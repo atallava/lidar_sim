@@ -1,0 +1,2 @@
+clear
+cd build && make

@@ -1,0 +1,65 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Folders
+build/
+data/
+bin/
+lib/
+
+# Backup files
+*~
+*#
+*.asv
+
+# data
+*.mat
+*.csv
+
+# image files
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.fig
+
+# compressed files
+*.zip
+*.rar
+*.tgz
+
+# tex 
+main.aux
+main.bbl
+main.blg
+main.log
+main.out
+main.pdf
+
+

@@ -1,0 +1,9 @@
+* gitly
+
+* viz point cloud
+
+* test segmentation algorithm
+
+* test classification algorithm
+
+* model databases
