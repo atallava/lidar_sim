@@ -3,6 +3,7 @@
 
 import os
 import math
+import struct
 
 def subsample_point_cloud_txt(file_in, file_out = ''):
     """ Subsample point cloud data.
@@ -60,6 +61,21 @@ def gen_pcd_header(num_pts):
            'DATA ascii'.format(num_pts, num_pts)
     return content
 
+def txt_line_to_pcd_line(str_in):
+    entries = str_in.split()
+    r = int(entries[4])
+    g = int(entries[5])
+    b = int(entries[6])
+    rgb_packed = rgb_to_int(r, g, b)
+    pcd_line = '{} {} {} {}\n'.format(entries[0], entries[1], entries[2], \
+                                      str(rgb_packed))
+    return pcd_line
+
+def rgb_to_int(r, g, b):
+    #packed = int('%02x%02x%02x' % (r, g, b), 16)
+    packed = (int(r)) << 16 | (int(g)) << 8 | (int(b))
+    return packed
+
 def append_pcd_header_to_point_cloud_txt(file_in, file_out = ''):
     """ Append header needed by pcl.
     
@@ -85,11 +101,14 @@ def append_pcd_header_to_point_cloud_txt(file_in, file_out = ''):
     file_out_obj.write(pcd_header)
     file_out_obj.write('\n')
 
-    file_in_obj = open(file_in, 'r')
-    contents = file_in_obj.read()
-    file_out_obj.write(contents)
 
-    file_in_obj.close()
+    # write out, ignoring intensity values
+    with open(file_in) as f:
+        for line_in in f:
+            entries = line_in.split()
+            line_out = txt_line_to_pcd_line(line_in)
+            file_out_obj.write(line_out)
+
     file_out_obj.close()
     
 
