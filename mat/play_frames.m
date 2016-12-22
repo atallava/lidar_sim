@@ -6,7 +6,7 @@ frameRelPathsPost = cell(1,nCams);
 
 for i = 1:nCams
     camId = camIds(i);
-    dirRelPath = ['lowres/AVTCamera_' num2str(camId)];
+    dirRelPath = ['../data/taylorJune2014/lowres/AVTCamera_' num2str(camId)];
     frameNamePre = ['Camera_' num2str(camId)];
     frameNamePost = ['.jpg'];
     frameRelPathPre = [dirRelPath '/' frameNamePre];

@@ -1,9 +1,28 @@
-* gitly
+mat:
 
-* viz point cloud
+relFilePath
 
-* test segmentation algorithm
+atan2(dy,dx) from the fixed xy corresponds approx to the ins heading. heading is
+smooth. -pi offset may be there.
 
-* test classification algorithm
+what is the unit of fixed xy? fixedXy*1e5 is in the range of meters?
 
-* model databases
+brigthened image by contrast. how it works is a mystery to me.
+
+--------------------------------------------------
+
+taylor data:
+
+camera ids: clock-hour orientation, 12 is straight ahead
+
+79: 10
+80: 12
+81: 4
+82: 2
+83: 8
+84: 6
+
+num frames:
+38384, 38384, 6242, 6242, 6224, 7989
+
+
