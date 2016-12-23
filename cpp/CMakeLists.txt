@@ -47,4 +47,7 @@ add_library(lidar_sim SHARED
 add_executable(run_tests src/run_tests.cpp)
 target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES})
 
+add_executable(split_packets src/split_packets.cpp)
+target_link_libraries(split_packets lidar_sim ${LIDAR_SIM_LIBRARIES})
+
 
