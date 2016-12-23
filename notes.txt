@@ -33,13 +33,7 @@ num velodyne packets: 4624457
 
 cpp:
 
-time windows of interest from frame ids
-
-velodyne packet ids corresponding to time window
-
-segment scans into smaller files
-
-subsample scans, if needed
+subsample section packets
 
 sensor-vehicle relative transform
 

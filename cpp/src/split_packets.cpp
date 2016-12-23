@@ -25,17 +25,18 @@ int main() {
     std::ofstream section_file;
 
     std::string current_line;
-    int packetNumber;
+    int packet_id;
 
     clock_t startTime = clock();
     while (std::getline(infile,current_line)) 
     {
 	// get packet number
     	std::istringstream iss(current_line);
-    	iss >> packetNumber;
+    	iss >> packet_id;
 
 	// section start
-    	if (std::find(section_packet_ids[0].begin(), section_packet_ids[0].end(), packetNumber) != section_packet_ids[0].end())
+    	if ((std::find(section_packet_ids[0].begin(), section_packet_ids[0].end(), packet_id) != section_packet_ids[0].end()) \
+	    && (!writing_out))
     	{
     	    // open section file
     	    std::ostringstream ss;
@@ -45,11 +46,14 @@ int main() {
 
     	    // turn writing on
     	    writing_out = true;
+	    
+	    std::cout << "Starting write: " << rel_path_section << std::endl;
     	}
 	// section end
-    	else if (std::find(section_packet_ids[1].begin(), section_packet_ids[1].end(), packetNumber) != section_packet_ids[1].end())
+    	else if ((std::find(section_packet_ids[1].begin(), section_packet_ids[1].end(), packet_id) != section_packet_ids[1].end()) \
+	    && (writing_out))
     	{
-    	    std::cout << "Written " << rel_path_section << std::endl;
+    	    std::cout << "Ending write: " << rel_path_section << std::endl;
 
     	    // close buffer
     	    section_file.close();
@@ -63,7 +67,9 @@ int main() {
     		break;
     	}
     	else
-    	    continue;
+	{
+	    // do nothing
+	}
 
     	// write to section file
     	if (writing_out)
