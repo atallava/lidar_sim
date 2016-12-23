@@ -9,6 +9,8 @@ what is the unit of fixed xy? fixedXy*1e5 is in the range of meters?
 
 brigthened image by contrast. how it works is a mystery to me.
 
+scatter3 can handle about 1e5 points smoothly
+
 --------------------------------------------------
 
 taylor data:
@@ -25,4 +27,21 @@ camera ids: clock-hour orientation, 12 is straight ahead
 num frames:
 38384, 38384, 6242, 6242, 6224, 7989
 
+num velodyne packets: 4624457
+
+--------------------------------------------------
+
+cpp:
+
+time windows of interest from frame ids
+
+velodyne packet ids corresponding to time window
+
+segment scans into smaller files
+
+subsample scans, if needed
+
+sensor-vehicle relative transform
+
+velodyne scanning pattern
 
