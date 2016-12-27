@@ -1,3 +1,9 @@
+try cloudcompare with one of these files
+
+convert xyz to cloudcompare compatible format
+
+--------------------------------------------------
+
 mat:
 
 relFilePath
@@ -33,9 +39,27 @@ num velodyne packets: 4624457
 
 cpp:
 
-subsample section packets
+make big matrix of points and then transform?
 
-sensor-vehicle relative transform
+raii
 
-velodyne scanning pattern
+--------------------------------------------------
 
+while installing cloudcompare:
+
+* installed qt5.7 via instructions from 
+  https://wiki.qt.io/Install_Qt_5_on_Ubuntu
+eventually files in ~ instead of /usr/local
+
+* git cloned cloudcompare and followed instructions on BUILD.md
+
+* used cmake gui to configure and generate. make of cloudcompare was not finding
+  qt5.7
+
+* changed qt default
+http://askubuntu.com/questions/435564/qt5-installation-and-path-configuration
+
+* this made it seem like 5.7 was being used, but compile still failed.
+
+* in cmake gui, changed the qt root path + qt cmake refs to the directories in ~
+which worked

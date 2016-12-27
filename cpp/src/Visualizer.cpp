@@ -3,11 +3,20 @@
 
 using namespace lidar_sim;
 
-void Visualizer::visualize(std::string file_name)
+void Visualizer::visualize(std::string file_name, int is_rgb = 1)
 {
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_name, *cloud);
-    visualize(cloud);
+    if (is_rgb)
+    {
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+	pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_name, *cloud);
+	visualize(cloud);
+    }
+    else
+    {
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::io::loadPCDFile<pcl::PointXYZ>(file_name, *cloud);
+	visualize(cloud);
+    }
 }
 
 void Visualizer::visualize(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
@@ -16,6 +25,26 @@ void Visualizer::visualize(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
 
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
     viewer.addPointCloud<pcl::PointXYZRGB>(cloud, rgb, "cloud");
+    viewer.addCoordinateSystem(1.0);
+    // am scene
+    //viewer.setCameraPosition(47.0035, 347.314, 71.6445, 333.539, 79.7573, -24.0705, 0.119185, -0.218815, 0.96846);
+    // an scene
+    viewer.setCameraPosition(11.1799, 153.713, 18.8741, 333.539, 79.7573, -24.0705, 0.0946536, -0.158154, 0.982867);
+    
+    if (write_to_file_)
+	viewer.saveScreenshot(file_name_);
+
+    while (!viewer.wasStopped()) {
+        viewer.spinOnce(100);
+    }     
+}
+
+void Visualizer::visualize(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    pcl::visualization::PCLVisualizer viewer("viz");
+
+    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color_cloud(cloud, 0, 255, 0);
+    viewer.addPointCloud<pcl::PointXYZ>(cloud, single_color_cloud, "cloud");
     viewer.addCoordinateSystem(1.0);
     // am scene
     //viewer.setCameraPosition(47.0035, 347.314, 71.6445, 333.539, 79.7573, -24.0705, 0.119185, -0.218815, 0.96846);

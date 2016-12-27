@@ -4,10 +4,10 @@
 
 using namespace lidar_sim;
 
-bool Test::testVizPCD(std::string file_name)
+bool Test::testVizPCD(std::string file_name, int is_rgb = 1)
 {
     Visualizer viz;
-    viz.visualize(file_name);
+    viz.visualize(file_name, is_rgb);
     return true;
 }
 

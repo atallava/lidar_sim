@@ -41,6 +41,7 @@ add_library(lidar_sim SHARED
 
   src/Visualizer.cpp
   src/Test.cpp
+  src/Utils.cpp
   )
 
 # Add files here to make executables out of them
@@ -50,4 +51,11 @@ target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES})
 add_executable(split_packets src/split_packets.cpp)
 target_link_libraries(split_packets lidar_sim ${LIDAR_SIM_LIBRARIES})
 
+add_executable(transform_sections_to_world src/transform_sections_to_world.cpp)
+target_link_libraries(transform_sections_to_world lidar_sim ${LIDAR_SIM_LIBRARIES})
 
+add_executable(subsample_pts src/subsample_pts.cpp)
+target_link_libraries(subsample_pts lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(prepend_pcd_header src/prepend_pcd_header.cpp)
+target_link_libraries(prepend_pcd_header lidar_sim ${LIDAR_SIM_LIBRARIES})

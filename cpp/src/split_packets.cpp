@@ -5,6 +5,7 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include <iomanip>
 
 int main() {
     std::string rel_path_velo_data = "../data/taylorJune2014/Velodyne/Velodyne_Rip.xyz";
@@ -30,28 +31,28 @@ int main() {
     clock_t startTime = clock();
     while (std::getline(infile,current_line)) 
     {
-	// get packet number
+    	// get packet number
     	std::istringstream iss(current_line);
     	iss >> packet_id;
 
-	// section start
+    	// section start
     	if ((std::find(section_packet_ids[0].begin(), section_packet_ids[0].end(), packet_id) != section_packet_ids[0].end()) \
-	    && (!writing_out))
+    	    && (!writing_out))
     	{
     	    // open section file
     	    std::ostringstream ss;
-    	    ss << rel_path_section_pre << section_count << rel_path_section_post;
+    	    ss << rel_path_section_pre << std::setw(2) << std::setfill('0') << section_count << rel_path_section_post;
     	    rel_path_section = ss.str();
     	    section_file.open(rel_path_section);
 
     	    // turn writing on
     	    writing_out = true;
 	    
-	    std::cout << "Starting write: " << rel_path_section << std::endl;
+    	    std::cout << "Starting write: " << rel_path_section << std::endl;
     	}
-	// section end
+    	// section end
     	else if ((std::find(section_packet_ids[1].begin(), section_packet_ids[1].end(), packet_id) != section_packet_ids[1].end()) \
-	    && (writing_out))
+    	    && (writing_out))
     	{
     	    std::cout << "Ending write: " << rel_path_section << std::endl;
 
@@ -67,9 +68,9 @@ int main() {
     		break;
     	}
     	else
-	{
-	    // do nothing
-	}
+    	{
+    	    // do nothing
+    	}
 
     	// write to section file
     	if (writing_out)
@@ -78,4 +79,6 @@ int main() {
 
     double elapsedTime = (clock()-startTime)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsedTime << "s." << std::endl;
+
+    return 0;
 }
