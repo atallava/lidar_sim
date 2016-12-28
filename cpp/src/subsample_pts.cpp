@@ -15,14 +15,14 @@
 using namespace lidar_sim;
 
 int main() {
-    std::string rel_path_file_pre = "../data/taylorJune2014/Velodyne/sections/section_";
-    std::string rel_path_file_post = "_world_frame.xyz";
+    std::string rel_path_file_pre = "../data/taylorJune2014/sections/laser_frame/section_";
+    std::string rel_path_file_post = ".xyz";
 
-    std::string rel_path_file_subsampled_pre = "../data/taylorJune2014/Velodyne/sections/section_";
-    std::string rel_path_file_subsampled_post = "_world_frame_subsampled.xyz";
+    std::string rel_path_file_subsampled_pre = "../data/taylorJune2014/sections/laser_frame/section_";
+    std::string rel_path_file_subsampled_post = "_subsampled.xyz";
 
     std::vector<int> section_ids;
-    for (size_t i = 1; i <= 1; ++i) 
+    for (size_t i = 1; i <= 14; ++i) 
 	section_ids.push_back(i);
     
     int max_pts = 1000000;

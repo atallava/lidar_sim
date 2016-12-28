@@ -15,10 +15,10 @@
 using namespace lidar_sim;
 
 int main() {
-    std::string rel_path_xyz_pre = "../data/taylorJune2014/Velodyne/sections/section_";
+    std::string rel_path_xyz_pre = "../data/taylorJune2014/sections/world_frame/section_";
     std::string rel_path_xyz_post = "_world_frame_subsampled.xyz";
 
-    std::string rel_path_pcd_pre = "../data/taylorJune2014/Velodyne/sections/section_";
+    std::string rel_path_pcd_pre = "../data/taylorJune2014/sections/world_frame/section_";
     std::string rel_path_pcd_post = "_world_frame_subsampled.pcd";
 
     std::vector<int> section_ids;

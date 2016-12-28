@@ -1,6 +1,17 @@
-try cloudcompare with one of these files
-
 convert xyz to cloudcompare compatible format
+
+imu, laser times
+
+y, -y ambiguity	  
+
+pose25 -> T_imu_world logic
+
+packets are dropped. current logic won't work.
+
+on a coarse scale, things look ok. but for rim stretch e.g., there are points
+under the ground, making it seem like z-is incorrect.
+
+compare with geo-referenced
 
 --------------------------------------------------
 

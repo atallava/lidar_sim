@@ -6,18 +6,26 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
+#include <stdexcept>
 
 #include <Eigen/Dense>
 
+#include <lidar_sim/Utils.h>
+
+using namespace lidar_sim;
+
 int main() {
-    std::string rel_path_section_pre = "../data/taylorJune2014/Velodyne/sections/section_";
-    std::string rel_path_section_post = ".xyz";
+    std::string rel_path_section_pre = "../data/taylorJune2014/sections/laser_frame/section_";
+    std::string rel_path_section_post = "_subsampled.xyz";
     
-    std::string rel_path_section_world_frame_pre = "../data/taylorJune2014/Velodyne/sections/section_";
-    std::string rel_path_section_world_frame_post = "_world_frame.xyz";
+    std::string rel_path_section_world_frame_pre = "../data/taylorJune2014/sections/world_frame/section_";
+    std::string rel_path_section_world_frame_post = "_world_frame_subsampled.xyz";
+
+    std::string rel_path_section_imu_transfs_pre = "../data/taylorJune2014/sections/imu_transfs/imu_transfs_";
+    std::string rel_path_section_imu_transfs_post = ".txt";
 
     std::vector<int> section_ids;
-    for (size_t i = 13; i <= 14; ++i) 
+    for (size_t i = 1; i <= 14; ++i) 
 	section_ids.push_back(i);
     
     // transforms
@@ -26,7 +34,8 @@ int main() {
 	-0.9999567242503523, 0.0087006599957041, 0.0032936517945554, -0.1016216668883396,
 	0.0032961982944134, 0.0002783552847679, 0.9999945287826025, 0.5000000000000000,
 	0.0000000000000000, 0.0000000000000000, 0.0000000000000000, 1.0000000000000000;
-    Eigen::Matrix<float,4,4> T_velodyne_imu = T_imu_velodyne.inverse();
+    Eigen::Matrix<float,4,4> T_velodyne_imu;
+    T_velodyne_imu = T_imu_velodyne.inverse();
 
     // loop over sections
     clock_t start_time = clock();
@@ -48,12 +57,24 @@ int main() {
 	std::ofstream section_world_frame_file(rel_path_section_world_frame);
 	std::cout << "Writing to: " << rel_path_section_world_frame << std::endl;
 
+	// open imu transfs file
+	ss.str("");
+	ss.clear();
+	ss << rel_path_section_imu_transfs_pre << std::setw(2) << std::setfill('0') << section_id << rel_path_section_imu_transfs_post;
+	std::string rel_path_section_imu_transfs = ss.str();
+	std::ifstream section_imu_transfs_file(rel_path_section_imu_transfs);
+	std::cout << "Imu transfs file: " << rel_path_section_imu_transfs << std::endl;
+
 	std::string current_line;
-	while(std::getline(section_file,current_line))
+	std::string imu_transfs_line;
+	int old_packet_id = -1; // just something invalid
+	int transf_packet;
+	while(std::getline(section_file, current_line))
 	{
 	    double data;
+	    int packet_id;
 	    std::istringstream iss(current_line);
-	    iss >> data; // packet id
+	    iss >> packet_id; // packet id
 	    iss >> data; // timestamp
 	    iss >> data; // timestamp
 
@@ -63,8 +84,27 @@ int main() {
 	    iss >> pt_laser[2]; // sensor frame z
 	    pt_laser[3] = 1;
 
+	    Eigen::Matrix<float,4,1> pt_imu;
+	    pt_imu = T_velodyne_imu*pt_laser;
+
+	    // if new packet id, read next transf
+	    Eigen::Matrix<float,4,4> T_imu;
+	    if (packet_id != old_packet_id)
+	    {
+		std::getline(section_imu_transfs_file, imu_transfs_line);
+		transf_packet = parseTransfsFileLine(imu_transfs_line, T_imu);
+		old_packet_id = packet_id;
+	    }
+
+	    // if (transf_packet != packet_id) 
+	    // {
+	    // 	std::cout << "transf packet: " << transf_packet << " does not match packet id: " << 
+	    // 	    packet_id << std::endl;
+	    // 	return -1;
+	    // }
+
 	    Eigen::Matrix<float,4,1> pt_world;
-	    pt_world = T_velodyne_imu*pt_laser;
+	    pt_world = T_imu*pt_imu;
 
 	    // write to file
 	    std::string output_line;
@@ -73,6 +113,14 @@ int main() {
 	    ss << pt_world[0] << " " << pt_world[1] << " " << pt_world[2] << std::endl;
 	    output_line = ss.str();
 	    section_world_frame_file << output_line;
+	    
+	    // debug
+	    // std::cout << "laser point: " << pt_laser << std::endl;
+	    // std::cout << "T laser imu: " << T_velodyne_imu << std::endl;
+	    // std::cout << "imu point: " << pt_imu << std::endl;
+	    // std::cout << "T imu: " << T_imu << std::endl;
+	    // std::cout << "world point: " << pt_world << std::endl;
+	    // break;
 	}
 
 	// close files

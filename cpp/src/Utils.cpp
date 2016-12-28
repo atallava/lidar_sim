@@ -48,4 +48,21 @@ namespace lidar_sim {
 	    "DATA ascii" << std::endl;
 	return header_ss.str();
     }
+
+    int parseTransfsFileLine(std::string line, Eigen::Matrix<float,4,4>& T_imu) {
+	std::istringstream iss(line);
+	int packet_id;
+	iss >> packet_id;
+	
+	// populate column-wise
+	for (size_t col = 0; col < 4; col++) 
+	    for (size_t row = 0; row < 4; row++)
+		iss >> T_imu(row,col);
+
+	// TODO: delete. hacks for unit errors
+	T_imu(0,3) = 100*T_imu(0,3);
+	T_imu(1,3) = 100*T_imu(1,3);
+	
+	return packet_id;
+    }
 }
