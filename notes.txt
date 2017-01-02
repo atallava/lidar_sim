@@ -1,17 +1,28 @@
 convert xyz to cloudcompare compatible format
 
-imu, laser times
+imu, laser times. check.
 
-y, -y ambiguity	  
+y, -y ambiguity. check.
 
-pose25 -> T_imu_world logic
+pose25 -> T_imu_world logic. check.
 
-packets are dropped. current logic won't work.
+packets are dropped. current logic won't work. TODO.
 
 on a coarse scale, things look ok. but for rim stretch e.g., there are points
 under the ground, making it seem like z-is incorrect.
 
 compare with geo-referenced
+
+the axes of imu might be flipped.
+
+extracted poses in mat
+
+times from
+camera Camera_156580_Timestamp
+packet Velodyne_Packet_Timestamp
+poses PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed
+
+they have upto 0.5 sec difference in first timestamps
 
 --------------------------------------------------
 
