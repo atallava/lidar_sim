@@ -25,7 +25,7 @@ int main() {
     std::string rel_path_section_imu_transfs_post = ".txt";
 
     std::vector<int> section_ids;
-    for (size_t i = 1; i <= 14; ++i) 
+    for (size_t i = 1; i <= 1; ++i) 
 	section_ids.push_back(i);
     
     // transforms

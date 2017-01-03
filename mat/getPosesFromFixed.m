@@ -27,9 +27,6 @@ while ischar(line)
     line = fgetl(fidFixed);
 end
 
-% subtract t0
-tLog = tLog-tLog(1);
-
 % subtract xyz0
 xyz0 = xyzLog(1,:);
 xyzLog = bsxfun(@minus,xyzLog,xyz0);

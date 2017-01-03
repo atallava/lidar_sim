@@ -42,6 +42,7 @@ add_library(lidar_sim SHARED
   src/Visualizer.cpp
   src/Test.cpp
   src/Utils.cpp
+  src/PoseServer.cpp
   )
 
 # Add files here to make executables out of them
@@ -59,3 +60,6 @@ target_link_libraries(subsample_pts lidar_sim ${LIDAR_SIM_LIBRARIES})
 
 add_executable(prepend_pcd_header src/prepend_pcd_header.cpp)
 target_link_libraries(prepend_pcd_header lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(extract_section_packet_ids src/extract_section_packet_ids.cpp)
+target_link_libraries(extract_section_packet_ids lidar_sim ${LIDAR_SIM_LIBRARIES})
