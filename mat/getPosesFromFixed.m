@@ -31,9 +31,8 @@ end
 xyz0 = xyzLog(1,:);
 xyzLog = bsxfun(@minus,xyzLog,xyz0);
 
-% convert angles to [0,2*pi]
+% convert angles to rad
 rpyLog = deg2rad(rpyLog);
-rpyLog = wrapTo2Pi(rpyLog);
 
 poseLog = [xyzLog rpyLog];
 end

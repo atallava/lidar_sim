@@ -10,6 +10,7 @@
 
 #include <Eigen/Dense>
 
+#include <lidar_sim/PoseServer.h>
 #include <lidar_sim/Utils.h>
 
 using namespace lidar_sim;
@@ -21,22 +22,31 @@ int main() {
     std::string rel_path_section_world_frame_pre = "../data/taylorJune2014/sections/world_frame/section_";
     std::string rel_path_section_world_frame_post = "_world_frame_subsampled.xyz";
 
-    std::string rel_path_section_imu_transfs_pre = "../data/taylorJune2014/sections/imu_transfs/imu_transfs_";
-    std::string rel_path_section_imu_transfs_post = ".txt";
-
     std::vector<int> section_ids;
     for (size_t i = 1; i <= 1; ++i) 
 	section_ids.push_back(i);
     
     // transforms
     Eigen::Matrix<float,4,4> T_imu_velodyne;
-    T_imu_velodyne << 0.0086996955871186, 0.9999621097991535, -0.0003070223393724, -0.0090499101707984,
+    T_imu_velodyne << 
+	0.0086996955871186, 0.9999621097991535, -0.0003070223393724, -0.0090499101707984,
 	-0.9999567242503523, 0.0087006599957041, 0.0032936517945554, -0.1016216668883396,
 	0.0032961982944134, 0.0002783552847679, 0.9999945287826025, 0.5000000000000000,
 	0.0000000000000000, 0.0000000000000000, 0.0000000000000000, 1.0000000000000000;
+    
     Eigen::Matrix<float,4,4> T_velodyne_imu;
     T_velodyne_imu = T_imu_velodyne.inverse();
 
+    Eigen::Matrix<float,4,4> T_base_world;
+    T_base_world << 
+    	1, 0, 0, 0,
+    	0, -1, 0, 0,
+    	0, 0, -1, 0,
+    	0, 0, 0, 1;
+
+    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/pose_log.txt";
+    PoseServer imu_pose_server(rel_path_poses_log);
+	
     // loop over sections
     clock_t start_time = clock();
     for (size_t i = 0; i < section_ids.size(); ++i)
@@ -57,26 +67,22 @@ int main() {
 	std::ofstream section_world_frame_file(rel_path_section_world_frame);
 	std::cout << "Writing to: " << rel_path_section_world_frame << std::endl;
 
-	// open imu transfs file
-	ss.str("");
-	ss.clear();
-	ss << rel_path_section_imu_transfs_pre << std::setw(2) << std::setfill('0') << section_id << rel_path_section_imu_transfs_post;
-	std::string rel_path_section_imu_transfs = ss.str();
-	std::ifstream section_imu_transfs_file(rel_path_section_imu_transfs);
-	std::cout << "Imu transfs file: " << rel_path_section_imu_transfs << std::endl;
-
+	// loop over section points
 	std::string current_line;
-	std::string imu_transfs_line;
-	int old_packet_id = -1; // just something invalid
-	int transf_packet;
 	while(std::getline(section_file, current_line))
 	{
 	    double data;
+	    double packet_timestamp_int;
+	    double packet_timestamp_frac;
+	    double packet_timestamp;
 	    int packet_id;
 	    std::istringstream iss(current_line);
-	    iss >> packet_id; // packet id
-	    iss >> data; // timestamp
-	    iss >> data; // timestamp
+	    iss >> packet_id; 
+	    iss >> packet_timestamp_int; // integer part
+	    iss >> packet_timestamp_frac; // fractional timestamp
+	    // quirk in data
+	    // TODO: use the packet timestamp file directly
+	    packet_timestamp = packet_timestamp_int + packet_timestamp_frac*1e-9;
 
 	    Eigen::Matrix<float,4,1> pt_laser;
 	    iss >> pt_laser[0]; // sensor frame x
@@ -86,25 +92,13 @@ int main() {
 
 	    Eigen::Matrix<float,4,1> pt_imu;
 	    pt_imu = T_velodyne_imu*pt_laser;
-
-	    // if new packet id, read next transf
-	    Eigen::Matrix<float,4,4> T_imu;
-	    if (packet_id != old_packet_id)
-	    {
-		std::getline(section_imu_transfs_file, imu_transfs_line);
-		transf_packet = parseTransfsFileLine(imu_transfs_line, T_imu);
-		old_packet_id = packet_id;
-	    }
-
-	    // if (transf_packet != packet_id) 
-	    // {
-	    // 	std::cout << "transf packet: " << transf_packet << " does not match packet id: " << 
-	    // 	    packet_id << std::endl;
-	    // 	return -1;
-	    // }
-
+	    
+	    Eigen::Matrix<float,4,4> T_imu_base = imu_pose_server.getTransfAtTime(packet_timestamp);
+	    Eigen::Matrix<float,4,1> pt_base;
+	    pt_base = T_imu_base*pt_imu;
+	    
 	    Eigen::Matrix<float,4,1> pt_world;
-	    pt_world = T_imu*pt_imu;
+	    pt_world = T_base_world*pt_base;
 
 	    // write to file
 	    std::string output_line;

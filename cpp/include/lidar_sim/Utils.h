@@ -8,4 +8,5 @@ namespace lidar_sim {
     int getNumLinesInFile(std::string rel_path_file);
     std::string genPCDHeader(int num_pts);
     int parseTransfsFileLine(std::string line, Eigen::Matrix<float,4,4>& T_imu);
+    void subsampleFile(std::string rel_path_file, std::string rel_path_file_subsampled, int subsample_factor);
 }

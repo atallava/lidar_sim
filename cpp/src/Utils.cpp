@@ -4,6 +4,8 @@
 #include <memory>
 #include <stdexcept>
 #include <cstring>
+#include <fstream>
+#include <string>
 
 #include <lidar_sim/Utils.h>
 
@@ -64,5 +66,32 @@ namespace lidar_sim {
 	T_imu(1,3) = 100*T_imu(1,3);
 	
 	return packet_id;
+    }
+
+    void subsampleFile(std::string rel_path_file, std::string rel_path_file_subsampled, int subsample_factor)
+    {
+	// open input file
+	std::ifstream file(rel_path_file);
+	std::cout << "Reading from: " << rel_path_file << std::endl;
+
+	// open output file
+	std::ofstream subsampled_file(rel_path_file_subsampled);
+	std::cout << "Writing to: " << rel_path_file_subsampled << std::endl;
+
+	std::cout << "Subsampling factor: " << subsample_factor << std::endl;
+
+	std::string current_line;
+	int count = 0;
+	while(std::getline(file,current_line))
+	{
+	    if (count % subsample_factor == 0)
+		subsampled_file << current_line << std::endl;
+
+	    count++;
+	}
+
+	// close files
+	file.close();
+	subsampled_file.close();
     }
 }

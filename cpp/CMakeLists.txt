@@ -55,11 +55,20 @@ target_link_libraries(split_packets lidar_sim ${LIDAR_SIM_LIBRARIES})
 add_executable(transform_sections_to_world src/transform_sections_to_world.cpp)
 target_link_libraries(transform_sections_to_world lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(subsample_pts src/subsample_pts.cpp)
-target_link_libraries(subsample_pts lidar_sim ${LIDAR_SIM_LIBRARIES})
+add_executable(subsample_sections src/subsample_sections.cpp)
+target_link_libraries(subsample_sections lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(subsample_georef src/subsample_georef.cpp)
+target_link_libraries(subsample_georef lidar_sim ${LIDAR_SIM_LIBRARIES})
 
 add_executable(prepend_pcd_header src/prepend_pcd_header.cpp)
 target_link_libraries(prepend_pcd_header lidar_sim ${LIDAR_SIM_LIBRARIES})
 
 add_executable(extract_section_packet_ids src/extract_section_packet_ids.cpp)
 target_link_libraries(extract_section_packet_ids lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(extract_from_georef src/extract_from_georef.cpp)
+target_link_libraries(extract_from_georef lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(extract_scans_from_rip src/extract_scans_from_rip.cpp)
+target_link_libraries(extract_scans_from_rip lidar_sim ${LIDAR_SIM_LIBRARIES})

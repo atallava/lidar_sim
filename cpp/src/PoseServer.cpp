@@ -83,7 +83,7 @@ std::vector<double> PoseServer::getPoseAtTime(double t)
     // t greater than max time
     if (index_2 == m_t_log.size())
     {
-	std::cout << t << " outside range" << std::endl;
+	std::cout << t << " outside range, greater than max time" << std::endl;
 	throw std::range_error("query time outside range");
     }
 
@@ -94,7 +94,7 @@ std::vector<double> PoseServer::getPoseAtTime(double t)
     // t less than min time
     if (index_2 == 0)
     {
-	std::cout << t << " outside range" << std::endl;
+	std::cout << t << " outside range, less than min time" << std::endl;
 	throw std::range_error("query time outside range");
     }
 

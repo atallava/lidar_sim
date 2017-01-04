@@ -24,6 +24,10 @@ poses PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed
 
 they have upto 0.5 sec difference in first timestamps
 
+here's a bug: in velodyne rip, there are two time fields. first is the integer
+part, second is the fractional part after the decimal. i don't know if this was
+intentional.
+
 --------------------------------------------------
 
 mat:
