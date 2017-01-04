@@ -28,6 +28,10 @@ here's a bug: in velodyne rip, there are two time fields. first is the integer
 part, second is the fractional part after the decimal. i don't know if this was
 intentional.
 
+putting together times seems right. one bug was the wrapping to [0,2pi], this
+was causing jumps. now it still seems like the yaw is off, not causing point
+clouds to align well.
+
 --------------------------------------------------
 
 mat:

@@ -40,11 +40,11 @@ int main() {
     Eigen::Matrix<float,4,4> T_base_world;
     T_base_world << 
     	1, 0, 0, 0,
-    	0, -1, 0, 0,
-    	0, 0, -1, 0,
+    	0, 1, 0, 0,
+    	0, 0, 1, 0,
     	0, 0, 0, 1;
 
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/pose_log.txt";
+    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 	
     // loop over sections

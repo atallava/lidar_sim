@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include <Eigen/Dense>
+#include <Eigen/Geometry>
 
 #include <lidar_sim/PoseServer.h>
 
@@ -18,40 +19,61 @@ PoseServer::PoseServer(std::string rel_path_pose_log) :
     m_loadPoseLog(m_path_pose_log);
 }
 
+// this version uses fixed
 void PoseServer::m_loadPoseLog(std::string path_pose_log)
 {
     std::ifstream pose_log_file(path_pose_log);
     std::string current_line;
     m_num_logs = 0;
+    std::vector<double> posn0(3,0);
+	
     while(std::getline(pose_log_file, current_line))
     {
 	m_num_logs++;
 	double data;
 	std::istringstream iss(current_line);
-	iss >> data;    
+	iss >> data;    // 30 sec delay timestamp
 
-	// debug
-	// std::cout << "data id: " << m_num_logs << std::endl;
-	// std::cout << "line: " << current_line << std::endl;
-	// std::cout << std::setprecision(20) << "t: " << data << std::endl;
-
+	iss >> data; // timestamp we want
 	m_t_log.push_back(data);
+
+	// ignore lat and lon
+	for (size_t i = 0; i < 2; ++i)
+	    iss >> data; 
+
+	std::vector<double> pose;
+	// xyz
+	for (size_t i = 0; i < 3; ++i)
+	{
+	    iss >> data;
+	    pose.push_back(data);
+	}
+
+	// bunch of values we don't need
+	for (size_t i = 0; i < 19; ++i)
+	    iss >> data;
+
+	// rpy
+	for (size_t i = 0; i < 3; ++i)
+	{
+	    iss >> data;
+	    // convert angles to radian
+	    pose.push_back(data*M_PI/180);
+	}
+
+	// if first time, get posn0
+	if (m_num_logs == 1)
+	    for (size_t i = 0; i < 3; ++i)
+		posn0[i] = pose[i];
+
+	// subtract posn0
+	for (size_t i = 0; i < 3; ++i)
+	    pose[i] = pose[i]-posn0[i];
 
 	// debug
 	// std::cout << "pose : ";
 
-	std::vector<double> xyzrpy;
-	for (size_t i = 0; i < 6; ++i)
-	{
-	    iss >> data;
-	    xyzrpy.push_back(data);
-
-	    // debug
-	    // std::cout << data << " ";
-	}
-	// std::cout << std::endl;
-
-	m_pose_log.push_back(xyzrpy);		      
+	m_pose_log.push_back(pose);		      
 
 	// if (m_num_logs > 10)
 	//     break;
@@ -83,7 +105,7 @@ std::vector<double> PoseServer::getPoseAtTime(double t)
     // t greater than max time
     if (index_2 == m_t_log.size())
     {
-	std::cout << t << " outside range, greater than max time" << std::endl;
+	std::cout << std::setprecision(20) << t << " outside range, greater than max time" << std::endl;
 	throw std::range_error("query time outside range");
     }
 
@@ -118,13 +140,29 @@ Eigen::Matrix<float,4,4> PoseServer::getTransfAtTime(double t)
     double pitch = pose[4];
     double yaw = pose[5];
 
+    Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitY());
+    Eigen::AngleAxisd yawAngle(yaw, Eigen::Vector3d::UnitZ());
+
+    // TODO: what is the correct order?
+    Eigen::Quaternion<double> q = yawAngle*pitchAngle*rollAngle;
+    
+    Eigen::Matrix3d rotationMatrix = q.matrix();
+
     Eigen::Matrix<float,4,4> T_pose;
 
-    T_pose << 
-	cos(yaw)*cos(pitch), cos(yaw)*sin(pitch)*sin(roll) - sin(yaw)*cos(roll), cos(yaw)*sin(pitch)*cos(roll) + sin(yaw)*sin(roll), x,
-	sin(yaw)*cos(pitch), sin(yaw)*sin(pitch)*sin(roll) + cos(yaw)*cos(roll), sin(yaw)*sin(pitch)*cos(roll) - cos(yaw)*sin(roll), y,
-	-sin(pitch), cos(pitch)*sin(roll), cos(pitch)*cos(roll), z,
-	0, 0, 0, 1;
+    for (size_t i = 0; i < 3; ++i)
+	for (size_t j = 0; j < 3; ++j)
+	    T_pose(i,j) = rotationMatrix(i,j);
+    T_pose(0,3) = x; T_pose(1,3) = y; T_pose(2,3) = z;
+    T_pose(3,0) = 0; T_pose(3,1) = 0; T_pose(3,2) = 0; T_pose(3,3) = 1;
+
+    // T_pose << 
+    // 	cos(yaw)*cos(pitch), cos(yaw)*sin(pitch)*sin(roll) - sin(yaw)*cos(roll), cos(yaw)*sin(pitch)*cos(roll) + sin(yaw)*sin(roll), x,
+    // 	sin(yaw)*cos(pitch), sin(yaw)*sin(pitch)*sin(roll) + cos(yaw)*cos(roll), sin(yaw)*sin(pitch)*cos(roll) - cos(yaw)*sin(roll), y,
+    // 	-sin(pitch), cos(pitch)*sin(roll), cos(pitch)*cos(roll), z,
+    // 	0, 0, 0, 1;
 
     return T_pose;
 }
+

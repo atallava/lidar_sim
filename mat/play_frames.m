@@ -6,8 +6,8 @@ frameRelPathsPost = cell(1,nCams);
 
 for i = 1:nCams
     camId = camIds(i);
-    %dirRelPath = ['../data/taylorJune2014/lowres/AVTCamera_' num2str(camId)];
-    dirRelPath = ['~/taylor/lowres/AVTCamera_' num2str(camId)];
+    dirRelPath = ['../data/taylorJune2014/lowres/AVTCamera_' num2str(camId)];
+%     dirRelPath = ['~/taylor/lowres/AVTCamera_' num2str(camId)];
     frameNamePre = ['Camera_' num2str(camId)];
     frameNamePost = ['.jpg'];
     frameRelPathPre = [dirRelPath '/' frameNamePre];
@@ -20,7 +20,7 @@ end
 numFrames = getNumFrames(dirRelPath); % assuming all have same number of frames
 
 %% frame ids
-startId = 8180;
+startId = 1;
 endId = 15000;
 skip = 5;
 frameIds = startId:skip:endId;

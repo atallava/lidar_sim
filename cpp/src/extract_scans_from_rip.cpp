@@ -18,8 +18,8 @@ using namespace lidar_sim;
 int main() {
     std::string rel_path_rip = "../data/taylorJune2014/Velodyne/Velodyne_Rip.xyz";
 
-    int start_packet_id = 200750;
-    int end_packet_id = 200750;
+    int start_packet_id = 190000;
+    int end_packet_id = 192000;
 
     std::ostringstream ss;
     ss << "../data/taylorJune2014/Velodyne/packets/packets_" << std::setw(7) << std::setfill('0') << start_packet_id << "_"
@@ -58,7 +58,7 @@ int main() {
     	0, 0, 1, 0,
     	0, 0, 0, 1;
 
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/pose_log.txt";
+    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 	
     clock_t start_time = clock();
@@ -83,9 +83,6 @@ int main() {
 	// quirk in data
 	// TODO: use the packet timestamp file directly
 	packet_timestamp = packet_timestamp_int + packet_timestamp_frac*1e-9;
-
-	// TODO: delete
-	std::cout << "id: " << packet_id << " timestamp: " << std::setprecision(20) << packet_timestamp << std::endl; break;
 
 	Eigen::Matrix<float,4,1> pt_laser;
 	iss >> pt_laser[0]; // sensor frame x
