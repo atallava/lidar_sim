@@ -41,7 +41,9 @@ int main() {
 	0.0000000000000000, 0.0000000000000000, 0.0000000000000000, 1.0000000000000000;
     
     Eigen::Matrix<float,4,4> T_velodyne_imu;
-    T_velodyne_imu = T_imu_velodyne.inverse();
+    // T_velodyne_imu = T_imu_velodyne.inverse();
+    // TODO: fix this
+    T_velodyne_imu = T_imu_velodyne;
 
     Eigen::Matrix<float,4,4> T_base_world;
     // TODO: fix tbase world
@@ -82,7 +84,7 @@ int main() {
 
 	// quirk in data
 	// TODO: use the packet timestamp file directly
-	packet_timestamp = packet_timestamp_int + packet_timestamp_frac*1e-9;
+	packet_timestamp = packet_timestamp_int + packet_timestamp_frac*1e-9 - 1;
 
 	Eigen::Matrix<float,4,1> pt_laser;
 	iss >> pt_laser[0]; // sensor frame x

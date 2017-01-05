@@ -122,6 +122,9 @@ std::vector<double> PoseServer::getPoseAtTime(double t)
 
     size_t index_1 = index_2-1;
 
+    // todo: remove hack
+    return m_pose_log[index_1];
+
     std::vector<double> pose(6, 0.0);
     double alpha = (t-m_t_log[index_1])/(m_t_log[index_2]-m_t_log[index_1]);
     for (size_t i = 0; i < 6; i++)
@@ -140,29 +143,58 @@ Eigen::Matrix<float,4,4> PoseServer::getTransfAtTime(double t)
     double pitch = pose[4];
     double yaw = pose[5];
 
-    Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitX());
-    Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitY());
-    Eigen::AngleAxisd yawAngle(yaw, Eigen::Vector3d::UnitZ());
-
-    // TODO: what is the correct order?
-    Eigen::Quaternion<double> q = yawAngle*pitchAngle*rollAngle;
-    
-    Eigen::Matrix3d rotationMatrix = q.matrix();
+    // TODO
+    // cetin's code flips x and y
+    x = pose[1]; y = pose[0];
 
     Eigen::Matrix<float,4,4> T_pose;
 
+    // TODO: what is the correct convention? 
+
+    // this is my assumption
+    // Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitX());
+    // Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitY());
+    // Eigen::AngleAxisd yawAngle(yaw, Eigen::Vector3d::UnitZ());
+
+    // this is from cetin
+    Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitY());
+    Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxisd yawAngle(-yaw, Eigen::Vector3d::UnitZ());
+
+    // TODO: what is the correct order?
+    Eigen::Matrix3d rotationMatrix = (yawAngle*pitchAngle*rollAngle).toRotationMatrix();
+
     for (size_t i = 0; i < 3; ++i)
-	for (size_t j = 0; j < 3; ++j)
-	    T_pose(i,j) = rotationMatrix(i,j);
+    	for (size_t j = 0; j < 3; ++j)
+    	    T_pose(i,j) = rotationMatrix(i,j);
     T_pose(0,3) = x; T_pose(1,3) = y; T_pose(2,3) = z;
     T_pose(3,0) = 0; T_pose(3,1) = 0; T_pose(3,2) = 0; T_pose(3,3) = 1;
 
-    // T_pose << 
-    // 	cos(yaw)*cos(pitch), cos(yaw)*sin(pitch)*sin(roll) - sin(yaw)*cos(roll), cos(yaw)*sin(pitch)*cos(roll) + sin(yaw)*sin(roll), x,
-    // 	sin(yaw)*cos(pitch), sin(yaw)*sin(pitch)*sin(roll) + cos(yaw)*cos(roll), sin(yaw)*sin(pitch)*cos(roll) - cos(yaw)*sin(roll), y,
-    // 	-sin(pitch), cos(pitch)*sin(roll), cos(pitch)*cos(roll), z,
-    // 	0, 0, 0, 1;
+    // Eigen::Matrix3d r = (Eigen::AngleAxisd(-yaw, Eigen::Vector3d::UnitZ())
+    // 			 * Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitX())
+    // 			 * Eigen::AngleAxisd(roll, Eigen::Vector3d::UnitY())).toRotationMatrix();
+    // Eigen::Affine3d cetin_transform;
+    // cetin_transform.setIdentity();
+    // cetin_transform.prerotate(r);
+    // cetin_transform.pretranslate(Eigen::Vector3d(x, y, z));
+    
+    // std::cout << "my tpose" << std::endl;
+    // for (size_t i = 0; i < 4; ++i)
+    // {
+    // 	for (size_t j = 0; j < 4; ++j)
+    // 	    std::cout << T_pose(i,j) << " ";
+    // 	std::cout << std::endl;
+    // }
+	
+    // std::cout << "cetin transform" << std::endl;
+    // for (size_t i = 0; i < 4; ++i)
+    // {
+    // 	for (size_t j = 0; j < 4; ++j)
+    // 	    std::cout << cetin_transform(i,j) << " ";
+    // 	std::cout << std::endl;
+    // }
 
     return T_pose;
 }
+
 

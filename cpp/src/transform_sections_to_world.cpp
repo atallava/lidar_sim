@@ -23,7 +23,7 @@ int main() {
     std::string rel_path_section_world_frame_post = "_world_frame_subsampled.xyz";
 
     std::vector<int> section_ids;
-    for (size_t i = 1; i <= 1; ++i) 
+    for (size_t i = 1; i <= 14; ++i) 
 	section_ids.push_back(i);
     
     // transforms
@@ -36,6 +36,7 @@ int main() {
     
     Eigen::Matrix<float,4,4> T_velodyne_imu;
     T_velodyne_imu = T_imu_velodyne.inverse();
+    T_velodyne_imu = T_imu_velodyne;
 
     Eigen::Matrix<float,4,4> T_base_world;
     T_base_world << 
