@@ -63,4 +63,5 @@ main.log
 main.out
 main.pdf
 
-
+# misc
+testApp.*

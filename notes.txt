@@ -1,47 +1,8 @@
-convert xyz to cloudcompare compatible format
-
-imu, laser times. check.
-
-y, -y ambiguity. check.
-
-pose25 -> T_imu_world logic. check.
-
-packets are dropped. current logic won't work. TODO.
-
-on a coarse scale, things look ok. but for rim stretch e.g., there are points
-under the ground, making it seem like z-is incorrect.
-
-compare with geo-referenced
-
-the axes of imu might be flipped.
-
-extracted poses in mat
-
-times from
-camera Camera_156580_Timestamp
-packet Velodyne_Packet_Timestamp
-poses PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed
-
-they have upto 0.5 sec difference in first timestamps
-
-here's a bug: in velodyne rip, there are two time fields. first is the integer
-part, second is the fractional part after the decimal. i don't know if this was
-intentional.
-
-putting together times seems right. one bug was the wrapping to [0,2pi], this
-was causing jumps. now it still seems like the yaw is off, not causing point
-clouds to align well.
+other logic from ref: don't include points too close, speed of vehicle etc.
 
 --------------------------------------------------
 
 mat:
-
-relFilePath
-
-atan2(dy,dx) from the fixed xy corresponds approx to the ins heading. heading is
-smooth. -pi offset may be there.
-
-what is the unit of fixed xy? fixedXy*1e5 is in the range of meters?
 
 brigthened image by contrast. how it works is a mystery to me.
 

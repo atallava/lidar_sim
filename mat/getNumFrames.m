@@ -1,5 +1,12 @@
 function numFrames = getNumFrames(dirName)
-    % number of images in folder
+    %GETNUMFRAMES Get number of images in folder.
+    %
+    % numFrames = GETNUMFRAMES(dirName)
+    %
+    % dirName   -
+    %
+    % numFrames -
+
     dirRes = dir(dirName);
 
     % hack. assuming end-1 is an image

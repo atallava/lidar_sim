@@ -51,23 +51,6 @@ namespace lidar_sim {
 	return header_ss.str();
     }
 
-    int parseTransfsFileLine(std::string line, Eigen::Matrix<float,4,4>& T_imu) {
-	std::istringstream iss(line);
-	int packet_id;
-	iss >> packet_id;
-	
-	// populate column-wise
-	for (size_t col = 0; col < 4; col++) 
-	    for (size_t row = 0; row < 4; row++)
-		iss >> T_imu(row,col);
-
-	// TODO: delete. hacks for unit errors
-	T_imu(0,3) = 100*T_imu(0,3);
-	T_imu(1,3) = 100*T_imu(1,3);
-	
-	return packet_id;
-    }
-
     void subsampleFile(std::string rel_path_file, std::string rel_path_file_subsampled, int subsample_factor)
     {
 	// open input file
@@ -80,6 +63,7 @@ namespace lidar_sim {
 
 	std::cout << "Subsampling factor: " << subsample_factor << std::endl;
 
+	// subsample
 	std::string current_line;
 	int count = 0;
 	while(std::getline(file,current_line))
@@ -94,4 +78,28 @@ namespace lidar_sim {
 	file.close();
 	subsampled_file.close();
     }    
+
+    void prependPCDHeaderToFile(std::string rel_path_input, std::string rel_path_output)
+    {
+	std::ifstream input_file(rel_path_input);
+	std::cout << "Reading from: " << rel_path_input << std::endl;
+
+	std::ofstream output_file(rel_path_output);
+	std::cout << "Writing to: " << rel_path_output << std::endl;
+
+	int num_pts = getNumLinesInFile(rel_path_input); 
+	std::string pcd_header = genPCDHeader(num_pts);
+	
+	// write header
+	output_file << pcd_header;
+
+	// write rest of input to output
+	std::string current_line;
+	while(std::getline(input_file,current_line))
+	    output_file << current_line << std::endl;
+
+	// close files
+	input_file.close();
+	output_file.close();
+    }
 }

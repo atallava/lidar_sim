@@ -27,23 +27,13 @@ int main() {
 	section_ids.push_back(i);
     
     // transforms
-    Eigen::Matrix<float,4,4> T_imu_velodyne;
-    T_imu_velodyne << 
+    // cetin's notation: imu_to_velodyne, my notation: velodyne_imu. same transform!
+    Eigen::Matrix<float,4,4> T_velodyne_imu;
+    T_velodyne_imu << 
 	0.0086996955871186, 0.9999621097991535, -0.0003070223393724, -0.0090499101707984,
 	-0.9999567242503523, 0.0087006599957041, 0.0032936517945554, -0.1016216668883396,
 	0.0032961982944134, 0.0002783552847679, 0.9999945287826025, 0.5000000000000000,
 	0.0000000000000000, 0.0000000000000000, 0.0000000000000000, 1.0000000000000000;
-    
-    Eigen::Matrix<float,4,4> T_velodyne_imu;
-    T_velodyne_imu = T_imu_velodyne.inverse();
-    T_velodyne_imu = T_imu_velodyne;
-
-    Eigen::Matrix<float,4,4> T_base_world;
-    T_base_world << 
-    	1, 0, 0, 0,
-    	0, 1, 0, 0,
-    	0, 0, 1, 0,
-    	0, 0, 0, 1;
 
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
@@ -72,34 +62,35 @@ int main() {
 	std::string current_line;
 	while(std::getline(section_file, current_line))
 	{
-	    double data;
-	    double packet_timestamp_int;
-	    double packet_timestamp_frac;
+	    double packet_timestamp_sec;
+	    double packet_timestamp_nanosec;
 	    double packet_timestamp;
 	    int packet_id;
 	    std::istringstream iss(current_line);
-	    iss >> packet_id; 
-	    iss >> packet_timestamp_int; // integer part
-	    iss >> packet_timestamp_frac; // fractional timestamp
-	    // quirk in data
-	    // TODO: use the packet timestamp file directly
-	    packet_timestamp = packet_timestamp_int + packet_timestamp_frac*1e-9;
 
+	    // packet id
+	    iss >> packet_id; 
+
+	    // packet timestamp
+	    iss >> packet_timestamp_sec;
+	    iss >> packet_timestamp_nanosec;
+	    packet_timestamp = packet_timestamp_sec + packet_timestamp_nanosec*1e-9;
+
+	    // pt in laser frame
 	    Eigen::Matrix<float,4,1> pt_laser;
-	    iss >> pt_laser[0]; // sensor frame x
-	    iss >> pt_laser[1]; // sensor frame y
-	    iss >> pt_laser[2]; // sensor frame z
+	    iss >> pt_laser[0];
+	    iss >> pt_laser[1];
+	    iss >> pt_laser[2];
 	    pt_laser[3] = 1;
 
+	    // pt in imu frame
 	    Eigen::Matrix<float,4,1> pt_imu;
 	    pt_imu = T_velodyne_imu*pt_laser;
 	    
-	    Eigen::Matrix<float,4,4> T_imu_base = imu_pose_server.getTransfAtTime(packet_timestamp);
-	    Eigen::Matrix<float,4,1> pt_base;
-	    pt_base = T_imu_base*pt_imu;
-	    
+	    // pt in world frame
+	    Eigen::Matrix<float,4,4> T_imu_world = imu_pose_server.getTransfAtTime(packet_timestamp);
 	    Eigen::Matrix<float,4,1> pt_world;
-	    pt_world = T_base_world*pt_base;
+	    pt_world = T_imu_world*pt_imu;
 
 	    // write to file
 	    std::string output_line;

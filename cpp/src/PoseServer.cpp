@@ -19,7 +19,6 @@ PoseServer::PoseServer(std::string rel_path_pose_log) :
     m_loadPoseLog(m_path_pose_log);
 }
 
-// this version uses fixed
 void PoseServer::m_loadPoseLog(std::string path_pose_log)
 {
     std::ifstream pose_log_file(path_pose_log);
@@ -42,7 +41,7 @@ void PoseServer::m_loadPoseLog(std::string path_pose_log)
 	    iss >> data; 
 
 	std::vector<double> pose;
-	// xyz
+	// yxz
 	for (size_t i = 0; i < 3; ++i)
 	{
 	    iss >> data;
@@ -75,8 +74,6 @@ void PoseServer::m_loadPoseLog(std::string path_pose_log)
 
 	m_pose_log.push_back(pose);		      
 
-	// if (m_num_logs > 10)
-	//     break;
     }
     pose_log_file.close();
     std::cout << "Loaded imu poses from: " << path_pose_log << std::endl;
@@ -122,9 +119,7 @@ std::vector<double> PoseServer::getPoseAtTime(double t)
 
     size_t index_1 = index_2-1;
 
-    // todo: remove hack
-    return m_pose_log[index_1];
-
+    // linear interpolation
     std::vector<double> pose(6, 0.0);
     double alpha = (t-m_t_log[index_1])/(m_t_log[index_2]-m_t_log[index_1]);
     for (size_t i = 0; i < 6; i++)
@@ -136,32 +131,20 @@ std::vector<double> PoseServer::getPoseAtTime(double t)
 Eigen::Matrix<float,4,4> PoseServer::getTransfAtTime(double t)
 {
     std::vector<double> pose = getPoseAtTime(t);
-    double x = pose[0];
-    double y = pose[1];
+    double y = pose[0];
+    double x = pose[1];
     double z = pose[2];
     double roll = pose[3];
     double pitch = pose[4];
     double yaw = pose[5];
 
-    // TODO
-    // cetin's code flips x and y
-    x = pose[1]; y = pose[0];
-
     Eigen::Matrix<float,4,4> T_pose;
 
-    // TODO: what is the correct convention? 
-
-    // this is my assumption
-    // Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitX());
-    // Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitY());
-    // Eigen::AngleAxisd yawAngle(yaw, Eigen::Vector3d::UnitZ());
-
-    // this is from cetin
+    // convention from cetin
     Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitY());
     Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitX());
     Eigen::AngleAxisd yawAngle(-yaw, Eigen::Vector3d::UnitZ());
 
-    // TODO: what is the correct order?
     Eigen::Matrix3d rotationMatrix = (yawAngle*pitchAngle*rollAngle).toRotationMatrix();
 
     for (size_t i = 0; i < 3; ++i)
@@ -169,30 +152,6 @@ Eigen::Matrix<float,4,4> PoseServer::getTransfAtTime(double t)
     	    T_pose(i,j) = rotationMatrix(i,j);
     T_pose(0,3) = x; T_pose(1,3) = y; T_pose(2,3) = z;
     T_pose(3,0) = 0; T_pose(3,1) = 0; T_pose(3,2) = 0; T_pose(3,3) = 1;
-
-    // Eigen::Matrix3d r = (Eigen::AngleAxisd(-yaw, Eigen::Vector3d::UnitZ())
-    // 			 * Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitX())
-    // 			 * Eigen::AngleAxisd(roll, Eigen::Vector3d::UnitY())).toRotationMatrix();
-    // Eigen::Affine3d cetin_transform;
-    // cetin_transform.setIdentity();
-    // cetin_transform.prerotate(r);
-    // cetin_transform.pretranslate(Eigen::Vector3d(x, y, z));
-    
-    // std::cout << "my tpose" << std::endl;
-    // for (size_t i = 0; i < 4; ++i)
-    // {
-    // 	for (size_t j = 0; j < 4; ++j)
-    // 	    std::cout << T_pose(i,j) << " ";
-    // 	std::cout << std::endl;
-    // }
-	
-    // std::cout << "cetin transform" << std::endl;
-    // for (size_t i = 0; i < 4; ++i)
-    // {
-    // 	for (size_t j = 0; j < 4; ++j)
-    // 	    std::cout << cetin_transform(i,j) << " ";
-    // 	std::cout << std::endl;
-    // }
 
     return T_pose;
 }
