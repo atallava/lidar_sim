@@ -22,6 +22,9 @@ int main() {
     std::string rel_path_section_world_frame_pre = "../data/taylorJune2014/sections/world_frame/section_";
     std::string rel_path_section_world_frame_post = "_world_frame_subsampled.xyz";
 
+    std::string rel_path_section_pts_world_frame_pre = "../data/taylorJune2014/sections/world_frame/section_pts_";
+    std::string rel_path_section_pts_world_frame_post = "_world_frame_subsampled.xyz";
+    
     std::vector<int> section_ids;
     for (size_t i = 1; i <= 14; ++i) 
 	section_ids.push_back(i);
@@ -57,6 +60,14 @@ int main() {
 	std::string rel_path_section_world_frame = ss.str();
 	std::ofstream section_world_frame_file(rel_path_section_world_frame);
 	std::cout << "Writing to: " << rel_path_section_world_frame << std::endl;
+
+	// open section detail world frame file
+	ss.str("");
+	ss.clear();
+	ss << rel_path_section_pts_world_frame_pre << std::setw(2) << std::setfill('0') << section_id << rel_path_section_pts_world_frame_post;
+	std::string rel_path_section_pts_world_frame = ss.str();
+	std::ofstream section_pts_world_frame_file(rel_path_section_pts_world_frame);
+	std::cout << "Writing to: " << rel_path_section_pts_world_frame << std::endl;
 
 	// loop over section points
 	std::string current_line;
@@ -96,9 +107,17 @@ int main() {
 	    std::string output_line;
 	    ss.str("");
 	    ss.clear();
+	    ss << packet_id << " ";
+	    ss << std::setprecision(20) << packet_timestamp_sec << " " << std::setprecision(20) << packet_timestamp_nanosec << " ";
 	    ss << pt_world[0] << " " << pt_world[1] << " " << pt_world[2] << std::endl;
 	    output_line = ss.str();
 	    section_world_frame_file << output_line;
+
+	    // write to pts-only file
+	    ss.str("");
+	    ss.clear();
+	    ss << pt_world[0] << " " << pt_world[1] << " " << pt_world[2] << std::endl;
+	    section_pts_world_frame_file << ss.str();
 	    
 	    // debug
 	    // std::cout << "laser point: " << pt_laser << std::endl;
@@ -112,6 +131,7 @@ int main() {
 	// close files
 	section_file.close();
 	section_world_frame_file.close();
+	section_pts_world_frame_file.close();
     }
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

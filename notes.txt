@@ -1,12 +1,22 @@
 other logic from ref: don't include points too close, speed of vehicle etc.
 
+everywhere in my code, the pose convention is : yzxrpy, and the yaw has to be -
+for using in a transformation
+
 --------------------------------------------------
 
 mat:
 
 brigthened image by contrast. how it works is a mystery to me.
 
-scatter3 can handle about 1e5 points smoothly
+scatter3 can handle about 1e5 points smoothly. keep matlab vegetation points at max
+
+fix pose extraction
+
+there is a simple way of vizing the segments from each pcd, fill in the holes of
+one pcd with the segmentation from another
+
+manual segmentation can use coarse segmentation output from matlab.
 
 --------------------------------------------------
 

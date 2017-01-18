@@ -1,5 +1,17 @@
-function segments = framePlayer(frameRelPathsPre,frameRelPathsPost,frameIds,getFrameTimeFromId,...
+function segments = framePlayer(frameRelPathsPre,frameRelPathsPost,frameIds,frameTimeFn,...
     xyLog,xyTimeLog)
+%FRAMEPLAYER 
+% 
+% segments = FRAMEPLAYER(frameRelPathsPre,frameRelPathsPost,frameIds,frameTimeFn,xyLog,xyTimeLog)
+% 
+% frameRelPathsPre  - 
+% frameRelPathsPost - 
+% frameIds          - 
+% frameTimeFn       - 
+% xyLog             - 
+% xyTimeLog         - 
+% 
+% segments          - 
 
 %% set up figure
 
@@ -63,6 +75,10 @@ while true
             continue;
         case 1
             % play
+            if frameCount > length(frameIds)
+                fprintf('Reached  end of frames. Exiting.\n');
+                break;
+            end
             dispFrame(frameCount);
             frameCount = frameCount+1;
             pause(tPause);
@@ -167,7 +183,7 @@ end
 %         title(num2str(frameId));
 
         % camera + path 
-        frameTime = getFrameTimeFromId(frameId);
+        frameTime = frameTimeFn(frameId);
         xyId = indexOfNearestTime(frameTime,xyTimeLog);
         
         figure(hfig);

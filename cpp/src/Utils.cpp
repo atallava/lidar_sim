@@ -102,4 +102,17 @@ namespace lidar_sim {
 	input_file.close();
 	output_file.close();
     }
+
+    std::string genDetailLine(double packet_timestamp, std::vector<double> imu_pose, Eigen::Matrix<float,4,1> pt)
+    {
+	std::ostringstream ss;
+	ss << packet_timestamp << " ";
+	for (size_t i = 0; i < 6; ++i)
+	    ss << imu_pose[i] << " ";
+	for (size_t i = 0; i < 3; ++i)
+	    ss << pt[i] << " ";
+	ss << std::endl;
+
+	return ss.str();
+    }
 }
