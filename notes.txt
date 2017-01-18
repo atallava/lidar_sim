@@ -1,7 +1,3 @@
-samia
-rani
-
-
 other logic from ref: don't include points too close, speed of vehicle etc.
 
 everywhere in my code, the pose convention is : yzxrpy, and the yaw has to be -
