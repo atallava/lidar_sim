@@ -49,6 +49,7 @@ lib/
 *.jpeg
 *.bmp
 *.fig
+*.pdf
 
 # compressed files
 *.zip
