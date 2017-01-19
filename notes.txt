@@ -18,7 +18,6 @@ one pcd with the segmentation from another
 
 manual segmentation can use coarse segmentation output from matlab.
 
-don't plot clusters with less than some number of points
 
 
 --------------------------------------------------
