@@ -3,6 +3,8 @@ other logic from ref: don't include points too close, speed of vehicle etc.
 everywhere in my code, the pose convention is : yzxrpy, and the yaw has to be -
 for using in a transformation
 
+still need to get permeabilities. need cpp code to make that good.
+
 --------------------------------------------------
 
 mat:
@@ -18,7 +20,13 @@ one pcd with the segmentation from another
 
 manual segmentation can use coarse segmentation output from matlab.
 
+params:
+min mahalanbois dist to consider intersection.
+the segment length of the ray plotting
+the levels used for drawing ellipses
+min and max range of velodyne
 
+yet again, keep vecs rows or cols in matlab? arggh.
 
 --------------------------------------------------
 
