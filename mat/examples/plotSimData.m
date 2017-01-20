@@ -30,15 +30,10 @@ function hfig = plotSimData(inputStruct)
         plotEllipsoids = true;
         ellipsoidData = inputStruct.ellipsoidData;
         
-        if isfield(ellipsoidData,'meanCell')
-            meanCell = ellipsoidData.meanCell;
+        if isfield(ellipsoidData,'ellipsoidModels')
+            ellipsoidModels = ellipsoidData.ellipsoidModels;
         else
-            error('meanCell not a field in ellipsoidData.');
-        end
-        if isfield(ellipsoidData,'covMatCell')
-            covMatCell = ellipsoidData.covMatCell;
-        else
-            error('covMatCell not a field in ellipsoidData.');
+            error('ellipsoidModels not a field in ellipsoidData.');
         end
         if isfield(ellipsoidData,'intersectionFlag')
             useIntersectionFlag = true;
@@ -69,7 +64,8 @@ function hfig = plotSimData(inputStruct)
                     continue
                 end
             end
-            pts = genPtsRay(rayOrigin,rayDirns(i,:),10);
+            % todo: this length can be the max laser length
+            pts = genPtsRay(rayOrigin,rayDirns(i,:),50);
             plot3(pts(:,1),pts(:,2),pts(:,3),'g--');
             hold on;
         end
@@ -78,7 +74,7 @@ function hfig = plotSimData(inputStruct)
     
     % plot ellipsoids
     if plotEllipsoids
-        nEllipses = length(meanCell);
+        nEllipses = length(ellipsoidModels);
         if useIntersectionFlag
             intersectedEllipses = sum(intersectionFlag,1);
         end
@@ -88,8 +84,8 @@ function hfig = plotSimData(inputStruct)
                     continue;
                 end
             end
-            thisMean = meanCell{i};
-            thisCovMat = covMatCell{i};
+            thisMean = ellipsoidModels(i).mu;
+            thisCovMat = ellipsoidModels(i).covMat;
             
             [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
             surf(xEll,yEll,zEll,'facecolor','r','facealpha',0.2,'meshstyle','none');

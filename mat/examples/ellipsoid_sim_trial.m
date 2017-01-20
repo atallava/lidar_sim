@@ -3,7 +3,7 @@ relPathPts = 'rim_stretch_veg_train';
 load(relPathPts,'pts');
 
 relPathModels = 'ellipsoid_models';
-load(relPathModels,'meanCell','covMatCell');
+load(relPathModels,'ellipsoidModels');
 
 relPathScanningPattern = 'scanning_pattern';
 load(relPathScanningPattern,'alphaVec','thetaVec');
@@ -30,10 +30,10 @@ rayDirns = rotateDirns(rayDirns,RLaserWorld);
 
 rayOrigin = [x y z]';
 
-[intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,meanCell,covMatCell);
+[intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels);
 
 %% simulate
-[simPts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,meanCell,covMatCell);
+[simPts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,ellipsoidModels);
 
 %% viz
 rayData.rayOrigin = rayOrigin;
@@ -41,8 +41,7 @@ rayData.rayDirns = rayDirns;
 rayData.hitFlag = hitFlag;
 plotStruct.rayData = rayData;
 
-ellipsoidData.meanCell = meanCell;
-ellipsoidData.covMatCell = covMatCell;
+ellipsoidData.ellipsoidModels = ellipsoidModels;
 plotStruct.ellipsoidData = ellipsoidData;
 
 plotStruct.simPts = simPts;
@@ -60,8 +59,7 @@ rayData.rayOrigin = rayOrigin;
 rayData.rayDirns = rayDirns(randRayIds,:);
 plotStruct.rayData = rayData;
 
-ellipsoidData.meanCell = meanCell;
-ellipsoidData.covMatCell = covMatCell;
+ellipsoidData.ellipsoidModels = ellipsoidModels;
 ellipsoidData.intersectionFlag = intersectionFlag(randRayIds,:);
 plotStruct.ellipsoidData = ellipsoidData;
 

@@ -1,9 +1,9 @@
-function [flag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,meanCell,covMatCell)
+function [flag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels)
     % todo: can this be vectorized?
     thresh = 3.5;
     maxDistAlongRay = 70;
     minDistAlongRay = 0;
-    nEllipsoids = length(meanCell);
+    nEllipsoids = length(ellipsoidModels);
     nRays = size(rayDirns,1);
     mahalonbisDistToMean = zeros(nRays,nEllipsoids);
     distAlongRay = zeros(nRays,nEllipsoids);
@@ -12,9 +12,9 @@ function [flag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,mea
         rayDirn = rayDirns(j,:);
         rayDirn = flipVecToColumn(rayDirn);
         for i = 1:nEllipsoids
-            mu = meanCell{i};
+            mu = ellipsoidModels(i).mu;
             mu = flipVecToColumn(mu);
-            covMat = covMatCell{i};
+            covMat = ellipsoidModels(i).covMat;
             tNum = rayDirn'*(covMat\(mu-rayOrigin));
             tDenom = rayDirn'*(covMat\rayDirn);
             distAlongRay(j,i) = tNum/tDenom;

@@ -2,7 +2,7 @@ relPathPts = 'rim_stretch_veg_train';
 load(relPathPts,'pts');
 
 %% 
-threshold = 1.154699;
+threshold = 1.153;
 clusterIds = clusterdata(pts,threshold);
 
 % rim stretch veg train, for coarse segmentation, threshold = 1.154699
@@ -12,13 +12,15 @@ clusterIds = clusterdata(pts,threshold);
 %% viz
 hfig = vizClustering(pts,clusterIds);
 
-%%
+%% fit ellipsoids
 % n pts in cluster, distribution
 nPtsPerCluster = getNPtsPerCluster(clusterIds);
 
 % filter clusters 
 minPtsPerCluster = 20;
 impClusterIds = find(nPtsPerCluster >= minPtsPerCluster);
+
+ellispoidModels = struct('mu',{},'covMat',{},'perm',{});
 
 % for those clusters only, get mean and cov
 nImpClusters = length(impClusterIds);
@@ -32,6 +34,14 @@ for i = 1:nImpClusters
     
     meanCell{i} = thisMean;
     covMatCell{i} = thisCovMat;
+
+    ellipsoidModels(i).mu = thisMean;
+    ellipsoidModels(i).covMat = thisCovMat;
+end
+
+%% permeability
+for i = 1:length(ellipsoidModels)
+    ellipsoidModels(i).perm = rand;
 end
 
 %% plot points

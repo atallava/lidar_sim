@@ -1,6 +1,6 @@
 function [xEll,yEll,zEll] = genSurfXyzEllipse(covMat,meanPts,level)
 if nargin < 3
-    level = 3;
+    level = 3^2; % three sigma
 end
 
 R = chol(inv(level*covMat));

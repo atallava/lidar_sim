@@ -26,7 +26,13 @@ the segment length of the ray plotting
 the levels used for drawing ellipses
 min and max range of velodyne
 
+plotting:
+length of the ray segment
+level of the ellipsoid
+
 yet again, keep vecs rows or cols in matlab? arggh.
+
+should probably make ellipsoid models struct. 
 
 --------------------------------------------------
 
