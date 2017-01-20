@@ -1,7 +1,8 @@
 function [flag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,meanCell,covMatCell)
     % todo: can this be vectorized?
     thresh = 3.5;
-    maxDist = 10;
+    maxDistAlongRay = 70;
+    minDistAlongRay = 0;
     nEllipsoids = length(meanCell);
     nRays = size(rayDirns,1);
     mahalonbisDistToMean = zeros(nRays,nEllipsoids);
@@ -21,5 +22,5 @@ function [flag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,mea
             mahalonbisDistToMean(j,i) = sqrt((q-mu)'*(covMat\(q-mu)));
         end
     end
-    flag = (mahalonbisDistToMean <= thresh) & (distAlongRay < maxDist);
+    flag = (mahalonbisDistToMean <= thresh) & (distAlongRay < maxDistAlongRay) & (distAlongRay > minDistAlongRay);
 end

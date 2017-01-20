@@ -36,5 +36,45 @@ rayOrigin = [x y z]';
 [simPts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,meanCell,covMatCell);
 
 %% viz
-hfig = plotEllipsoidSimPts(rayOrigin,rayDirns,meanCell,covMatCell,simPts,hitFlag);
+rayData.rayOrigin = rayOrigin;
+rayData.rayDirns = rayDirns;
+rayData.hitFlag = hitFlag;
+plotStruct.rayData = rayData;
+
+ellipsoidData.meanCell = meanCell;
+ellipsoidData.covMatCell = covMatCell;
+plotStruct.ellipsoidData = ellipsoidData;
+
+plotStruct.simPts = simPts;
+
+hfig = plotSimData(plotStruct);
+
+%% debug 
+% pick some hit rays at random
+hitRayIds = find(hitFlag);
+randRayIds = randsample(hitRayIds,1);
+
+% viz the ellipsoids they intersects, and the sim points
+clear rayData ellipsoidData
+rayData.rayOrigin = rayOrigin;
+rayData.rayDirns = rayDirns(randRayIds,:);
+plotStruct.rayData = rayData;
+
+ellipsoidData.meanCell = meanCell;
+ellipsoidData.covMatCell = covMatCell;
+ellipsoidData.intersectionFlag = intersectionFlag(randRayIds,:);
+plotStruct.ellipsoidData = ellipsoidData;
+
+plotStruct.simPts = simPts(randRayIds,:);
+
+hfig = plotSimData(plotStruct);
+
+
+
+
+
+
+
+
+
 

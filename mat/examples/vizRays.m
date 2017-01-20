@@ -1,4 +1,13 @@
 function hfig = vizRays(origin,rayDirns)
+    %VIZRAYS
+    %
+    % hfig = VIZRAYS(origin,rayDirns)
+    %
+    % origin   -
+    % rayDirns -
+    %
+    % hfig     -
+    
     nRays = size(rayDirns,1);
     for i = 1:nRays
         pts = genPtsRay(origin,rayDirns(i,:),10);
@@ -6,6 +15,7 @@ function hfig = vizRays(origin,rayDirns)
         hold on;
         axis equal;
     end
+    plot3(origin(1),origin(2),origin(3),'gx');
     xlabel('x (m)');
     ylabel('y (m)');
     
