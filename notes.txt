@@ -32,7 +32,7 @@ level of the ellipsoid
 
 yet again, keep vecs rows or cols in matlab? arggh.
 
-should probably make ellipsoid models struct. 
+debug again pose transformation of rays from sensor frame to world frame
 
 --------------------------------------------------
 

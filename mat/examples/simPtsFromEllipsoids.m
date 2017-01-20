@@ -1,5 +1,6 @@
 function [pts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,ellipsoidModels)
     [nRays,nEllipsoids] = size(intersectionFlag);
+    permVec = [ellipsoidModels.perm];
     pts = zeros(nRays,3);
     hitFlag = zeros(1,nRays);
     for i = 1:nRays
@@ -10,15 +11,22 @@ function [pts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,elli
             hitFlag(i) = 1;
         end
         
-        % intersecting id
-        
-        % minimum dist
+        % sorted intersecting id
         intersectingIds = find(intersectionFlag(i,:));
-        [~,minId] = min(distAlongRay(i,intersectingIds));
-        hitEllipsoidId = intersectingIds(minId);
+        distAlongRayIntersections = distAlongRay(i,intersectingIds);
+        [~,sortedIds] = sort(distAlongRayIntersections);
+        sortedIntersectingIds = intersectingIds(sortedIds);
+        
+        % pick minimum
+%         hitEllipsoidId = sortedIntersectingIds(1);
         
         % use permeabilities
-        
+        [hitEllipsoidId,hitBool] = sampleHitId(permVec(sortedIntersectingIds), ...
+            sortedIntersectingIds);
+        if ~hitBool
+            hitFlag(i) = 0;
+            continue;
+        end
         
         % draw sample
         mu = ellipsoidModels(hitEllipsoidId).mu;
