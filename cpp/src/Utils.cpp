@@ -79,6 +79,47 @@ namespace lidar_sim {
 	subsampled_file.close();
     }    
 
+    void sectionOfSection(std::string rel_path_input, std::string rel_path_output, double start_time, double end_time)
+    {
+	// open input file
+	std::ifstream input_file(rel_path_input);
+	std::cout << "Reading from: " << rel_path_input << std::endl;
+
+	std::ofstream output_file(rel_path_output);
+	std::cout << "Writing to: " << rel_path_output << std::endl;
+
+	std::string current_line;
+	while(std::getline(input_file,current_line))
+	{
+	    double packet_timestamp_sec;
+	    double packet_timestamp_nanosec;
+	    double packet_timestamp;
+	    int packet_id;
+	    std::istringstream iss(current_line);
+
+	    // packet id
+	    iss >> packet_id; 
+
+	    // packet timestamp
+	    iss >> packet_timestamp_sec;
+	    iss >> packet_timestamp_nanosec;
+	    packet_timestamp = packet_timestamp_sec + packet_timestamp_nanosec*1e-9;
+
+	    if ((packet_timestamp > start_time) && (packet_timestamp < end_time))
+	    {
+		output_file << current_line;
+		output_file << std::endl;
+	    }
+
+	    if (packet_timestamp > end_time)
+		break;
+	}
+
+	// close files
+	input_file.close();
+	output_file.close();
+    }
+
     void prependPCDHeaderToFile(std::string rel_path_input, std::string rel_path_output)
     {
 	std::ifstream input_file(rel_path_input);

@@ -43,6 +43,7 @@ add_library(lidar_sim SHARED
   src/Test.cpp
   src/Utils.cpp
   src/PoseServer.cpp
+  src/FrameTimeServer.cpp
   )
 
 # Add files here to make executables out of them
@@ -72,3 +73,7 @@ target_link_libraries(extract_pts_from_georef lidar_sim ${LIDAR_SIM_LIBRARIES})
 
 add_executable(extract_packets_from_rip src/extract_packets_from_rip.cpp)
 target_link_libraries(extract_packets_from_rip lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(extract_timed_sections_of_sections src/extract_timed_sections_of_sections.cpp)
+target_link_libraries(extract_timed_sections_of_sections lidar_sim ${LIDAR_SIM_LIBRARIES})
+
