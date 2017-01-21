@@ -8,7 +8,7 @@ function id = indexOfNearestTime(t,tLog)
     %
     % id   - Index in tLog.
     
-    condn = (t >= tLog(1)) && (t <= tLog(end));
+    condn = (t >= tLog(1)) & (t <= tLog(end));
     msg = sprintf('%s: t not in tLog limits.\n',mfilename);
     assert(condn,msg);
     

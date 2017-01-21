@@ -12,10 +12,8 @@ function [pts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,elli
         end
         
         % sorted intersecting id
-        intersectingIds = find(intersectionFlag(i,:));
-        distAlongRayIntersections = distAlongRay(i,intersectingIds);
-        [~,sortedIds] = sort(distAlongRayIntersections);
-        sortedIntersectingIds = intersectingIds(sortedIds);
+        [sortedIntersectingIds,sortedDistAlongRayIntersections] = ...
+            sortIntersectionFlag(intersectionFlag(i,:),distAlongRay(i,:));
         
         % pick minimum
 %         hitEllipsoidId = sortedIntersectingIds(1);

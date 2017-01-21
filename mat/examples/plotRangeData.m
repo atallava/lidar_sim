@@ -1,4 +1,4 @@
-function hfig = plotSimData(inputStruct)
+function hfig = plotRangeData(inputStruct)
     
     %% unpack 
     if isfield(inputStruct,'rayData')
@@ -45,11 +45,11 @@ function hfig = plotSimData(inputStruct)
         plotEllipsoids = false;
     end
     
-    if isfield(inputStruct,'simPts')
-        plotSimPts = true;
-        simPts = inputStruct.simPts;
+    if isfield(inputStruct,'pts')
+        plotPts = true;
+        pts = inputStruct.pts;
     else
-        plotSimPts = false;
+        plotPts = false;
     end
     
     %% plot
@@ -65,8 +65,8 @@ function hfig = plotSimData(inputStruct)
                 end
             end
             % todo: this length can be the max laser length
-            pts = genPtsRay(rayOrigin,rayDirns(i,:),50);
-            plot3(pts(:,1),pts(:,2),pts(:,3),'g--');
+            rayPts = genPtsRay(rayOrigin,rayDirns(i,:),50);
+            plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'g--');
             hold on;
         end
     end
@@ -94,13 +94,13 @@ function hfig = plotSimData(inputStruct)
     end
     
     % plot sim pts
-    if plotSimPts
+    if plotPts
         if useHitFlag
             ptPlotIds = logical(hitFlag);
         else
-            ptPlotIds = logical(1:size(simPts,1));
+            ptPlotIds = logical(1:size(pts,1));
         end
-        plot3(simPts(ptPlotIds,1),simPts(ptPlotIds,2),simPts(ptPlotIds,3),'go','markerfacecolor','g');
+        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'go','markerfacecolor','g');
     end
     
     %% bookkeeping

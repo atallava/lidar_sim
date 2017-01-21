@@ -1,4 +1,4 @@
-function rayDirns = genRayDirnsWorldFrame(inputMat)
+function rayDirns = genRayDirnsWorldFrame(inputMat,alphaVec,thetaVec)
     if size(inputMat,1) == 3
         RLaserWorld = inputMat;
     end

@@ -21,7 +21,7 @@ one pcd with the segmentation from another
 manual segmentation can use coarse segmentation output from matlab.
 
 params:
-min mahalanbois dist to consider intersection.
+min mahalanbois dist to consider intersection. 
 the segment length of the ray plotting
 the levels used for drawing ellipses
 min and max range of velodyne
@@ -33,6 +33,17 @@ level of the ellipsoid
 yet again, keep vecs rows or cols in matlab? arggh.
 
 debug again pose transformation of rays from sensor frame to world frame
+
+selection of scan ids to process. some smearing from nearest neighbour matches?
+
+how to clean up code: function help comments, put functions in folder, clean up
+scripts, put parameters in file and share them. at the end, you should have
+image of validation scan, vs image of simulated, and then list which parameters
+have to be optimized, so you can tune them
+
+names getting confusing 
+scanPts, for the driveby
+trainPts, makes sense
 
 --------------------------------------------------
 
