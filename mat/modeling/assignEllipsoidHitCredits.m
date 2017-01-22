@@ -1,18 +1,18 @@
-function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEllipsoids,sortedIntersectingIds)
+function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEllipsoids,sortedIntersectingIds,modelingParams)
     %ASSIGNELLIPSOIDHITCREDITS
     %
-    % [ellipsoidHitId,ellipsoidMissIds] = ASSIGNELLIPSOIDHITCREDITS(distsToEllipsoids,sortedIntersectingIds)
+    % [ellipsoidHitId,ellipsoidMissIds] = ASSIGNELLIPSOIDHITCREDITS(distsToEllipsoids,sortedIntersectingIds,modelingParams)
     %
     % distsToEllipsoids     - nIntersectingEllipsoids length vector.
     % Mahalanobis distances.
     % sortedIntersectingIds - nIntersectingEllipsoids length vector. Sorted
     % by distances along ray.
+    % modelingParams
     %
     % ellipsoidHitId        - scalar.
     % ellipsoidMissIds      - nMissEllipsoids length vector.
     
-    threshold = 3.5;
-    flag = distsToEllipsoids < threshold;
+    flag = distsToEllipsoids < modelingParams.maxDistForHit;
     
     if ~any(flag)
         if distsToEllipsoids(1) < distsToEllipsoids(end)

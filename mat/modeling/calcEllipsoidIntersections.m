@@ -1,19 +1,22 @@
-function [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels)
+function [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels,laserCalibParams,modelingParams)
     %CALCELLIPSOIDINTERSECTIONS
     %
-    % [flag,distAlongRay] = CALCELLIPSOIDINTERSECTIONS(rayOrigin,rayDirns,ellipsoidModels)
+    % [flag,distAlongRay] = CALCELLIPSOIDINTERSECTIONS(rayOrigin,rayDirns,ellipsoidModels,modelingParams)
     %
     % rayOrigin       - length 3 vector.
     % rayDirns        - [nRays,3] array.
     % ellipsoidModels - nEllipsoids length struct array.
+    % laserCalibParams - struct.
+    % modelingParams - struct.
     %
     % intersectionFlag - [nRays,nEllipsoids] array. Logical.
     % distAlongRay    - [nRays,nEllipsoids] array.
     
-    % todo: can this be vectorized?
-    thresh = 3.5;
-    maxDistAlongRay = 70;
-    minDistAlongRay = 0;
+    % TODO: can this be vectorized?
+    
+    maxDistAlongRay = laserCalibParams.intrinsics.minRange;
+    minDistAlongRay = laserCalibParams.intrinsics.maxRange;
+    
     nEllipsoids = length(ellipsoidModels);
     nRays = size(rayDirns,1);
     mahalonbisDistToMean = zeros(nRays,nEllipsoids);
@@ -33,5 +36,9 @@ function [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,
             mahalonbisDistToMean(j,i) = sqrt((q-mu)'*(covMat\(q-mu)));
         end
     end
-    intersectionFlag = (mahalonbisDistToMean <= thresh) & (distAlongRay < maxDistAlongRay) & (distAlongRay > minDistAlongRay);
+    
+    condn1 = mahalonbisDistToMean <= modelingParams.maxDistForHit;
+    condn2 = distAlongRay < maxDistAlongRay;
+    condn3 = distAlongRay > minDistAlongRay;
+    intersectionFlag = condn1 & condn2 & condn3;
 end

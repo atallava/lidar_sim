@@ -51,7 +51,7 @@ for scanId = scanIdsToProcess
     [rayDirn,observedDistance] = calcRayDirn(rayOrigin,thisPt);
         
     % intersection with ellipsoids
-    [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirn,ellipsoidModels);
+    [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirn,ellipsoidModels,laserCalibParams,modelingParams);
     
     if sum(intersectionFlag) == 0
         % no credits to assign
@@ -78,7 +78,7 @@ for scanId = scanIdsToProcess
     % maha distances to ellipsoids
     distToEllipsoids = mahalanobisDistsToEllipsoids(ellipsoidModels(sortedIntersectingIds),thisPt);
     % get credits
-    [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distToEllipsoids,sortedIntersectingIds);
+    [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distToEllipsoids,sortedIntersectingIds,modelingParams);
     
     % assign credits
     ellipsoidHitCount(ellipsoidHitId) = ellipsoidHitCount(ellipsoidHitId)+1;

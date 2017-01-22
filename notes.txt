@@ -23,11 +23,12 @@ one pcd with the segmentation from another
 
 manual segmentation, use coarse segmentation output from matlab.
 
+grep todos in code
+
 params:
 min mahalanbois dist to consider intersection. 
 the segment length of the ray plotting
 the levels used for drawing ellipses
-min and max range of velodyne
 
 selection of scan ids to process. some smearing from nearest neighbour matches?
 
