@@ -26,15 +26,13 @@ manual segmentation, use coarse segmentation output from matlab.
 grep todos in code
 
 params:
-min mahalanbois dist to consider intersection. 
-the segment length of the ray plotting
-the levels used for drawing ellipses
+viz:
+segment length in plot
+levels in plotting ellipse
 
 selection of scan ids to process. some smearing from nearest neighbour matches?
 
-how to clean up code: put parameters in file and share them. 
-
-need metric of comparison
+metric of comparing point clouds
 
 what is the default value when nothing is returned from laser?
 laser scanning pattern
