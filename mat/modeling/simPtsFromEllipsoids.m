@@ -1,4 +1,15 @@
 function [pts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,ellipsoidModels)
+    %SIMPTSFROMELLIPSOIDS
+    %
+    % [pts,hitFlag] = SIMPTSFROMELLIPSOIDS(intersectionFlag,distAlongRay,ellipsoidModels)
+    %
+    % intersectionFlag - [nRays,nEllipsoids] array. Logical.
+    % distAlongRay     - [nRays,nEllipsoids] array.
+    % ellipsoidModels  - length nEllipsoids struct array.
+    %
+    % pts              - [nRays,3] array.
+    % hitFlag          - length nRays array. Logical.
+
     [nRays,nEllipsoids] = size(intersectionFlag);
     permVec = [ellipsoidModels.perm];
     pts = zeros(nRays,3);

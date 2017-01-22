@@ -8,7 +8,7 @@ relPathPoseLog = 'pose_log';
 load(relPathPoseLog,'poseLog','tLog');
 poseTLog = tLog;
 
-%%
+%% get imu poses
 nScanPts = size(scanPts,1);
 imuPoses = zeros(nScanPts,6);
 for i = 1:nScanPts
@@ -18,6 +18,6 @@ for i = 1:nScanPts
     imuPoses(i,:) = imuPose;
 end
 
-%%
+%% write
 relPathOutput = [relPathDriveby '_poses'];
 save(relPathOutput,'imuPoses','scanPtsTLog');

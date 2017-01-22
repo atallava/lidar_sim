@@ -1,12 +1,11 @@
-% a = 2; b = 1; c = 1;
-% covMat = diag([a^2,b^2,c^2]);
- 
+% random pts + cov
 nRandPts = 20;
 randPts = 10*rand(nRandPts,3);
 meanRandPts = mean(randPts,1);
 randPts = bsxfun(@minus,randPts,meanRandPts);
 covMat = cov(randPts);
 
+%% plot
 [x,y,z] = genXyzEllipse(covMat);
 surf(x,y,z,'facecolor','b','facealpha',0.1,'meshstyle','none');
 hold on;

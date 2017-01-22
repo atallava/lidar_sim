@@ -1,4 +1,13 @@
 function hfig = vizClustering(pts,clusterIds)
+    %VIZCLUSTERING
+    %
+    % hfig = VIZCLUSTERING(pts,clusterIds)
+    %
+    % pts        - [nPts,3] array.
+    % clusterIds - length nPts array. Cluster identifier.
+    %
+    % hfig       - figure handle.
+    
     hfig = figure;
     hold on;
     axis equal;

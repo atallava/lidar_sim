@@ -9,16 +9,19 @@ still need to get permeabilities. need cpp code to make that good.
 
 mat:
 
+analyze taylor data:
+
 brigthened image by contrast. how it works is a mystery to me.
 
-scatter3 can handle about 1e5 points smoothly. keep matlab vegetation points at max
+scatter3 can handle about 1e5 points smoothly. keep matlab vegetation points at
+max
 
-fix pose extraction
+vane sim:
 
 there is a simple way of vizing the segments from each pcd, fill in the holes of
 one pcd with the segmentation from another
 
-manual segmentation can use coarse segmentation output from matlab.
+manual segmentation, use coarse segmentation output from matlab.
 
 params:
 min mahalanbois dist to consider intersection. 
@@ -26,20 +29,14 @@ the segment length of the ray plotting
 the levels used for drawing ellipses
 min and max range of velodyne
 
-plotting:
-length of the ray segment
-level of the ellipsoid
-
-yet again, keep vecs rows or cols in matlab? arggh.
-
-debug again pose transformation of rays from sensor frame to world frame
-
 selection of scan ids to process. some smearing from nearest neighbour matches?
 
-how to clean up code: function help comments, put functions in folder, clean up
-scripts, put parameters in file and share them. at the end, you should have
-image of validation scan, vs image of simulated, and then list which parameters
-have to be optimized, so you can tune them
+how to clean up code: put parameters in file and share them. 
+
+need metric of comparison
+
+what is the default value when nothing is returned from laser?
+laser scanning pattern
 
 names getting confusing 
 scanPts, for the driveby

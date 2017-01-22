@@ -1,3 +1,4 @@
+% load train pts
 relPathPts = 'rim_stretch_veg_train';
 load(relPathPts,'pts');
 
@@ -50,7 +51,6 @@ hfig = scatterPts(ptsToPlot);
 
 % hfig = vizClustering(pts(1:2:end,:),clusterIds(1:2:end));
 
-% subsample further for plotting?
 figure(hfig);
 hold on;
 nEllipses = length(meanCell);

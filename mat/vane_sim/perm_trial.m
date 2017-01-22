@@ -21,7 +21,7 @@ load(relPathTLaser,'TLaserImu');
 relPathScanningPattern = 'scanning_pattern';
 load(relPathScanningPattern,'alphaVec','thetaVec');
 
-%%
+%% scans to process
 nScanPts = size(scanPts,1);
 nEllipsoids = length(ellipsoidModels);
 % decide which scan pts to process

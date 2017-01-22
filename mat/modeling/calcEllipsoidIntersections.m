@@ -1,4 +1,15 @@
-function [flag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels)
+function [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels)
+    %CALCELLIPSOIDINTERSECTIONS
+    %
+    % [flag,distAlongRay] = CALCELLIPSOIDINTERSECTIONS(rayOrigin,rayDirns,ellipsoidModels)
+    %
+    % rayOrigin       - length 3 vector.
+    % rayDirns        - [nRays,3] array.
+    % ellipsoidModels - nEllipsoids length struct array.
+    %
+    % intersectionFlag - [nRays,nEllipsoids] array. Logical.
+    % distAlongRay    - [nRays,nEllipsoids] array.
+    
     % todo: can this be vectorized?
     thresh = 3.5;
     maxDistAlongRay = 70;
@@ -22,5 +33,5 @@ function [flag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ell
             mahalonbisDistToMean(j,i) = sqrt((q-mu)'*(covMat\(q-mu)));
         end
     end
-    flag = (mahalonbisDistToMean <= thresh) & (distAlongRay < maxDistAlongRay) & (distAlongRay > minDistAlongRay);
+    intersectionFlag = (mahalonbisDistToMean <= thresh) & (distAlongRay < maxDistAlongRay) & (distAlongRay > minDistAlongRay);
 end

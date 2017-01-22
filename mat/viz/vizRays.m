@@ -3,10 +3,10 @@ function hfig = vizRays(origin,rayDirns)
     %
     % hfig = VIZRAYS(origin,rayDirns)
     %
-    % origin   -
-    % rayDirns -
+    % origin   - length 3 vector.
+    % rayDirns - [nRays,3] array.
     %
-    % hfig     -
+    % hfig     - figure handle.
     
     nRays = size(rayDirns,1);
     for i = 1:nRays

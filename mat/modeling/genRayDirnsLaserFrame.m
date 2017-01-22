@@ -1,4 +1,14 @@
-function rayDirns = genRayDirnsLaserFrame(alphaVec,thetaVec)
+function rayDirns = genRayDirnsLaserFrame(laserCalibIntrinsics)
+    %GENRAYDIRNSLASERFRAME
+    %
+    % rayDirns = GENRAYDIRNSLASERFRAME(scanningPatternParams)
+    %
+    % laserCalibIntrinsics - struct. fields ('alphaVec','thetaVec').
+    %
+    % rayDirns              - [nRays,3] array. Unit vectors.
+    
+    alphaVec = laserCalibIntrinsics.alphaVec;
+    thetaVec = laserCalibIntrinsics.thetaVec;
     nAlpha = length(alphaVec);
     nTheta = length(thetaVec);
     nRays = nAlpha*nTheta;
