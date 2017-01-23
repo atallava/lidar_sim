@@ -30,6 +30,13 @@ viz:
 segment length in plot
 levels in plotting ellipse
 
+surf:
+resn in fit
+padding
+smoothness
+dist to projn for restrict fit
+
+for perm:
 selection of scan ids to process. some smearing from nearest neighbour matches?
 
 metric of comparing point clouds
@@ -40,6 +47,33 @@ laser scanning pattern
 names getting confusing 
 scanPts, for the driveby
 trainPts, makes sense
+
+triangulation requires some work of calculating isosurfaces, followed by
+marching cubes. if only doing surface calculation for ground, then probably
+enough to manually specify triangles.
+
+also shouldn't keep around triangles outside the projection of the ground.
+
+xnodes, ynodes (rev)
+zfit
+unroll
+project observations to 2d, and throw away far points
+for rest, perform delaunay
+save results
+
+calculate variance
+
+pose simulation
+
+poses simulation
+
+compare real and sim
+
+put both kinds of models together. actually it's not much. just simulate with
+first set of models, then second. for any ray with multiple returns, keep the
+closest range reading.
+
+done.
 
 --------------------------------------------------
 
