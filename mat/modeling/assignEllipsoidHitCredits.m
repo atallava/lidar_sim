@@ -1,4 +1,4 @@
-function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEllipsoids,sortedIntersectingIds,modelingParams)
+function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEllipsoids,sortedIntersectingIds,maxDistForHit)
     %ASSIGNELLIPSOIDHITCREDITS
     %
     % [ellipsoidHitId,ellipsoidMissIds] = ASSIGNELLIPSOIDHITCREDITS(distsToEllipsoids,sortedIntersectingIds,modelingParams)
@@ -12,7 +12,7 @@ function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEl
     % ellipsoidHitId        - scalar.
     % ellipsoidMissIds      - nMissEllipsoids length vector.
     
-    flag = distsToEllipsoids < modelingParams.maxDistForHit;
+    flag = distsToEllipsoids < maxDistForHit;
     
     if ~any(flag)
         if distsToEllipsoids(1) < distsToEllipsoids(end)

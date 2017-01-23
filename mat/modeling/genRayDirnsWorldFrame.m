@@ -3,8 +3,8 @@ function rayDirns = genRayDirnsWorldFrame(inputMat,laserCalibIntrinsics)
     %
     % rayDirns = GENRAYDIRNSWORLDFRAME(inputMat,scanningPatternParams)
     %
-    % inputMat              - [3,3] array. Rotation matrix.
-    % inputMat              - [4,4] array. Transformation matrix.
+    % inputMat              - [3,3] array. RLaserWorld.
+    % inputMat              - [4,4] array. TLaserWorld.
     % laserCalibIntrinsics - struct. fields ('alphaVec','thetaVec').
     %
     % rayDirns              - [nRays,3] array. Unit vectors.

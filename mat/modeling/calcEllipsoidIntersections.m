@@ -14,8 +14,8 @@ function [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,
     
     % TODO: can this be vectorized?
     
-    maxDistAlongRay = laserCalibParams.intrinsics.minRange;
-    minDistAlongRay = laserCalibParams.intrinsics.maxRange;
+    maxDistAlongRay = laserCalibParams.intrinsics.maxRange;
+    minDistAlongRay = laserCalibParams.intrinsics.minRange;
     
     nEllipsoids = length(ellipsoidModels);
     nRays = size(rayDirns,1);

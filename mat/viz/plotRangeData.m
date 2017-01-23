@@ -1,6 +1,8 @@
 function hfig = plotRangeData(inputStruct)
     
     %% unpack 
+    
+    %% rayData
     if isfield(inputStruct,'rayData')
         plotRays = true;
         rayData = inputStruct.rayData;
@@ -15,6 +17,11 @@ function hfig = plotRangeData(inputStruct)
         else
             error('rayDirns not a field in rayData.');
         end
+        if isfield(rayData,'rayLengthToPlot')
+            rayLengthToPlot = rayData.rayLengthToPlot;
+        else
+            rayLengthToPlot = 15;
+        end
         % note that the hit flag logic will be propagated to sim pts
         if isfield(rayData,'hitFlag')
             useHitFlag = true;
@@ -26,6 +33,7 @@ function hfig = plotRangeData(inputStruct)
         plotRays = false;
     end
     
+    %% ellipsoidData
     if isfield(inputStruct,'ellipsoidData')
         plotEllipsoids = true;
         ellipsoidData = inputStruct.ellipsoidData;
@@ -45,6 +53,31 @@ function hfig = plotRangeData(inputStruct)
         plotEllipsoids = false;
     end
     
+    %% triModelData
+    if isfield(inputStruct,'triModelData')
+        plotTri = true;
+        triModelData = inputStruct.triModelData;
+        
+        if isfield(triModelData,'tri')
+        else
+            error('tri not a field in triModelData');
+        end
+        if isfield(triModelData,'ptsFit')
+        else
+            error('ptsFit not a field in triModelData');
+        end
+        
+        if isfield(triModelData,'intersectionFlag')
+            useIntersectionFlag = true;
+            intersectionFlag = triModelData.intersectionFlag;
+        else
+            useIntersectionFlag = false;
+        end
+    else
+        plotTri = false;
+    end
+    
+    %% pts
     if isfield(inputStruct,'pts')
         plotPts = true;
         pts = inputStruct.pts;
@@ -55,7 +88,7 @@ function hfig = plotRangeData(inputStruct)
     %% plot
     hfig = figure(); 
     
-    % plot rays
+    %% rays
     if plotRays
         nRays = size(rayDirns,1);
         for i = 1:nRays
@@ -65,14 +98,14 @@ function hfig = plotRangeData(inputStruct)
                 end
             end
             % todo: this length can be the max laser length
-            rayPts = genPtsRay(rayOrigin,rayDirns(i,:),50);
+            rayPts = genPtsRay(rayOrigin,rayDirns(i,:),rayLengthToPlot);
             plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'g--');
             hold on;
         end
     end
     plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'gx');
     
-    % plot ellipsoids
+    %% ellipsoids
     if plotEllipsoids
         nEllipses = length(ellipsoidModels);
         if useIntersectionFlag
@@ -93,7 +126,20 @@ function hfig = plotRangeData(inputStruct)
         end
     end
     
-    % plot sim pts
+    %% triangles
+    if plotTri
+        if useIntersectionFlag
+            intersectedTri = sum(intersectionFlag,1);
+            triIdsToPlot = find(intersectedTri);
+        else
+            triIdsToPlot = 1:size(triModelData.tri,1);
+        end
+        
+        trimesh(triModelData.tri(triIdsToPlot,:), ...
+            triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3));
+    end
+    
+    %% pts
     if plotPts
         if useHitFlag
             ptPlotIds = logical(hitFlag);
@@ -103,7 +149,7 @@ function hfig = plotRangeData(inputStruct)
         scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'go','markerfacecolor','g');
     end
     
-    %% bookkeeping
+    %% extra
     axis equal;
     grid on;
     xlabel('x (m)');

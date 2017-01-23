@@ -1,6 +1,6 @@
 % load data
 relPathGroundModel = 'ground_model';
-load(relPathEllipsoids,'ellipsoidModels');
+load(relPathGroundModel,'groundTriModel');
 
 relPathPts = 'rim_stretch_ground_train';
 load(relPathPts,'pts');
@@ -20,7 +20,7 @@ load(relPathLaserCalibParams,'laserCalibParams');
 
 %% scans to process
 nScanPts = size(scanPts,1);
-nEllipsoids = length(ellipsoidModels);
+nTri = size(groundTriModel.tri,1);
 % decide which scan pts to process
 scanIdsMatchedToTrain = knnsearch(scanPts,trainPts);
 
@@ -29,12 +29,22 @@ scanIdsToProcess = scanIdsMatchedToTrain;
 scanIdsToProcess = flipVecToRow(scanIdsToProcess);
 
 %% process scan points
-ellipsoidHitCountPrior = ones(1,nEllipsoids);
-ellipsoidMissCountPrior = ones(1,nEllipsoids);
+nScanIdsToProcess = length(scanIdsToProcess);
+ptsToGroundTri = zeros(nScanIdsToProcess,3);
 
-ellipsoidHitCount = ellipsoidHitCountPrior;
-ellipsoidMissCount = ellipsoidMissCountPrior;
+[triVert1,triVert2,triVert3] = extractTriVerticesFromGroundModel(groundTriModel);
 
+[obsRange,predRange,residualRanges] = deal(zeros(nScanIdsToProcess,1));
+
+triHitCountPrior = ones(1,nTri);
+triMissCountPrior = ones(1,nTri);
+
+triHitCount = triHitCountPrior;
+triMissCount = triMissCountPrior;
+
+maxResidualForHit = 1;
+
+count = 0;
 clockLocal = tic();
 for scanId = scanIdsToProcess
     % get imu pose
@@ -43,58 +53,72 @@ for scanId = scanIdsToProcess
     imuPose = poseLog(poseIndex,:);
     
     % this ray
-    rayOrigin = posnFromImuPose(imuPose);
+    rayOrigin = getPosnFromImuPose(imuPose);
     thisPt = scanPts(scanId,:);
     [rayDirn,observedDistance] = calcRayDirn(rayOrigin,thisPt);
-        
-    % intersection with ellipsoids
-    [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirn,ellipsoidModels,laserCalibParams,modelingParams);
     
+    % intersection with triangles
+    [intersectionFlag,distsToTriangles] = TriangleRayIntersection(rayOrigin,rayDirn,triVert1,triVert2,triVert3);
     if sum(intersectionFlag) == 0
-        % no credits to assign
+        % nothing to do
         continue;
     end
-    
+        
     % viz for debug
-%     plotStructVars = {'rayData','ellipsoidData','plotStruct'};
+%     plotStructVars = {'rayData','triData','plotStruct'};
 %     clear(plotStructVars{:});
 %     rayData.rayOrigin = rayOrigin;
 %     rayData.rayDirns = rayDirn;
+%     rayData.rayLengthToPlot = 20;
 %     plotStruct.rayData = rayData;
 %     
-%     ellipsoidData.ellipsoidModels = ellipsoidModels;
-%     ellipsoidData.intersectionFlag = intersectionFlag;
-%     plotStruct.ellipsoidData = ellipsoidData;
+%     triModelData = groundTriModel;
+%     triModelData.intersectionFlag = intersectionFlag;
+%     plotStruct.triModelData = triModelData;
 %     
 %     plotStruct.pts = thisPt;
 %     
 %     hfig = plotRangeData(plotStruct);
 
+    % predicted and observed range
     % sorted distances along ray
-    [sortedIntersectingIds,sortedDistAlongRay] = sortIntersectionFlag(intersectionFlag,distAlongRay);
-    % maha distances to ellipsoids
-    distToEllipsoids = mahalanobisDistsToEllipsoids(ellipsoidModels(sortedIntersectingIds),thisPt);
+    [sortedIntersectingIds,sortedDistsToTri] = sortIntersectionFlag(intersectionFlag,distsToTriangles);
     % get credits
-    [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distToEllipsoids,sortedIntersectingIds,modelingParams);
-    
+    [triHitId,triMissIds,thisResidualRange] = assignTriHitCredits(sortedDistsToTri,sortedIntersectingIds,observedDistance,maxResidualForHit);
     % assign credits
-    ellipsoidHitCount(ellipsoidHitId) = ellipsoidHitCount(ellipsoidHitId)+1;
-    ellipsoidMissCount(ellipsoidMissIds) = ellipsoidMissCount(ellipsoidMissIds)+1;
+    triHitCount(triHitId) = triHitCount(triHitId)+1;
+    triMissCount(triMissIds) = triMissCount(triMissIds)+1;
+    
+    count = count+1;
+    residualRanges(count) = thisResidualRange;
 end
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
 
 %% calculate perm
-permVec = ellipsoidHitCount./(ellipsoidHitCount+ellipsoidMissCount);
+permVec = triHitCount./(triHitCount+triMissCount);
+
+%% calculate variance
+filteredResidualRanges = residualRanges(residualRanges < maxResidualForHit);
+rangeVar = var(filteredResidualRanges);
 
 %% add to models
-ellipsoidModels = appendPermFieldToEllipsoidModels(ellipsoidModels,permVec);
+groundTriModel.rangeVar = rangeVar;
+groundTriModel.permVec = permVec;
 
 %% stats
-nScanRaysHit = sum(ellipsoidHitCount)-sum(ellipsoidHitCountPrior);
+% how many rays never hit
+nScanRaysHit = sum(triHitCount)-sum(triHitCountPrior);
 fracScanRaysHit = nScanRaysHit/length(scanIdsToProcess);
 fprintf('Percent scan rays hit: %.2f\n',fracScanRaysHit*100);
 
+figure;
 hist(permVec);
 ylabel('perm');
+
+figure;
+hist(residualRanges)
+ylabel('residual ranges');
+hist(residualRanges);
+ylabel('residual range');
 

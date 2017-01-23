@@ -35,6 +35,7 @@ resn in fit
 padding
 smoothness
 dist to projn for restrict fit
+maxdist to triangle to consider hit, for calculating variance
 
 for perm:
 selection of scan ids to process. some smearing from nearest neighbour matches?
@@ -74,6 +75,18 @@ first set of models, then second. for any ray with multiple returns, keep the
 closest range reading.
 
 done.
+
+maybe instead of making cell braces inside a long function, write subfunctions.
+
+debug ground perm calc
+
+actually, perm value is opacity.
+
+70% of ellipsoids scan rays hit
+75% of tri scan rays hit
+
+for now, ignoring the perm of triangles?
+although very easy to incorporate
 
 --------------------------------------------------
 
