@@ -10,3 +10,4 @@ addpath([pwd '/viz']);
 
 %%
 addpath(genpath([pwd '/RegularizeData3D']));
+addpath(genpath([pwd '/TriangleRayIntersection']));

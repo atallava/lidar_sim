@@ -29,5 +29,5 @@ laserCalibParams.intrinsics = intrinsics;
 laserCalibParams.extrinsics = extrinsics;
 
 %% write
-relPathOutput = 'laser_calib_params';
+relPathOutput = '../data/laser_calib_params';
 save(relPathOutput,'laserCalibParams');

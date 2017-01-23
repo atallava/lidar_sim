@@ -1,8 +1,8 @@
 % load data
-relPathEllipsoids = 'ellipsoid_models';
+relPathGroundModel = 'ground_model';
 load(relPathEllipsoids,'ellipsoidModels');
 
-relPathPts = 'rim_stretch_veg_train';
+relPathPts = 'rim_stretch_ground_train';
 load(relPathPts,'pts');
 trainPts = pts;
 
@@ -15,11 +15,8 @@ relPathPoseLog = 'pose_log';
 load(relPathPoseLog,'poseLog','tLog');
 poseTLog = tLog;
 
-relPathTLaser = 'transf_laser_imu';
-load(relPathTLaser,'TLaserImu');
-
-relPathScanningPattern = 'scanning_pattern';
-load(relPathScanningPattern,'alphaVec','thetaVec');
+relPathLaserCalibParams = 'laser_calib_params';
+load(relPathLaserCalibParams,'laserCalibParams');
 
 %% scans to process
 nScanPts = size(scanPts,1);

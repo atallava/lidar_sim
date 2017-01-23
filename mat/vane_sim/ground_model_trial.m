@@ -38,4 +38,4 @@ groundModel.tri = tri;
 groundModel.ptsFit = ptsFit;
 
 relPathGroundModel = '../data/ground_model';
-save('relPathGroundModel','groundModel');
+save(relPathGroundModel,'groundModel');
