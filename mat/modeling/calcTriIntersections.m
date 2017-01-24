@@ -1,19 +1,16 @@
 function [intersectionFlag,distAlongRay] = calcTriIntersections(rayOrigin,rayDirns,triModel,laserCalibParams)
-    %CALCELLIPSOIDINTERSECTIONS
-    %
-    % [flag,distAlongRay] = CALCELLIPSOIDINTERSECTIONS(rayOrigin,rayDirns,ellipsoidModels,modelingParams)
-    %
-    % rayOrigin       - length 3 vector.
-    % rayDirns        - [nRays,3] array.
-    % ellipsoidModels - nEllipsoids length struct array.
-    % laserCalibParams - struct.
-    % modelingParams - struct.
-    %
-    % intersectionFlag - [nRays,nEllipsoids] array. Logical.
-    % distAlongRay    - [nRays,nEllipsoids] array.
-    
-    % TODO: can this be vectorized?
-    
+ %CALCTRIINTERSECTIONS 
+% 
+% [intersectionFlag,distAlongRay] = CALCTRIINTERSECTIONS(rayOrigin,rayDirns,triModel,laserCalibParams)
+% 
+% rayOrigin        - length 3 vector.
+% rayDirns         - [nRays,3] array.
+% triModel         - struct.
+% laserCalibParams - struct.
+% 
+% intersectionFlag - [nRays,nTri] array. logical.
+% distAlongRay     - [nRays,nTri] array.
+
     maxDistAlongRay = laserCalibParams.intrinsics.maxRange;
     minDistAlongRay = laserCalibParams.intrinsics.minRange;
     

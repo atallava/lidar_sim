@@ -18,6 +18,10 @@ poseTLog = tLog;
 relPathLaserCalibParams = 'laser_calib_params';
 load(relPathLaserCalibParams,'laserCalibParams');
 
+relPathModelingParams = 'modeling_params';
+load(relPathModelingParams,'modelingParams');
+triParams = modelingParams.triParams;
+
 %% scans to process
 nScanPts = size(scanPts,1);
 nTri = size(groundTriModel.tri,1);
@@ -41,8 +45,6 @@ triMissCountPrior = ones(1,nTri);
 
 triHitCount = triHitCountPrior;
 triMissCount = triMissCountPrior;
-
-maxResidualForHit = 1;
 
 count = 0;
 clockLocal = tic();
@@ -80,11 +82,10 @@ for scanId = scanIdsToProcess
 %     
 %     hfig = plotRangeData(plotStruct);
 
-    % predicted and observed range
     % sorted distances along ray
     [sortedIntersectingIds,sortedDistsToTri] = sortIntersectionFlag(intersectionFlag,distsToTriangles);
     % get credits
-    [triHitId,triMissIds,thisResidualRange] = assignTriHitCredits(sortedDistsToTri,sortedIntersectingIds,observedDistance,maxResidualForHit);
+    [triHitId,triMissIds,thisResidualRange] = assignTriHitCredits(sortedDistsToTri,sortedIntersectingIds,observedDistance,triParams.maxResidualForHit);
     % assign credits
     triHitCount(triHitId) = triHitCount(triHitId)+1;
     triMissCount(triMissIds) = triMissCount(triMissIds)+1;
@@ -99,7 +100,7 @@ fprintf('comp time: %.2fs\n',compTime);
 permVec = triHitCount./(triHitCount+triMissCount);
 
 %% calculate variance
-filteredResidualRanges = residualRanges(residualRanges < maxResidualForHit);
+filteredResidualRanges = residualRanges(residualRanges < triParams.maxResidualForHit);
 rangeVar = var(filteredResidualRanges);
 
 %% add to models
@@ -107,7 +108,6 @@ groundTriModel.rangeVar = rangeVar;
 groundTriModel.permVec = permVec;
 
 %% stats
-% how many rays never hit
 nScanRaysHit = sum(triHitCount)-sum(triHitCountPrior);
 fracScanRaysHit = nScanRaysHit/length(scanIdsToProcess);
 fprintf('Percent scan rays hit: %.2f\n',fracScanRaysHit*100);

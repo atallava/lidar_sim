@@ -1,5 +1,17 @@
 function [pts,hitFlag] = simPtsFromTri(rayOrigin,rayDirns,intersectionFlag,distAlongRay,triModel)
-  
+  %SIMPTSFROMTRI 
+% 
+% [pts,hitFlag] = SIMPTSFROMTRI(rayOrigin,rayDirns,intersectionFlag,distAlongRay,triModel)
+% 
+% rayOrigin        - length 3 vector.
+% rayDirns         - [nRays,3] array.
+% intersectionFlag - [nRays,nTri] array.
+% distAlongRay     - [nRays,nTri] array.
+% triModel         - struct.
+% 
+% pts              - [nRays,3] array.
+% hitFlag          - length nRays vector. logical.
+
     [nRays,nTri] = size(intersectionFlag);
     permVec = triModel.permVec;
     pts = zeros(nRays,3);
@@ -15,9 +27,6 @@ function [pts,hitFlag] = simPtsFromTri(rayOrigin,rayDirns,intersectionFlag,distA
         % sorted intersecting id
         [sortedIntersectingIds,sortedDistAlongRayIntersections] = ...
             sortIntersectionFlag(intersectionFlag(i,:),distAlongRay(i,:));
-        
-        % pick minimum
-%         hitEllipsoidId = sortedIntersectingIds(1);
         
         % use permeabilities
         [hitTriId,hitBool] = sampleHitId(permVec(sortedIntersectingIds), ...

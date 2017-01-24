@@ -3,11 +3,11 @@ function [hitId,hitFlag] = sampleHitId(permVec,targetIds)
     %
     % [hitId,hitFlag] = SAMPLEHITID(permVec,targetIds)
     %
-    % permVec   -
-    % targetIds -
+    % permVec   - length nTargets vector.
+    % targetIds - length nTargets vector.
     %
-    % hitId     -
-    % hitFlag   -
+    % hitId     - scalar.
+    % hitFlag   - boolean.
     
     nTargets = length(permVec);
     if nargin < 2

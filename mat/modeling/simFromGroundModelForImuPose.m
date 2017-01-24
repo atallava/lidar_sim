@@ -1,5 +1,14 @@
 function simPts = simFromGroundModelForImuPose(imuPose,groundTriModel,laserCalibParams)
-      
+%SIMFROMGROUNDMODELFORIMUPOSE
+%
+% simPts = SIMFROMGROUNDMODELFORIMUPOSE(imuPose,groundTriModel,laserCalibParams)
+%
+% imuPose          - length 6 vector.
+% groundTriModel   - struct.
+% laserCalibParams - struct.
+%
+% simPts           - [nSimPts,3] array.
+
     posn = getPosnFromImuPose(imuPose);
     rayOrigin = posn;
     TImuWorld = getImuTransfFromPose(imuPose);

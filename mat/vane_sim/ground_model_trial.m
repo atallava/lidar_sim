@@ -1,8 +1,13 @@
 relPathTrainPts = '../data/rim_stretch_ground_train.mat';
 load(relPathTrainPts,'pts');
 
+relPathModelingParams = '../data/modeling_params';
+load(relPathModelingParams,'modelingParams');
+
+triParams = modelingParams.triParams;
+
 %% fit smoothed pts
-ptsFit = getSmoothedFitToGroundPts(pts);
+ptsFit = getSmoothedFitToGroundPts(pts,triParams);
 
 %% viz 
 figure;

@@ -7,4 +7,4 @@ load(relPathPts,'pts');
 realPts = pts;
 
 %% viz
-hfig = plotSimVsRealPts(realPts,simPts);
+hfig = plotComparePts(realPts,simPts);

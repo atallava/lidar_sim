@@ -1,6 +1,17 @@
 function [triHitId,triMissIds,minResidualRange] = assignTriHitCredits(distsToTri,sortedIntersectingIds,obsRange,maxResidualForHit)
+%ASSIGNTRIHITCREDITS
+%
+% [triHitId,triMissIds,minResidualRange] = ASSIGNTRIHITCREDITS(distsToTri,sortedIntersectingIds,obsRange,maxResidualForHit)
+%
+% distsToTri            - length nTri vector.
+% sortedIntersectingIds - length nTri vector.
+% obsRange              - scalar.
+% maxResidualForHit     - scalar.
+%
+% triHitId              - scalar.
+% triMissIds            - vector.
+% minResidualRange      - scalar.
 
-     % find the closest
     residualRange = obsRange-distsToTri;
     [minResidualRange,posn] = min(abs(residualRange));
         
