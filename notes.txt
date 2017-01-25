@@ -54,7 +54,10 @@ actually, perm value is opacity.
 70% of ellipsoids scan rays hit
 75% of tri scan rays hit
 
+segment:
 
+too many points for matlab to deal with. remember that values of params depend
+on point cloud density, e.g. max dist to nbrs or min nbrs
 
 --------------------------------------------------
 

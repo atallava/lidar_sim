@@ -3,6 +3,8 @@
 
 #include <Eigen/Dense>
 
+#include <osg/Geode>
+
 namespace lidar_sim {
     std::string exec(const char* cmd);	
     int getNumLinesInFile(std::string rel_path_file);
@@ -11,4 +13,5 @@ namespace lidar_sim {
     void prependPCDHeaderToFile(std::string rel_path_input, std::string rel_path_output);
     std::string genDetailLine(double packet_timestamp, std::vector<double> imu_pose, Eigen::Matrix<float,4,1> pt);
     void sectionOfSection(std::string rel_path_input, std::string rel_path_output, double start_time, double end_time);
+    osg::ref_ptr<osg::Geode> osgXYZLoader(std::string rel_path_input);
 }

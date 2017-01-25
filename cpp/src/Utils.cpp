@@ -7,6 +7,9 @@
 #include <fstream>
 #include <string>
 
+#include <osg/Geometry>
+#include <osg/Geode>
+
 #include <lidar_sim/Utils.h>
 
 namespace lidar_sim {
@@ -155,5 +158,54 @@ namespace lidar_sim {
 	ss << std::endl;
 
 	return ss.str();
+    }
+
+    osg::ref_ptr<osg::Geode> osgXYZLoader(std::string rel_path_input)
+    {
+	// open input file
+	std::ifstream input_file(rel_path_input);
+	std::cout << "Reading from: " << rel_path_input << std::endl;
+
+	osg::ref_ptr<osg::Geode> geode;
+	geode=osg::ref_ptr<osg::Geode>(new osg::Geode());
+	osg::ref_ptr<osg::Geometry> geometry (new osg::Geometry());
+  
+	osg::ref_ptr<osg::Vec3Array> vertices (new osg::Vec3Array());
+	osg::ref_ptr<osg::Vec4Array> colors (new osg::Vec4Array());
+
+	std::string current_line;
+	while (std::getline(input_file, current_line))
+	{
+	    std::istringstream iss(current_line);
+	    double x,y,z;
+	    iss >> x;
+	    iss >> y;
+	    iss >> z;
+  
+	    vertices->push_back (osg::Vec3 (x, y, z));
+	    // uint32_t rgb_val_;
+	    // memcpy(&rgb_val_, &(cloud.points[i].rgb), sizeof(uint32_t));
+  
+	    // uint32_t red,green,blue;
+	    // blue=rgb_val_ & 0x000000ff;
+	    // rgb_val_ = rgb_val_ >> 8;
+	    // green=rgb_val_ & 0x000000ff;
+	    // rgb_val_ = rgb_val_ >> 8;
+	    // red=rgb_val_ & 0x000000ff;
+  
+	    // colors->push_back (osg::Vec4f ((float)red/255.0f, (float)green/255.0f, (float)blue/255.0f,1.0f));
+	}
+  
+	geometry->setVertexArray (vertices.get());
+	// geometry->setColorArray (colors.get());
+	// geometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+  
+	geometry->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS,0,vertices->size()));
+  
+	geode->addDrawable (geometry.get());
+	osg::StateSet* state = geometry->getOrCreateStateSet();
+	state->setMode( GL_LIGHTING,osg::StateAttribute::OFF);
+
+	return geode;
     }
 }

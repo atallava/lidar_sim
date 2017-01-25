@@ -1,2 +1,2 @@
 clear
-cd build && make
+cd build && make -j

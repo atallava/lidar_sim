@@ -8,7 +8,7 @@ pts = pts(1:skip:end,:);
 %% calc spherical variation
 nPts = size(pts,1);
 D = pdist2(pts,pts);
-maxDistForNbr = 5;
+maxDistToNbr = 5;
 minNbrs = 15;
 sphVarnVec = zeros(nPts,1);
 sphVarnDefault = 0.01;
@@ -19,7 +19,7 @@ for i = 1:nPts
     thisPt = pts(i,:);
     thisPtDistances = D(i,:);
     
-    nbrFlag = thisPtDistances < maxDistForNbr;
+    nbrFlag = thisPtDistances < maxDistToNbr;
     thisNbrPts = pts(nbrFlag,:);
         
     if sum(nbrFlag) < minNbrs

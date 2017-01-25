@@ -22,12 +22,24 @@ list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_thread" ) # Force linking against thread
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_system" ) # Force linking against system
 
+# OSG
+# TODO: all hacked up
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};/usr0/home/atallav1/OpenSceneGraph-3.4.0/CMakeModules") 
+find_package(OSG REQUIRED)
+set(OSG_INCLUDE_DIR "/usr0/home/atallav1/OpenSceneGraph-3.4.0/include/")
+set(OSG_LIBRARY "/usr0/home/atallav1/OpenSceneGraph-3.4.0/lib/libosg.so.3.4.0;/usr0/home/atallav1/OpenSceneGraph-3.4.0/lib/libosgViewer.so.3.4.0")
+include_directories( ${OSG_INCLUDE_DIR} )
+list( APPEND LIDAR_SIM_LIBRARIES ${OSG_LIBRARY})
+# MESSAGE( FATAL_ERROR "take a break" )
+
 # PCL for visualizing
 find_package( PCL 1.4 REQUIRED )
 include_directories( ${PCL_INCLUDE_DIRS} )
 link_directories( ${PCL_LIBRARY_DIRS} )
 add_definitions(${PCL_DEFINITIONS})
 list( APPEND LIDAR_SIM_LIBRARIES ${PCL_LIBRARIES})
+
+# c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 add_definitions( -Wall -std=c++0x )
@@ -77,3 +89,8 @@ target_link_libraries(extract_packets_from_rip lidar_sim ${LIDAR_SIM_LIBRARIES})
 add_executable(extract_timed_sections_of_sections src/extract_timed_sections_of_sections.cpp)
 target_link_libraries(extract_timed_sections_of_sections lidar_sim ${LIDAR_SIM_LIBRARIES})
 
+add_executable(osg_trial src/osg_trial.cpp)
+target_link_libraries(osg_trial lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(osg_xyz_trial src/osg_xyz_trial.cpp)
+target_link_libraries(osg_xyz_trial lidar_sim ${LIDAR_SIM_LIBRARIES})
