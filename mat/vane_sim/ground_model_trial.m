@@ -9,7 +9,7 @@ triParams = modelingParams.triParams;
 %% fit smoothed pts
 ptsFit = getSmoothedFitToGroundPts(pts,triParams);
 
-%% viz 
+%% viz pts fit
 figure;
 subplot(2,1,1);
 scatter3(ptsFit(:,1),ptsFit(:,2),ptsFit(:,3),'r.');

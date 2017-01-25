@@ -10,7 +10,7 @@ function ptsFit = getSmoothedFitToGroundPts(pts,triParams)
 
 [xNodeVec,yNodeVec] = genNodeVecsForSmoothedFit(pts,triParams.ptsFitParams.padding,triParams.ptsFitParams.nodeResn);
 
-smoothness = triParams.ptsFit.smoothness;
+smoothness = triParams.ptsFitParams.smoothness;
 % what is the effect of smoothness?
 % default is 5e-3. visible difference to 1e-3
 % 5e-2 already smooths too much
@@ -20,5 +20,5 @@ zFitMat = RegularizeData3D(pts(:,1),pts(:,2),pts(:,3),xNodeVec,yNodeVec,'interp'
 [xFitUnrolled,yFitUnrolled,zFitUnrolled] = unrollFitPts(xNodeVec,yNodeVec,zFitMat);
 ptsFit = [xFitUnrolled, yFitUnrolled, zFitUnrolled];
 
-ptsFit = restrictFitToObsProjn(pts,ptsFit,triParams.ptsFit.maxDistTiProjn);
+ptsFit = restrictFitToObsProjn(pts,ptsFit,triParams.ptsFitParams.maxDistToProjn);
 end

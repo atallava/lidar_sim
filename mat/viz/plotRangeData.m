@@ -81,6 +81,10 @@ function hfig = plotRangeData(inputStruct)
     if isfield(inputStruct,'pts')
         plotPts = true;
         pts = inputStruct.pts;
+        
+        if ~exist('useHitFlag','var')
+            useHitFlag = 0;
+        end
     else
         plotPts = false;
     end
@@ -102,8 +106,8 @@ function hfig = plotRangeData(inputStruct)
             plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'g--');
             hold on;
         end
+        plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'gx');
     end
-    plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'gx');
     
     %% ellipsoids
     if plotEllipsoids
@@ -137,6 +141,7 @@ function hfig = plotRangeData(inputStruct)
         
         trimesh(triModelData.tri(triIdsToPlot,:), ...
             triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3));
+        hold on;
     end
     
     %% pts
@@ -146,7 +151,7 @@ function hfig = plotRangeData(inputStruct)
         else
             ptPlotIds = logical(1:size(pts,1));
         end
-        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'go','markerfacecolor','g');
+        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'g.','markerfacecolor','g');
     end
     
     %% extra
