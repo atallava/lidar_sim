@@ -10,17 +10,23 @@ set( LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib" CACHE PATH
 set( EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin" CACHE PATH
     "Target directory for all executables." )
 
-# Threading and Boost utilities
+# Threading
 find_package( Threads REQUIRED )
 list( APPEND LIDAR_SIM_LIBRARIES ${CMAKE_THREAD_LIBS_INIT} )
 
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 
+# Boost
 find_package( Boost COMPONENTS system thread log REQUIRED )
 include_directories( ${Boost_INCLUDE_DIRS} )
 list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_thread" ) # Force linking against thread
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_system" ) # Force linking against system
+
+# VTK
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+list( APPEND LIDAR_SIM_LIBRARIES ${VTK_LIBRARIES} )
 
 # OSG
 # TODO: all hacked up
@@ -30,9 +36,8 @@ set(OSG_INCLUDE_DIR "/usr0/home/atallav1/OpenSceneGraph-3.4.0/include/")
 set(OSG_LIBRARY "/usr0/home/atallav1/OpenSceneGraph-3.4.0/lib/libosg.so.3.4.0;/usr0/home/atallav1/OpenSceneGraph-3.4.0/lib/libosgViewer.so.3.4.0")
 include_directories( ${OSG_INCLUDE_DIR} )
 list( APPEND LIDAR_SIM_LIBRARIES ${OSG_LIBRARY})
-# MESSAGE( FATAL_ERROR "take a break" )
 
-# PCL for visualizing
+# PCL
 find_package( PCL 1.4 REQUIRED )
 include_directories( ${PCL_INCLUDE_DIRS} )
 link_directories( ${PCL_LIBRARY_DIRS} )
@@ -58,39 +63,36 @@ add_library(lidar_sim SHARED
   src/FrameTimeServer.cpp
   )
 
-# Add files here to make executables out of them
-add_executable(run_tests src/run_tests.cpp)
-target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES})
+# Executables
 
-add_executable(split_packets src/split_packets.cpp)
-target_link_libraries(split_packets lidar_sim ${LIDAR_SIM_LIBRARIES})
+# analyze taylor data
+file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
+MESSAGE( STATUS "analyze_taylor_data sources: " ${ANALYZE_TAYLOR_DATA_SOURCES} )
+foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+  string( REPLACE "analyze_taylor_data/" "" testname ${testnamewithdir})
+  add_executable( ${testname} ${testsourcefile} )
+  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
 
-add_executable(transform_sections_to_world src/transform_sections_to_world.cpp)
-target_link_libraries(transform_sections_to_world lidar_sim ${LIDAR_SIM_LIBRARIES})
+# vane sim
+file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )
+MESSAGE( STATUS "vane_sim sources: " ${VANE_SIM_SOURCES} )
+foreach( testsourcefile ${VANE_SIM_SOURCES} )
+  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+  string( REPLACE "vane_sim/" "" testname ${testnamewithdir})
 
-add_executable(subsample_sections src/subsample_sections.cpp)
-target_link_libraries(subsample_sections lidar_sim ${LIDAR_SIM_LIBRARIES})
+  add_executable( ${testname} ${testsourcefile} )
+  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+endforeach( testsourcefile ${VANE_SIM_SOURCES} )
 
-add_executable(subsample_georef src/subsample_georef.cpp)
-target_link_libraries(subsample_georef lidar_sim ${LIDAR_SIM_LIBRARIES})
+# tests
+file( GLOB TESTS_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp )
+MESSAGE( STATUS "tests sources: " ${TESTS_SOURCES} )
+foreach( testsourcefile ${TESTS_SOURCES} )
+  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+  string( REPLACE "tests/" "" testname ${testnamewithdir})
+  add_executable( ${testname} ${testsourcefile} )
+  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+endforeach( testsourcefile ${TESTS_SOURCES} )
 
-add_executable(prepend_pcd_header_to_sections src/prepend_pcd_header_to_sections.cpp)
-target_link_libraries(prepend_pcd_header_to_sections lidar_sim ${LIDAR_SIM_LIBRARIES})
-
-add_executable(extract_section_packet_ids src/extract_section_packet_ids.cpp)
-target_link_libraries(extract_section_packet_ids lidar_sim ${LIDAR_SIM_LIBRARIES})
-
-add_executable(extract_pts_from_georef src/extract_pts_from_georef.cpp)
-target_link_libraries(extract_pts_from_georef lidar_sim ${LIDAR_SIM_LIBRARIES})
-
-add_executable(extract_packets_from_rip src/extract_packets_from_rip.cpp)
-target_link_libraries(extract_packets_from_rip lidar_sim ${LIDAR_SIM_LIBRARIES})
-
-add_executable(extract_timed_sections_of_sections src/extract_timed_sections_of_sections.cpp)
-target_link_libraries(extract_timed_sections_of_sections lidar_sim ${LIDAR_SIM_LIBRARIES})
-
-add_executable(osg_trial src/osg_trial.cpp)
-target_link_libraries(osg_trial lidar_sim ${LIDAR_SIM_LIBRARIES})
-
-add_executable(osg_xyz_trial src/osg_xyz_trial.cpp)
-target_link_libraries(osg_xyz_trial lidar_sim ${LIDAR_SIM_LIBRARIES})

@@ -160,7 +160,7 @@ namespace lidar_sim {
 	return ss.str();
     }
 
-    osg::ref_ptr<osg::Geode> osgXYZLoader(std::string rel_path_input)
+    osg::ref_ptr<osg::Geode> getOsgGeodeFromXYZ(std::string rel_path_input)
     {
 	// open input file
 	std::ifstream input_file(rel_path_input);
@@ -171,13 +171,13 @@ namespace lidar_sim {
 	osg::ref_ptr<osg::Geometry> geometry (new osg::Geometry());
   
 	osg::ref_ptr<osg::Vec3Array> vertices (new osg::Vec3Array());
-	osg::ref_ptr<osg::Vec4Array> colors (new osg::Vec4Array());
+	// osg::ref_ptr<osg::Vec4Array> colors (new osg::Vec4Array());
 
 	std::string current_line;
 	while (std::getline(input_file, current_line))
 	{
 	    std::istringstream iss(current_line);
-	    double x,y,z;
+	    double x, y, z;
 	    iss >> x;
 	    iss >> y;
 	    iss >> z;
@@ -207,5 +207,28 @@ namespace lidar_sim {
 	state->setMode( GL_LIGHTING,osg::StateAttribute::OFF);
 
 	return geode;
+    }
+
+    vtkPoints* getVtkPointsFromXYZ(std::string rel_path_input)
+    {
+	// open input file
+	std::ifstream input_file(rel_path_input);
+	std::cout << "Reading from: " << rel_path_input << std::endl;
+
+	vtkPoints* points = vtkPoints::New();
+
+	std::string current_line;
+	while (std::getline(input_file, current_line))
+	{
+	    std::istringstream iss(current_line);
+	    double x, y, z;
+	    iss >> x;
+	    iss >> y;
+	    iss >> z;
+
+	    points->InsertNextPoint(x, y, z);
+  	}
+  
+	return points;
     }
 }

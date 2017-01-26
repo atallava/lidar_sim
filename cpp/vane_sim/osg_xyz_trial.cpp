@@ -12,8 +12,10 @@ using namespace lidar_sim;
 
 int main() {
     osg::Group* root = new osg::Group();
-    std::string rel_path_xyz = "../data/taylorJune2014/sections/world_frame/section_pts_01_world_frame_subsampled.xyz";
-    root->addChild(osgXYZLoader(rel_path_xyz));
+    // std::string rel_path_xyz = "../data/taylorJune2014/sections/world_frame/section_pts_01_world_frame_subsampled.xyz";
+    std::string rel_path_xyz = "../data/taylorJune2014/vane/rim_stretch_veg_train.asc";
+
+    root->addChild(getOsgGeodeFromXYZ(rel_path_xyz));
 
     osgViewer::Viewer viewer;
 
