@@ -9,7 +9,7 @@
 
 #include <lidar_sim/EllipsoidVtkActorServer.h>
 #include <lidar_sim/PointsVtkActorServer.h>
-#include <lidar_sim/Ellipsoids.h>
+#include <lidar_sim/EllipsoidsModelUtils.h>
 
 namespace lidar_sim {
     class RangeDataVizer {

@@ -3,7 +3,7 @@
 #include <lidar_sim/Test.h>
 #include <lidar_sim/Visualizer.h>
 #include <lidar_sim/PoseServer.h>
-#include <lidar_sim/Ellipsoids.h>
+#include <lidar_sim/EllipsoidsModelUtils.h>
 
 using namespace lidar_sim;
 

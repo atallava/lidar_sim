@@ -106,6 +106,8 @@ check perm logic
 clustering class
 how to set which coords are in view
 
+cluster_trial should be a class
+
 params:
 ellipsoids
 default perm value

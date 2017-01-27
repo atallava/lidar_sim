@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <lidar_sim/Ellipsoids.h>
+#include <lidar_sim/MathUtils.h>
 
 namespace lidar_sim {
     std::vector<double> calcPtsMean(Pts pts)
@@ -59,22 +59,5 @@ namespace lidar_sim {
 		centered_pts[i][j] = pts[i][j]-mu[j];
 
 	return centered_pts;
-    }
-
-    EllipsoidModel createEllipsoidModel(Pts pts)
-    {
-	EllipsoidModel model;
-	model.mu = calcPtsMean(pts);
-	model.cov_mat = calcPtsCovMat(pts);
-	model.perm = 1;
-
-	return model;
-    }
-
-    void dispPt(std::vector<double> pt)
-    {
-	for(size_t i = 0; i < pt.size(); ++i)
-	    std::cout << pt[i] << " ";
-	std::cout << std::endl;
     }
 }

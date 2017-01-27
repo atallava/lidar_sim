@@ -65,12 +65,11 @@ namespace lidar_sim {
     void writeClusterIdsToFile(alglib::integer_1d_array pt_cluster_ids, std::string rel_path_output)
     {
 	std::ofstream file(rel_path_output);
-	std::cout << "Writing to: " << rel_path_output << std::endl;
+	std::cout << "Writing cluster ids to: " << rel_path_output << std::endl;
 	
 	for(size_t i = 0; i < pt_cluster_ids.length(); ++i)
 	    file << pt_cluster_ids[i] << std::endl;
 
 	file.close();
     }
-
 }

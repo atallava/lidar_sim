@@ -8,7 +8,7 @@
 #include "dataanalysis.h"
 
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/Ellipsoids.h>
+#include <lidar_sim/EllipsoidsModelUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/Clusterer.h>
 
@@ -41,9 +41,9 @@ int main(int argc, char **argv)
     // std::string rel_path_output = "data/clustering.txt";
     // writeClusterIdsToFile(pt_cluster_ids, rel_path_output);
  
-   // retain those with min pts
+    // retain those with min pts
     std::vector<int> n_pts_per_cluster = getNumPtsPerCluster(pt_cluster_ids, n_clusters);
-    int min_pts_per_cluster = 7;
+    int min_pts_per_cluster = 9;
     std::vector<int> selected_cluster_ids;
     for(size_t i = 0; i < n_pts_per_cluster.size(); ++i)
 	if (n_pts_per_cluster[i] >= min_pts_per_cluster)
@@ -51,17 +51,6 @@ int main(int argc, char **argv)
 
     std::cout << "num selected clusters: " << selected_cluster_ids.size() << std::endl;
     
-    // // pick some cluster ids at random
-    // std::vector<int> cluster_ids_shuffled(n_clusters);
-    // std::iota(cluster_ids_shuffled.begin(), cluster_ids_shuffled.end(), 0);
-    // std::random_device rd;
-    // std::mt19937 g(rd());
-    // std::shuffle(cluster_ids_shuffled.begin(), cluster_ids_shuffled.end(), g);
-    // std::vector<int>::const_iterator first = cluster_ids_shuffled.begin();
-    // size_t n_clusters_to_display = 10;
-    // std::vector<int>::const_iterator last = cluster_ids_shuffled.begin() + n_clusters_to_display;
-    // std::vector<int> selected_cluster_ids(first, last);
-
     // ellipsoid models from selected clusters
     std::cout << "creating ellipsoid models..." << std::endl;
     EllipsoidModels ellipsoid_models;
@@ -76,6 +65,10 @@ int main(int argc, char **argv)
 	
 	ellipsoid_models.push_back(createEllipsoidModel(this_cluster_pts));
     }
+
+    // write to file
+    std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
+    writeEllipsoidModelsToFile(ellipsoid_models, rel_path_ellipsoid_models);
 
     // viz
     RangeDataVizer vizer;

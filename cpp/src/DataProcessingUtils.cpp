@@ -195,4 +195,11 @@ namespace lidar_sim {
 
 	return pts_alglib;
     }
+
+    void dispPt(std::vector<double> pt)
+    {
+	for(size_t i = 0; i < pt.size(); ++i)
+	    std::cout << pt[i] << " ";
+	std::cout << std::endl;
+    }
 }

@@ -65,7 +65,8 @@ add_library(lidar_sim SHARED
   src/EllipsoidVtkActorServer.cpp
   src/PointsVtkActorServer.cpp
   src/VizUtils.cpp
-  src/Ellipsoids.cpp
+  src/EllipsoidsModelUtils.cpp
+  src/MathUtils.cpp
   src/RangeDataVizer.cpp 
   src/Clusterer.cpp
   )
