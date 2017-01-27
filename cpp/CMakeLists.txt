@@ -28,15 +28,6 @@ find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 list( APPEND LIDAR_SIM_LIBRARIES ${VTK_LIBRARIES} )
 
-# OSG
-# TODO: all hacked up
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};/usr0/home/atallav1/OpenSceneGraph-3.4.0/CMakeModules") 
-find_package(OSG REQUIRED)
-set(OSG_INCLUDE_DIR "/usr0/home/atallav1/OpenSceneGraph-3.4.0/include/")
-set(OSG_LIBRARY "/usr0/home/atallav1/OpenSceneGraph-3.4.0/lib/libosg.so.3.4.0;/usr0/home/atallav1/OpenSceneGraph-3.4.0/lib/libosgViewer.so.3.4.0")
-include_directories( ${OSG_INCLUDE_DIR} )
-list( APPEND LIDAR_SIM_LIBRARIES ${OSG_LIBRARY})
-
 # PCL
 find_package( PCL 1.4 REQUIRED )
 include_directories( ${PCL_INCLUDE_DIRS} )
@@ -58,12 +49,27 @@ add_library(lidar_sim SHARED
 
   src/Visualizer.cpp
   src/Test.cpp
-  src/Utils.cpp
+  
   src/PoseServer.cpp
   src/FrameTimeServer.cpp
+  src/DataProcessingUtils.cpp
+  
+  src/EllipsoidVtkActorServer.cpp
+  src/PointsVtkActorServer.cpp
+  src/VizUtils.cpp
   )
 
 # Executables
+
+# tests
+# file( GLOB TESTS_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp )
+# MESSAGE( STATUS "tests sources: " ${TESTS_SOURCES} )
+# foreach( testsourcefile ${TESTS_SOURCES} )
+#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+#   string( REPLACE "tests/" "" testname ${testnamewithdir})
+#   add_executable( ${testname} ${testsourcefile} )
+#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# endforeach( testsourcefile ${TESTS_SOURCES} )
 
 # analyze taylor data
 file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
@@ -74,25 +80,16 @@ foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
   add_executable( ${testname} ${testsourcefile} )
   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
-
+ 
 # vane sim
 file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )
 MESSAGE( STATUS "vane_sim sources: " ${VANE_SIM_SOURCES} )
 foreach( testsourcefile ${VANE_SIM_SOURCES} )
   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
   string( REPLACE "vane_sim/" "" testname ${testnamewithdir})
-
+   
   add_executable( ${testname} ${testsourcefile} )
   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 endforeach( testsourcefile ${VANE_SIM_SOURCES} )
 
-# tests
-file( GLOB TESTS_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp )
-MESSAGE( STATUS "tests sources: " ${TESTS_SOURCES} )
-foreach( testsourcefile ${TESTS_SOURCES} )
-  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-  string( REPLACE "tests/" "" testname ${testnamewithdir})
-  add_executable( ${testname} ${testsourcefile} )
-  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-endforeach( testsourcefile ${TESTS_SOURCES} )
-
+ 

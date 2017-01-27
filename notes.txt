@@ -81,9 +81,16 @@ num velodyne packets: 4624457
 
 cpp:
 
-make big matrix of points and then transform?
+vtk:
+axes ticks
+how does the gui mouse click work?
 
-raii
+just like you have functions written in matlab for matlab processing, you need
+to write emacs lisp to do simple operations in emacs
+
+hierarchical clustering
+pdist2
+the equivalent of plotRangeData
 
 --------------------------------------------------
 

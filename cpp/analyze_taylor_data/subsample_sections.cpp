@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <cstring>
 
-#include <lidar_sim/Utils.h>
+#include <lidar_sim/DataProcessingUtils.h>
 
 using namespace lidar_sim;
 
