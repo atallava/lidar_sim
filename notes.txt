@@ -88,6 +88,17 @@ how does the gui mouse click work?
 just like you have functions written in matlab for matlab processing, you need
 to write emacs lisp to do simple operations in emacs
 
+clustering:
+viz clusters for small size
+then take fine-grained clustering
+retain important clusters
+make ellipsoid models
+assign random perm
+ray intersection
+perm calc
+...
+essentially repeat mat work
+
 hierarchical clustering
 pdist2
 the equivalent of plotRangeData

@@ -35,6 +35,14 @@ link_directories( ${PCL_LIBRARY_DIRS} )
 add_definitions(${PCL_DEFINITIONS})
 list( APPEND LIDAR_SIM_LIBRARIES ${PCL_LIBRARIES})
 
+# ALGLIB
+set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
+include_directories( ${ALGLIB_INCLUDE_DIR} )
+set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
+set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
+link_directories( ${ALGLIB_LIBRARY_DIR} )
+list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
+  
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
@@ -53,7 +61,7 @@ add_library(lidar_sim SHARED
   src/PoseServer.cpp
   src/FrameTimeServer.cpp
   src/DataProcessingUtils.cpp
-  
+
   src/EllipsoidVtkActorServer.cpp
   src/PointsVtkActorServer.cpp
   src/VizUtils.cpp
@@ -73,7 +81,6 @@ add_library(lidar_sim SHARED
 
 # analyze taylor data
 file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
-MESSAGE( STATUS "analyze_taylor_data sources: " ${ANALYZE_TAYLOR_DATA_SOURCES} )
 foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
   string( REPLACE "analyze_taylor_data/" "" testname ${testnamewithdir})
@@ -83,7 +90,6 @@ endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
  
 # vane sim
 file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )
-MESSAGE( STATUS "vane_sim sources: " ${VANE_SIM_SOURCES} )
 foreach( testsourcefile ${VANE_SIM_SOURCES} )
   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
   string( REPLACE "vane_sim/" "" testname ${testnamewithdir})

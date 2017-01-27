@@ -156,4 +156,43 @@ namespace lidar_sim {
 
 	return ss.str();
     }
+
+    std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_input)
+    {
+	std::ifstream input_file(rel_path_input);
+	std::cout << "Reading pts from: " << rel_path_input << std::endl;
+
+	std::vector<std::vector<double> > pts;
+	
+	std::string current_line;
+	while(std::getline(input_file,current_line))
+	{
+	    std::istringstream iss(current_line);
+	    double x, y, z;
+	    iss >> x;
+	    iss >> y;
+	    iss >> z;
+	    
+	    std::vector<double> this_pt;
+	    this_pt.push_back(x);
+	    this_pt.push_back(y);
+	    this_pt.push_back(z);
+
+	    pts.push_back(this_pt);
+  	}
+
+	return pts;
+    }
+    
+    alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts)
+    {
+	alglib::real_2d_array pts_alglib;
+	pts_alglib.setlength(pts.size(), 3);
+
+	for(size_t i = 0; i < pts.size(); ++i)
+	    for(size_t j = 0; j < 3; ++j)
+		pts_alglib[i][j] = pts[i][j];
+
+	return pts_alglib;
+    }
 }
