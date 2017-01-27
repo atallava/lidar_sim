@@ -11,9 +11,9 @@ namespace lidar_sim {
     class EllipsoidVtkActorServer {
     public:
 	EllipsoidVtkActorServer();
-	vtkSmartPointer<vtkActor> genEllipsoidVtkActor(std::vector<double> mu, 
+	vtkSmartPointer<vtkActor> genEllipsoidActor(std::vector<double> mu, 
 						       Eigen::MatrixXd cov_mat);
-
+	
     private:
 	std::vector<double> m_color;
 	double m_opacity;

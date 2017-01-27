@@ -4,6 +4,7 @@
 
 #include <vtkSmartPointer.h>
 #include <vtkActor.h>
+#include <vtkPolyData.h>
 
 #include <Eigen/Dense>
 

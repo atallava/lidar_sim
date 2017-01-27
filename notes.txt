@@ -101,7 +101,15 @@ essentially repeat mat work
 
 hierarchical clustering
 pdist2
-the equivalent of plotRangeData
+
+check perm logic
+clustering class
+how to set which coords are in view
+
+params:
+ellipsoids
+default perm value
+
 
 --------------------------------------------------
 

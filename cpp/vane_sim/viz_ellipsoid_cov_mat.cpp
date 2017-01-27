@@ -55,7 +55,7 @@ int main(int, char *[])
     EllipsoidVtkActorServer ellipsoid_actor_server;
 
     // get actor
-    vtkSmartPointer<vtkActor> actor = ellipsoid_actor_server.genEllipsoidVtkActor(mu, cov_mat);
+    vtkSmartPointer<vtkActor> actor = ellipsoid_actor_server.genEllipsoidActor(mu, cov_mat);
 
     // renderer
     vtkSmartPointer<vtkRenderer>

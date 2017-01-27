@@ -9,6 +9,7 @@
 #include <vtkParametricFunctionSource.h>
 #include <vtkParametricEllipsoid.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkParametricFunctionSource.h>
 #include <vtkProperty.h>

@@ -25,14 +25,14 @@
 using namespace lidar_sim;
 
 EllipsoidVtkActorServer::EllipsoidVtkActorServer() :
-    m_opacity(1),
-    m_level(3^2)
+    m_opacity(0.3),
+    m_level(9)
 {
     std::vector<double> ellipse_rgb = {1, 0, 0};
     m_color = ellipse_rgb;
 }
 
-vtkSmartPointer<vtkActor> EllipsoidVtkActorServer::genEllipsoidVtkActor(std::vector<double> mu, 
+vtkSmartPointer<vtkActor> EllipsoidVtkActorServer::genEllipsoidActor(std::vector<double> mu, 
 						       Eigen::MatrixXd cov_mat)
 {
     // parametric ellipsoid

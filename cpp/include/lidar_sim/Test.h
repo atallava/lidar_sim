@@ -8,5 +8,6 @@ namespace lidar_sim {
         bool testVizPoints();
 	bool testPoseServer(std::string rel_path_pose_log);
 	bool testGetPoseAtTime(std::string rel_path_pose_log, double t);
+	bool testCovMat();
     };
 }
