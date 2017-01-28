@@ -107,6 +107,7 @@ clustering class
 how to set which coords are in view
 
 cluster_trial should be a class
+better vizer logic
 
 params:
 ellipsoids

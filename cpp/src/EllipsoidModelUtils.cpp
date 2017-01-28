@@ -1,6 +1,7 @@
 #include <iostream>
+#include <sstream>
 
-#include <lidar_sim/EllipsoidsModelUtils.h>
+#include <lidar_sim/EllipsoidModelUtils.h>
 
 namespace lidar_sim {
     EllipsoidModel createEllipsoidModel(Pts pts)
@@ -24,7 +25,7 @@ namespace lidar_sim {
 	    std::vector<double> mu = ellipsoid_models[i].mu;
 	    std::ostringstream line;
 	    for(size_t j = 0; j < 3; ++j)
-		line << mu[i] << " ";
+		line << mu[j] << " ";
 
 	    // cov mat
 	    Eigen::MatrixXd cov_mat = ellipsoid_models[i].cov_mat;
@@ -51,12 +52,11 @@ namespace lidar_sim {
 	EllipsoidModels ellipsoid_models;
 
 	std::string current_line;
-	int count = 0;
 	while(std::getline(file, current_line))
 	{
 	    std::istringstream iss(current_line);
 
-	    std::vector<double> mu;
+	    std::vector<double> mu(3,0);
 	    for(size_t i = 0; i < 3; ++i)
 		iss >> mu[i];
 
@@ -79,5 +79,19 @@ namespace lidar_sim {
 	file.close();
 
 	return ellipsoid_models;
+    }
+
+    void dispEllipsoidModel(EllipsoidModel model)
+    {
+	std::cout << "mu: " << std::endl;
+	for(size_t i = 0; i < 3; ++i)
+	    std::cout << model.mu[i] << " ";
+	std::cout << std::endl;
+
+	std::cout << "cov_mat: " << std::endl;
+	std::cout << model.cov_mat << std::endl;
+
+	std::cout << "prob_hit: " << std::endl;
+	std::cout << model.hit_prob << std::endl;
     }
 }

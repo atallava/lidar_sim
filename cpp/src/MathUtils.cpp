@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 
 #include <lidar_sim/MathUtils.h>
 
@@ -59,5 +60,10 @@ namespace lidar_sim {
 		centered_pts[i][j] = pts[i][j]-mu[j];
 
 	return centered_pts;
+    }
+
+    double deg2rad(double angle_deg)
+    {
+	return angle_deg*M_PI/180;
     }
 }

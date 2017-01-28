@@ -37,6 +37,7 @@ using namespace lidar_sim;
 
 RangeDataVizer::RangeDataVizer() :
     m_points_actor_server(),
+    m_line_actor_server(),
     m_ellipsoid_actor_server()
 {    
 }
@@ -46,10 +47,6 @@ void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models)
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
     size_t n_ellipsoids = ellipsoid_models.size();
-    // for(size_t i = 0; i < n_ellipsoids; ++i)
-    // 	actors.push_back(
-    // 	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
-    // 						       ellipsoid_models[i].cov_mat));
 
     std::vector<double> mu(3,0);
     Eigen::MatrixXd cov_mat(3,3);
@@ -61,9 +58,6 @@ void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models)
     	m_ellipsoid_actor_server.genEllipsoidActor(mu, cov_mat));
     for(size_t i = 0; i < n_ellipsoids; ++i)
     {
-	// std::cout << "model " << i << " mu : " << std::endl;
-	// dispPt(ellipsoid_models[i].mu);
-	// std::cout << "cov mat: " << std::endl << ellipsoid_models[i].cov_mat << std::endl;
     	actors.push_back(
     	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
     						       ellipsoid_models[i].cov_mat));
@@ -77,10 +71,6 @@ void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models, Pts pt
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
     size_t n_ellipsoids = ellipsoid_models.size();
-    // for(size_t i = 0; i < n_ellipsoids; ++i)
-    // 	actors.push_back(
-    // 	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
-    // 						       ellipsoid_models[i].cov_mat));
 
     // origin dot
     std::vector<double> origin_dot_mu(3,0);
@@ -95,9 +85,6 @@ void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models, Pts pt
     // ellipsoids
     for(size_t i = 0; i < n_ellipsoids; ++i)
     {
-	// std::cout << "model " << i << " mu : " << std::endl;
-	// dispPt(ellipsoid_models[i].mu);
-	// std::cout << "cov mat: " << std::endl << ellipsoid_models[i].cov_mat << std::endl;
     	actors.push_back(
     	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
     						       ellipsoid_models[i].cov_mat));

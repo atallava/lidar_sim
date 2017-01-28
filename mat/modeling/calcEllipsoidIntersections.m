@@ -1,7 +1,7 @@
 function [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels,laserCalibParams,modelingParams)
     %CALCELLIPSOIDINTERSECTIONS
     %
-    % [flag,distAlongRay] = CALCELLIPSOIDINTERSECTIONS(rayOrigin,rayDirns,ellipsoidModels,modelingParams)
+    % [flag,distAlongRay] = CALCELLIPSOIDINTERSECTIONS(rayOrigin,rayDirns,ellipsoidModels,laserCalibParams,modelingParams)
     %
     % rayOrigin       - length 3 vector.
     % rayDirns        - [nRays,3] array.
@@ -37,7 +37,7 @@ function [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,
         end
     end
     
-    condn1 = mahalonbisDistToMean <= modelingParams.maxDistForHit;
+    condn1 = mahalonbisDistToMean <= modelingParams.ellipsoidParams.maxDistForHit;
     condn2 = distAlongRay < maxDistAlongRay;
     condn3 = distAlongRay > minDistAlongRay;
     intersectionFlag = condn1 & condn2 & condn3;

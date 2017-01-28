@@ -8,9 +8,9 @@
 #include "dataanalysis.h"
 
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/EllipsoidsModelUtils.h>
+#include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
-#include <lidar_sim/Clusterer.h>
+#include <lidar_sim/ClusteringUtils.h>
 
 using namespace lidar_sim;
 

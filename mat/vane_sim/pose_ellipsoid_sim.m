@@ -2,14 +2,14 @@
 relPathPts = 'rim_stretch_veg_train';
 load(relPathPts,'pts');
 
-relPathModels = 'ellipsoid_models';
+relPathModels = 'ellipsoid_models_alglib';
 load(relPathModels,'ellipsoidModels');
 
-relPathScanningPattern = 'scanning_pattern';
-load(relPathScanningPattern,'alphaVec','thetaVec');
+relPathModelingParams = 'modeling_params';
+load(relPathModelingParams,'modelingParams');
 
-relPathTLaser = 'transf_laser_imu';
-load(relPathTLaser,'TLaserImu');
+relPathLaserCalibParams = 'laser_calib_params';
+load(relPathLaserCalibParams,'laserCalibParams');
 
 %% specify pose
 x = -475;
@@ -21,16 +21,13 @@ yaw = deg2rad(10);
 
 imuPose = [y x z roll pitch yaw];
 TImuWorld = getImuTransfFromPose(imuPose);
-TLaserWorld = TLaserImu*TImuWorld;
+TLaserWorld = laserCalibParams.extrinsics.TLaserImu*TImuWorld;
 
 %% calculate intersections
-RLaserWorld = TLaserWorld(1:3,1:3);
-rayDirns = genRayDirnsLaserFrame(alphaVec,thetaVec);
-rayDirns = rotateDirns(rayDirns,RLaserWorld);
+rayOrigin = [x y z];
+rayDirns = genRayDirnsWorldFrame(TLaserWorld,laserCalibParams.intrinsics);
 
-rayOrigin = [x y z]';
-
-[intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels);
+[intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirns,ellipsoidModels,laserCalibParams,modelingParams);
 
 %% simulate
 [simPts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,ellipsoidModels);
@@ -63,9 +60,9 @@ ellipsoidData.ellipsoidModels = ellipsoidModels;
 ellipsoidData.intersectionFlag = intersectionFlag(randRayIds,:);
 plotStruct.ellipsoidData = ellipsoidData;
 
-plotStruct.simPts = simPts(randRayIds,:);
+plotStruct.pts = simPts(randRayIds,:);
 
-hfig = plotSimData(plotStruct);
+hfig = plotRangeData(plotStruct);
 
 
 

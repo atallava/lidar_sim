@@ -11,5 +11,6 @@ namespace lidar_sim {
     Pts calcCenteredPts(Pts pts);
     Eigen::MatrixXd calcPtsCovMat(std::vector<std::vector<double> > pts);
     Eigen::MatrixXd calcOuterProd(std::vector<double> pt);
+    double deg2rad(double angle_deg);
 }
 

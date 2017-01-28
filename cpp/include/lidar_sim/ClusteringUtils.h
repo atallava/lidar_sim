@@ -9,7 +9,7 @@
 
 #include <lidar_sim/EllipsoidVtkActorServer.h>
 #include <lidar_sim/PointsVtkActorServer.h>
-#include <lidar_sim/EllipsoidsModelUtils.h>
+#include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/MathUtils.h>
 
 namespace lidar_sim {

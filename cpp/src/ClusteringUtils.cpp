@@ -30,7 +30,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-#include <lidar_sim/Clusterer.h>
+#include <lidar_sim/ClusteringUtils.h>
 #include <lidar_sim/VizUtils.h>
 
 namespace lidar_sim {

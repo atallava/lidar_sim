@@ -63,4 +63,30 @@ namespace lidar_sim {
 	return T_vtk;
     }
 
+    void dispVec(std::vector<double> vec)
+    {
+	for(size_t i = 0; i < vec.size(); ++i)
+	    std::cout << vec[i] << " ";
+	std::cout << std::endl;
+    }
+    
+    void dispMat(std::vector<std::vector<double> > mat)
+    {
+	for(size_t i = 0; i < mat.size(); ++i)
+	{
+	    for(size_t j = 0; j < mat[i].size(); ++j)
+		std::cout << mat[i][j] << " ";
+	    std::cout << std::endl;
+	}
+    }
+
+    void dispMat(std::vector<std::vector<int> > mat)
+    {
+	for(size_t i = 0; i < mat.size(); ++i)
+	{
+	    for(size_t j = 0; j < mat[i].size(); ++j)
+		std::cout << mat[i][j] << " ";
+	    std::cout << std::endl;
+	}
+    }
 }
