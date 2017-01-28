@@ -48,7 +48,7 @@ hfig = plotSimData(plotStruct);
 %% debug 
 % pick some hit rays at random
 hitRayIds = find(hitFlag);
-randRayIds = randsample(hitRayIds,1);
+% randRayIds = randsample(hitRayIds,1);
 
 % viz the ellipsoids they intersects, and the sim points
 clear rayData ellipsoidData

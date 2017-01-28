@@ -16,4 +16,5 @@ namespace lidar_sim {
     void sectionOfSection(std::string rel_path_input, std::string rel_path_output, double start_time, double end_time);
     std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_file);
     alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts);
+    Eigen::MatrixXd stlArrayToEigen(std::vector<std::vector<double> > array);
 }

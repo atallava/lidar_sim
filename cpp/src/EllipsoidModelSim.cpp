@@ -11,7 +11,8 @@
 using namespace lidar_sim;
 
 EllipsoidModelSim::EllipsoidModelSim() :
-    m_maxMahaDistForHit(3.5)
+    m_maxMahaDistForHit(3.5),
+    m_debug_flag(0)
 {    
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -33,10 +34,19 @@ void EllipsoidModelSim::setLaserCalibParams(LaserCalibParams laser_calib_params)
     m_laser_calib_params = laser_calib_params;
 }
 
+void EllipsoidModelSim::setDebugFlag(int value)
+{
+    m_debug_flag = value;
+}
+
 std::tuple<std::vector<std::vector<int> >,
 	   std::vector<std::vector<double> > > EllipsoidModelSim::calcEllipsoidIntersections(std::vector<double> ray_origin, std::vector<std::vector<double> > ray_dirns)
 {
     size_t n_ellipsoids = m_ellipsoid_models.size();
+    
+    // debug
+    if (m_debug_flag)
+	n_ellipsoids = 1;
 
     size_t n_rays = ray_dirns.size();
     std::vector<std::vector<double> > maha_dist_to_mu(n_rays, std::vector<double>(n_ellipsoids));
@@ -56,10 +66,13 @@ std::tuple<std::vector<std::vector<int> >,
 	    dist_along_ray[i][j] = this_dist_along_ray;
 
 	    // debug
-	    // std::cout << "mu, cov_mat: " << std::endl;
-	    // dispVec(mu); 
-	    // std::cout << cov_mat << std::endl;
-	    // std::cout << "this maha dist, dist along ray: " << this_maha_dist << " " << this_dist_along_ray << std::endl;
+	    if (m_debug_flag)
+	    {
+		std::cout << "mu, cov_mat: " << std::endl;
+		dispVec(mu); 
+		std::cout << cov_mat << std::endl;
+		std::cout << "this maha dist, dist along ray: " << this_maha_dist << " " << this_dist_along_ray << std::endl;
+	    } 
 	}
     }
 
@@ -99,15 +112,25 @@ std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(std::ve
     Eigen::MatrixXd mu_eigen(3,1);
     for(size_t i = 0; i < 3; ++i)
 	mu_eigen(i) = mu[i];
-
+    
     Eigen::MatrixXd q(3,1);
     q = ray_origin_eigen + dist_along_ray*ray_dirn_eigen;
     double maha_dist_to_mu = ((q-mu_eigen).transpose()*(cov_mat.inverse()*(q-mu_eigen)))(0);
     maha_dist_to_mu = std::sqrt(maha_dist_to_mu);
 
     // debug
-    // std::cout << "t num, t denom: " << t_num << " " << t_denom << std::endl;
-    // std::cout << "this dist_along_ray, q: " << dist_along_ray << " " << q << std::endl;
+    if (m_debug_flag)
+    {
+	std::cout << "ray origin: " << std::endl;
+	dispVec(ray_origin);
+	std::cout << "ray dirn: " << std::endl;
+	dispVec(ray_dirn);
+	std::cout << "ray dirn eigen: " << ray_dirn_eigen << std::endl;
+	std::cout << "cov mat inv: " << cov_mat.inverse() << std::endl;
+	std::cout << "cov mat inv*ray dirn eigen: " << cov_mat.inverse()*ray_dirn_eigen << std::endl;
+        std::cout << "t num, t denom: " << t_num << " " << t_denom << std::endl;
+	std::cout << "this dist_along_ray, q: " << dist_along_ray << " " << q << std::endl;
+    } 
 
     return std::make_tuple(maha_dist_to_mu, dist_along_ray);
 }

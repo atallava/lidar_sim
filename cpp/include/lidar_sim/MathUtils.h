@@ -14,5 +14,29 @@ namespace lidar_sim {
     double deg2rad(double angle_deg);
     bool anyNonzeros(std::vector<int> vec);
     std::vector<double> sampleFromMvn(std::vector<double> mu, Eigen::MatrixXd cov_mat);
+
+    /* std::vector<std::vector<double> > logicalSubsetOfArray(std::vector<std::vector<double> > array, std::vector<int> logical_flag) */
+
+    template <typename T>
+	std::vector<T> logicalSubset2DArray(std::vector<T> array, std::vector<int> logical_flag)
+    {
+	std::vector<T> array_subset;
+	for(size_t i = 0; i < array.size(); ++i)
+	    if (logical_flag[i])
+		array_subset.push_back(array[i]);
+
+	return array_subset;
+    }
+
+    template <typename T>
+	std::vector<int> findNonzeroIds(std::vector<T> vec)
+    {
+	std::vector<int> nonzero_ids;
+	for(size_t i = 0; i < vec.size(); ++i)
+	    if (vec[i])
+		nonzero_ids.push_back(i);
+
+	return nonzero_ids;
+    }
 }
 

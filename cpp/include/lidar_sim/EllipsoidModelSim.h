@@ -19,6 +19,7 @@ namespace lidar_sim {
 	void setEllipsoidModels(EllipsoidModels ellipsoid_models);
 	void setEllipsoidModels(std::string rel_path_models);
 	void setLaserCalibParams(LaserCalibParams laser_calib_params);
+	void setDebugFlag(int value);
 	std::tuple<std::vector<std::vector<int> >,
 	    std::vector<std::vector<double> > > calcEllipsoidIntersections(std::vector<double>, std::vector<std::vector<double> >);
 	std::tuple<double, double> calcMahaDistRayToEllipsoid(std::vector<double> ray_origin, std::vector<double> ray_dirn, std::vector<double> mu, Eigen::MatrixXd cov_mat);
@@ -31,6 +32,7 @@ namespace lidar_sim {
 	
     private:
 	double m_maxMahaDistForHit;
+	int m_debug_flag;
 	EllipsoidModels m_ellipsoid_models;
 	LaserCalibParams m_laser_calib_params;
 	std::mt19937 m_gen;

@@ -32,4 +32,34 @@ namespace lidar_sim {
 
 	return T_pose;
     }
+
+    std::vector<std::vector<double> > genRayDirnsWorldFrame(std::vector<double> imu_pose, LaserCalibParams laser_calib_params)
+    {
+	Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
+	Eigen::MatrixXd T_laser_world = laser_calib_params.T_laser_imu*T_imu_world;
+
+	std::vector<std::vector<double> > ray_dirns_laser_frame = genRayDirnsLaserFrame(laser_calib_params.intrinsics);
+	
+    }
+
+    std::vector<std::vector<double> > genRayDirnsLaserFrame(LaserIntrinsics intrinsics)
+    {
+	size_t n_alpha_vec = intrinsics.alpha_vec.size();
+	size_t n_theta_vec = intrinsics.theta_vec.size();
+	size_t n_rays = n_alpha_vec*n_theta_vec;
+	std::vector<std::vector<double> > ray_dirns;
+	for(size_t i = 0; i < n_alpha_vec; ++i)
+	{
+	    double alpha = intrinsics.alpha_vec[i];
+	    for(size_t j = 0; j < n_theta_vec; ++j)
+	    {
+		double theta = intrinsics.theta_vec[j];
+		std::vector<double> ray_dirn = 
+		    {std::cos(theta)*std::cos(alpha), std::sin(theta)*std::cos(alpha); std::sin(alpha)};
+		ray_dirns.push_back(ray_dirn);
+	    }
+	}
+	
+	return ray_dirns;
+    }
 }

@@ -21,5 +21,6 @@ namespace lidar_sim {
     void writeEllipsoidModelsToFile(EllipsoidModels ellipsoid_models, std::string rel_path_output);
     EllipsoidModels loadEllipsoidModels(std::string rel_path_input);
     void dispEllipsoidModel(EllipsoidModel model);
+    std::vector<int> getIntersectedFlag(std::vector<std::vector<int> > intersection_flag);
 }
 
