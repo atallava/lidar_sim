@@ -13,7 +13,7 @@ namespace lidar_sim {
 
     struct LaserExtrinsics {
     	LaserExtrinsics();
-    	Eigen::MatrixXd T_laser_world;
+    	Eigen::MatrixXd T_laser_imu;
     };
     
     struct LaserCalibParams {

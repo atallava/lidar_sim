@@ -41,9 +41,9 @@ plotStruct.rayData = rayData;
 ellipsoidData.ellipsoidModels = ellipsoidModels;
 plotStruct.ellipsoidData = ellipsoidData;
 
-plotStruct.simPts = simPts;
+plotStruct.pts = simPts;
 
-hfig = plotSimData(plotStruct);
+hfig = plotRangeData(plotStruct);
 
 %% debug 
 % pick some hit rays at random

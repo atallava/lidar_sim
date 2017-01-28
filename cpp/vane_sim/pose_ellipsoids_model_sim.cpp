@@ -29,14 +29,19 @@ int main(int argc, char **argv)
     Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
 
     std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
-    std::vector<std::vector<double> > ray_dirns = {{-0.146354, -0.979840, -0.135992}};
-    ray_dirns = genRayDirnsWorldFrame(imu_pose, laser_calib_params);
+    // single ray dirn
+    // std::vector<std::vector<double> > ray_dirns = {{-0.146354, -0.979840, -0.135992}};
+    // scanning pattern
+    std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, laser_calib_params);
 
     // sim object
     EllipsoidModelSim sim;
     sim.setEllipsoidModels(ellipsoid_models);
     sim.setLaserCalibParams(laser_calib_params);
 
+
+    // ellipsoid intersections
+    std::cout << "calculating ellipsoid intersections..." << std::endl;
     std::vector<std::vector<int> > intersection_flag;
     std::vector<std::vector<double> > dist_along_ray;
     std::tie(intersection_flag, dist_along_ray) = sim.calcEllipsoidIntersections(
@@ -44,12 +49,7 @@ int main(int argc, char **argv)
     std::vector<int> intersected_ellipsoids_flag = 
 	getIntersectedFlag(intersection_flag);   
 
-    // debug
-    // std::cout << "intersected ellipsoids: " << std::endl;
-    // dispVec(findNonzeroIds(intersected_ellipsoids_flag));
-    // std::cout << "dist along ray: " << std::endl;
-    // dispVec(dist_along_ray[0]);
-
+    std::cout << "simulating from ellipsoids..." << std::endl;
     std::vector<std::vector<double> > sim_pts;
     std::vector<int> hit_flag;
     std::tie(sim_pts, hit_flag) = sim.simPtsGivenIntersections(intersection_flag, dist_along_ray);
@@ -60,20 +60,29 @@ int main(int argc, char **argv)
     bool use_intersected_flag = false;
     bool use_hit_flag = true;
 
-    // ellipsoids
-    EllipsoidModels ellipsoid_models_to_plot;
-    if (use_intersected_flag)
-    	ellipsoid_models_to_plot = logicalSubset2DArray(ellipsoid_models, intersected_ellipsoids_flag);
-    else
-    	ellipsoid_models_to_plot = ellipsoid_models;
+    // debug
+    // std::cout << "intersected flag: " << std::endl;
+    // dispVec(findNonzeroIds(intersected_ellipsoids_flag));
 
-    for(size_t i = 0; i < ellipsoid_models_to_plot.size(); ++i)
+    // ellipsoids
+    for(size_t i = 0; i < ellipsoid_models.size()-50; ++i)
+    {
+	if (use_intersected_flag)
+	    if (!intersected_ellipsoids_flag[i])
+		continue;
     	actors.push_back(
-    	    vizer.m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models_to_plot[i].mu, ellipsoid_models_to_plot[i].cov_mat));
+    	    vizer.m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, ellipsoid_models[i].cov_mat));
+    }
 
     // ray
-    actors.push_back(
-    	vizer.m_line_actor_server.genLineActorDirn(ray_origin, ray_dirns[0]));
+    for(size_t i = 0; i < ray_dirns.size(); ++i)
+    {
+	if (use_hit_flag)
+	    if (!hit_flag[i])
+		continue;
+	actors.push_back(
+	    vizer.m_line_actor_server.genLineActorDirn(ray_origin, ray_dirns[i]));
+    }
 
     // pts
     std::vector<std::vector<double> > sim_pts_to_plot;

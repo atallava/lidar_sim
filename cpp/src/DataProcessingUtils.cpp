@@ -205,4 +205,15 @@ namespace lidar_sim {
 
 	return array_eigen;
     }
+
+    std::vector<std::vector<double> > EigenToStlArray(Eigen::MatrixXd array)
+    {
+	std::vector<std::vector<double> > array_stl(array.rows(), 
+						    std::vector<double>(array.cols()));
+	for(size_t i = 0; i < array.rows(); ++i)
+	    for(size_t j = 0; j < array.cols(); ++j)
+		array_stl[i][j] = array(i,j);
+
+	return array_stl;
+    }
 }

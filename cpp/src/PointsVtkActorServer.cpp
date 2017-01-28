@@ -27,7 +27,7 @@
 using namespace lidar_sim;
 
 PointsVtkActorServer::PointsVtkActorServer() :
-    m_point_size(2)
+    m_point_size(4)
 {
 }
 

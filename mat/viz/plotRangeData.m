@@ -151,7 +151,7 @@ function hfig = plotRangeData(inputStruct)
         else
             ptPlotIds = logical(1:size(pts,1));
         end
-        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'g.','markerfacecolor','g');
+        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'go','markerfacecolor','g');
     end
     
     %% extra
