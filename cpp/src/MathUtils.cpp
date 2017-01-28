@@ -1,6 +1,8 @@
 #include <iostream>
 #include <math.h>
 
+#include "eigenmvn.h"
+
 #include <lidar_sim/MathUtils.h>
 
 namespace lidar_sim {
@@ -65,5 +67,29 @@ namespace lidar_sim {
     double deg2rad(double angle_deg)
     {
 	return angle_deg*M_PI/180;
+    }
+
+    bool anyNonzeros(std::vector<int> vec)
+    {
+	for(size_t i = 0; i < vec.size(); ++i)
+	    if (!(vec[i] == 0))
+		return true;
+	return false;
+    }
+
+    std::vector<double> sampleFromMvn(std::vector<double> mu, Eigen::MatrixXd cov_mat)
+    {
+	Eigen::MatrixXd mean(3,1);
+	for(size_t i = 0; i < 3; ++i)
+	    mean(i) = mu[i];
+
+	Eigen::EigenMultivariateNormal<double> normX_solver(mean, cov_mat);
+	Eigen::MatrixXd sample = normX_solver.samples(1);
+
+	std::vector<double> sample_stl(3, 0);
+	for(size_t i = 0; i < 3; ++i)
+	    sample_stl[i] = sample(i);
+
+	return sample_stl;
     }
 }

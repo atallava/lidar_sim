@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "eigenmvn.h"
+
 #include <lidar_sim/Test.h>
 #include <lidar_sim/Visualizer.h>
 #include <lidar_sim/PoseServer.h>
@@ -56,5 +58,28 @@ bool Test::testCovMat()
     Eigen::MatrixXd cov_mat = calcPtsCovMat(pts);
     std::cout << "cov mat: " << cov_mat << std::endl;
 
+    return true;
+}
+
+bool Test::testEigenmvn()
+{
+    Pts pts { {1,2,3},
+	{6,7,6},
+	{5,1,5},
+	{9,7,8}};
+    
+    std::vector<double> mu = calcPtsMean(pts);
+    Eigen::MatrixXd mean(3,1);
+    for(size_t i = 0; i < 3; ++i)
+	mean(i) = mu[i];
+    Eigen::MatrixXd cov_mat = calcPtsCovMat(pts);
+    
+    Eigen::EigenMultivariateNormal<double> normX_solver(mean, cov_mat);
+
+    Eigen::MatrixXd samples = normX_solver.samples(20);
+
+    std::cout << "samples: " << std::endl;
+    std::cout << samples << std::endl;
+    
     return true;
 }

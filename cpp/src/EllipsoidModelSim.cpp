@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <random>
+
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
@@ -10,6 +13,9 @@ using namespace lidar_sim;
 EllipsoidModelSim::EllipsoidModelSim() :
     m_maxMahaDistForHit(3.5)
 {    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    m_gen = gen;
 }
 
 void EllipsoidModelSim::setEllipsoidModels(EllipsoidModels ellipsoid_models)
@@ -31,8 +37,6 @@ std::tuple<std::vector<std::vector<int> >,
 	   std::vector<std::vector<double> > > EllipsoidModelSim::calcEllipsoidIntersections(std::vector<double> ray_origin, std::vector<std::vector<double> > ray_dirns)
 {
     size_t n_ellipsoids = m_ellipsoid_models.size();
-    // todo: remove!
-    // n_ellipsoids = 1;
 
     size_t n_rays = ray_dirns.size();
     std::vector<std::vector<double> > maha_dist_to_mu(n_rays, std::vector<double>(n_ellipsoids));
@@ -107,3 +111,103 @@ std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(std::ve
 
     return std::make_tuple(maha_dist_to_mu, dist_along_ray);
 }
+
+std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+EllipsoidModelSim::simPtsGivenIntersections(std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray)
+{
+    size_t n_rays = intersection_flag.size();
+    size_t n_ellipsoids = m_ellipsoid_models.size();
+    
+    Pts sim_pts(n_rays, std::vector<double>(3, 0));
+    std::vector<int> hit_flag(n_rays, 0);
+
+    for(size_t i = 0; i < n_rays; ++i)
+    {
+	if (!anyNonzeros(intersection_flag[i]))
+	{
+	    hit_flag[i] = 0;
+	    continue;
+	}
+	else
+	    hit_flag[i] = 1;
+
+	std::vector<int> sorted_intersecting_ids;
+	std::vector<double> sorted_dist_along_ray_intersections;
+	std::tie(sorted_intersecting_ids, sorted_dist_along_ray_intersections) =
+	    sortIntersectionFlag(intersection_flag[i], dist_along_ray[i]);
+
+	std::vector<double> hit_prob_vec(sorted_intersecting_ids.size());
+	for(size_t j = 0; j < sorted_intersecting_ids.size(); ++j)
+	    hit_prob_vec[j] = m_ellipsoid_models[sorted_intersecting_ids[j]].hit_prob;
+
+	int hit_ellipsoid_id;
+	bool hit_bool;
+	std::tie(hit_ellipsoid_id, hit_bool) =
+	    sampleHitId(hit_prob_vec, sorted_intersecting_ids);
+
+	if (!hit_bool)
+	{
+	    hit_flag[i] = 0;
+	    continue;
+	}
+	 
+	std::vector<double> sim_pt = sampleFromMvn(m_ellipsoid_models[hit_ellipsoid_id].mu,
+						   m_ellipsoid_models[hit_ellipsoid_id].cov_mat);
+	for(size_t j = 0; j < 3; ++j)
+	    sim_pts[i][j] = sim_pt[j];
+    }
+
+    return std::make_tuple(sim_pts, hit_flag);
+}
+
+std::tuple<std::vector<int>, std::vector<double> >
+EllipsoidModelSim::sortIntersectionFlag(std::vector<int> intersection_flag, std::vector<double> dist_along_ray)
+{
+    std::vector<int> intersecting_ids;
+    std::vector<double> dist_along_ray_intersections;
+    for(size_t i = 0; i < intersection_flag.size(); ++i)
+	if (intersection_flag[i] == 1)
+	{
+	    intersecting_ids.push_back(i);
+	    dist_along_ray_intersections.push_back(dist_along_ray[i]);
+	}
+    
+    // get indices of ascending sort
+    std::vector<int> sorted_ids(intersecting_ids.size());
+    std::size_t n(0);
+    std::generate(std::begin(sorted_ids), std::end(sorted_ids), [&]{ return n++; });
+
+    std::sort( std::begin(sorted_ids), std::end(sorted_ids), 
+	       [&](int i1, int i2) { return dist_along_ray_intersections[i1] < dist_along_ray_intersections[i2]; });
+
+    std::vector<int> sorted_intersecting_ids(intersecting_ids.size());
+    std::vector<double> sorted_dist_along_ray_intersections(dist_along_ray_intersections.size());
+    for(size_t i = 0; i < sorted_ids.size(); ++i)
+    {
+	sorted_intersecting_ids[i] = intersecting_ids[sorted_ids[i]];
+	sorted_dist_along_ray_intersections[i] = dist_along_ray_intersections[sorted_ids[i]];
+    }
+    
+    return std::make_tuple(sorted_intersecting_ids, sorted_dist_along_ray_intersections);
+}
+
+std::tuple<int, bool>
+EllipsoidModelSim::sampleHitId(std::vector<double> hit_prob_vec, std::vector<int> target_ids)
+{
+    size_t n_targets = hit_prob_vec.size();
+    std::uniform_real_distribution<> dis(0, 1);
+
+    int hit_id;
+    bool hit_bool;
+    for(size_t i = 0; i < n_targets; ++i)
+	if (dis(m_gen) < hit_prob_vec[i])
+	{
+	    hit_id = target_ids[i];
+	    hit_bool = true;
+	    return std::make_tuple(hit_id, hit_bool);
+	}
+    hit_id = -1;
+    hit_bool = false;
+    return std::make_tuple(hit_id, hit_bool);
+}
+

@@ -27,7 +27,7 @@
 using namespace lidar_sim;
 
 LineVtkActorServer::LineVtkActorServer() :
-    m_line_length(15),
+    m_line_length(40),
     m_line_width(2)
 {
     std::vector<double> ellipse_rgb = {0, 1, 0};

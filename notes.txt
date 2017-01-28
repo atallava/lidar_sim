@@ -89,15 +89,13 @@ just like you have functions written in matlab for matlab processing, you need
 to write emacs lisp to do simple operations in emacs
 
 clustering:
-viz clusters for small size
-then take fine-grained clustering
-retain important clusters
-make ellipsoid models
-assign random perm
-ray intersection
+gen many rays
+sim many rays
+get actors only for hit flag
+get actors only for intersected
 perm calc
-...
-essentially repeat mat work
+multiple poses
+viz side by side
 
 hierarchical clustering
 pdist2

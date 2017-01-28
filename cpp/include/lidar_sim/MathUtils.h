@@ -12,5 +12,7 @@ namespace lidar_sim {
     Eigen::MatrixXd calcPtsCovMat(std::vector<std::vector<double> > pts);
     Eigen::MatrixXd calcOuterProd(std::vector<double> pt);
     double deg2rad(double angle_deg);
+    bool anyNonzeros(std::vector<int> vec);
+    std::vector<double> sampleFromMvn(std::vector<double> mu, Eigen::MatrixXd cov_mat);
 }
 

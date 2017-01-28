@@ -42,6 +42,10 @@ set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
 set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
 link_directories( ${ALGLIB_LIBRARY_DIR} )
 list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
+
+# EIGENMVN
+set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
+include_directories( ${EIGENMVN_INCLUDE_DIR} )
   
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
