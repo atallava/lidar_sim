@@ -109,10 +109,10 @@ namespace lidar_sim {
 	flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
 
 	// construct an randomized kd-tree index using 4 kd-trees
-	int n_kd_trees = 4;
+	int n_kd_trees = 10;
 	flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
 	index.buildIndex();                                                                                               
-	int n_checks = 20;
+	int n_checks = 100;
 	index.knnSearch(query, indices, dists, nn, flann::SearchParams(n_checks));
 
 	std::vector<int> ids(pts2.size(), 0);

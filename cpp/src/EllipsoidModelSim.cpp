@@ -7,11 +7,14 @@
 #include <lidar_sim/EllipsoidModelSim.h>
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/PoseUtils.h>
+#include <lidar_sim/LaserUtils.h>
 
 using namespace lidar_sim;
 
 EllipsoidModelSim::EllipsoidModelSim() :
-    m_maxMahaDistForHit(3.5),
+    m_max_maha_dist_for_hit(3.5),
     m_debug_flag(0)
 {    
     std::random_device rd;
@@ -79,7 +82,7 @@ std::tuple<std::vector<std::vector<int> >,
     std::vector<std::vector<int> > intersection_flag(n_rays, std::vector<int>(n_ellipsoids));
     for(size_t i = 0; i < n_rays; ++i)
 	for(size_t j = 0; j < n_ellipsoids; ++j)
-	    if ((maha_dist_to_mu[i][j] <= m_maxMahaDistForHit) && 
+	    if ((maha_dist_to_mu[i][j] <= m_max_maha_dist_for_hit) && 
 		(dist_along_ray[i][j] <= m_laser_calib_params.intrinsics.max_range) &&
 		(dist_along_ray[i][j] >= m_laser_calib_params.intrinsics.min_range))
 		intersection_flag[i][j] = 1;
@@ -87,6 +90,20 @@ std::tuple<std::vector<std::vector<int> >,
 		intersection_flag[i][j] = 0;
     
     return std::make_tuple(intersection_flag, dist_along_ray);
+}
+
+std::tuple<std::vector<int>,
+	   std::vector<double> > EllipsoidModelSim::calcEllipsoidIntersections(std::vector<double> ray_origin, std::vector<double> ray_dirn)
+{
+    std::vector<std::vector<double> > ray_dirns;
+    ray_dirns.push_back(ray_dirn);
+
+    std::vector<std::vector<int> > intersection_flag;
+    std::vector<std::vector<double> > dist_along_ray;
+    std::tie(intersection_flag, dist_along_ray) = calcEllipsoidIntersections(
+    	ray_origin, ray_dirns);
+
+    return std::make_tuple(intersection_flag[0], dist_along_ray[0]);
 }
 
 std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(std::vector<double> ray_origin, std::vector<double> ray_dirn, std::vector<double> mu, Eigen::MatrixXd cov_mat)
@@ -233,3 +250,104 @@ EllipsoidModelSim::sampleHitId(std::vector<double> hit_prob_vec, std::vector<int
     return std::make_tuple(hit_id, hit_bool);
 }
 
+std::vector<double> EllipsoidModelSim::calcMahaDistPtToEllipsoids(std::vector<int> ellipsoid_ids, std::vector<double> pt)
+{
+    std::vector<double> maha_dists_to_ellipsoids;
+    for(size_t i = 0; i < ellipsoid_ids.size(); ++i)
+	maha_dists_to_ellipsoids.push_back(
+	    calcMahaDistPtToEllipsoid(ellipsoid_ids[i], pt));
+
+    return maha_dists_to_ellipsoids;
+}
+
+double EllipsoidModelSim::calcMahaDistPtToEllipsoid(int ellipsoid_id, std::vector<double> pt)
+{
+    return calcMahaDistPtToEllipsoid(m_ellipsoid_models[ellipsoid_id].mu, m_ellipsoid_models[ellipsoid_id].cov_mat, 
+				 pt);
+}
+
+double EllipsoidModelSim::calcMahaDistPtToEllipsoid(std::vector<double> mu, Eigen::MatrixXd cov_mat, 
+						std::vector<double> pt)
+{
+    Eigen::MatrixXd mu_eigen = stlVecToEigen(mu);
+    Eigen::MatrixXd pt_eigen = stlVecToEigen(pt);
+    double maha_dist = ((pt_eigen-mu_eigen).transpose()*(cov_mat.inverse()*(pt_eigen-mu_eigen)))(0);
+    maha_dist = std::sqrt(maha_dist);
+    
+    return maha_dist;
+}
+
+std::tuple<int, std::vector<int> >
+EllipsoidModelSim::assignEllipsoidHitCredits(std::vector<double> maha_dists_to_ellipsoids, 
+					     std::vector<int> sorted_intersecting_ids)
+{
+    std::vector<int> flag(maha_dists_to_ellipsoids.size(), 0);
+    for(size_t i = 0; i < flag.size(); ++i)
+	if (maha_dists_to_ellipsoids[i] < m_max_maha_dist_for_hit)
+	    flag[i] = 1;
+
+    int ellipsoid_hit_id = -1;
+    std::vector<int> ellipsoid_miss_ids;
+
+    if (!anyNonzeros(flag))
+	{
+	    if (maha_dists_to_ellipsoids[0] < maha_dists_to_ellipsoids.back())
+		// no ellipsoids hit
+		return std::make_tuple(-1, ellipsoid_miss_ids);
+	    else
+	    {
+		// all ellipsoids missed
+		ellipsoid_miss_ids = sorted_intersecting_ids;
+		return std::make_tuple(-1, ellipsoid_miss_ids);
+	    }
+	}
+
+    std::vector<int> posns = findNonzeroIds(flag);
+    int posn = posns[0]; // take first hit
+    ellipsoid_hit_id = sorted_intersecting_ids[posn];
+    
+    for(size_t i = 0; i < (size_t)posn; ++i)
+	ellipsoid_miss_ids.push_back(sorted_intersecting_ids[i]);
+
+    return std::make_tuple(ellipsoid_hit_id, ellipsoid_miss_ids);
+}
+
+std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPose(std::vector<double> imu_pose)
+{
+    // rays
+    Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
+    std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
+    std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, m_laser_calib_params);
+
+    // intersections
+    std::vector<std::vector<int> > intersection_flag;
+    std::vector<std::vector<double> > dist_along_ray;
+    std::tie(intersection_flag, dist_along_ray) = calcEllipsoidIntersections(
+    	ray_origin, ray_dirns);
+
+    // sim
+    std::vector<std::vector<double> > sim_pts;
+    std::vector<int> hit_flag;
+    std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(intersection_flag, dist_along_ray);
+
+    // throw away vectors which are zeros
+    std::vector<std::vector<double> > sim_pts_hit;
+    for(size_t i = 0; i < hit_flag.size(); ++i)
+	if (hit_flag[i])
+	    sim_pts_hit.push_back(sim_pts[i]);
+
+    return sim_pts;
+}
+
+std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPoses(std::vector<std::vector<double> > imu_poses)
+{
+    std::vector<std::vector<double> > sim_pts;
+    for(size_t i = 0; i < imu_poses.size(); ++i)
+    {
+	std::vector<std::vector<double> > this_sim_pts = simPtsGivenPose(imu_poses[i]); 
+	for(size_t j = 0; j < this_sim_pts.size(); ++j)
+	    sim_pts.push_back(this_sim_pts[j]);
+    }
+
+    return sim_pts;
+}

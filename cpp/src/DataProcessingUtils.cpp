@@ -196,6 +196,15 @@ namespace lidar_sim {
 	return pts_alglib;
     }
 
+    Eigen::MatrixXd stlVecToEigen(std::vector<double> vec)
+    {
+	Eigen::MatrixXd vec_eigen(vec.size(), 1);
+	for(size_t i = 0; i < vec.size(); ++i)
+	    vec_eigen(i) = vec[i];
+
+	return vec_eigen;
+    }
+
     Eigen::MatrixXd stlArrayToEigen(std::vector<std::vector<double> > array)
     {
 	Eigen::MatrixXd array_eigen(array.size(), array[0].size());

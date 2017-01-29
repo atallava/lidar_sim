@@ -82,8 +82,9 @@ add_library(lidar_sim SHARED
   src/PoseUtils.cpp
   src/EllipsoidModelSim.cpp
   src/SectionLoader.cpp
+  src/LaserUtils.cpp
   )
-
+ 
 # Executables
 
 # tests

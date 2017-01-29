@@ -1,5 +1,5 @@
 % load data
-relPathEllipsoids = 'ellipsoid_models';
+relPathEllipsoids = 'ellipsoid_models_alglib';
 load(relPathEllipsoids,'ellipsoidModels');
 
 relPathPts = 'rim_stretch_veg_train';
@@ -17,6 +17,9 @@ poseTLog = tLog;
 
 relPathLaserCalibParams = 'laser_calib_params';
 load(relPathLaserCalibParams,'laserCalibParams');
+
+relPathModelingParams = 'modeling_params';
+load(relPathModelingParams,'modelingParams');
 
 %% scans to process
 nScanPts = size(scanPts,1);
@@ -36,7 +39,7 @@ ellipsoidHitCount = ellipsoidHitCountPrior;
 ellipsoidMissCount = ellipsoidMissCountPrior;
 
 clockLocal = tic();
-for scanId = scanIdsToProcess
+for scanId = 67232%scanIdsToProcess
     % get imu pose
     t = scanPtsTLog(scanId);
     poseIndex = indexOfNearestTime(t,poseTLog);
@@ -75,7 +78,7 @@ for scanId = scanIdsToProcess
     % maha distances to ellipsoids
     distToEllipsoids = mahalanobisDistsToEllipsoids(ellipsoidModels(sortedIntersectingIds),thisPt);
     % get credits
-    [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distToEllipsoids,sortedIntersectingIds,modelingParams);
+    [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distToEllipsoids,sortedIntersectingIds,modelingParams.ellipsoidParams.maxDistForHit);
     
     % assign credits
     ellipsoidHitCount(ellipsoidHitId) = ellipsoidHitCount(ellipsoidHitId)+1;

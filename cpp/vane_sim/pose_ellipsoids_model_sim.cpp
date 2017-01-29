@@ -4,6 +4,7 @@
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseUtils.h>
+#include <lidar_sim/LaserUtils.h>
 #include <lidar_sim/LaserCalibParams.h>
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/EllipsoidModelSim.h>
@@ -38,7 +39,6 @@ int main(int argc, char **argv)
     EllipsoidModelSim sim;
     sim.setEllipsoidModels(ellipsoid_models);
     sim.setLaserCalibParams(laser_calib_params);
-
 
     // ellipsoid intersections
     std::cout << "calculating ellipsoid intersections..." << std::endl;
