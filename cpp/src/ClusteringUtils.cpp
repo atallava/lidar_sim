@@ -38,7 +38,7 @@ namespace lidar_sim {
     {
 	std::vector<int> vec_stl;
 	
-	for(size_t i = 0; i < vec.length(); ++i)
+	for(size_t i = 0; i < (size_t)vec.length(); ++i)
 	    vec_stl.push_back((int)vec[i]);
 
 	return vec_stl;
@@ -54,9 +54,9 @@ namespace lidar_sim {
     {
 	std::vector<int> n_pts_per_cluster(n_clusters, 0);
     
-	for(size_t i = 0; i < n_clusters; ++i)
+	for(size_t i = 0; i < (size_t)n_clusters; ++i)
 	    for(size_t j = 0; j < pt_cluster_ids.size(); ++j)
-		if (pt_cluster_ids[j] == i)
+		if (pt_cluster_ids[j] == (int)i)
 		    n_pts_per_cluster[i]++;
 
 	return n_pts_per_cluster;
@@ -67,7 +67,7 @@ namespace lidar_sim {
 	std::ofstream file(rel_path_output);
 	std::cout << "Writing cluster ids to: " << rel_path_output << std::endl;
 	
-	for(size_t i = 0; i < pt_cluster_ids.length(); ++i)
+	for(size_t i = 0; i < (size_t)pt_cluster_ids.length(); ++i)
 	    file << pt_cluster_ids[i] << std::endl;
 
 	file.close();

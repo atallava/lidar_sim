@@ -2,10 +2,13 @@
 
 #include "eigenmvn.h"
 
+#include <flann/flann.hpp>
+
 #include <lidar_sim/Test.h>
 #include <lidar_sim/Visualizer.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/VizUtils.h>
 
 using namespace lidar_sim;
 
@@ -81,5 +84,47 @@ bool Test::testEigenmvn()
     std::cout << "samples: " << std::endl;
     std::cout << samples << std::endl;
     
+    return true;
+}
+
+bool Test::testFLANN()
+{
+    std::vector<std::vector<double> > pts1 = 
+	{{0, 0},
+	 {0, 1},
+	 {1, 0}};
+      
+    flann::Matrix<double> dataset(new double[pts1.size()*pts1[0].size()], pts1.size(), pts1[0].size());
+    for(size_t i = 0; i < pts1.size(); ++i)
+	for(size_t j = 0; j < pts1[0].size(); ++j)
+	    dataset[i][j] = pts1[i][j];
+
+    std::vector<std::vector<double> > pts2 = 
+	{{0.6, 0},
+	 {0, 0.8}};
+    flann::Matrix<double> query(new double[pts2.size()*pts2[0].size()], pts2.size(), pts2[0].size());
+    for(size_t i = 0; i < pts2.size(); ++i)
+    	for(size_t j = 0; j < pts2[0].size(); ++j)
+    	    query[i][j] = pts2[i][j];
+    
+    int nn = 2;
+    
+    flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
+    flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
+
+
+    // construct an randomized kd-tree index using 4 kd-trees
+    flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(4));
+    index.buildIndex();                                                                                               
+
+    // do a knn search, using 128 checks
+    index.knnSearch(query, indices, dists, nn, flann::SearchParams(128));
+
+    std::vector<int> nn_ids;
+    for(size_t i = 0; i < pts2.size(); ++i)
+	nn_ids.push_back(indices[i][0]);
+
+    dispVec(nn_ids);
+
     return true;
 }

@@ -139,8 +139,7 @@ std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 EllipsoidModelSim::simPtsGivenIntersections(std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray)
 {
     size_t n_rays = intersection_flag.size();
-    size_t n_ellipsoids = m_ellipsoid_models.size();
-    
+
     Pts sim_pts(n_rays, std::vector<double>(3, 0));
     std::vector<int> hit_flag(n_rays, 0);
 

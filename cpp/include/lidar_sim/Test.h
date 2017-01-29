@@ -10,5 +10,6 @@ namespace lidar_sim {
 	bool testGetPoseAtTime(std::string rel_path_pose_log, double t);
 	bool testCovMat();
 	bool testEigenmvn();
+	bool testFLANN();
     };
 }

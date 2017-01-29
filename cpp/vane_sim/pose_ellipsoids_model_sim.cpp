@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     // dispVec(findNonzeroIds(intersected_ellipsoids_flag));
 
     // ellipsoids
-    for(size_t i = 0; i < ellipsoid_models.size()-50; ++i)
+    for(size_t i = 0; i < ellipsoid_models.size(); ++i)
     {
 	if (use_intersected_flag)
 	    if (!intersected_ellipsoids_flag[i])

@@ -15,11 +15,8 @@ relPathPoseLog = 'pose_log';
 load(relPathPoseLog,'poseLog','tLog');
 poseTLog = tLog;
 
-relPathTLaser = 'transf_laser_imu';
-load(relPathTLaser,'TLaserImu');
-
-relPathScanningPattern = 'scanning_pattern';
-load(relPathScanningPattern,'alphaVec','thetaVec');
+relPathLaserCalibParams = 'laser_calib_params';
+load(relPathLaserCalibParams,'laserCalibParams');
 
 %% scans to process
 nScanPts = size(scanPts,1);

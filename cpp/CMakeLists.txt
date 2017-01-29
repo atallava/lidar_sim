@@ -46,6 +46,10 @@ list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
 # EIGENMVN
 set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
 include_directories( ${EIGENMVN_INCLUDE_DIR} )
+
+# FLANN
+# set( FLANN_INCLUDE_DIR "/usr0/home/atallav1/" )
+# include_directories( ${FLANN_INCLUDE_DIR} )
   
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
@@ -77,6 +81,7 @@ add_library(lidar_sim SHARED
   src/LaserCalibParams.cpp
   src/PoseUtils.cpp
   src/EllipsoidModelSim.cpp
+  src/SectionLoader.cpp
   )
 
 # Executables

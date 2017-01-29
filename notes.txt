@@ -89,15 +89,23 @@ just like you have functions written in matlab for matlab processing, you need
 to write emacs lisp to do simple operations in emacs
 
 clustering:
-gen many rays
-sim many rays
+get driveby poses and pts
+scan ids to process
 perm calc
 multiple poses
 viz side by side
 
+cpp:
 hierarchical clustering
 pdist2
+flann, nearest neighbors
+auto( v : y )
+std generator
+why template only in header
+auto
+vector to eigen, vector to flann, better than copying
 
+flann has hierarchical clustering also
 check perm logic
 clustering class
 how to set which coords are in view
@@ -106,12 +114,6 @@ cluster_trial should be a class
 better vizer logic
 
 params:
-ellipsoids
-default perm value
-
-auto( v : y )
-std generator
-why template only in header
 
 --------------------------------------------------
 

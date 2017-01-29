@@ -6,6 +6,8 @@
 #include "stdafx.h"
 #include "dataanalysis.h"
 
+#include <flann/flann.hpp>
+
 namespace lidar_sim {
     std::string exec(const char* cmd);	
     int getNumLinesInFile(std::string rel_path_file);
@@ -18,4 +20,6 @@ namespace lidar_sim {
     alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts);
     Eigen::MatrixXd stlArrayToEigen(std::vector<std::vector<double> > array);
     std::vector<std::vector<double> > EigenToStlArray(Eigen::MatrixXd array);
+    flann::Matrix<double> stlArrayToFlannMatrix(std::vector<std::vector<double> > array);    
+    std::vector<std::vector<double> > flannMatrixToStlArray(flann::Matrix<double> mat);
 }

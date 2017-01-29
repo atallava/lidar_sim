@@ -210,10 +210,30 @@ namespace lidar_sim {
     {
 	std::vector<std::vector<double> > array_stl(array.rows(), 
 						    std::vector<double>(array.cols()));
-	for(size_t i = 0; i < array.rows(); ++i)
-	    for(size_t j = 0; j < array.cols(); ++j)
+	for(size_t i = 0; i < (size_t)array.rows(); ++i)
+	    for(size_t j = 0; j < (size_t)array.cols(); ++j)
 		array_stl[i][j] = array(i,j);
 
 	return array_stl;
+    }
+
+    flann::Matrix<double> stlArrayToFlannMatrix(std::vector<std::vector<double> > array)
+    {
+	flann::Matrix<double> mat(new double[array.size()*array[0].size()], array.size(), array[0].size());
+	for(size_t i = 0; i < array.size(); ++i)
+	    for(size_t j = 0; j < array[0].size(); ++j)
+		mat[i][j] = array[i][j];
+
+	return mat;
+    }
+
+    std::vector<std::vector<double> > flannMatrixToStlArray(flann::Matrix<double> mat)
+    {
+	std::vector<std::vector<double> > array;
+	for(size_t i = 0; i < mat.rows; ++i)
+	    for(size_t j = 0; j < mat.cols; ++j)
+		array[i][j] = mat[i][j];
+
+	return array;
     }
 }

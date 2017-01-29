@@ -1,9 +1,14 @@
 #include <iostream>
 #include <math.h>
+#include <cmath>
+#include <algorithm>
 
 #include "eigenmvn.h"
 
+#include <flann/flann.hpp>
+
 #include <lidar_sim/MathUtils.h>
+#include <lidar_sim/DataProcessingUtils.h>
 
 namespace lidar_sim {
     std::vector<double> calcPtsMean(Pts pts)
@@ -91,5 +96,52 @@ namespace lidar_sim {
 	    sample_stl[i] = sample(i);
 
 	return sample_stl;
+    }
+
+    std::vector<int> nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2)
+    {
+	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
+	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
+
+	int nn = 1;
+
+	flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
+	flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
+
+	// construct an randomized kd-tree index using 4 kd-trees
+	int n_kd_trees = 4;
+	flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
+	index.buildIndex();                                                                                               
+	int n_checks = 20;
+	index.knnSearch(query, indices, dists, nn, flann::SearchParams(n_checks));
+
+	std::vector<int> ids(pts2.size(), 0);
+	for(size_t i = 0; i < pts2.size(); ++i)
+	    ids[i] = indices[i][0];
+
+	return ids;
+    }
+
+    std::vector<std::vector<double> > pdist2(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2)
+    {
+	size_t n_pts1 = pts1.size();
+	size_t n_pts2 = pts2.size();
+	std::vector<std::vector<double> > D(n_pts1, std::vector<double>(n_pts2));
+
+	for(size_t i = 0; i < n_pts1; ++i)
+	    for(size_t j = 0; j < n_pts2; ++j)
+		D[i][j] = euclideanDist(pts1[i], pts2[j]);
+
+	return D;
+    }
+
+    double euclideanDist(std::vector<double> pt1, std::vector<double> pt2)
+    {
+	double dist = 0;
+	for(size_t i = 0; i < pt1.size(); ++i)
+	    dist = dist + std::pow(pt1[i]-pt2[i], 2);
+
+	dist = std::sqrt(dist);
+	return dist;
     }
  }
