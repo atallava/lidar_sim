@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <ctime>
 
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/EllipsoidModelUtils.h>
@@ -18,6 +19,8 @@ using namespace lidar_sim;
 
 int main(int argc, char **argv)
 {
+    clock_t start_time = clock();
+
     std::cout << "loading data..." << std::endl;
     // load ellipsoids
     std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
@@ -32,7 +35,7 @@ int main(int argc, char **argv)
     std::string rel_path_xyz = "data/rim_stretch_veg_train.asc";
     std::vector<std::vector<double> > train_pts = loadPtsFromXYZFile(rel_path_xyz);
 
-    // poses
+    // pose server
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
@@ -48,13 +51,14 @@ int main(int argc, char **argv)
 
     size_t n_ellipsoids = ellipsoid_models.size();
     std::vector<int> ellipsoid_hit_count_prior(n_ellipsoids, 1);
-    std::vector<int> ellipsoid_miss_count_prior(n_ellipsoids, 0.2);
+    std::vector<int> ellipsoid_miss_count_prior(n_ellipsoids, 0);
 
     std::vector<int> ellipsoid_hit_count = ellipsoid_hit_count_prior;
     std::vector<int> ellipsoid_miss_count = ellipsoid_miss_count_prior;
 
     std::cout << "processing section pts..." << std::endl;
-    for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
+    for(size_t i = 0; i < section_pt_ids_to_process.size()
+	    ; ++i)
     {
     	int id = section_pt_ids_to_process[i];
 	
@@ -121,7 +125,8 @@ int main(int argc, char **argv)
     std::vector<double> hit_prob_vec(ellipsoid_models.size(), 1);
     for(size_t i = 0; i < hit_prob_vec.size(); ++i)
     {
-	hit_prob_vec[i] = ellipsoid_hit_count[i]/(ellipsoid_hit_count[i] + ellipsoid_miss_count[i]);
+	hit_prob_vec[i] = (double)(ellipsoid_hit_count[i]/(double)(ellipsoid_hit_count[i] + ellipsoid_miss_count[i]));
+	std::cout << ellipsoid_hit_count[i] << " " << ellipsoid_miss_count[i] << " " << hit_prob_vec[i] << std::endl;
 	ellipsoid_models[i].hit_prob = hit_prob_vec[i];
     }
 
@@ -129,5 +134,10 @@ int main(int argc, char **argv)
     std::cout << "writing out..." << std::endl;
     std::string rel_path_output = "data/ellipsoid_models_updated_hit_prob.txt";
     writeEllipsoidModelsToFile(ellipsoid_models, rel_path_output);
+
+    double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
+    std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
+
+    return(1);
 }
 

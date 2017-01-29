@@ -67,8 +67,8 @@ int main(int argc, char **argv)
     }
 
     // write to file
-    std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
-    writeEllipsoidModelsToFile(ellipsoid_models, rel_path_ellipsoid_models);
+    // std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
+    // writeEllipsoidModelsToFile(ellipsoid_models, rel_path_ellipsoid_models);
 
     // viz
     RangeDataVizer vizer;

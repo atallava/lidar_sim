@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     const LaserCalibParams laser_calib_params;
 
     // specify pose
-    std::vector<double> imu_pose = {450, -475, 0, 0, 0, deg2rad(10)};
+    std::vector<double> imu_pose = {455.729, -498.582, -5.825, 0.0397752, 0.022933, 5.07743};
     Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
 
     std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
@@ -61,8 +61,8 @@ int main(int argc, char **argv)
     bool use_hit_flag = true;
 
     // debug
-    // std::cout << "intersected flag: " << std::endl;
-    // dispVec(findNonzeroIds(intersected_ellipsoids_flag));
+    std::cout << "hit flag: " << std::endl;
+    dispVec(findNonzeroIds(hit_flag));
 
     // ellipsoids
     for(size_t i = 0; i < ellipsoid_models.size(); ++i)

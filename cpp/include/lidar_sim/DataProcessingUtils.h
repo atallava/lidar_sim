@@ -18,6 +18,7 @@ namespace lidar_sim {
     std::string genDetailLine(double packet_timestamp, std::vector<double> imu_pose, Eigen::Matrix<float,4,1> pt);
     void sectionOfSection(std::string rel_path_input, std::string rel_path_output, double start_time, double end_time);
     std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_file);
+    void writePtsToXYZFile(std::vector<std::vector<double> > pts, std::string rel_path_output);
 
     alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts);
 

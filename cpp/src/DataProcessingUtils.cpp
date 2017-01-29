@@ -184,6 +184,21 @@ namespace lidar_sim {
 	return pts;
     }
     
+    void writePtsToXYZFile(std::vector<std::vector<double> > pts, std::string rel_path_output)
+    {
+	std::ofstream file(rel_path_output);
+	std::cout << "Writing pts to: " << rel_path_output << std::endl;
+
+	for(size_t i = 0; i < pts.size(); ++i)
+	{
+	    std::ostringstream ss;
+	    ss << pts[i][0] << " " << pts[i][1] << " " << pts[i][2] << std::endl;
+	    file << ss.str();
+	}
+
+	file.close();
+    }
+    
     alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts)
     {
 	alglib::real_2d_array pts_alglib;

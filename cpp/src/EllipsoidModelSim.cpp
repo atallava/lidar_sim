@@ -336,7 +336,7 @@ std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPose(std::vector
 	if (hit_flag[i])
 	    sim_pts_hit.push_back(sim_pts[i]);
 
-    return sim_pts;
+    return sim_pts_hit;
 }
 
 std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPoses(std::vector<std::vector<double> > imu_poses)

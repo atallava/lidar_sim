@@ -14,7 +14,7 @@ load(relPathPoses,'imuPoses');
 %% simulate
 simPts = [];
 nImuPoses = size(imuPoses,1);
-imuPoseIdsToProcess = floor(linspace(1,nImuPoses,100));
+imuPoseIdsToProcess = floor(linspace(1,nImuPoses,1));
 imuPoseIdsToProcess = flipVecToRow(imuPoseIdsToProcess);
 
 clockLocal = tic();
