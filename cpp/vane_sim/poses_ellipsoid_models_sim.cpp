@@ -40,7 +40,6 @@ int main(int argc, char **argv)
     double dt = (t_max-t_min)/n_poses_to_sim;
 
     // get poses
-    int count = 0;
     double t = t_min;
     while(t < t_max)
     {

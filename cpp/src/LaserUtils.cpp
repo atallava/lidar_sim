@@ -26,7 +26,7 @@ namespace lidar_sim {
     {
 	size_t n_alpha_vec = intrinsics.alpha_vec.size();
 	size_t n_theta_vec = intrinsics.theta_vec.size();
-	size_t n_rays = n_alpha_vec*n_theta_vec;
+
 	std::vector<std::vector<double> > ray_dirns;
 	for(size_t i = 0; i < n_alpha_vec; ++i)
 	{

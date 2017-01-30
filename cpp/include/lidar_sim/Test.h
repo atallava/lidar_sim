@@ -11,5 +11,7 @@ namespace lidar_sim {
 	bool testCovMat();
 	bool testEigenmvn();
 	bool testFLANN();
+	bool testLibgp();
+	bool testAlglibRbf();
     };
 }

@@ -104,12 +104,21 @@ std generator
 why template only in header
 auto
 vector to eigen, vector to flann, better than copying
+for each
 
 flann has hierarchical clustering also
 check perm logic
 clustering class
 how to set which coords are in view
 cpp slower than matlab, perhaps because copying vectors?
+libgp slow. takes forever to fit to rim stretch ground train pts
+alglib rbf fit also very slow.
+matlab pdist2 very fast compared to for looping cpp
+
+for rim stretch ground train, with 1e6 pts, takes 729 s with rbfdist = 1, level = 1, smoothness = 1e-3
+10s with radius = 0.1m.
+
+how does matlab manage griddata fast? probably does it only for query points
 
 cluster_trial should be a class
 better vizer logic

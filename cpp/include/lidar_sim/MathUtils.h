@@ -39,6 +39,7 @@ namespace lidar_sim {
 	return nonzero_ids;
     }
 
+    // nearest neighbor ids for pts2 in pts1
     std::vector<int> nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
     std::vector<std::vector<double> > pdist2(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
     double euclideanDist(std::vector<double> pt1, std::vector<double> pt2);

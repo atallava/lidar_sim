@@ -47,7 +47,16 @@ list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
 set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
 include_directories( ${EIGENMVN_INCLUDE_DIR} )
 
+# LIBGP
+set( LIBGP_INCLUDE_DIR "/usr0/home/atallav1/libgp/include" )
+include_directories( ${LIBGP_INCLUDE_DIR} )
+set( LIBGP_LIBRARY "/usr0/home/atallav1/libgp/build/libgp.a" )
+set( LIBGP_LIBRARY_DIR "/usr0/home/atallav1/libgp/build" )
+link_directories( ${LIBGP_LIBRARY_DIR} )
+list( APPEND LIDAR_SIM_LIBRARIES ${LIBGP_LIBRARY} )
+
 # FLANN
+# commenting out because flann headers seem to already be in /usr/include
 # set( FLANN_INCLUDE_DIR "/usr0/home/atallav1/" )
 # include_directories( ${FLANN_INCLUDE_DIR} )
   
@@ -83,6 +92,7 @@ add_library(lidar_sim SHARED
   src/EllipsoidModelSim.cpp
   src/SectionLoader.cpp
   src/LaserUtils.cpp
+  src/GroundModeler.cpp
   )
  
 # Executables

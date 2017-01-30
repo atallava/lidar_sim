@@ -18,7 +18,10 @@ namespace lidar_sim {
 	RangeDataVizer();
 	void vizEllipsoidModels(EllipsoidModels ellipsoid_models);
 	void vizEllipsoidModels(EllipsoidModels ellipsoid_models, Pts pts);
+	void vizPts(std::vector<std::vector<double> > pts);
 	void takeItAway(std::vector<vtkSmartPointer<vtkActor> > actors);
+	void vizComparePts(std::vector<std::vector<double> > pts1,
+			   std::vector<std::vector<double> > pts2);
 
 	PointsVtkActorServer m_points_actor_server;
 	LineVtkActorServer m_line_actor_server;

@@ -30,20 +30,7 @@ int main(int argc, char **argv)
 
     // viz
     RangeDataVizer vizer;
-    std::vector<vtkSmartPointer<vtkActor> > actors;
+    vizer.vizComparePts(pts1, pts2);
     
-    std::vector<double> color1 = {1, 1, 1};
-    vtkSmartPointer<vtkActor> actor1 = vizer.m_points_actor_server.genPointsActor(pts1);
-    actor1->GetProperty()->SetColor(color1[0], color1[1], color1[2]);
-    actors.push_back(actor1);
-
-    std::vector<double> color2 = {1, 0, 0};
-    vtkSmartPointer<vtkActor> actor2 = vizer.m_points_actor_server.genPointsActor(pts2);
-    actor2->GetProperty()->SetColor(color2[0], color2[1], color2[2]);
-    actors.push_back(actor2);
-
-    // fire up
-    vizer.takeItAway(actors);
-
     return(1);
 }

@@ -198,6 +198,23 @@ namespace lidar_sim {
 
 	file.close();
     }
+
+    std::tuple<std::vector<double>, std::vector<double>, std::vector<double> >
+    getVecsFromPts(const std::vector<std::vector<double> > &pts)
+    {
+	std::vector<double> x(pts.size(), 0);
+	std::vector<double> y(pts.size(), 0);
+	std::vector<double> z(pts.size(), 0);
+
+	for(size_t i = 0; i < pts.size(); ++i)
+	{
+	    x[i] = pts[i][0];
+	    y[i] = pts[i][1];
+	    z[i] = pts[i][2];
+	}
+
+	return std::make_tuple(x, y, z);
+    }
     
     alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts)
     {

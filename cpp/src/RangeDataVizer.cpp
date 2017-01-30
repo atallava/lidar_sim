@@ -157,3 +157,31 @@ void RangeDataVizer::takeItAway(std::vector<vtkSmartPointer<vtkActor> > actors)
     renderWindow->Render();
     interactor->Start();
 }
+
+void RangeDataVizer::vizComparePts(std::vector<std::vector<double> > pts1,
+				   std::vector<std::vector<double> > pts2)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+    
+    std::vector<double> color1 = {1, 1, 1};
+    vtkSmartPointer<vtkActor> actor1 = m_points_actor_server.genPointsActor(pts1);
+    actor1->GetProperty()->SetColor(color1[0], color1[1], color1[2]);
+    actors.push_back(actor1);
+
+    std::vector<double> color2 = {1, 0, 0};
+    vtkSmartPointer<vtkActor> actor2 = m_points_actor_server.genPointsActor(pts2);
+    actor2->GetProperty()->SetColor(color2[0], color2[1], color2[2]);
+    actors.push_back(actor2);
+
+    // fire up
+    takeItAway(actors);
+}
+
+void RangeDataVizer::vizPts(std::vector<std::vector<double> > pts)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+    actors.push_back(m_points_actor_server.genPointsActor(pts));
+
+    // fire up
+    takeItAway(actors);
+}

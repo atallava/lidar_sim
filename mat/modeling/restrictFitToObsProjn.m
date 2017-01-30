@@ -11,6 +11,9 @@ function ptsFit = restrictFitToObsProjn(pts,ptsFit,maxDistToProjn)
 
 xy = pts(:,1:2);
 xyFit = ptsFit(:,1:2);
+fprintf('n pts: %d\n', size(xy,1));
+fprintf('n nodes: %d\n', size(xyFit,1));
+
 D = pdist2(xyFit,xy);
 DMin = min(D,[],2);
 
