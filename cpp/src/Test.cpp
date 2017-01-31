@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+// #include <vector>
 
 #include "eigenmvn.h"
 
@@ -12,6 +13,10 @@
 
 #include "gp.h"
 #include "gp_utils.h"
+
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
 
 #include <lidar_sim/Test.h>
 #include <lidar_sim/Visualizer.h>
@@ -231,6 +236,37 @@ bool Test::testAlglibRbf()
 
     // BTW, if you look at v, you will see that it is equal to 0.9999999997, not to 1.
     // This small error can be fixed by adding one more layer.
+
+    return true;
+}
+
+bool Test::testCgal()
+{
+    typedef CGAL::Exact_predicates_inexact_constructions_kernel            Kernel;
+    typedef CGAL::Triangulation_vertex_base_with_info_2<unsigned int, Kernel> Vb;
+    typedef CGAL::Triangulation_data_structure_2<Vb>                       Tds;
+    typedef CGAL::Delaunay_triangulation_2<Kernel, Tds>                    Delaunay;
+    typedef Kernel::Point_2                                                Point;
+
+    std::vector< std::pair<Point,unsigned> > points;
+    points.push_back( std::make_pair( Point(1,1), 0 ) );
+    points.push_back( std::make_pair( Point(1,2), 1 ) );
+    points.push_back( std::make_pair( Point(1,3), 2 ) );
+    points.push_back( std::make_pair( Point(2,1), 3 ) );
+    points.push_back( std::make_pair( Point(2,2), 4 ) );
+    points.push_back( std::make_pair( Point(2,3), 5 ) );
+
+    Delaunay triangulation;
+    triangulation.insert(points.begin(),points.end());
+
+    for(Delaunay::Finite_faces_iterator fit = triangulation.finite_faces_begin();
+	fit != triangulation.finite_faces_end(); ++fit) {
+
+	Delaunay::Face_handle face = fit;
+	std::cout << "Triangle:\t" << triangulation.triangle(face) << std::endl;
+	std::cout << "Vertex 0:\t" << triangulation.triangle(face)[0] << std::endl;
+	std::cout << "Vertex 0:\t" << face->vertex(0)->info() << std::endl;
+    }
 
     return true;
 }

@@ -129,4 +129,12 @@ GroundModeler::genNodeVecsForSmoothedFit(const std::vector<std::vector<double> >
     return std::make_tuple(x_node_vec, y_node_vec);
 }
 
-
+void GroundModeler::delaunayTriangulate()
+{
+    std::vector< std::pair<Point_cgal, unsigned> > points_cgal;
+    for(size_t i = 0; i < m_fit_pts.size(); ++i)
+	points_cgal.push_back(
+	    std::make_pair(Point_cgal(m_fit_pts[i][0], m_fit_pts[i][1]), i));
+    
+    m_triangulation.insert(points_cgal.begin(), points_cgal.end());
+}

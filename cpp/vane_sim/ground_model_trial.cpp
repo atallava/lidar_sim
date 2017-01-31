@@ -32,9 +32,11 @@ int main(int argc, char **argv)
     // debug
     RangeDataVizer vizer;
     // vizer.vizComparePts(pts, modeler.m_fit_pts);
-    vizer.vizPts(modeler.m_fit_pts);
+    // vizer.vizPts(modeler.m_fit_pts);
 
     // delaunay triangulate
+    std::cout << "triangulating: " << std::endl;
+    modeler.delaunayTriangulate();
 
     // write out
 

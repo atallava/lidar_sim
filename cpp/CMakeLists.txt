@@ -59,6 +59,13 @@ list( APPEND LIDAR_SIM_LIBRARIES ${LIBGP_LIBRARY} )
 # commenting out because flann headers seem to already be in /usr/include
 # set( FLANN_INCLUDE_DIR "/usr0/home/atallav1/" )
 # include_directories( ${FLANN_INCLUDE_DIR} )
+
+# CGAL
+find_package( CGAL)
+include( ${CGAL_USE_FILE} ) 
+include( CGAL_CreateSingleSourceCGALProgram ) 
+# message( STATUS "CGAL FOUND: " ${CGAL_FOUND} )
+# message( FATAL_ERROR )
   
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
