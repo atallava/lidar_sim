@@ -39,6 +39,7 @@ namespace lidar_sim {
 	std::vector<std::vector<double> > m_pts;
 	alglib::rbfmodel m_surface_model;
 	std::vector<std::vector<double> > m_fit_pts;
+	Delaunay_cgal m_triangulation;
 
     private:
 	double m_rbf_radius;
@@ -47,6 +48,5 @@ namespace lidar_sim {
 	double m_fit_pts_padding;
 	double m_fit_pts_node_resn;
 	double m_max_dist_to_projn;
-	Delaunay_cgal m_triangulation;
     };
 }

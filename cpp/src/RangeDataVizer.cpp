@@ -42,7 +42,7 @@ RangeDataVizer::RangeDataVizer() :
 {    
 }
 
-void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models)
+void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models)
 {
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
@@ -66,7 +66,7 @@ void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models)
     takeItAway(actors);
 }
 
-void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models, Pts pts)
+void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models, const Pts &pts)
 {
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
@@ -97,7 +97,7 @@ void RangeDataVizer::vizEllipsoidModels(EllipsoidModels ellipsoid_models, Pts pt
     takeItAway(actors);
 }
 
-void RangeDataVizer::takeItAway(std::vector<vtkSmartPointer<vtkActor> > actors)
+void RangeDataVizer::takeItAway(const std::vector<vtkSmartPointer<vtkActor> > &actors)
 {
     // renderer
     vtkSmartPointer<vtkRenderer>
@@ -158,6 +158,13 @@ void RangeDataVizer::takeItAway(std::vector<vtkSmartPointer<vtkActor> > actors)
     interactor->Start();
 }
 
+void RangeDataVizer::takeItAway(vtkSmartPointer<vtkActor> actor)
+{
+    std::vector<vtkSmartPointer<vtkActor> >actors;
+    actors.push_back(actor);
+    takeItAway(actors);
+}
+
 void RangeDataVizer::vizComparePts(std::vector<std::vector<double> > pts1,
 				   std::vector<std::vector<double> > pts2)
 {
@@ -184,4 +191,10 @@ void RangeDataVizer::vizPts(std::vector<std::vector<double> > pts)
 
     // fire up
     takeItAway(actors);
+}
+
+void RangeDataVizer::vizTriangles(const Delaunay_cgal &triangulation, const std::vector<std::vector<double> > &pts)
+{
+    vtkSmartPointer<vtkActor> actor = m_triangles_actor_server.genTrianglesActor(triangulation, pts);
+    takeItAway(actor);
 }

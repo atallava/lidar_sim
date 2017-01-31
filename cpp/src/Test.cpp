@@ -270,3 +270,4 @@ bool Test::testCgal()
 
     return true;
 }
+

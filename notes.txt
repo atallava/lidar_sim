@@ -104,7 +104,9 @@ std generator
 why template only in header
 auto
 vector to eigen, vector to flann, better than copying
-for each
+for each, lambdas
+can make a bunch of things const &
+many members are public
 
 flann has hierarchical clustering also
 check perm logic
