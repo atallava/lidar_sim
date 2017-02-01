@@ -18,7 +18,7 @@
 using namespace lidar_sim;
 
 TriangleModelSim::TriangleModelSim() :
-    m_range_var(0.003),
+    m_range_var(0.07),
     m_max_residual_for_hit(1),
     m_normal_dist(0, m_range_var)
 {    
@@ -84,7 +84,7 @@ void TriangleModelSim::fillCgalData()
 {
     for(size_t i = 0; i < m_fit_pts.size(); ++i)
     {
-	Point_3_cgal pt(m_fit_pts[i][0], m_fit_pts[i][2], m_fit_pts[i][2]);
+	Point_3_cgal pt(m_fit_pts[i][0], m_fit_pts[i][1], m_fit_pts[i][2]);
 	m_fit_pts_cgal.push_back(pt);
     }
 

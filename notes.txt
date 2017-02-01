@@ -133,7 +133,8 @@ maybe sorted intersection flag should be in a modeling utils
 
 write triangles also shouldn't be attached to a class?
 
-while calculating variance, might also calculate bias to these models
+perm and var for meshes is not right..
+
 
 --------------------------------------------------
 

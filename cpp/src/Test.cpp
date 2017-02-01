@@ -28,6 +28,7 @@
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/VizUtils.h>
+#include <lidar_sim/MathUtils.h>
 
 using namespace lidar_sim;
 
@@ -285,33 +286,19 @@ bool Test::testCgalIntersection()
     typedef Kernel::Triangle_3 Triangle_3;
     
     // ray along x-axis
-    Point_3 ray_origin(0, 0, 0);
-    Direction_3 ray_dirn(1, 0, 0);
+    Point_3 ray_origin(-460, 440, 0);
+    Direction_3 ray_dirn(std::cos(deg2rad(50)), 0, -std::sin(deg2rad(50)));
     Ray_3 ray(ray_origin, ray_dirn);
 
     // triangle 1 that ray should hit
-    Point_3 v11(1, 0, 1);
-    Point_3 v12(1, 1, -1);
-    Point_3 v13(1, -1, -1);
+    Point_3 v11(-453.4150, 440.1160, -7.7246);
+    Point_3 v12(-454.4150, 440.1160, -7.6696);
+    Point_3 v13(-453.4150, 439.1160, -7.5615);
     Triangle_3 t1(v11, v12, v13);
 
     CGAL::Object obj = intersection(ray, t1);
 
     Point_3 pt_intersection;
-    if (assign(pt_intersection, obj))
-    {
-	std::cout << "hit! point:" << std::endl;
-	std::cout << pt_intersection << std::endl;
-    }
-
-    // triangle 2 that ray should not hit
-    Point_3 v21(1, 0, 10);
-    Point_3 v22(1, 1, -9);
-    Point_3 v23(1, -1, -9);
-    Triangle_3 t2(v21, v22, v23);
-
-    obj = intersection(ray, t2);
-
     if (assign(pt_intersection, obj))
     {
 	std::cout << "hit! point:" << std::endl;

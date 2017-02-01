@@ -2,7 +2,7 @@
 relPathPts = 'rim_stretch_ground_train';
 load(relPathPts,'pts');
 
-relPathModels = 'ground_model';
+relPathModels = 'ground_model_cgal';
 load(relPathModels,'groundTriModel');
 
 relPathLaserCalibParams = 'laser_calib_params';
@@ -22,7 +22,8 @@ TLaserWorld = laserCalibParams.extrinsics.TLaserImu*TImuWorld;
 
 %% calculate intersections
 rayOrigin = [x y z];
-rayDirns = genRayDirnsWorldFrame(TLaserWorld,laserCalibParams.intrinsics);
+% rayDirns = genRayDirnsWorldFrame(TLaserWorld,laserCalibParams.intrinsics);
+rayDirns = [cos(deg2rad(50)), 0, -sin(deg2rad(50))];
 
 [intersectionFlag,distAlongRay] = calcTriIntersections(rayOrigin,rayDirns,groundTriModel,laserCalibParams);
 
@@ -36,14 +37,12 @@ clear(plotStructVars{:});
 rayData.rayOrigin = rayOrigin;
 rayData.rayDirns = rayDirns;
 rayData.rayLengthToPlot = 20;
-rayData.hitFlag = hitFlag;
 plotStruct.rayData = rayData;
 
 triModelData = groundTriModel;
-triModelData.intersectionFlag = intersectionFlag;
 plotStruct.triModelData = triModelData;
 
-plotStruct.pts = simPts;
+% plotStruct.pts = simPts;
 
 hfig = plotRangeData(plotStruct);
 

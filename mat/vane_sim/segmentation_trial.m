@@ -2,7 +2,7 @@ relPathPts = '../data/rim_stretch_segment_train';
 load(relPathPts,'pts');
 
 %% subsample
-skip = 5;
+skip = 14;
 pts = pts(1:skip:end,:);
 
 %% calc spherical variation
@@ -26,7 +26,7 @@ for i = 1:nPts
         sphVarnVec(i) = sphVarnDefault;
         nPtsInsufficientNbrs = nPtsInsufficientNbrs+1;
     else
-        sphVarnVec(i) = calcSphVarn(thisNbrPts);
+        sphVarnVec(i) = calcSphericalVariation(thisNbrPts);
     end
 end
 compTime = toc(clockLocal);

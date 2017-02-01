@@ -1,5 +1,7 @@
 #include <tuple>
 
+#include <vtkProperty.h>
+
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
@@ -27,7 +29,7 @@ int main(int argc, char **argv)
 
     std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
     // single ray dirn
-    // std::vector<std::vector<double> > ray_dirns = {{-0.146354, -0.979840, -0.135992}};
+    // std::vector<std::vector<double> > ray_dirns = {{std::cos(deg2rad(50)), 0, -std::sin(deg2rad(50))}};
     // scanning pattern
     std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, laser_calib_params);
 
@@ -44,13 +46,13 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > sim_pts;
     std::vector<int> hit_flag;
     std::tie(sim_pts, hit_flag) = sim.simPtsGivenIntersections(ray_origin, ray_dirns, 
-							       intersection_flag, dist_along_ray);
+    							       intersection_flag, dist_along_ray);
 
     // viz
     RangeDataVizer vizer;
     std::vector<vtkSmartPointer<vtkActor> > actors;
     bool use_intersected_flag = false;
-    bool use_hit_flag = false;
+    bool use_hit_flag = true;
 
     // debug
     // std::cout << "hit flag: " << std::endl;
@@ -76,9 +78,9 @@ int main(int argc, char **argv)
     	sim_pts_to_plot = logicalSubset2DArray(sim_pts, hit_flag);
     else
     	sim_pts_to_plot = sim_pts;
-
-    actors.push_back(
-    	vizer.m_points_actor_server.genPointsActor(sim_pts_to_plot));
+    vtkSmartPointer<vtkActor> pts_actor = vizer.m_points_actor_server.genPointsActor(sim_pts_to_plot);
+    pts_actor->GetProperty()->SetColor(0, 1, 0);
+    actors.push_back(pts_actor);
 
     // fire up
     vizer.takeItAway(actors);
