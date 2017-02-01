@@ -199,37 +199,6 @@ EllipsoidModelSim::simPtsGivenIntersections(std::vector<std::vector<int> > inter
     return std::make_tuple(sim_pts, hit_flag);
 }
 
-std::tuple<std::vector<int>, std::vector<double> >
-EllipsoidModelSim::sortIntersectionFlag(std::vector<int> intersection_flag, std::vector<double> dist_along_ray)
-{
-    std::vector<int> intersecting_ids;
-    std::vector<double> dist_along_ray_intersections;
-    for(size_t i = 0; i < intersection_flag.size(); ++i)
-	if (intersection_flag[i] == 1)
-	{
-	    intersecting_ids.push_back(i);
-	    dist_along_ray_intersections.push_back(dist_along_ray[i]);
-	}
-    
-    // get indices of ascending sort
-    std::vector<int> sorted_ids(intersecting_ids.size());
-    std::size_t n(0);
-    std::generate(std::begin(sorted_ids), std::end(sorted_ids), [&]{ return n++; });
-
-    std::sort( std::begin(sorted_ids), std::end(sorted_ids), 
-	       [&](int i1, int i2) { return dist_along_ray_intersections[i1] < dist_along_ray_intersections[i2]; });
-
-    std::vector<int> sorted_intersecting_ids(intersecting_ids.size());
-    std::vector<double> sorted_dist_along_ray_intersections(dist_along_ray_intersections.size());
-    for(size_t i = 0; i < sorted_ids.size(); ++i)
-    {
-	sorted_intersecting_ids[i] = intersecting_ids[sorted_ids[i]];
-	sorted_dist_along_ray_intersections[i] = dist_along_ray_intersections[sorted_ids[i]];
-    }
-    
-    return std::make_tuple(sorted_intersecting_ids, sorted_dist_along_ray_intersections);
-}
-
 std::tuple<int, bool>
 EllipsoidModelSim::sampleHitId(std::vector<double> hit_prob_vec, std::vector<int> target_ids)
 {

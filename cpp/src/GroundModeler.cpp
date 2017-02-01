@@ -22,7 +22,8 @@ GroundModeler::GroundModeler() :
     m_rbf_reg(1e-3),
     m_fit_pts_padding(5),
     m_fit_pts_node_resn(1),
-    m_max_dist_to_projn(1.5)
+    m_max_dist_to_projn(1.5),
+    m_default_hit_prob(1)
 {    
 }
 
@@ -137,4 +138,40 @@ void GroundModeler::delaunayTriangulate()
 	    std::make_pair(Point_cgal(m_fit_pts[i][0], m_fit_pts[i][1]), i));
     
     m_triangulation.insert(points_cgal.begin(), points_cgal.end());
+
+    calcTrianglesFromTriangulation();
+}
+
+void GroundModeler::calcTrianglesFromTriangulation()
+{
+    for(Delaunay_cgal::Finite_faces_iterator fit = m_triangulation.finite_faces_begin();
+	fit != m_triangulation.finite_faces_end(); ++fit) 
+    {
+	Delaunay_cgal::Face_handle face = fit;
+	std::vector<int> triangle;
+	for(size_t i = 0; i < 3; ++i)
+	    triangle.push_back(face->vertex(i)->info());
+	m_triangles.push_back(triangle);
+    }
+}
+
+void GroundModeler::writeTrianglesToFile(std::string rel_path_output)
+{
+    std::ofstream file(rel_path_output);
+    std::cout << "Writing triangles to: " << rel_path_output << std::endl;
+
+    file << "pts" << std::endl;
+    
+    for(size_t i = 0; i < m_fit_pts.size(); ++i)
+	file << m_fit_pts[i][0] << " " <<
+	    m_fit_pts[i][1] << " " <<
+	    m_fit_pts[i][2] << std::endl;
+
+    file << "triangles" << std::endl;
+    for(size_t i = 0; i < m_triangles.size(); ++i)
+	file << m_triangles[i][0] << " " <<
+	    m_triangles[i][1] << " " <<
+	    m_triangles[i][2] << " " << m_default_hit_prob << std::endl;
+    
+    file.close();
 }

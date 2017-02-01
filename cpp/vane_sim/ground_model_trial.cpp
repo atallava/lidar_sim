@@ -30,18 +30,17 @@ int main(int argc, char **argv)
     modeler.fitSmoothedPts();
 
     // delaunay triangulate
-    std::cout << "triangulating: " << std::endl;
+    std::cout << "triangulating " << std::endl;
     modeler.delaunayTriangulate();
 
     // debug
     RangeDataVizer vizer;
     // vizer.vizComparePts(pts, modeler.m_fit_pts);
-    // vizer.vizPts(modeler.m_fit_pts);
     // vizer.vizTriangles(modeler.m_triangulation, modeler.m_fit_pts);
 
     // write out
-    // how will you save the triangulation?
-    // depends on how you want to simulate from them
+    std::string rel_path_triangles = "data/triangle_models.txt";
+    modeler.writeTrianglesToFile(rel_path_triangles);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

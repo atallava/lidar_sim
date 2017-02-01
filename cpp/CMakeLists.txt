@@ -98,6 +98,7 @@ add_library(lidar_sim SHARED
   src/LaserCalibParams.cpp
   src/PoseUtils.cpp
   src/EllipsoidModelSim.cpp
+  src/TriangleModelSim.cpp
   src/SectionLoader.cpp
   src/LaserUtils.cpp
   src/GroundModeler.cpp
@@ -123,15 +124,15 @@ foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
   add_executable( ${testname} ${testsourcefile} )
   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
- 
+  
 # vtk examples
-file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vtk_examples/*.cpp )
-foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
-  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-  string( REPLACE "vtk_examples/" "" testname ${testnamewithdir})
-  add_executable( ${testname} ${testsourcefile} )
-  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+# file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vtk_examples/*.cpp )
+# foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+#   string( REPLACE "vtk_examples/" "" testname ${testnamewithdir})
+#   add_executable( ${testname} ${testsourcefile} )
+#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
  
 # vane sim
 file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )

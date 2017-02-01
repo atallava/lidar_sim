@@ -15,8 +15,13 @@
 #include "gp_utils.h"
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
 #include <CGAL/Triangulation_vertex_base_with_info_2.h>
+#include <CGAL/intersections.h>
+#include <CGAL/Cartesian.h>
+#include <CGAL/Object.h>
+#include <boost/variant.hpp>
 
 #include <lidar_sim/Test.h>
 #include <lidar_sim/Visualizer.h>
@@ -271,3 +276,47 @@ bool Test::testCgal()
     return true;
 }
 
+bool Test::testCgalIntersection()
+{
+    typedef CGAL::Exact_predicates_inexact_constructions_kernel            Kernel;
+    typedef CGAL::Ray_3<Kernel> Ray_3;
+    typedef CGAL::Point_3<Kernel> Point_3;
+    typedef CGAL::Direction_3<Kernel> Direction_3;
+    typedef Kernel::Triangle_3 Triangle_3;
+    
+    // ray along x-axis
+    Point_3 ray_origin(0, 0, 0);
+    Direction_3 ray_dirn(1, 0, 0);
+    Ray_3 ray(ray_origin, ray_dirn);
+
+    // triangle 1 that ray should hit
+    Point_3 v11(1, 0, 1);
+    Point_3 v12(1, 1, -1);
+    Point_3 v13(1, -1, -1);
+    Triangle_3 t1(v11, v12, v13);
+
+    CGAL::Object obj = intersection(ray, t1);
+
+    Point_3 pt_intersection;
+    if (assign(pt_intersection, obj))
+    {
+	std::cout << "hit! point:" << std::endl;
+	std::cout << pt_intersection << std::endl;
+    }
+
+    // triangle 2 that ray should not hit
+    Point_3 v21(1, 0, 10);
+    Point_3 v22(1, 1, -9);
+    Point_3 v23(1, -1, -9);
+    Triangle_3 t2(v21, v22, v23);
+
+    obj = intersection(ray, t2);
+
+    if (assign(pt_intersection, obj))
+    {
+	std::cout << "hit! point:" << std::endl;
+	std::cout << pt_intersection << std::endl;
+    }
+
+    return true;
+}

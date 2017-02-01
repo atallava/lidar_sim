@@ -81,7 +81,7 @@ int main(int argc, char **argv)
     	std::vector<int> sorted_intersecting_ids;
     	std::vector<double> sorted_dist_along_ray;
     	std::tie(sorted_intersecting_ids, sorted_dist_along_ray) =
-    	    sim.sortIntersectionFlag(intersection_flag, dist_along_ray);
+    	    sortIntersectionFlag(intersection_flag, dist_along_ray);
     	std::vector<double> maha_dists_to_ellipsoids = 
     	    sim.calcMahaDistPtToEllipsoids(sorted_intersecting_ids, this_pt);
 	

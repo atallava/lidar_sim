@@ -39,9 +39,13 @@ namespace lidar_sim {
 	return nonzero_ids;
     }
 
+    std::tuple<std::vector<int>, std::vector<double> >
+	sortIntersectionFlag(std::vector<int> intersection_flag, std::vector<double> dist_along_ray);
+
     // nearest neighbor ids for pts2 in pts1
     std::vector<int> nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
     std::vector<std::vector<double> > pdist2(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
     double euclideanDist(std::vector<double> pt1, std::vector<double> pt2);
+    double calcVariance(std::vector<double> vec);
 }
 
