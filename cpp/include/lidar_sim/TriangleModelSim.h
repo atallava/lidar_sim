@@ -30,6 +30,9 @@ namespace lidar_sim {
 	    assignTriHitCredits(std::vector<double> sorted_dists_to_tri, 
 				std::vector<int> sorted_intersecting_ids, double measured_range);
 	void writeTrianglesToFile(std::string rel_path_output);
+	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+	    simPtsGivenIntersections(std::vector<double> ray_origin, std::vector<std::vector<double> > ray_dirns,
+				     std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray);
 
 	std::vector<std::vector<int> > m_triangles;
 	std::vector<std::vector<double> > m_fit_pts;
@@ -41,5 +44,7 @@ namespace lidar_sim {
     private:
 	LaserCalibParams m_laser_calib_params;
 	double m_max_residual_for_hit;
+	std::mt19937 m_gen;
+	std::normal_distribution<> m_normal_dist;
     };
 }

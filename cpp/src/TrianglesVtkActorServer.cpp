@@ -85,3 +85,53 @@ vtkSmartPointer<vtkActor> TrianglesVtkActorServer::genTrianglesActor(const Delau
 
     return actor;
 }
+
+vtkSmartPointer<vtkActor> 
+TrianglesVtkActorServer::genTrianglesActor(const std::vector<std::vector<int> > &triangle_vertex_ids, 
+					    const std::vector<std::vector<double> > &pts)
+{
+    // insert points
+    vtkSmartPointer<vtkPoints> points =
+	vtkSmartPointer<vtkPoints>::New();
+    for(size_t i = 0; i < pts.size(); ++i)
+	points->InsertNextPoint(pts[i][0], pts[i][1], pts[i][2]);
+
+    // insert triangles
+    vtkSmartPointer<vtkCellArray> triangles =
+	vtkSmartPointer<vtkCellArray>::New();
+    for(size_t i = 0; i < triangle_vertex_ids.size(); ++i)
+    {
+	vtkSmartPointer<vtkTriangle> triangle =
+	    vtkSmartPointer<vtkTriangle>::New();
+	for(size_t j = 0; j < 3; ++j)
+	    triangle->GetPointIds()->SetId (j, triangle_vertex_ids[i][j]);
+	
+	triangles->InsertNextCell(triangle);
+    }
+
+    // polydata
+    vtkSmartPointer<vtkPolyData> polyData =
+	vtkSmartPointer<vtkPolyData>::New();
+    polyData->SetPoints(points);
+    polyData->SetPolys(triangles);
+ 
+        // extract edges
+    vtkSmartPointer<vtkExtractEdges> edges = 
+	vtkSmartPointer<vtkExtractEdges>::New();
+    edges->SetInput(polyData);
+
+    // mapper
+    vtkSmartPointer<vtkPolyDataMapper>
+    	mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInput(edges->GetOutput());
+    
+    // actor
+    vtkSmartPointer<vtkActor>
+    	actor = vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);
+
+    return actor;
+}
+
+
+

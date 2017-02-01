@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
+#include <random>
 #include <algorithm>
 
 #include "eigenmvn.h"
@@ -189,6 +190,28 @@ namespace lidar_sim {
 	var /= vec.size();
 
 	return var;
+    }
+
+    std::tuple<int, bool>
+    sampleHitId(std::vector<double> hit_prob_vec, std::vector<int> target_ids)
+    {
+	size_t n_targets = hit_prob_vec.size();
+	std::random_device rd;
+	std::mt19937 gen(rd());
+   	std::uniform_real_distribution<> dis(0, 1);
+
+	int hit_id;
+	bool hit_bool;
+	for(size_t i = 0; i < n_targets; ++i)
+	    if (dis(gen) < hit_prob_vec[i])
+	    {
+		hit_id = target_ids[i];
+		hit_bool = true;
+		return std::make_tuple(hit_id, hit_bool);
+	    }
+	hit_id = -1;
+	hit_bool = false;
+	return std::make_tuple(hit_id, hit_bool);
     }
 }
 

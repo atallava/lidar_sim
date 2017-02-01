@@ -18,9 +18,14 @@
 using namespace lidar_sim;
 
 TriangleModelSim::TriangleModelSim() :
-    m_range_var(0.2),
-    m_max_residual_for_hit(1)
+    m_range_var(0.003),
+    m_max_residual_for_hit(1),
+    m_normal_dist(0, m_range_var)
 {    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    m_gen = gen;
+    
 }
 
 void TriangleModelSim::loadTriangleModels(std::string rel_path_input)
@@ -200,4 +205,52 @@ void TriangleModelSim::writeTrianglesToFile(std::string rel_path_output)
 	    m_triangles[i][2] << " " << m_hit_prob_vec[i] << std::endl;
     
     file.close();
+}
+
+std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+TriangleModelSim::simPtsGivenIntersections(std::vector<double> ray_origin, std::vector<std::vector<double> > ray_dirns,
+					   std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray)
+{
+    size_t n_rays = intersection_flag.size();
+
+    Pts sim_pts(n_rays, std::vector<double>(3, 0));
+    std::vector<int> hit_flag(n_rays, 0);
+
+    for(size_t i = 0; i < n_rays; ++i)
+    {
+	if (!anyNonzeros(intersection_flag[i]))
+	{
+	    hit_flag[i] = 0;
+	    continue;
+	}
+	else
+	    hit_flag[i] = 1;
+
+	std::vector<int> sorted_intersecting_ids;
+	std::vector<double> sorted_dist_along_ray_intersections;
+	std::tie(sorted_intersecting_ids, sorted_dist_along_ray_intersections) =
+	    sortIntersectionFlag(intersection_flag[i], dist_along_ray[i]);
+
+	std::vector<double> hit_prob_vec(sorted_intersecting_ids.size());
+	for(size_t j = 0; j < sorted_intersecting_ids.size(); ++j)
+	    hit_prob_vec[j] = m_hit_prob_vec[sorted_intersecting_ids[j]];
+
+	int hit_ellipsoid_id;
+	bool hit_bool;
+	std::tie(hit_ellipsoid_id, hit_bool) =
+	    sampleHitId(hit_prob_vec, sorted_intersecting_ids);
+
+	if (!hit_bool)
+	{
+	    hit_flag[i] = 0;
+	    continue;
+	}
+
+	double sim_range = dist_along_ray[i][hit_ellipsoid_id] + m_normal_dist(m_gen);
+	 
+	for(size_t j = 0; j < 3; ++j)
+	    sim_pts[i][j] = ray_origin[j] + sim_range*ray_dirns[i][j];
+    }
+
+    return std::make_tuple(sim_pts, hit_flag);
 }

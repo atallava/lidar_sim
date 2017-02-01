@@ -16,6 +16,8 @@ namespace lidar_sim {
 	TrianglesVtkActorServer();
 	vtkSmartPointer<vtkActor> genTrianglesActor(const Delaunay_cgal &triangulation, 
 						    const std::vector<std::vector<double> > &m_fit_pts);
+	vtkSmartPointer<vtkActor> genTrianglesActor(const std::vector<std::vector<int> > &triangle_vertex_ids, 
+						    const std::vector<std::vector<double> > &pts);
 
     private:
     };

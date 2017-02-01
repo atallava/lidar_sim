@@ -102,6 +102,8 @@ int main(int argc, char **argv)
 	    filtered_residual_ranges.push_back(this_residual_range);
     }
 
+    std::cout << "n rays intersected: " << residual_ranges.size() << std::endl;
+
     // calculate hit prob
     std::vector<double> hit_prob_vec(n_tris, 1);
     for(size_t i = 0; i < hit_prob_vec.size(); ++i)

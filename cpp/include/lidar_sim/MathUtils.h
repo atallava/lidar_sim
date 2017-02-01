@@ -47,5 +47,8 @@ namespace lidar_sim {
     std::vector<std::vector<double> > pdist2(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
     double euclideanDist(std::vector<double> pt1, std::vector<double> pt2);
     double calcVariance(std::vector<double> vec);
+
+    std::tuple<int, bool>
+	sampleHitId(std::vector<double> hit_prob_vec, std::vector<int> sorted_intersecting_ids);
 }
 

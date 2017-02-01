@@ -199,26 +199,6 @@ EllipsoidModelSim::simPtsGivenIntersections(std::vector<std::vector<int> > inter
     return std::make_tuple(sim_pts, hit_flag);
 }
 
-std::tuple<int, bool>
-EllipsoidModelSim::sampleHitId(std::vector<double> hit_prob_vec, std::vector<int> target_ids)
-{
-    size_t n_targets = hit_prob_vec.size();
-    std::uniform_real_distribution<> dis(0, 1);
-
-    int hit_id;
-    bool hit_bool;
-    for(size_t i = 0; i < n_targets; ++i)
-	if (dis(m_gen) < hit_prob_vec[i])
-	{
-	    hit_id = target_ids[i];
-	    hit_bool = true;
-	    return std::make_tuple(hit_id, hit_bool);
-	}
-    hit_id = -1;
-    hit_bool = false;
-    return std::make_tuple(hit_id, hit_bool);
-}
-
 std::vector<double> EllipsoidModelSim::calcMahaDistPtToEllipsoids(std::vector<int> ellipsoid_ids, std::vector<double> pt)
 {
     std::vector<double> maha_dists_to_ellipsoids;

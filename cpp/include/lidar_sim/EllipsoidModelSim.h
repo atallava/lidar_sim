@@ -32,9 +32,6 @@ namespace lidar_sim {
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 	    simPtsGivenIntersections(std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray);
 
-	std::tuple<int, bool>
-	    sampleHitId(std::vector<double> hit_prob_vec, std::vector<int> sorted_intersecting_ids);
-
 	std::vector<double> calcMahaDistPtToEllipsoids(std::vector<int> ellipsoid_ids, std::vector<double> pt);
 
 	double calcMahaDistPtToEllipsoid(int ellipsoid_id, std::vector<double> pt);
