@@ -41,7 +41,8 @@ int main(int argc, char **argv)
 
     std::cout << "calculating section ids to process..." << std::endl;
     // section ids to process
-    std::vector<int> section_pt_ids_to_process = nearestNeighbors(section.m_pts, train_pts);
+    std::vector<int> section_pt_ids_to_process;
+    std::tie(section_pt_ids_to_process, std::ignore) = nearestNeighbors(section.m_pts, train_pts);
 
     // sim object
     const LaserCalibParams laser_calib_params;

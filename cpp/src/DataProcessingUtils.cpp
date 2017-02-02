@@ -216,7 +216,7 @@ namespace lidar_sim {
 	return std::make_tuple(x, y, z);
     }
     
-    alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts)
+    alglib::real_2d_array convertStlPtsToAlglibPts(const std::vector<std::vector<double> > &pts)
     {
 	alglib::real_2d_array pts_alglib;
 	pts_alglib.setlength(pts.size(), 3);
@@ -228,7 +228,7 @@ namespace lidar_sim {
 	return pts_alglib;
     }
 
-    Eigen::MatrixXd stlVecToEigen(std::vector<double> vec)
+    Eigen::MatrixXd stlVecToEigen(const std::vector<double> &vec)
     {
 	Eigen::MatrixXd vec_eigen(vec.size(), 1);
 	for(size_t i = 0; i < vec.size(); ++i)
@@ -237,7 +237,7 @@ namespace lidar_sim {
 	return vec_eigen;
     }
 
-    Eigen::MatrixXd stlArrayToEigen(std::vector<std::vector<double> > array)
+    Eigen::MatrixXd stlArrayToEigen(const std::vector<std::vector<double> > &array)
     {
 	Eigen::MatrixXd array_eigen(array.size(), array[0].size());
 	for(size_t i = 0; i < array.size(); ++i)
@@ -247,7 +247,7 @@ namespace lidar_sim {
 	return array_eigen;
     }
 
-    std::vector<std::vector<double> > EigenToStlArray(Eigen::MatrixXd array)
+    std::vector<std::vector<double> > EigenToStlArray(const Eigen::MatrixXd &array)
     {
 	std::vector<std::vector<double> > array_stl(array.rows(), 
 						    std::vector<double>(array.cols()));
@@ -258,7 +258,7 @@ namespace lidar_sim {
 	return array_stl;
     }
 
-    flann::Matrix<double> stlArrayToFlannMatrix(std::vector<std::vector<double> > array)
+    flann::Matrix<double> stlArrayToFlannMatrix(const std::vector<std::vector<double> > &array)
     {
 	flann::Matrix<double> mat(new double[array.size()*array[0].size()], array.size(), array[0].size());
 	for(size_t i = 0; i < array.size(); ++i)
@@ -266,15 +266,5 @@ namespace lidar_sim {
 		mat[i][j] = array[i][j];
 
 	return mat;
-    }
-
-    std::vector<std::vector<double> > flannMatrixToStlArray(flann::Matrix<double> mat)
-    {
-	std::vector<std::vector<double> > array;
-	for(size_t i = 0; i < mat.rows; ++i)
-	    for(size_t j = 0; j < mat.cols; ++j)
-		array[i][j] = mat[i][j];
-
-	return array;
     }
 }

@@ -2,7 +2,7 @@ relPathPts = '../data/rim_stretch_segment_train';
 load(relPathPts,'pts');
 
 %% subsample
-skip = 14;
+skip = 15;
 pts = pts(1:skip:end,:);
 
 %% calc spherical variation
@@ -48,5 +48,6 @@ hfig = vizSegmentation(pts,groundFlag,classLabels);
 % maxDistForNbr = 5
 % minNbrs = 15
 % sphVarnThresh = 0.1
+% sphVarnDefault = 0.01
 
 % add-in filtering over s values, which has its own set of n parameters

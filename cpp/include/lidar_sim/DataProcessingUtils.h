@@ -11,6 +11,7 @@
 namespace lidar_sim {
     std::string exec(const char* cmd);	
 
+    // file processing
     int getNumLinesInFile(std::string rel_path_file);
     std::string genPCDHeader(int num_pts);
     void subsampleFile(std::string rel_path_file, std::string rel_path_file_subsampled, int subsample_factor);
@@ -23,17 +24,28 @@ namespace lidar_sim {
     std::tuple<std::vector<double>, std::vector<double>, std::vector<double> >
 	getVecsFromPts(const std::vector<std::vector<double> > &pts);
 
-    alglib::real_2d_array convertStlPtsToAlglibPts(std::vector<std::vector<double> > pts);
+    // data types conversions
+    alglib::real_2d_array convertStlPtsToAlglibPts(const std::vector<std::vector<double> > &pts);
 
-    Eigen::MatrixXd stlVecToEigen(std::vector<double> vec);
-    Eigen::MatrixXd stlArrayToEigen(std::vector<std::vector<double> > array);
-    std::vector<std::vector<double> > EigenToStlArray(Eigen::MatrixXd array);
+    Eigen::MatrixXd stlVecToEigen(const std::vector<double> &vec);
+    Eigen::MatrixXd stlArrayToEigen(const std::vector<std::vector<double> > &array);
+    std::vector<std::vector<double> > EigenToStlArray(const Eigen::MatrixXd &array);
 
-    flann::Matrix<double> stlArrayToFlannMatrix(std::vector<std::vector<double> > array);    
-    std::vector<std::vector<double> > flannMatrixToStlArray(flann::Matrix<double> mat);
+    flann::Matrix<double> stlArrayToFlannMatrix(const std::vector<std::vector<double> > &array);    
 
     template<typename T>
-	std::vector<std::vector<T> > subsampleArray(std::vector<std::vector<T> > array,
+    	std::vector<std::vector<T> > flannMatrixToStlArray(const flann::Matrix<T> &mat_flann)
+    {
+    	std::vector<std::vector<T> > array(mat_flann.rows, std::vector<T>(mat_flann.cols));
+    	for(size_t i = 0; i < mat_flann.rows; ++i)
+    	    for(size_t j = 0; j < mat_flann.cols; ++j)
+    		array[i][j] = mat_flann[i][j];
+
+    	return array;
+    }
+
+    template<typename T>
+	std::vector<std::vector<T> > subsampleArray(const std::vector<std::vector<T> > &array,
 	    int subsample_factor = 10)
     {
 	std::vector<std::vector<T> > array_subsampled;

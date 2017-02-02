@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     std::string rel_path_xyz = "data/rim_stretch_ground_train.asc";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_xyz);
 
-    // fit gp
+    // fit smoothed pts
     GroundModeler modeler;
     modeler.m_pts = pts;
     modeler.fitSmoothedPts();

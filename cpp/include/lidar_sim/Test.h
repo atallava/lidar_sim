@@ -15,5 +15,6 @@ namespace lidar_sim {
 	bool testAlglibRbf();
 	bool testCgal();
 	bool testCgalIntersection();
+	bool testEigenvalues();
     };
 }

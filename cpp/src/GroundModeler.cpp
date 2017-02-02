@@ -79,7 +79,8 @@ GroundModeler::cutNodesToPtsProjn(std::vector<std::vector<double> > xy_nodes)
 	xy_pts[i][1] = m_pts[i][1];
     }
     
-    std::vector<int> nn_ids = nearestNeighbors(xy_pts, xy_nodes);
+    std::vector<int> nn_ids;
+    std::tie(nn_ids, std::ignore) = nearestNeighbors(xy_pts, xy_nodes);
     std::vector<std::vector<double> > xy_fit;
 
     for(size_t i = 0; i < xy_nodes.size(); ++i)

@@ -9,16 +9,15 @@ namespace lidar_sim {
 
     std::vector<double> calcPtsMean(std::vector<std::vector<double> > pts);
     Pts calcCenteredPts(Pts pts);
-    Eigen::MatrixXd calcPtsCovMat(std::vector<std::vector<double> > pts);
+    Eigen::MatrixXd calcPtsCovMat(const std::vector<std::vector<double> > &pts);
     Eigen::MatrixXd calcOuterProd(std::vector<double> pt);
     double deg2rad(double angle_deg);
     bool anyNonzeros(std::vector<int> vec);
     std::vector<double> sampleFromMvn(std::vector<double> mu, Eigen::MatrixXd cov_mat);
 
-    /* std::vector<std::vector<double> > logicalSubsetOfArray(std::vector<std::vector<double> > array, std::vector<int> logical_flag) */
-
+    // mimicking matlab mat(flag,:)
     template <typename T>
-	std::vector<T> logicalSubset2DArray(std::vector<T> array, std::vector<int> logical_flag)
+	std::vector<T> logicalSubsetArray(std::vector<T> array, std::vector<int> logical_flag)
     {
 	std::vector<T> array_subset;
 	for(size_t i = 0; i < array.size(); ++i)
@@ -42,9 +41,15 @@ namespace lidar_sim {
     std::tuple<std::vector<int>, std::vector<double> >
 	sortIntersectionFlag(std::vector<int> intersection_flag, std::vector<double> dist_along_ray);
 
+    std::vector<int> negateLogicalVec(std::vector<int> vec);
+
     // nearest neighbor ids for pts2 in pts1
-    std::vector<int> nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
+    std::tuple<std::vector<int>, std::vector<double> >
+	nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
     std::vector<std::vector<double> > pdist2(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2);
+    std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+	nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2, int nn);
+
     double euclideanDist(std::vector<double> pt1, std::vector<double> pt2);
     double calcVariance(std::vector<double> vec);
 

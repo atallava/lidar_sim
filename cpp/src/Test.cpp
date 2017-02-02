@@ -307,3 +307,19 @@ bool Test::testCgalIntersection()
 
     return true;
 }
+
+bool Test::testEigenvalues()
+{
+    Pts pts { {1,2,3},
+	{6,7,6},
+	{5,1,5},
+	{9,7,8}};
+
+    Eigen::MatrixXd cov_mat = calcPtsCovMat(pts);
+    std::cout << "cov mat: " << cov_mat << std::endl;
+    
+    Eigen::VectorXcd eivals = cov_mat.eigenvalues();
+    std::cout << std::real(eivals(0)) << std::endl;
+
+    return true;
+}

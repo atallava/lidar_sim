@@ -25,7 +25,7 @@ namespace lidar_sim {
 	return mu;
     }
 
-    Eigen::MatrixXd calcPtsCovMat(std::vector<std::vector<double> > pts)
+    Eigen::MatrixXd calcPtsCovMat(const std::vector<std::vector<double> > &pts)
     {
 	Pts centered_pts = calcCenteredPts(pts);
 	
@@ -99,7 +99,18 @@ namespace lidar_sim {
 	return sample_stl;
     }
 
-    std::vector<int> nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2)
+    std::vector<int> negateLogicalVec(std::vector<int> vec)
+    {
+	std::vector<int> vec_negated(vec.size(), 0);
+	for(size_t i = 0; i < vec.size(); ++i)
+	    if (vec[i] == 0)
+		vec_negated[i] = 1;
+
+	return vec_negated;
+    }
+
+    std::tuple<std::vector<int>, std::vector<double> >
+    nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2)
     {
 	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
 	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
@@ -109,7 +120,6 @@ namespace lidar_sim {
 	flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
 	flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
 
-	// construct an randomized kd-tree index using 4 kd-trees
 	int n_kd_trees = 10;
 	flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
 	index.buildIndex();                                                                                               
@@ -117,10 +127,33 @@ namespace lidar_sim {
 	index.knnSearch(query, indices, dists, nn, flann::SearchParams(n_checks));
 
 	std::vector<int> ids(pts2.size(), 0);
+	std::vector<double> nearest_dists(pts2.size(), 0);
 	for(size_t i = 0; i < pts2.size(); ++i)
+	{
 	    ids[i] = indices[i][0];
+	    nearest_dists[i] = dists[i][0];
+	}
 
-	return ids;
+	return std::make_tuple(ids, nearest_dists);
+    }
+
+    std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+    nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2, int nn)
+    {
+	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
+	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
+
+	flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
+	flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
+
+	int n_kd_trees = 10;
+	flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
+	index.buildIndex();                                                                                               
+	int n_checks = 100;
+	index.knnSearch(query, indices, dists, nn, flann::SearchParams(n_checks));
+	
+	return std::make_tuple(
+	    flannMatrixToStlArray(indices), flannMatrixToStlArray(dists));
     }
 
     std::vector<std::vector<double> > pdist2(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2)

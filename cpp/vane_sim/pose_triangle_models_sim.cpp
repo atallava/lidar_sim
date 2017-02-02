@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     // pts
     std::vector<std::vector<double> > sim_pts_to_plot;
     if (use_hit_flag)
-    	sim_pts_to_plot = logicalSubset2DArray(sim_pts, hit_flag);
+    	sim_pts_to_plot = logicalSubsetArray(sim_pts, hit_flag);
     else
     	sim_pts_to_plot = sim_pts;
     vtkSmartPointer<vtkActor> pts_actor = vizer.m_points_actor_server.genPointsActor(sim_pts_to_plot);

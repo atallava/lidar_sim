@@ -20,13 +20,14 @@ namespace lidar_sim {
 	RangeDataVizer();
 	void vizEllipsoidModels(const EllipsoidModels &ellipsoid_models);
 	void vizEllipsoidModels(const EllipsoidModels &ellipsoid_models, const Pts &pts);
-	void vizPts(std::vector<std::vector<double> > pts);
+	void vizPts(const std::vector<std::vector<double> > &pts);
 	void takeItAway(const std::vector<vtkSmartPointer<vtkActor> > &actors);
-	void takeItAway(vtkSmartPointer<vtkActor> actor);
-	void vizComparePts(std::vector<std::vector<double> > pts1,
-			   std::vector<std::vector<double> > pts2);
+	void takeItAway(const vtkSmartPointer<vtkActor> &actor);
+	void vizComparePts(const std::vector<std::vector<double> > &pts1,
+			   const std::vector<std::vector<double> > &pts2);
 	void vizTriangles(const Delaunay_cgal &triangulation,
 			  const std::vector<std::vector<double> > &pts);
+	void vizSegmentation(const std::vector<std::vector<double> >& pts, const std::vector<int> &segmentation);
 
 	PointsVtkActorServer m_points_actor_server;
 	LineVtkActorServer m_line_actor_server;

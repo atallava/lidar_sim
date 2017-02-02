@@ -135,6 +135,14 @@ write triangles also shouldn't be attached to a class?
 
 perm and var for meshes is not right..
 
+sim with alglib ellipsoids in matlab to debug
+
+maybe flann nn should be a class so nchecks and nkdtrees can be set?
+
+flann nn different from pdist2. because inexact?
+
+params:
+flann
 
 --------------------------------------------------
 

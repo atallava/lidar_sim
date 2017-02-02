@@ -158,15 +158,15 @@ void RangeDataVizer::takeItAway(const std::vector<vtkSmartPointer<vtkActor> > &a
     interactor->Start();
 }
 
-void RangeDataVizer::takeItAway(vtkSmartPointer<vtkActor> actor)
+void RangeDataVizer::takeItAway(const vtkSmartPointer<vtkActor> &actor)
 {
     std::vector<vtkSmartPointer<vtkActor> >actors;
     actors.push_back(actor);
     takeItAway(actors);
 }
 
-void RangeDataVizer::vizComparePts(std::vector<std::vector<double> > pts1,
-				   std::vector<std::vector<double> > pts2)
+void RangeDataVizer::vizComparePts(const std::vector<std::vector<double> > &pts1,
+				   const std::vector<std::vector<double> > &pts2)
 {
     std::vector<vtkSmartPointer<vtkActor> > actors;
     
@@ -184,7 +184,7 @@ void RangeDataVizer::vizComparePts(std::vector<std::vector<double> > pts1,
     takeItAway(actors);
 }
 
-void RangeDataVizer::vizPts(std::vector<std::vector<double> > pts)
+void RangeDataVizer::vizPts(const std::vector<std::vector<double> > &pts)
 {
     std::vector<vtkSmartPointer<vtkActor> > actors;
     actors.push_back(m_points_actor_server.genPointsActor(pts));
@@ -197,4 +197,12 @@ void RangeDataVizer::vizTriangles(const Delaunay_cgal &triangulation, const std:
 {
     vtkSmartPointer<vtkActor> actor = m_triangles_actor_server.genTrianglesActor(triangulation, pts);
     takeItAway(actor);
+}
+
+void RangeDataVizer::vizSegmentation(const std::vector<std::vector<double> >& pts, const std::vector<int> &segmentation)
+{
+    std::vector<std::vector<double> > pts1 = logicalSubsetArray(pts, segmentation);
+    std::vector<std::vector<double> > pts0 = logicalSubsetArray(pts, negateLogicalVec(segmentation));
+
+    vizComparePts(pts1, pts0);
 }

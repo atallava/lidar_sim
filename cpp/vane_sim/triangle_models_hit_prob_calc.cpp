@@ -43,7 +43,8 @@ int main(int argc, char **argv)
 
     std::cout << "calculating section ids to process..." << std::endl;
     // section ids to process
-    std::vector<int> section_pt_ids_to_process = nearestNeighbors(section.m_pts, train_pts);
+    std::vector<int> section_pt_ids_to_process;
+    std::tie(section_pt_ids_to_process, std::ignore) = nearestNeighbors(section.m_pts, train_pts);
 
     size_t n_tris = sim.m_triangles.size();
     std::vector<int> tri_hit_count_prior(n_tris, 1);
