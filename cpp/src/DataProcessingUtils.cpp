@@ -51,6 +51,26 @@ namespace lidar_sim {
 	return header_ss.str();
     }
 
+    std::string getPtsLineFromSectionLine(std::string line)
+    {
+	std::istringstream iss(line);
+
+	double data;
+	// packet id
+	iss >> data; 
+	// packet timestamp
+	iss >> data;
+	iss >> data;
+
+	double x, y, z;
+	iss >> x;
+	iss >> y;
+	iss >> z;
+	std::string line_pts = std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z);
+	
+	return line_pts;
+    }
+
     void subsampleFile(std::string rel_path_file, std::string rel_path_file_subsampled, int subsample_factor)
     {
 	// open input file
@@ -184,7 +204,7 @@ namespace lidar_sim {
 	return pts;
     }
     
-    void writePtsToXYZFile(std::vector<std::vector<double> > pts, std::string rel_path_output)
+    void writePtsToXYZFile(const std::vector<std::vector<double> > &pts, const std::string rel_path_output)
     {
 	std::ofstream file(rel_path_output);
 	std::cout << "Writing pts to: " << rel_path_output << std::endl;

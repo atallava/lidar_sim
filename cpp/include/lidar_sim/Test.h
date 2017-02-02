@@ -16,5 +16,6 @@ namespace lidar_sim {
 	bool testCgal();
 	bool testCgalIntersection();
 	bool testEigenvalues();
+	bool testPtsLine();
     };
 }

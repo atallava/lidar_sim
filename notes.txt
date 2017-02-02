@@ -1,9 +1,7 @@
 other logic from ref: don't include points too close, speed of vehicle etc.
 
-everywhere in my code, the pose convention is : yzxrpy, and the yaw has to be -
+everywhere in my code, the pose convention is : yzxrpy, and the yaw has to be -ve
 for using in a transformation
-
-still need to get permeabilities. need cpp code to make that good.
 
 --------------------------------------------------
 
@@ -13,15 +11,14 @@ analyze taylor data:
 
 brigthened image by contrast. how it works is a mystery to me.
 
-scatter3 can handle about 1e5 points smoothly. keep matlab vegetation points at
-max
+scatter3 can handle about a max of 1e5 points smoothly. 
 
 vane sim:
 
 there is a simple way of vizing the segments from each pcd, fill in the holes of
 one pcd with the segmentation from another
 
-manual segmentation, use coarse segmentation output from matlab.
+manual segmentation, can use coarse hierarchical clustering output from matlab.
 
 grep todos in code
 
@@ -43,11 +40,7 @@ names getting confusing
 scanPts, for the driveby
 trainPts, makes sense
 
-triangulation requires some work of calculating isosurfaces, followed by
-marching cubes. if only doing surface calculation for ground, then probably
-enough to manually specify triangles.
-
-maybe instead of making cell braces inside a long function, write subfunctions.
+maybe instead of making cell blocks inside a long function, write subfunctions.
 
 actually, perm value is opacity.
 
@@ -56,8 +49,11 @@ actually, perm value is opacity.
 
 segment:
 
-too many points for matlab to deal with. remember that values of params depend
-on point cloud density, e.g. max dist to nbrs or min nbrs
+remember that values of params depend on point cloud density, e.g. max dist to
+nbrs or min nbrs
+
+segmentation works with subsampled dataset. so will have to transfer labels to
+points in full dataset, just do nearest neighbors
 
 --------------------------------------------------
 
@@ -83,17 +79,13 @@ cpp:
 
 vtk:
 axes ticks
-how does the gui mouse click work?
+subfigures
+labels
+viewpoints
+saving figures
 
 just like you have functions written in matlab for matlab processing, you need
 to write emacs lisp to do simple operations in emacs
-
-clustering:
-get driveby poses and pts
-scan ids to process
-perm calc
-multiple poses
-viz side by side
 
 cpp:
 hierarchical clustering
@@ -111,29 +103,23 @@ many members are public
 flann has hierarchical clustering also
 check perm logic
 clustering class
-how to set which coords are in view
+ellipsoid model generator class
 cpp slower than matlab, perhaps because copying vectors?
-libgp slow. takes forever to fit to rim stretch ground train pts
-alglib rbf fit also very slow.
 matlab pdist2 very fast compared to for looping cpp
-there is a smarter way to line walk instead of checking with all triangles
+there is a smarter way to line walk instead of checking intersection with all triangles
 
-for rim stretch ground train, with 1e6 pts, takes 729 s with rbfdist = 1, level = 1, smoothness = 1e-3
-10s with radius = 0.1m.
+alglib rbf fit also very slow. for rim stretch ground train, with 1e6 pts, takes
+729 s with rbfdist = 1, level = 1, smoothness = 1e-3 10s with radius = 0.1m.
 
 how does matlab manage griddata fast? probably does it only for query points
 
-cluster_trial should be a class
-better vizer logic
-
 why is sim from ellipsoids so sparse?
-what is a kdtree used for?
 
 maybe sorted intersection flag should be in a modeling utils
 
 write triangles also shouldn't be attached to a class?
 
-perm and var for meshes is not right..
+perm, var for meshes debug
 
 sim with alglib ellipsoids in matlab to debug
 
@@ -141,8 +127,27 @@ maybe flann nn should be a class so nchecks and nkdtrees can be set?
 
 flann nn different from pdist2. because inexact?
 
+code comments
+
+metric for comparing point clouds
+
 params:
+max pts in a block
+
 flann
+alglib
+vtk
+cgal
+
+boost scope cpu timer
+valgrind
+ellipsoids kd tree
+
+for each modeling, do a cleanup: remove pts that are far from any neighbors
+
+segmentation optim: debug the nn calculation, smoothing, look at block 1 in
+matlab to see what is going in, plot the spherical variation directly.
+maybe block 1 doesn't have enough point density.
 
 --------------------------------------------------
 

@@ -29,6 +29,7 @@
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/MathUtils.h>
+#include <lidar_sim/DataProcessingUtils.h>
 
 using namespace lidar_sim;
 
@@ -321,5 +322,12 @@ bool Test::testEigenvalues()
     Eigen::VectorXcd eivals = cov_mat.eigenvalues();
     std::cout << std::real(eivals(0)) << std::endl;
 
+    return true;
+}
+
+bool Test::testPtsLine()
+{
+    std::string line = "1 2 3 4 5 6";
+    std::cout << getPtsLineFromSectionLine(line) << std::endl;
     return true;
 }

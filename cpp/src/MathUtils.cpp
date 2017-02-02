@@ -12,7 +12,7 @@
 #include <lidar_sim/DataProcessingUtils.h>
 
 namespace lidar_sim {
-    std::vector<double> calcPtsMean(Pts pts)
+    std::vector<double> calcPtsMean(const Pts &pts)
     {
 	std::vector<double> mu(3,0);
 	for(size_t i = 0; i < pts.size(); ++i)
@@ -45,7 +45,7 @@ namespace lidar_sim {
 	return cov_mat;
     }
 
-    Eigen::MatrixXd calcOuterProd(std::vector<double> pt)
+    Eigen::MatrixXd calcOuterProd(const std::vector<double> &pt)
     {
 	Eigen::MatrixXd outer_prod(3,3);
 	for(size_t i = 0; i < 3; ++i)
@@ -55,7 +55,7 @@ namespace lidar_sim {
 	return outer_prod;
     }
 
-    Pts calcCenteredPts(Pts pts)
+    Pts calcCenteredPts(const Pts &pts)
     {
 	std::vector<double> mu = calcPtsMean(pts);
 
@@ -75,7 +75,7 @@ namespace lidar_sim {
 	return angle_deg*M_PI/180;
     }
 
-    bool anyNonzeros(std::vector<int> vec)
+    bool anyNonzeros(const std::vector<int> &vec)
     {
 	for(size_t i = 0; i < vec.size(); ++i)
 	    if (!(vec[i] == 0))
@@ -83,7 +83,7 @@ namespace lidar_sim {
 	return false;
     }
 
-    std::vector<double> sampleFromMvn(std::vector<double> mu, Eigen::MatrixXd cov_mat)
+    std::vector<double> sampleFromMvn(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat)
     {
 	Eigen::MatrixXd mean(3,1);
 	for(size_t i = 0; i < 3; ++i)
@@ -99,7 +99,7 @@ namespace lidar_sim {
 	return sample_stl;
     }
 
-    std::vector<int> negateLogicalVec(std::vector<int> vec)
+    std::vector<int> negateLogicalVec(const std::vector<int> &vec)
     {
 	std::vector<int> vec_negated(vec.size(), 0);
 	for(size_t i = 0; i < vec.size(); ++i)
@@ -110,7 +110,7 @@ namespace lidar_sim {
     }
 
     std::tuple<std::vector<int>, std::vector<double> >
-    nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2)
+    nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2)
     {
 	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
 	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
@@ -138,7 +138,7 @@ namespace lidar_sim {
     }
 
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
-    nearestNeighbors(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2, int nn)
+    nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2, const int nn)
     {
 	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
 	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
@@ -156,7 +156,7 @@ namespace lidar_sim {
 	    flannMatrixToStlArray(indices), flannMatrixToStlArray(dists));
     }
 
-    std::vector<std::vector<double> > pdist2(std::vector<std::vector<double> > pts1, std::vector<std::vector<double> > pts2)
+    std::vector<std::vector<double> > pdist2(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2)
     {
 	size_t n_pts1 = pts1.size();
 	size_t n_pts2 = pts2.size();
@@ -180,7 +180,7 @@ namespace lidar_sim {
     }
 
     std::tuple<std::vector<int>, std::vector<double> >
-    sortIntersectionFlag(std::vector<int> intersection_flag, std::vector<double> dist_along_ray)
+    sortIntersectionFlag(const std::vector<int> &intersection_flag, const std::vector<double> &dist_along_ray)
     {
 	std::vector<int> intersecting_ids;
 	std::vector<double> dist_along_ray_intersections;
@@ -210,7 +210,7 @@ namespace lidar_sim {
 	return std::make_tuple(sorted_intersecting_ids, sorted_dist_along_ray_intersections);
     }
 
-    double calcVariance(std::vector<double> vec)
+    double calcVariance(const std::vector<double> &vec)
     {
 	double mu = 0;
 	for(size_t i = 0; i < vec.size(); ++i)
@@ -226,7 +226,7 @@ namespace lidar_sim {
     }
 
     std::tuple<int, bool>
-    sampleHitId(std::vector<double> hit_prob_vec, std::vector<int> target_ids)
+    sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &target_ids)
     {
 	size_t n_targets = hit_prob_vec.size();
 	std::random_device rd;

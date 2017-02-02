@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 
     // pts from xyz
     std::string rel_path_xyz = "data/rim_stretch_segment_train.asc";
+    // std::string rel_path_xyz = "../data/taylorJune2014/sections/world_frame/section_pts_03_world_frame_subsampled.xyz";
     std::vector<std::vector<double> > pts_all = loadPtsFromXYZFile(rel_path_xyz);
     
     int skip = 15;

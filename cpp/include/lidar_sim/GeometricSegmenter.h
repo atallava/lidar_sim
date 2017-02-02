@@ -6,6 +6,7 @@ namespace lidar_sim {
     class GeometricSegmenter {
     public:
 	GeometricSegmenter();
+	void setDebugFlag(int flag);
 	std::vector<int> segmentPts(const std::vector<std::vector<double> > &pts);
 	std::vector<double> calcFeaturesForPts(const std::vector<std::vector<double> > &pts);
 	double calcSphericalVariation(const std::vector<std::vector<double> > &pts);
@@ -15,5 +16,6 @@ namespace lidar_sim {
 	double m_min_nbrs;
 	double m_default_spherical_variation;
 	double m_spherical_variation_threshold;
+	int m_debug_flag;
     };
 }

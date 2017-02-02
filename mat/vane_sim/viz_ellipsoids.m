@@ -12,6 +12,6 @@ clear(plotStructVars{:});
 ellipsoidData.ellipsoidModels = ellipsoidModels;
 plotStruct.ellipsoidData = ellipsoidData;
 
-plotStruct.pts = pts(1:10:end,:);
+plotStruct.pts = pts(1:20:end,:);
 
 hfig = plotRangeData(plotStruct);

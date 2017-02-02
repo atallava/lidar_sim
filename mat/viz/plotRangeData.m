@@ -101,7 +101,6 @@ function hfig = plotRangeData(inputStruct)
                     continue
                 end
             end
-            % todo: this length can be the max laser length
             rayPts = genPtsRay(rayOrigin,rayDirns(i,:),rayLengthToPlot);
             plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'g--');
             hold on;

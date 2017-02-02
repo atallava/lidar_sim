@@ -11,10 +11,16 @@ using namespace lidar_sim;
 
 GeometricSegmenter::GeometricSegmenter() :
     m_max_dist2_to_nbr(25),
-    m_min_nbrs(15),
-    m_default_spherical_variation(0.01),
-    m_spherical_variation_threshold(0.1)
+    m_min_nbrs(10),
+    m_default_spherical_variation(0.005),
+    m_spherical_variation_threshold(0.04),
+    m_debug_flag(0)
 {
+}
+
+void GeometricSegmenter::setDebugFlag(int flag)
+{
+    m_debug_flag = flag;
 }
 
 std::vector<int> GeometricSegmenter::segmentPts(const std::vector<std::vector<double> > &pts)
@@ -28,6 +34,11 @@ std::vector<int> GeometricSegmenter::segmentPts(const std::vector<std::vector<do
     for(size_t i = 0; i < pts.size(); ++i)
 	if (feature_values[i] < m_spherical_variation_threshold)
 	    segmentation[i] = 1;
+
+    if (m_debug_flag)
+	std::cout << "GeometricSegmenter: fracn ground pts: " 
+		  << std::accumulate(std::begin(segmentation), std::end(segmentation), 0)/(double)segmentation.size() 
+		  << std::endl;
 
     return segmentation;
 }
@@ -58,8 +69,9 @@ std::vector<double> GeometricSegmenter::calcFeaturesForPts(const std::vector<std
 	    feature_values[i] = calcSphericalVariation(this_pt_nbrs);
     }
 
-    std::cout << "fracn with insufficient nbrs: " << n_pts_insufficient_nbrs/(double)pts.size() 
-	      << std::endl;
+    if (m_debug_flag)
+	std::cout << "GeometricSegmenter: fracn with insufficient nbrs: " << n_pts_insufficient_nbrs/(double)pts.size() 
+		  << std::endl;
 
     return feature_values;
 }

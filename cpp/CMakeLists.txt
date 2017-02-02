@@ -108,23 +108,23 @@ add_library(lidar_sim SHARED
 # Executables
 
 # tests
-# file( GLOB TESTS_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp )
-# MESSAGE( STATUS "tests sources: " ${TESTS_SOURCES} )
-# foreach( testsourcefile ${TESTS_SOURCES} )
-#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-#   string( REPLACE "tests/" "" testname ${testnamewithdir})
-#   add_executable( ${testname} ${testsourcefile} )
-#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-# endforeach( testsourcefile ${TESTS_SOURCES} )
+file( GLOB TESTS_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp )
+MESSAGE( STATUS "tests sources: " ${TESTS_SOURCES} )
+foreach( testsourcefile ${TESTS_SOURCES} )
+  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+  string( REPLACE "tests/" "" testname ${testnamewithdir})
+  add_executable( ${testname} ${testsourcefile} )
+  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+endforeach( testsourcefile ${TESTS_SOURCES} )
 
 # analyze taylor data
-# file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
-# foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
-#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-#   string( REPLACE "analyze_taylor_data/" "" testname ${testnamewithdir})
-#   add_executable( ${testname} ${testsourcefile} )
-#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-# endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
+foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+  string( REPLACE "analyze_taylor_data/" "" testname ${testnamewithdir})
+  add_executable( ${testname} ${testsourcefile} )
+  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
   
 # vtk examples
 # file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vtk_examples/*.cpp )

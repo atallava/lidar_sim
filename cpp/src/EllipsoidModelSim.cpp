@@ -109,6 +109,7 @@ std::tuple<std::vector<int>,
 std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(std::vector<double> ray_origin, std::vector<double> ray_dirn, std::vector<double> mu, Eigen::MatrixXd cov_mat)
 {
     // TODO: bad conversion work
+    // but these eigen matrixxds are small in size
     
     Eigen::MatrixXd v(3,1);
     for(size_t i = 0; i < 3; ++i)
