@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 2.8)
 project (LIDAR_SIM)
 
 set (CMAKE_BUILD_TYPE "Debug")
- 
+
 set( LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib" CACHE PATH
     "Target directory for all libraries." )
 set( EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin" CACHE PATH

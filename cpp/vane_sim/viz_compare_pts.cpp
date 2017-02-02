@@ -20,11 +20,11 @@ using namespace lidar_sim;
 int main(int argc, char **argv)
 {
     // load pts1
-    std::string rel_path_pts1 = "data/rim_stretch_veg_validation.asc";
+    std::string rel_path_pts1 = "data/rim_stretch_ground_validation.asc";
     std::vector<std::vector<double> > pts1 = loadPtsFromXYZFile(rel_path_pts1);
 
     // load pts2
-    std::string rel_path_pts2 = "data/rim_stretch_veg_validation_sim.xyz";
+    std::string rel_path_pts2 = "data/rim_stretch_ground_validation_sim.xyz";
     // std::string rel_path_pts2 = "data/rim_stretch_veg_train.asc";
     std::vector<std::vector<double> > pts2 = loadPtsFromXYZFile(rel_path_pts2);
 
