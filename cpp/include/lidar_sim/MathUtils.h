@@ -50,7 +50,7 @@ namespace lidar_sim {
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 	nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2, const int nn);
 
-    double euclideanDist(std::vector<double> pt1, std::vector<double> pt2);
+    double euclideanDist(const std::vector<double> &pt1, const std::vector<double> &pt2);
     double calcVariance(const std::vector<double> &vec);
 
     std::tuple<int, bool>

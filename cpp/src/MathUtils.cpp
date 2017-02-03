@@ -176,7 +176,7 @@ namespace lidar_sim {
 	return D;
     }
 
-    double euclideanDist(std::vector<double> pt1, std::vector<double> pt2)
+    double euclideanDist(const std::vector<double> &pt1, const std::vector<double> &pt2)
     {
 	double dist = 0;
 	for(size_t i = 0; i < pt1.size(); ++i)
