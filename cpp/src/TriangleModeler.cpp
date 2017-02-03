@@ -6,7 +6,7 @@
 
 #include "interpolation.h"
 
-#include <lidar_sim/GroundModeler.h>
+#include <lidar_sim/TriangleModeler.h>
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
@@ -16,7 +16,7 @@
 
 using namespace lidar_sim;
 
-GroundModeler::GroundModeler() :
+TriangleModeler::TriangleModeler() :
     m_rbf_radius(0.1),
     m_rbf_layers(1),
     m_rbf_reg(1e-3),
@@ -27,7 +27,7 @@ GroundModeler::GroundModeler() :
 {    
 }
 
-void GroundModeler::fitSmoothedSurface()
+void TriangleModeler::fitSmoothedSurface()
 {
     alglib::rbfreport rep;
     alglib::rbfcreate(2, 1, m_surface_model); // 2d input, 1d output
@@ -38,7 +38,7 @@ void GroundModeler::fitSmoothedSurface()
 }
 
 
-void GroundModeler::fitSmoothedPts()
+void TriangleModeler::fitSmoothedPts()
 {
     std::cout << "building surface model" << std::endl;
     fitSmoothedSurface();
@@ -69,7 +69,7 @@ void GroundModeler::fitSmoothedPts()
 }
 
 std::vector<std::vector<double> >
-GroundModeler::cutNodesToPtsProjn(std::vector<std::vector<double> > xy_nodes)
+TriangleModeler::cutNodesToPtsProjn(std::vector<std::vector<double> > xy_nodes)
 {
     
     std::vector<std::vector<double> > xy_pts(m_pts.size(), std::vector<double>(2,0));
@@ -95,7 +95,7 @@ GroundModeler::cutNodesToPtsProjn(std::vector<std::vector<double> > xy_nodes)
 }
 
 std::tuple<std::vector<double>, std::vector<double> >
-GroundModeler::genNodeVecsForSmoothedFit(const std::vector<std::vector<double> > &pts)
+TriangleModeler::genNodeVecsForSmoothedFit(const std::vector<std::vector<double> > &pts)
 {
     std::vector<double> x;
     std::vector<double> y;
@@ -131,7 +131,7 @@ GroundModeler::genNodeVecsForSmoothedFit(const std::vector<std::vector<double> >
     return std::make_tuple(x_node_vec, y_node_vec);
 }
 
-void GroundModeler::delaunayTriangulate()
+void TriangleModeler::delaunayTriangulate()
 {
     std::vector< std::pair<Point_cgal, unsigned> > points_cgal;
     for(size_t i = 0; i < m_fit_pts.size(); ++i)
@@ -143,7 +143,7 @@ void GroundModeler::delaunayTriangulate()
     calcTrianglesFromTriangulation();
 }
 
-void GroundModeler::calcTrianglesFromTriangulation()
+void TriangleModeler::calcTrianglesFromTriangulation()
 {
     for(Delaunay_cgal::Finite_faces_iterator fit = m_triangulation.finite_faces_begin();
 	fit != m_triangulation.finite_faces_end(); ++fit) 
@@ -156,7 +156,7 @@ void GroundModeler::calcTrianglesFromTriangulation()
     }
 }
 
-void GroundModeler::writeTrianglesToFile(std::string rel_path_output)
+void TriangleModeler::writeTrianglesToFile(std::string rel_path_output)
 {
     std::ofstream file(rel_path_output);
     std::cout << "Writing triangles to: " << rel_path_output << std::endl;

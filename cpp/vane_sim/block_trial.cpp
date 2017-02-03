@@ -56,7 +56,8 @@ int main(int argc, char **argv)
 
     int section_id = 3;
     int block_id = 13;
-    std::string rel_path_block_pts = genBlockPtsRelPath(section_id, block_id);
+    // std::string rel_path_block_pts = genBlockPtsRelPath(section_id, block_id);
+    std::string rel_path_block_pts = "data/block_trial.xyz";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_block_pts);
 
     RangeDataVizer vizer;
@@ -74,10 +75,26 @@ int main(int argc, char **argv)
     vizer.vizSegmentation(pts, segmentation);
 
     // write pts to file
-    // std::vector<std::vector<double> > pts_ground = logicalSubsetArray(pts, segmentation);
-    // std::vector<std::vector<double> > pts_non_ground = logicalSubsetArray(pts, negateLogicalVec(segmentation));
-    // writePtsToXYZFile(pts_ground, genBlockGroundRelPath(section_id, block_id));
-    // writePtsToXYZFile(pts_non_ground, genBlockNonGroundRelPath(section_id, block_id));
+    std::vector<std::vector<double> > pts_ground = logicalSubsetArray(pts, segmentation);
+    std::vector<std::vector<double> > pts_non_ground = logicalSubsetArray(pts, negateLogicalVec(segmentation));
+    std::string rel_path_ground_pts = "data/block_trial_ground.xyz";
+	std::string rel_path_non_ground_pts = "data/block_trial_non_ground.xyz";
+    writePtsToXYZFile(pts_ground, rel_path_ground_pts);
+    writePtsToXYZFile(pts_non_ground, rel_path_non_ground_pts);
+
+    // build ellipsoid models
+    // put the perm calc inside modeler
+
+    // EllipsoidModeler ellipsoid_modeler;
+    // ellipsoid_modeler.createEllipsoids(rel_path_ground_pts);
+    // calculate hit prob
+    // output file for saving stuff
+    // viz the models
+
+    // build tri models
+    // calculate hit prob
+    // file to write tri to
+    // viz the models
     
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

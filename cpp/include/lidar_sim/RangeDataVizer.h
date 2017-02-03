@@ -12,7 +12,7 @@
 #include <lidar_sim/LineVtkActorServer.h>
 #include <lidar_sim/TrianglesVtkActorServer.h>
 #include <lidar_sim/EllipsoidModelUtils.h>
-#include <lidar_sim/GroundModeler.h>
+#include <lidar_sim/TriangleModeler.h>
 
 namespace lidar_sim {
     class RangeDataVizer {

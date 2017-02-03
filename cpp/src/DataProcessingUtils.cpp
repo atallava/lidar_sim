@@ -248,6 +248,16 @@ namespace lidar_sim {
 	return pts_alglib;
     }
 
+    std::vector<int> convertAlglib1DIntArrayToStlVector(const alglib::integer_1d_array &vec)
+    {
+	std::vector<int> vec_stl;
+	
+	for(size_t i = 0; i < (size_t)vec.length(); ++i)
+	    vec_stl.push_back((int)vec[i]);
+
+	return vec_stl;
+    }
+
     Eigen::MatrixXd stlVecToEigen(const std::vector<double> &vec)
     {
 	Eigen::MatrixXd vec_eigen(vec.size(), 1);

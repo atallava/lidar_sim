@@ -27,6 +27,7 @@ namespace lidar_sim {
 
     // data types conversions
     alglib::real_2d_array convertStlPtsToAlglibPts(const std::vector<std::vector<double> > &pts);
+    std::vector<int> convertAlglib1DIntArrayToStlVector(const alglib::integer_1d_array &vec);
 
     Eigen::MatrixXd stlVecToEigen(const std::vector<double> &vec);
     Eigen::MatrixXd stlArrayToEigen(const std::vector<std::vector<double> > &array);

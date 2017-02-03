@@ -8,7 +8,7 @@
 
 #include <Eigen/Dense>
 
-#include <lidar_sim/GroundModeler.h>
+#include <lidar_sim/TriangleModeler.h>
 
 namespace lidar_sim {
     class TrianglesVtkActorServer {

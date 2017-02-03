@@ -11,9 +11,9 @@ using namespace lidar_sim;
 
 GeometricSegmenter::GeometricSegmenter() :
     m_max_dist2_to_nbr(25),
-    m_min_nbrs(10),
-    m_default_spherical_variation(0.005),
-    m_spherical_variation_threshold(0.04),
+    m_min_nbrs(15),
+    m_default_spherical_variation(0.01),
+    m_spherical_variation_threshold(0.09),
     m_debug_flag(0)
 {
 }

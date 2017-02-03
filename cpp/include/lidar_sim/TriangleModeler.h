@@ -20,9 +20,9 @@
 #include <lidar_sim/CgalTypedefs.h>
 
 namespace lidar_sim {
-    class GroundModeler {
+    class TriangleModeler {
     public:
-	GroundModeler();
+	TriangleModeler();
 	void fitSmoothedSurface();
 	void fitSmoothedPts();
 	std::vector<std::vector<double> >

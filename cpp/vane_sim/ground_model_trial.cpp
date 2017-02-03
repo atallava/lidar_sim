@@ -10,7 +10,7 @@
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/ClusteringUtils.h>
-#include <lidar_sim/GroundModeler.h>
+#include <lidar_sim/TriangleModeler.h>
 
 using namespace lidar_sim;
 
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_xyz);
 
     // fit smoothed pts
-    GroundModeler modeler;
+    TriangleModeler modeler;
     modeler.m_pts = pts;
     modeler.fitSmoothedPts();
 

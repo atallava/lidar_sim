@@ -8,7 +8,6 @@
 #include <lidar_sim/MathUtils.h>
 
 namespace lidar_sim {
-
     struct EllipsoidModel {
 	std::vector<double> mu;
 	Eigen::MatrixXd cov_mat;
@@ -17,10 +16,11 @@ namespace lidar_sim {
 
     typedef std::vector<EllipsoidModel> EllipsoidModels;
 
+    struct EllipsoidModel;
+    
     EllipsoidModel createEllipsoidModel(Pts pts);
     void writeEllipsoidModelsToFile(EllipsoidModels ellipsoid_models, std::string rel_path_output);
     EllipsoidModels loadEllipsoidModels(std::string rel_path_input);
     void dispEllipsoidModel(EllipsoidModel model);
-    std::vector<int> getIntersectedFlag(std::vector<std::vector<int> > intersection_flag);
 }
 

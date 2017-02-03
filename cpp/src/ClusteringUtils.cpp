@@ -34,16 +34,6 @@
 #include <lidar_sim/VizUtils.h>
 
 namespace lidar_sim {
-    std::vector<int> convertAlglib1DIntArrayToStlVector(alglib::integer_1d_array vec)
-    {
-	std::vector<int> vec_stl;
-	
-	for(size_t i = 0; i < (size_t)vec.length(); ++i)
-	    vec_stl.push_back((int)vec[i]);
-
-	return vec_stl;
-    }
-
     std::vector<int> getNumPtsPerCluster(alglib::integer_1d_array pt_cluster_ids, int n_clusters)
     {
 	std::vector<int> ids = convertAlglib1DIntArrayToStlVector(pt_cluster_ids);

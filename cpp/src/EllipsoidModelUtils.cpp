@@ -95,13 +95,4 @@ namespace lidar_sim {
 	std::cout << model.hit_prob << std::endl;
     }
 
-    std::vector<int> getIntersectedFlag(std::vector<std::vector<int> > intersection_flag)
-    {
-	std::vector<int> intersected_flag(intersection_flag[0].size(), 0);
-	for(size_t i = 0; i < intersection_flag[0].size(); ++i)
-	    for(size_t j = 0; j < intersection_flag.size(); ++j)
-		intersected_flag[i] += intersection_flag[j][i];
-
-	return intersected_flag;
-    }
 }
