@@ -27,6 +27,8 @@ namespace lidar_sim {
 			   const std::vector<std::vector<double> > &pts2);
 	void vizTriangles(const Delaunay_cgal &triangulation,
 			  const std::vector<std::vector<double> > &pts);
+	void vizTriangles(const std::vector<std::vector<int> > &triangle_vertex_ids,
+			  const std::vector<std::vector<double> > &pts);
 	void vizSegmentation(const std::vector<std::vector<double> >& pts, const std::vector<int> &segmentation);
 
 	PointsVtkActorServer m_points_actor_server;

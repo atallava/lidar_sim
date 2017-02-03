@@ -15,6 +15,8 @@
 #include <lidar_sim/EllipsoidModelSim.h>
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/GeometricSegmenter.h>
+#include <lidar_sim/EllipsoidModeler.h>
+#include <lidar_sim/TriangleModeler.h>
 
 using namespace lidar_sim;
 
@@ -65,8 +67,8 @@ int main(int argc, char **argv)
     // viz pts
     // vizer.vizPts(pts);
 
+    // segment pts
     std::cout << "segmenting..." << std::endl;
-    // segment
     GeometricSegmenter segmenter;
     segmenter.setDebugFlag(1);
     std::vector<int> segmentation = segmenter.segmentPts(pts);
@@ -74,28 +76,49 @@ int main(int argc, char **argv)
     // viz segmentation
     vizer.vizSegmentation(pts, segmentation);
 
-    // write pts to file
+    // write segmented pts to file
     std::vector<std::vector<double> > pts_ground = logicalSubsetArray(pts, segmentation);
     std::vector<std::vector<double> > pts_non_ground = logicalSubsetArray(pts, negateLogicalVec(segmentation));
     std::string rel_path_ground_pts = "data/block_trial_ground.xyz";
-	std::string rel_path_non_ground_pts = "data/block_trial_non_ground.xyz";
+    std::string rel_path_non_ground_pts = "data/block_trial_non_ground.xyz";
     writePtsToXYZFile(pts_ground, rel_path_ground_pts);
     writePtsToXYZFile(pts_non_ground, rel_path_non_ground_pts);
 
     // build ellipsoid models
-    // put the perm calc inside modeler
+    EllipsoidModeler ellipsoid_modeler;
+    ellipsoid_modeler.setDebugFlag(1);
+    ellipsoid_modeler.createEllipsoidModels(rel_path_non_ground_pts);
+    
+    // hit prob
+    std::string rel_path_section = "data/section_03_world_frame_subsampled_timed.xyz";
+    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
+    PoseServer imu_pose_server(rel_path_poses_log);
 
-    // EllipsoidModeler ellipsoid_modeler;
-    // ellipsoid_modeler.createEllipsoids(rel_path_ground_pts);
-    // calculate hit prob
-    // output file for saving stuff
-    // viz the models
+    // ellipsoid_modeler.calcHitProb(rel_path_section, imu_poses_server);
+    
+    // viz ellipsoids
+    vizer.vizEllipsoidModels(ellipsoid_modeler.m_ellipsoid_models, ellipsoid_modeler.m_pts);
+
+    // save ellipsoids
+    std::string rel_path_ellipsoid_models = "data/block_trial_ellipsoid_models.txt";
+    // ellipsoid_modeler.writeEllipsoidModelsToFile(rel_path_ellipsoid_models);
 
     // build tri models
-    // calculate hit prob
-    // file to write tri to
-    // viz the models
-    
+    TriangleModeler triangle_modeler;
+    triangle_modeler.setDebugFlag(1);
+    triangle_modeler.createTriangleModels(rel_path_ground_pts);
+
+    // hit prob + range
+    // assuming that ellipsoids and triangles will use the same section
+    // triangle_modeler.calcHitProb(rel_path_section, imu_poses_server);
+
+    // viz triangles
+    vizer.vizTriangles(triangle_modeler.m_triangles, triangle_modeler.m_pts);
+
+    // save triangles
+    std::string rel_path_triangle_models = "data/block_trial_triangle_models.txt";
+    // triangle_modeler.writeTrianglesToFile(rel_path_triangle_models);
+
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
     

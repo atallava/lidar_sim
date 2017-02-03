@@ -27,8 +27,27 @@ TriangleModeler::TriangleModeler() :
 {    
 }
 
+void TriangleModeler::createTriangleModels(const std::string rel_path_pts)
+{
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: creating triangle models..." << std::endl;
+
+    loadPts(rel_path_pts);
+    fitSmoothedPts();
+    delaunayTriangulate();
+    calcTrianglesFromTriangulation();
+}
+
+void TriangleModeler::loadPts(const std::string rel_path_pts)
+{
+    m_pts = loadPtsFromXYZFile(rel_path_pts);
+}
+
 void TriangleModeler::fitSmoothedSurface()
 {
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: fitting smoothed surface..." << std::endl;
+
     alglib::rbfreport rep;
     alglib::rbfcreate(2, 1, m_surface_model); // 2d input, 1d output
     alglib::real_2d_array pts_alglib = convertStlPtsToAlglibPts(m_pts);
@@ -40,10 +59,11 @@ void TriangleModeler::fitSmoothedSurface()
 
 void TriangleModeler::fitSmoothedPts()
 {
-    std::cout << "building surface model" << std::endl;
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: fitting smoothed points..." << std::endl;
+
     fitSmoothedSurface();
 
-    std::cout << "getting node vecs" << std::endl;
     std::vector<double> x_node_vec;
     std::vector<double> y_node_vec;
     std::tie(x_node_vec, y_node_vec) = genNodeVecsForSmoothedFit(m_pts);
@@ -55,10 +75,8 @@ void TriangleModeler::fitSmoothedPts()
 	    xy_nodes[i*y_node_vec.size() + j][1] = y_node_vec[j];
 	}
 
-    std::cout << "cutting to projection" << std::endl;
     std::vector<std::vector<double> > xy_fit = cutNodesToPtsProjn(xy_nodes);
     
-    std::cout << "calculating z for fit pts" << std::endl;
     // z for the fit pts
     for(size_t i = 0 ; i < xy_fit.size(); ++i)
     {
@@ -71,7 +89,6 @@ void TriangleModeler::fitSmoothedPts()
 std::vector<std::vector<double> >
 TriangleModeler::cutNodesToPtsProjn(std::vector<std::vector<double> > xy_nodes)
 {
-    
     std::vector<std::vector<double> > xy_pts(m_pts.size(), std::vector<double>(2,0));
     for(size_t i = 0; i < m_pts.size(); ++i)
     {
@@ -133,18 +150,22 @@ TriangleModeler::genNodeVecsForSmoothedFit(const std::vector<std::vector<double>
 
 void TriangleModeler::delaunayTriangulate()
 {
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: delaunay triangulation..." << std::endl;
+
     std::vector< std::pair<Point_cgal, unsigned> > points_cgal;
     for(size_t i = 0; i < m_fit_pts.size(); ++i)
 	points_cgal.push_back(
 	    std::make_pair(Point_cgal(m_fit_pts[i][0], m_fit_pts[i][1]), i));
     
     m_triangulation.insert(points_cgal.begin(), points_cgal.end());
-
-    calcTrianglesFromTriangulation();
 }
 
 void TriangleModeler::calcTrianglesFromTriangulation()
 {
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: triangles from triangulation..." << std::endl;
+
     for(Delaunay_cgal::Finite_faces_iterator fit = m_triangulation.finite_faces_begin();
 	fit != m_triangulation.finite_faces_end(); ++fit) 
     {
@@ -159,7 +180,7 @@ void TriangleModeler::calcTrianglesFromTriangulation()
 void TriangleModeler::writeTrianglesToFile(std::string rel_path_output)
 {
     std::ofstream file(rel_path_output);
-    std::cout << "Writing triangles to: " << rel_path_output << std::endl;
+    std::cout << "TriangleModeler: writing triangles to: " << rel_path_output << std::endl;
 
     file << "pts" << std::endl;
     
@@ -176,3 +197,9 @@ void TriangleModeler::writeTrianglesToFile(std::string rel_path_output)
     
     file.close();
 }
+
+void TriangleModeler::setDebugFlag(int flag)
+{
+    m_debug_flag = flag;
+}
+

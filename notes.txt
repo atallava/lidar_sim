@@ -149,6 +149,11 @@ segmentation optim: debug the nn calculation, smoothing, look at block 1 in
 matlab to see what is going in, plot the spherical variation directly.
 maybe block 1 doesn't have enough point density.
 
+in cpp, one function after another, only operating on member data, who knows
+what comes when?
+
+abstract modeler class
+
 --------------------------------------------------
 
 while installing cloudcompare:

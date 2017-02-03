@@ -30,6 +30,7 @@ int main(int argc, char **argv)
     // delaunay triangulate
     std::cout << "triangulating " << std::endl;
     modeler.delaunayTriangulate();
+    modeler.calcTrianglesFromTriangulation();
 
     // viz
     RangeDataVizer vizer;

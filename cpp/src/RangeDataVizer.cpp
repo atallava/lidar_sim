@@ -199,6 +199,12 @@ void RangeDataVizer::vizTriangles(const Delaunay_cgal &triangulation, const std:
     takeItAway(actor);
 }
 
+void RangeDataVizer::vizTriangles(const std::vector<std::vector<int> > &triangle_vertex_ids, const std::vector<std::vector<double> > &pts)
+{
+    vtkSmartPointer<vtkActor> actor = m_triangles_actor_server.genTrianglesActor(triangle_vertex_ids, pts);
+    takeItAway(actor);
+}
+
 void RangeDataVizer::vizSegmentation(const std::vector<std::vector<double> >& pts, const std::vector<int> &segmentation)
 {
     std::vector<std::vector<double> > pts1 = logicalSubsetArray(pts, segmentation);

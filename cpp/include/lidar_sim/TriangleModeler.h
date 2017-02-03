@@ -23,6 +23,8 @@ namespace lidar_sim {
     class TriangleModeler {
     public:
 	TriangleModeler();
+	void createTriangleModels(const std::string rel_path_pts);
+	void loadPts(const std::string rel_path_pts);
 	void fitSmoothedSurface();
 	void fitSmoothedPts();
 	std::vector<std::vector<double> >
@@ -32,6 +34,7 @@ namespace lidar_sim {
 	void delaunayTriangulate();
 	void calcTrianglesFromTriangulation();
 	void writeTrianglesToFile(std::string rel_path_output);
+	void setDebugFlag(int flag);
 
 	std::vector<std::vector<double> > m_pts;
 	alglib::rbfmodel m_surface_model;
@@ -40,6 +43,7 @@ namespace lidar_sim {
 	Delaunay_cgal m_triangulation;
 
     private:
+	int m_debug_flag;
 	double m_rbf_radius;
 	double m_rbf_layers;
 	double m_rbf_reg;
