@@ -28,7 +28,8 @@ EllipsoidVtkActorServer::EllipsoidVtkActorServer() :
     m_opacity(0.3),
     m_level(9)
 {
-    std::vector<double> ellipse_rgb = {1, 0, 0};
+    // ellipsoids are green, for vegetation
+    std::vector<double> ellipse_rgb = {0, 1, 0};
     m_color = ellipse_rgb;
 }
 

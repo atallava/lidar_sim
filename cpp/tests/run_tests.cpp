@@ -5,5 +5,5 @@ using namespace lidar_sim;
 
 int main() {
     Test t = Test();
-    t.testPtsLine();
+    t.testVizEllipsoid();
 }

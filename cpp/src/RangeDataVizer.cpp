@@ -57,11 +57,9 @@ void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models)
     actors.push_back(
     	m_ellipsoid_actor_server.genEllipsoidActor(mu, cov_mat));
     for(size_t i = 0; i < n_ellipsoids; ++i)
-    {
-    	actors.push_back(
+	actors.push_back(
     	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
     						       ellipsoid_models[i].cov_mat));
-    }
 
     takeItAway(actors);
 }
@@ -79,16 +77,14 @@ void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models,
 	1,0,0,
 	0,1,0,
 	0,0,1;
-    actors.push_back(
-    	m_ellipsoid_actor_server.genEllipsoidActor(origin_dot_mu, origin_dot_cov_mat));
+    // actors.push_back(
+    // 	m_ellipsoid_actor_server.genEllipsoidActor(origin_dot_mu, origin_dot_cov_mat));
 
     // ellipsoids
     for(size_t i = 0; i < n_ellipsoids; ++i)
-    {
     	actors.push_back(
     	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
     						       ellipsoid_models[i].cov_mat));
-    }
 
     // pts
     actors.push_back(

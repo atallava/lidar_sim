@@ -156,7 +156,10 @@ abstract modeler class
 
 vtk bulbs when giving it only sim points, why?
 
-so there was an error in the rng in eigenmvn. watch out, there could be similar errors 
+so there was an error in the rng in eigenmvn. watch out, there could be similar
+errors in the rest of the code
+
+can modulate transparencies with permeabilities
 
 --------------------------------------------------
 

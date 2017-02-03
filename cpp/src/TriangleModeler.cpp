@@ -17,9 +17,10 @@
 using namespace lidar_sim;
 
 TriangleModeler::TriangleModeler() :
+    m_debug_flag(0),
     m_rbf_radius(0.1),
     m_rbf_layers(1),
-    m_rbf_reg(1e-3),
+    m_rbf_reg(1e-2),
     m_fit_pts_padding(5),
     m_fit_pts_node_resn(1),
     m_max_dist_to_projn(1.5),

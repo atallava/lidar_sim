@@ -19,8 +19,8 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     // pts from xyz
-    // std::string rel_path_xyz = "data/rim_stretch_veg_train.asc";
-    std::string rel_path_xyz = "data/dummy_cluster.xyz";
+    std::string rel_path_xyz = "data/rim_stretch_veg_train.asc";
+    // std::string rel_path_xyz = "data/dummy_cluster.xyz";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_xyz);
     size_t n_pts = pts.size();
     alglib::real_2d_array pts_alglib = convertStlPtsToAlglibPts(pts);
@@ -37,8 +37,7 @@ int main(int argc, char **argv)
     alglib::clusterizerrunahc(clusterizer_state, ahc_report);
 
     // get clusters
-    // size_t n_clusters = 2300;
-    size_t n_clusters = 1;
+    size_t n_clusters = 250;
     alglib::clusterizergetkclusters(ahc_report, n_clusters, pt_cluster_ids, cz);
 
     // write clustering to file
@@ -53,10 +52,9 @@ int main(int argc, char **argv)
 	if (n_pts_per_cluster[i] >= min_pts_per_cluster)
 	    selected_cluster_ids.push_back(i);
 
-    std::cout << "num selected clusters: " << selected_cluster_ids.size() << std::endl;
-    
     // ellipsoid models from selected clusters
     std::cout << "creating ellipsoid models..." << std::endl;
+    int n_pts_in_clusters = 0;
     EllipsoidModels ellipsoid_models;
     for(size_t i = 0; i < selected_cluster_ids.size(); ++i)
     {
@@ -65,16 +63,22 @@ int main(int argc, char **argv)
 	std::vector<std::vector<double> > this_cluster_pts;
 	for(size_t j = 0; j < n_pts; ++j)
 	    if (pt_cluster_ids[j] == this_cluster_id)
+	    {
 		this_cluster_pts.push_back(pts[j]);
+		n_pts_in_clusters++;
+	    }
 	
 	ellipsoid_models.push_back(createEllipsoidModel(this_cluster_pts));
     }
 
+    std::cout << "num clusters queried: " << n_clusters << std::endl;
+    std::cout << "num selected clusters: " << selected_cluster_ids.size() << std::endl;
+    std::cout << "fracn pts in clusters: " << n_pts_in_clusters/(double)pts.size() << std::endl;
+    
     // write to file
     // std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
     // writeEllipsoidModelsToFile(ellipsoid_models, rel_path_ellipsoid_models);
 
-    
     // viz
     RangeDataVizer vizer;
     std::cout << "vizing ellipsoid models..." << std::endl;

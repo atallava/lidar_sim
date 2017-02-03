@@ -30,7 +30,8 @@ LineVtkActorServer::LineVtkActorServer() :
     m_line_length(15),
     m_line_width(2)
 {
-    std::vector<double> ellipse_rgb = {0, 1, 0};
+    // lines are red, for laser beams
+    std::vector<double> ellipse_rgb = {1, 0, 0};
     m_color = ellipse_rgb;
 }
 
