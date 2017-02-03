@@ -56,33 +56,32 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    int section_id = 3;
-    int block_id = 13;
-    // std::string rel_path_block_pts = genBlockPtsRelPath(section_id, block_id);
-    std::string rel_path_block_pts = "data/block_trial.xyz";
-    std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_block_pts);
+    // int section_id = 3;
+    // int block_id = 13;
+    // // std::string rel_path_block_pts = genBlockPtsRelPath(section_id, block_id);
+    // std::string rel_path_block_pts = "data/block_trial.xyz";
+    // std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_block_pts);
 
     RangeDataVizer vizer;
 
-    // viz pts
-    // vizer.vizPts(pts);
+    // // viz pts
+    // // vizer.vizPts(pts);
 
-    // segment pts
-    std::cout << "segmenting..." << std::endl;
-    GeometricSegmenter segmenter;
-    segmenter.setDebugFlag(1);
-    std::vector<int> segmentation = segmenter.segmentPts(pts);
+    // // segment pts
+    // GeometricSegmenter segmenter;
+    // segmenter.setDebugFlag(1);
+    // std::vector<int> segmentation = segmenter.segmentPts(pts);
 
-    // viz segmentation
-    vizer.vizSegmentation(pts, segmentation);
+    // // viz segmentation
+    // vizer.vizSegmentation(pts, segmentation);
 
-    // write segmented pts to file
-    std::vector<std::vector<double> > pts_ground = logicalSubsetArray(pts, segmentation);
-    std::vector<std::vector<double> > pts_non_ground = logicalSubsetArray(pts, negateLogicalVec(segmentation));
+    // // write segmented pts to file
+    // std::vector<std::vector<double> > pts_ground = logicalSubsetArray(pts, segmentation);
+    // std::vector<std::vector<double> > pts_non_ground = logicalSubsetArray(pts, negateLogicalVec(segmentation));
     std::string rel_path_ground_pts = "data/block_trial_ground.xyz";
     std::string rel_path_non_ground_pts = "data/block_trial_non_ground.xyz";
-    writePtsToXYZFile(pts_ground, rel_path_ground_pts);
-    writePtsToXYZFile(pts_non_ground, rel_path_non_ground_pts);
+    // writePtsToXYZFile(pts_ground, rel_path_ground_pts);
+    // writePtsToXYZFile(pts_non_ground, rel_path_non_ground_pts);
 
     // build ellipsoid models
     EllipsoidModeler ellipsoid_modeler;
@@ -93,7 +92,7 @@ int main(int argc, char **argv)
     std::string rel_path_section = "data/section_03_world_frame_subsampled_timed.xyz";
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
-    ellipsoid_modeler.calcHitProb(rel_path_section, imu_pose_server);
+    // ellipsoid_modeler.calcHitProb(rel_path_section, imu_pose_server);
     
     // viz ellipsoids
     vizer.vizEllipsoidModels(ellipsoid_modeler.m_ellipsoid_models, ellipsoid_modeler.m_pts);
@@ -109,7 +108,7 @@ int main(int argc, char **argv)
 
     // hit prob + range
     // assuming that ellipsoids and triangles will use the same section
-    triangle_modeler.calcHitProb(rel_path_section, imu_pose_server);
+    // triangle_modeler.calcHitProb(rel_path_section, imu_pose_server);
 
     // viz triangles
     vizer.vizTriangles(triangle_modeler.m_triangles, triangle_modeler.m_pts);

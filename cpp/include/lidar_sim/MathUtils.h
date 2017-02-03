@@ -55,6 +55,6 @@ namespace lidar_sim {
 
     std::tuple<int, bool>
 	sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &sorted_intersecting_ids);
-    std::vector<int> getIntersectedFlag(std::vector<std::vector<int> > intersection_flag);
+    std::vector<int> getIntersectedFlag(const std::vector<std::vector<int> > &intersection_flag);
 }
 

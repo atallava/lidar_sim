@@ -8,8 +8,8 @@
 #include <lidar_sim/LaserCalibParams.h>
 
 namespace lidar_sim {
-    std::vector<std::vector<double> > genRayDirnsWorldFrame(std::vector<double> imu_pose, LaserCalibParams laser_calib_params);
-    std::vector<std::vector<double> > genRayDirnsLaserFrame(LaserIntrinsics intrinsics);
-    std::vector<std::vector<double> > rotateRayDirns(Eigen::MatrixXd R, std::vector<std::vector<double> > ray_dirns);
-    std::tuple<std::vector<double>, double> calcRayDirn(std::vector<double> ray_origin, std::vector<double> end_pt);
+    std::vector<std::vector<double> > genRayDirnsWorldFrame(const std::vector<double> &imu_pose, const LaserCalibParams laser_calib_params);
+    std::vector<std::vector<double> > genRayDirnsLaserFrame(const LaserIntrinsics intrinsics);
+    std::vector<std::vector<double> > rotateRayDirns(const Eigen::MatrixXd &R, const std::vector<std::vector<double> > &ray_dirns);
+    std::tuple<std::vector<double>, double> calcRayDirn(const std::vector<double> &ray_origin, const std::vector<double> &end_pt);
 }

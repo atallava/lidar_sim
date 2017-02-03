@@ -16,36 +16,36 @@ namespace lidar_sim {
     class EllipsoidModelSim {
     public:
 	EllipsoidModelSim();
-	void setEllipsoidModels(EllipsoidModels ellipsoid_models);
-	void setEllipsoidModels(std::string rel_path_models);
-	void setLaserCalibParams(LaserCalibParams laser_calib_params);
-	void setDebugFlag(int value);
+	void setEllipsoidModels(const EllipsoidModels &ellipsoid_models);
+	void setEllipsoidModels(const std::string rel_path_models);
+	void setLaserCalibParams(const LaserCalibParams laser_calib_params);
+	void setDebugFlag(const int value);
 
 	std::tuple<std::vector<std::vector<int> >,
-	    std::vector<std::vector<double> > > calcEllipsoidIntersections(std::vector<double>, std::vector<std::vector<double> >);
+	    std::vector<std::vector<double> > > calcEllipsoidIntersections(const std::vector<double>& ray_origin, const std::vector<std::vector<double> > &ray_dirns);
 
 	std::tuple<std::vector<int>,
-	    std::vector<double> > calcEllipsoidIntersections(std::vector<double> ray_origin, std::vector<double> ray_dirn);
+	    std::vector<double> > calcEllipsoidIntersections(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn);
 
-	std::tuple<double, double> calcMahaDistRayToEllipsoid(std::vector<double> ray_origin, std::vector<double> ray_dirn, std::vector<double> mu, Eigen::MatrixXd cov_mat);
+	std::tuple<double, double> calcMahaDistRayToEllipsoid(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat);
 
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
-	    simPtsGivenIntersections(std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray);
+	    simPtsGivenIntersections(const std::vector<std::vector<int> > &intersection_flag, const std::vector<std::vector<double> > &dist_along_ray);
 
-	std::vector<double> calcMahaDistPtToEllipsoids(std::vector<int> ellipsoid_ids, std::vector<double> pt);
+	std::vector<double> calcMahaDistPtToEllipsoids(const std::vector<int> &ellipsoid_ids, const std::vector<double> &pt);
 
-	double calcMahaDistPtToEllipsoid(int ellipsoid_id, std::vector<double> pt);
+	double calcMahaDistPtToEllipsoid(const int ellipsoid_id, const std::vector<double> &pt);
 
-	double calcMahaDistPtToEllipsoid(std::vector<double> mu, Eigen::MatrixXd cov_mat, 
-							std::vector<double> pt);
+	double calcMahaDistPtToEllipsoid(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat, 
+					 const std::vector<double> &pt);
 
 	std::tuple<int, std::vector<int> >
-	    assignEllipsoidHitCredits(std::vector<double> maha_dists_to_ellipsoids, 
-							 std::vector<int> sorted_intersecting_ids);
+	    assignEllipsoidHitCredits(const std::vector<double> &maha_dists_to_ellipsoids, 
+				      const std::vector<int> &sorted_intersecting_ids);
 
-	std::vector<std::vector<double> > simPtsGivenPose(std::vector<double> imu_pose);
+	std::vector<std::vector<double> > simPtsGivenPose(const std::vector<double> &imu_pose);
 
-	std::vector<std::vector<double> > simPtsGivenPoses(std::vector<std::vector<double> > imu_poses);
+	std::vector<std::vector<double> > simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
 
     private:
 	double m_max_maha_dist_for_hit;

@@ -55,6 +55,8 @@ void EllipsoidModeler::clusterPts()
 	std::cout << "EllipsoidModeler: clustering..." << std::endl;
 
     alglib::real_2d_array pts_alglib = convertStlPtsToAlglibPts(m_pts);
+    std::cout << m_pts.size() << std::endl;
+    std::cout << pts_alglib[0][0] << std::endl;
 
     alglib::clusterizerstate clusterizer_state;
     alglib::ahcreport ahc_report;

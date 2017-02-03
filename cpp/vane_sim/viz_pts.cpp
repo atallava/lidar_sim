@@ -21,7 +21,8 @@ using namespace lidar_sim;
 int main(int, char *[])
 {
     // std::string rel_path_input = "../data/taylorJune2014/sections/world_frame/section_pts_01_world_frame_subsampled.xyz";
-    std::string rel_path_input = "../data/taylorJune2014/vane/rim_stretch_veg_train.asc";
+    // std::string rel_path_input = "../data/taylorJune2014/vane/rim_stretch_veg_train.asc";
+    std::string rel_path_input = "../data/taylorJune2014/vane/rim_stretch_veg_validation_sim.xyz";
 
     // actor
     PointsVtkActorServer points_actor_server;

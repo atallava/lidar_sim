@@ -10,7 +10,7 @@
 #include <lidar_sim/PoseUtils.h>
 
 namespace lidar_sim {
-    std::vector<std::vector<double> > genRayDirnsWorldFrame(std::vector<double> imu_pose, LaserCalibParams laser_calib_params)
+    std::vector<std::vector<double> > genRayDirnsWorldFrame(const std::vector<double> &imu_pose, const LaserCalibParams laser_calib_params)
     {
 	Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
 	Eigen::MatrixXd T_laser_world = laser_calib_params.extrinsics.T_laser_imu*T_imu_world;
@@ -22,7 +22,7 @@ namespace lidar_sim {
 	return ray_dirns_world_frame;
     }
 
-    std::vector<std::vector<double> > genRayDirnsLaserFrame(LaserIntrinsics intrinsics)
+    std::vector<std::vector<double> > genRayDirnsLaserFrame(const LaserIntrinsics intrinsics)
     {
 	size_t n_alpha_vec = intrinsics.alpha_vec.size();
 	size_t n_theta_vec = intrinsics.theta_vec.size();
@@ -43,7 +43,7 @@ namespace lidar_sim {
 	return ray_dirns;
     }
 
-    std::vector<std::vector<double> > rotateRayDirns(Eigen::MatrixXd R, std::vector<std::vector<double> > ray_dirns)
+    std::vector<std::vector<double> > rotateRayDirns(const Eigen::MatrixXd &R, const std::vector<std::vector<double> > &ray_dirns)
     {
 	Eigen::MatrixXd ray_dirns_eigen = stlArrayToEigen(ray_dirns);
 	
@@ -52,7 +52,7 @@ namespace lidar_sim {
 	return EigenToStlArray(ray_dirns_rotated_eigen.transpose());
     }
 
-    std::tuple<std::vector<double>, double> calcRayDirn(std::vector<double> ray_origin, std::vector<double> end_pt)
+    std::tuple<std::vector<double>, double> calcRayDirn(const std::vector<double> &ray_origin, const std::vector<double> &end_pt)
     {
 	std::vector<double> ray_dirn(3,0);
 	double meas_dist = 0;

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
+#include <chrono>
 #include <random>
+#include <time.h>
 #include <algorithm>
 
 #include "eigenmvn.h"
@@ -89,7 +91,12 @@ namespace lidar_sim {
 	for(size_t i = 0; i < 3; ++i)
 	    mean(i) = mu[i];
 
-	Eigen::EigenMultivariateNormal<double> normX_solver(mean, cov_mat);
+	bool use_cholesky = false;
+	// should the seed be passed as argument?
+	// what a long-winded seed. had to go to level o
+	uint64_t seed = std::chrono::duration_cast<std::chrono::nanoseconds>
+	    (std::chrono::steady_clock::now().time_since_epoch()).count();
+	Eigen::EigenMultivariateNormal<double> normX_solver(mean, cov_mat, use_cholesky, seed);
 	Eigen::MatrixXd sample = normX_solver.samples(1);
 
 	std::vector<double> sample_stl(3, 0);
@@ -247,7 +254,7 @@ namespace lidar_sim {
 	return std::make_tuple(hit_id, hit_bool);
     }
 
-    std::vector<int> getIntersectedFlag(std::vector<std::vector<int> > intersection_flag)
+    std::vector<int> getIntersectedFlag(const std::vector<std::vector<int> > &intersection_flag)
     {
 	std::vector<int> intersected_flag(intersection_flag[0].size(), 0);
 	for(size_t i = 0; i < intersection_flag[0].size(); ++i)

@@ -1,4 +1,5 @@
 #include <tuple>
+#include <iomanip>
 
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
@@ -14,6 +15,8 @@ using namespace lidar_sim;
 
 int main(int argc, char **argv)
 {
+    clock_t start_time = clock();
+
     // load ellipsoids
     std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
     EllipsoidModels ellipsoid_models = 
@@ -27,11 +30,12 @@ int main(int argc, char **argv)
 
     // specify pose
     std::vector<double> imu_pose = {455.729, -498.582, -5.825, 0.0397752, 0.022933, 5.07743};
+    // std::vector<double> imu_pose = {450, -475, 0, 0, 0, deg2rad(10)};
     Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
 
     std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
     // single ray dirn
-    // std::vector<std::vector<double> > ray_dirns = {{-0.146354, -0.979840, -0.135992}};
+    // std::vector<std::vector<double> > ray_dirns = {{-0.146803, -0.982715, -0.112786}};
     // scanning pattern
     std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, laser_calib_params);
 
@@ -57,12 +61,14 @@ int main(int argc, char **argv)
     // viz
     RangeDataVizer vizer;
     std::vector<vtkSmartPointer<vtkActor> > actors;
-    bool use_intersected_flag = false;
+    bool use_intersected_flag  = false;
     bool use_hit_flag = true;
 
     // debug
-    std::cout << "hit flag: " << std::endl;
-    dispVec(findNonzeroIds(hit_flag));
+    // std::cout << "hit flag: " << std::endl;
+    // dispVec(findNonzeroIds(hit_flag));
+    // std::cout << "intersected ellipsoids: " << std::endl;
+    // dispVec(findNonzeroIds(intersected_ellipsoids_flag));
 
     // ellipsoids
     for(size_t i = 0; i < ellipsoid_models.size(); ++i)
@@ -95,7 +101,10 @@ int main(int argc, char **argv)
     	vizer.m_points_actor_server.genPointsActor(sim_pts_to_plot));
 
     // fire up
-    vizer.takeItAway(actors);
+    //vizer.takeItAway(actors);
+
+    double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
+    std::cout << std::setprecision(15) << "elapsed time: " << elapsed_time << "s" << std::endl;
 
     return(1);
 }

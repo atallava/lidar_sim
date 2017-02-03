@@ -16,8 +16,11 @@ using namespace lidar_sim;
 
 int main(int argc, char **argv)
 {
+    clock_t start_time = clock();
+
     // pts from xyz
-    std::string rel_path_xyz = "data/rim_stretch_veg_train.asc";
+    // std::string rel_path_xyz = "data/rim_stretch_veg_train.asc";
+    std::string rel_path_xyz = "data/dummy_cluster.xyz";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_xyz);
     size_t n_pts = pts.size();
     alglib::real_2d_array pts_alglib = convertStlPtsToAlglibPts(pts);
@@ -34,7 +37,8 @@ int main(int argc, char **argv)
     alglib::clusterizerrunahc(clusterizer_state, ahc_report);
 
     // get clusters
-    size_t n_clusters = 2300;
+    // size_t n_clusters = 2300;
+    size_t n_clusters = 1;
     alglib::clusterizergetkclusters(ahc_report, n_clusters, pt_cluster_ids, cz);
 
     // write clustering to file
@@ -70,10 +74,14 @@ int main(int argc, char **argv)
     // std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
     // writeEllipsoidModelsToFile(ellipsoid_models, rel_path_ellipsoid_models);
 
+    
     // viz
     RangeDataVizer vizer;
     std::cout << "vizing ellipsoid models..." << std::endl;
     vizer.vizEllipsoidModels(ellipsoid_models, pts);
 
-    return 0;
+    double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
+    std::cout << std::setprecision(15) << "elapsed time: " << elapsed_time << "s" << std::endl;
+
+    return(1);
 }

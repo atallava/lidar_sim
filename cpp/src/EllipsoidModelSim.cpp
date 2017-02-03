@@ -22,28 +22,28 @@ EllipsoidModelSim::EllipsoidModelSim() :
     m_gen = gen;
 }
 
-void EllipsoidModelSim::setEllipsoidModels(EllipsoidModels ellipsoid_models)
+void EllipsoidModelSim::setEllipsoidModels(const EllipsoidModels &ellipsoid_models)
 {
     m_ellipsoid_models = ellipsoid_models;
 }
 
-void EllipsoidModelSim::setEllipsoidModels(std::string rel_path_models)
+void EllipsoidModelSim::setEllipsoidModels(const std::string rel_path_models)
 {
     m_ellipsoid_models = loadEllipsoidModels(rel_path_models);
 }
 
-void EllipsoidModelSim::setLaserCalibParams(LaserCalibParams laser_calib_params)
+void EllipsoidModelSim::setLaserCalibParams(const LaserCalibParams laser_calib_params)
 {
     m_laser_calib_params = laser_calib_params;
 }
 
-void EllipsoidModelSim::setDebugFlag(int value)
+void EllipsoidModelSim::setDebugFlag(const int value)
 {
     m_debug_flag = value;
 }
 
 std::tuple<std::vector<std::vector<int> >,
-	   std::vector<std::vector<double> > > EllipsoidModelSim::calcEllipsoidIntersections(std::vector<double> ray_origin, std::vector<std::vector<double> > ray_dirns)
+	   std::vector<std::vector<double> > > EllipsoidModelSim::calcEllipsoidIntersections(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns)
 {
     size_t n_ellipsoids = m_ellipsoid_models.size();
     
@@ -93,7 +93,7 @@ std::tuple<std::vector<std::vector<int> >,
 }
 
 std::tuple<std::vector<int>,
-	   std::vector<double> > EllipsoidModelSim::calcEllipsoidIntersections(std::vector<double> ray_origin, std::vector<double> ray_dirn)
+	   std::vector<double> > EllipsoidModelSim::calcEllipsoidIntersections(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn)
 {
     std::vector<std::vector<double> > ray_dirns;
     ray_dirns.push_back(ray_dirn);
@@ -106,7 +106,7 @@ std::tuple<std::vector<int>,
     return std::make_tuple(intersection_flag[0], dist_along_ray[0]);
 }
 
-std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(std::vector<double> ray_origin, std::vector<double> ray_dirn, std::vector<double> mu, Eigen::MatrixXd cov_mat)
+std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat)
 {
     // TODO: bad conversion work
     // but these eigen matrixxds are small in size
@@ -154,7 +154,7 @@ std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(std::ve
 }
 
 std::tuple<std::vector<std::vector<double> >, std::vector<int> >
-EllipsoidModelSim::simPtsGivenIntersections(std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray)
+EllipsoidModelSim::simPtsGivenIntersections(const std::vector<std::vector<int> > &intersection_flag, const std::vector<std::vector<double> > &dist_along_ray)
 {
     size_t n_rays = intersection_flag.size();
 
@@ -200,7 +200,7 @@ EllipsoidModelSim::simPtsGivenIntersections(std::vector<std::vector<int> > inter
     return std::make_tuple(sim_pts, hit_flag);
 }
 
-std::vector<double> EllipsoidModelSim::calcMahaDistPtToEllipsoids(std::vector<int> ellipsoid_ids, std::vector<double> pt)
+std::vector<double> EllipsoidModelSim::calcMahaDistPtToEllipsoids(const std::vector<int> &ellipsoid_ids, const std::vector<double> &pt)
 {
     std::vector<double> maha_dists_to_ellipsoids;
     for(size_t i = 0; i < ellipsoid_ids.size(); ++i)
@@ -210,14 +210,14 @@ std::vector<double> EllipsoidModelSim::calcMahaDistPtToEllipsoids(std::vector<in
     return maha_dists_to_ellipsoids;
 }
 
-double EllipsoidModelSim::calcMahaDistPtToEllipsoid(int ellipsoid_id, std::vector<double> pt)
+double EllipsoidModelSim::calcMahaDistPtToEllipsoid(const int ellipsoid_id, const std::vector<double> &pt)
 {
     return calcMahaDistPtToEllipsoid(m_ellipsoid_models[ellipsoid_id].mu, m_ellipsoid_models[ellipsoid_id].cov_mat, 
 				 pt);
 }
 
-double EllipsoidModelSim::calcMahaDistPtToEllipsoid(std::vector<double> mu, Eigen::MatrixXd cov_mat, 
-						std::vector<double> pt)
+double EllipsoidModelSim::calcMahaDistPtToEllipsoid(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat, 
+						    const std::vector<double> &pt)
 {
     Eigen::MatrixXd mu_eigen = stlVecToEigen(mu);
     Eigen::MatrixXd pt_eigen = stlVecToEigen(pt);
@@ -228,8 +228,8 @@ double EllipsoidModelSim::calcMahaDistPtToEllipsoid(std::vector<double> mu, Eige
 }
 
 std::tuple<int, std::vector<int> >
-EllipsoidModelSim::assignEllipsoidHitCredits(std::vector<double> maha_dists_to_ellipsoids, 
-					     std::vector<int> sorted_intersecting_ids)
+EllipsoidModelSim::assignEllipsoidHitCredits(const std::vector<double> &maha_dists_to_ellipsoids, 
+					     const std::vector<int> &sorted_intersecting_ids)
 {
     std::vector<int> flag(maha_dists_to_ellipsoids.size(), 0);
     for(size_t i = 0; i < flag.size(); ++i)
@@ -262,7 +262,7 @@ EllipsoidModelSim::assignEllipsoidHitCredits(std::vector<double> maha_dists_to_e
     return std::make_tuple(ellipsoid_hit_id, ellipsoid_miss_ids);
 }
 
-std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPose(std::vector<double> imu_pose)
+std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 {
     // rays
     Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
@@ -289,7 +289,7 @@ std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPose(std::vector
     return sim_pts_hit;
 }
 
-std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPoses(std::vector<std::vector<double> > imu_poses)
+std::vector<std::vector<double> > EllipsoidModelSim::simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses)
 {
     std::vector<std::vector<double> > sim_pts;
     for(size_t i = 0; i < imu_poses.size(); ++i)
