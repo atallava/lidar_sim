@@ -93,15 +93,14 @@ int main(int argc, char **argv)
     std::string rel_path_section = "data/section_03_world_frame_subsampled_timed.xyz";
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
-
-    // ellipsoid_modeler.calcHitProb(rel_path_section, imu_poses_server);
+    ellipsoid_modeler.calcHitProb(rel_path_section, imu_pose_server);
     
     // viz ellipsoids
     vizer.vizEllipsoidModels(ellipsoid_modeler.m_ellipsoid_models, ellipsoid_modeler.m_pts);
 
     // save ellipsoids
     std::string rel_path_ellipsoid_models = "data/block_trial_ellipsoid_models.txt";
-    // ellipsoid_modeler.writeEllipsoidModelsToFile(rel_path_ellipsoid_models);
+    ellipsoid_modeler.writeEllipsoidModelsToFile(rel_path_ellipsoid_models);
 
     // build tri models
     TriangleModeler triangle_modeler;
@@ -110,14 +109,14 @@ int main(int argc, char **argv)
 
     // hit prob + range
     // assuming that ellipsoids and triangles will use the same section
-    // triangle_modeler.calcHitProb(rel_path_section, imu_poses_server);
+    triangle_modeler.calcHitProb(rel_path_section, imu_pose_server);
 
     // viz triangles
     vizer.vizTriangles(triangle_modeler.m_triangles, triangle_modeler.m_pts);
 
     // save triangles
     std::string rel_path_triangle_models = "data/block_trial_triangle_models.txt";
-    // triangle_modeler.writeTrianglesToFile(rel_path_triangle_models);
+    triangle_modeler.writeTrianglesToFile(rel_path_triangle_models);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

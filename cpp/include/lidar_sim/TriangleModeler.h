@@ -18,6 +18,8 @@
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/LaserCalibParams.h>
 #include <lidar_sim/CgalTypedefs.h>
+#include <lidar_sim/PoseServer.h>
+#include <lidar_sim/SectionLoader.h>
 
 namespace lidar_sim {
     class TriangleModeler {
@@ -35,11 +37,13 @@ namespace lidar_sim {
 	void calcTrianglesFromTriangulation();
 	void writeTrianglesToFile(std::string rel_path_output);
 	void setDebugFlag(int flag);
+	void calcHitProb(std::string rel_path_section, PoseServer imu_poses_server);
 
 	std::vector<std::vector<double> > m_pts;
 	alglib::rbfmodel m_surface_model;
 	std::vector<std::vector<double> > m_fit_pts;
 	std::vector<std::vector<int> > m_triangles;
+	std::vector<double> m_hit_prob_vec;
 	Delaunay_cgal m_triangulation;
 
     private:
@@ -51,5 +55,7 @@ namespace lidar_sim {
 	double m_fit_pts_node_resn;
 	double m_max_dist_to_projn;
 	double m_default_hit_prob;
+	int m_hit_count_prior;
+	int m_miss_count_prior;
     };
 }

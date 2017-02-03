@@ -148,7 +148,7 @@ void EllipsoidModeler::writeEllipsoidModelsToFile(std::string rel_path_output)
     file.close();
 }
 
-void EllipsoidModeler::calcProbHit(std::string rel_path_section, PoseServer imu_pose_server)
+void EllipsoidModeler::calcHitProb(std::string rel_path_section, PoseServer imu_pose_server)
 {
     if (m_debug_flag)
 	std::cout << "EllipsoidModeler: calculating hot probs..." << std::endl;
