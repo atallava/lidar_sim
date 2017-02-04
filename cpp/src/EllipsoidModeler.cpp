@@ -30,7 +30,7 @@ EllipsoidModeler::EllipsoidModeler() :
     m_hit_count_prior(1),
     m_miss_count_prior(0)
 {    
-    m_n_clusters_per_pt = 2300/(double)12016; // hack based on rim stretch test
+    m_n_clusters_per_pt = 250/(double)12016; // hack based on rim stretch test
 }
 
 void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
@@ -55,8 +55,6 @@ void EllipsoidModeler::clusterPts()
 	std::cout << "EllipsoidModeler: clustering..." << std::endl;
 
     alglib::real_2d_array pts_alglib = convertStlPtsToAlglibPts(m_pts);
-    std::cout << m_pts.size() << std::endl;
-    std::cout << pts_alglib[0][0] << std::endl;
 
     alglib::clusterizerstate clusterizer_state;
     alglib::ahcreport ahc_report;
@@ -108,7 +106,7 @@ void EllipsoidModeler::fillEllipsoidModels()
 
 int EllipsoidModeler::calcNClusters()
 {
-    return m_pts.size()*m_n_clusters_per_pt;
+    return (int)m_pts.size()*m_n_clusters_per_pt;
 }
 
 EllipsoidModel EllipsoidModeler::createEllipsoidModel(const Pts &pts)
@@ -121,7 +119,7 @@ EllipsoidModel EllipsoidModeler::createEllipsoidModel(const Pts &pts)
     return model;
 }
 
-void EllipsoidModeler::writeEllipsoidModelsToFile(std::string rel_path_output)
+void EllipsoidModeler::writeEllipsoidsToFile(std::string rel_path_output)
 {
     std::ofstream file(rel_path_output);
     std::cout << "EllipsoidModeler: writing ellipsoid models to: " << rel_path_output << std::endl;
@@ -243,7 +241,6 @@ void EllipsoidModeler::calcHitProb(std::string rel_path_section, PoseServer imu_
 	for(size_t i = 0; i < hit_prob_vec.size(); ++i)
 	{
 	    hit_prob_vec[i] = (double)(ellipsoid_hit_count[i]/(double)(ellipsoid_hit_count[i] + ellipsoid_miss_count[i]));
-	    std::cout << ellipsoid_hit_count[i] << " " << ellipsoid_miss_count[i] << " " << hit_prob_vec[i] << std::endl;
 	    m_ellipsoid_models[i].hit_prob = hit_prob_vec[i];
 	}
 }

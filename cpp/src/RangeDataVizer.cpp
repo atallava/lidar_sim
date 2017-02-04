@@ -87,8 +87,10 @@ void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models,
     						       ellipsoid_models[i].cov_mat));
 
     // pts
-    actors.push_back(
-	m_points_actor_server.genPointsActor(pts));
+    vtkSmartPointer<vtkActor> pts_actor = 
+	m_points_actor_server.genPointsActor(pts);
+    pts_actor->GetProperty()->SetColor(1, 1, 1);
+    actors.push_back(pts_actor);
 	
     takeItAway(actors);
 }

@@ -13,24 +13,24 @@
 #include <lidar_sim/LaserCalibParams.h>
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/EllipsoidModelSim.h>
+#include <lidar_sim/TriangleModelSim.h>
 #include <lidar_sim/MathUtils.h>
 
 using namespace lidar_sim;
 
 int main(int argc, char **argv)
 {
-    // load pts1
-    std::string rel_path_pts1 = "data/rim_stretch_veg_validation.asc";
-    std::vector<std::vector<double> > pts1 = loadPtsFromXYZFile(rel_path_pts1);
+    // pts
+    std::string rel_path_pts = "data/sections/section_03/section_03_block_03_non_ground.xyz";
+    std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
-    // load pts2
-    std::string rel_path_pts2 = "data/rim_stretch_veg_validation_sim.xyz";
-    // std::string rel_path_pts2 = "data/rim_stretch_veg_train.asc";
-    std::vector<std::vector<double> > pts2 = loadPtsFromXYZFile(rel_path_pts2);
+    // triangles
+    std::string rel_path_ellipsoids = "data/sections/section_03/section_03_block_03_non_ground_ellipsoids.txt";
+    EllipsoidModels ellipsoid_models = 
+	loadEllipsoidModels(rel_path_ellipsoids);
 
     // viz
     RangeDataVizer vizer;
-    vizer.vizComparePts(pts1, pts2);
-    
+    vizer.vizEllipsoidModels(ellipsoid_models, pts);
     return(1);
 }

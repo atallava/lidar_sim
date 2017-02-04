@@ -180,6 +180,13 @@ namespace lidar_sim {
     std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_input)
     {
 	std::ifstream input_file(rel_path_input);
+	if (!input_file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_input;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
+
 	std::cout << "Reading pts from: " << rel_path_input << std::endl;
 
 	std::vector<std::vector<double> > pts;

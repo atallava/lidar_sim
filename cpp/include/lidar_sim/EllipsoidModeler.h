@@ -28,7 +28,7 @@ namespace lidar_sim {
 	void fillEllipsoidModels();
 	int calcNClusters();
 	EllipsoidModel createEllipsoidModel(const Pts &pts);
-	void writeEllipsoidModelsToFile(std::string rel_path_output);
+	void writeEllipsoidsToFile(std::string rel_path_output);
 	void calcHitProb(std::string rel_path_section, PoseServer imu_poses_server);
 
 	std::vector<std::vector<double> > m_pts;

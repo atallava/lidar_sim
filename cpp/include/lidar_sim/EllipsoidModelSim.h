@@ -47,10 +47,11 @@ namespace lidar_sim {
 
 	std::vector<std::vector<double> > simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
 
+	EllipsoidModels m_ellipsoid_models;
+
     private:
 	double m_max_maha_dist_for_hit;
 	int m_debug_flag;
-	EllipsoidModels m_ellipsoid_models;
 	LaserCalibParams m_laser_calib_params;
 	std::mt19937 m_gen;
     };
