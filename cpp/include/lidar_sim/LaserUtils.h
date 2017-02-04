@@ -12,4 +12,5 @@ namespace lidar_sim {
     std::vector<std::vector<double> > genRayDirnsLaserFrame(const LaserIntrinsics intrinsics);
     std::vector<std::vector<double> > rotateRayDirns(const Eigen::MatrixXd &R, const std::vector<std::vector<double> > &ray_dirns);
     std::tuple<std::vector<double>, double> calcRayDirn(const std::vector<double> &ray_origin, const std::vector<double> &end_pt);
+    std::vector<double> laserPosnFromImuPose(const std::vector<double> &imu_pose, const LaserCalibParams laser_calib_params);
 }

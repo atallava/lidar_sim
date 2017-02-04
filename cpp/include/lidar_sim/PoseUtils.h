@@ -7,6 +7,6 @@
 #include <lidar_sim/LaserCalibParams.h>
 
 namespace lidar_sim {
-    Eigen::MatrixXd getImuTransfFromPose(std::vector<double> imu_pose);
-    std::vector<double> posnFromImuPose(std::vector<double> imu_pose);
+    Eigen::MatrixXd getImuTransfFromPose(const std::vector<double> &imu_pose);
+    std::vector<double> posnFromImuPose(const std::vector<double> &imu_pose);
 }

@@ -12,6 +12,9 @@
 
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/LaserUtils.h>
+#include <lidar_sim/MathUtils.h>
+#include <lidar_sim/LaserCalibParams.h>
 
 using namespace lidar_sim;
 
@@ -40,6 +43,11 @@ int main() {
 
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
+
+    LaserCalibParams laser_calib_params;
+
+    // ranges less than this distance discarded
+    double min_range_filter = 2;
 	
     // loop over sections
     clock_t start_time = clock();
@@ -99,10 +107,20 @@ int main() {
 	    pt_imu = T_velodyne_imu*pt_laser;
 	    
 	    // pt in world frame
+	    std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(packet_timestamp);
 	    Eigen::Matrix<float,4,4> T_imu_world = imu_pose_server.getTransfAtTime(packet_timestamp);
 	    Eigen::Matrix<float,4,1> pt_world;
 	    pt_world = T_imu_world*pt_imu;
 
+	    // measured range
+	    std::vector<double> laser_posn = laserPosnFromImuPose(imu_pose, laser_calib_params);
+	    std::vector<double> pt_world_stl(3,0);
+	    for(size_t i = 0; i < 3; ++i)
+		pt_world_stl[i] = pt_world(i);
+	    double measured_range = euclideanDist(laser_posn, pt_world_stl);
+	    if (measured_range < min_range_filter)
+		continue;
+	    
 	    // write to file
 	    std::string output_line;
 	    ss.str("");

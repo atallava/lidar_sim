@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     	double t = section.m_pt_timestamps[id];
     	std::vector<double> this_pt = section.m_pts[id];
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
-    	std::vector<double> ray_origin = posnFromImuPose(imu_pose);
+    	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, laser_calib_params);
     	std::vector<double> ray_dirn;
     	double meas_dist;
     	std::tie(ray_dirn, meas_dist) = calcRayDirn(ray_origin, this_pt);

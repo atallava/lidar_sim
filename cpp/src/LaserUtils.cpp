@@ -68,4 +68,16 @@ namespace lidar_sim {
 
 	return std::make_tuple(ray_dirn, meas_dist);
     }
+    
+    std::vector<double> laserPosnFromImuPose(const std::vector<double> &imu_pose, const LaserCalibParams laser_calib_params)
+    {
+	Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
+	Eigen::MatrixXd T_laser_world = T_imu_world*laser_calib_params.extrinsics.T_laser_imu;
+	std::vector<double> laser_posn(3,0);
+	for(size_t i = 0; i < 3; ++i)
+	    laser_posn[i] = T_laser_world(i,3);
+
+	return laser_posn;
+    }
+    
 }

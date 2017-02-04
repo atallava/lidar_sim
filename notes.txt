@@ -163,6 +163,8 @@ can modulate transparencies with permeabilities
 
 flann includes pt as its own nearest nbr, check code for this!
 
+one of the sources of error is that the imu posn is not the laser posn!
+
 --------------------------------------------------
 
 while installing cloudcompare:
