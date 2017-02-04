@@ -161,6 +161,8 @@ errors in the rest of the code
 
 can modulate transparencies with permeabilities
 
+flann includes pt as its own nearest nbr, check code for this!
+
 --------------------------------------------------
 
 while installing cloudcompare:

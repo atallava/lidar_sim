@@ -6,6 +6,8 @@
 
 #include <lidar_sim/GeometricSegmenter.h>
 #include <lidar_sim/MathUtils.h>
+#include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/VizUtils.h>
 
 using namespace lidar_sim;
 
@@ -18,9 +20,9 @@ GeometricSegmenter::GeometricSegmenter() :
 
     m_smooth_features(1),
     m_smoothing_distance_weight(1),
-    m_smoothing_score_weight(1),
+    m_smoothing_score_weight(0),
     m_smoothing_max_nbrs(10),
-    m_smoothing_max_dist(0.5)
+    m_smoothing_max_dist(2)
 {
 }
 
@@ -111,18 +113,17 @@ std::vector<double> GeometricSegmenter::smoothFeatures(const std::vector<double>
     std::vector<std::vector<double> > nn_dists;
     std::tie(nn_ids, nn_dists) = nearestNeighbors(pts, pts, m_smoothing_max_nbrs);
     
-
     for(size_t i = 0; i < pts.size(); ++i)
     {
 	// find which pts qualify as nbrs
 	std::vector<std::vector<double> > this_pt_nbrs;
 	std::vector<double> this_pt_nbrs_features;
-	// this pt is its own nbr
-	this_pt_nbrs.push_back(pts[i]);
-	this_pt_nbrs_features.push_back(features[i]);
 	for(size_t j = 0; j < m_smoothing_max_nbrs; ++j)
 	    if (nn_dists[i][j] <= m_smoothing_max_dist)
+	    {
 		this_pt_nbrs.push_back(pts[nn_ids[i][j]]);
+		this_pt_nbrs_features.push_back(features[nn_ids[i][j]]);
+	    }
 	
 	if (this_pt_nbrs.size() == 1)
 	    smoothed_features[i] = features[i];
