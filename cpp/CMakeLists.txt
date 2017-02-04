@@ -146,4 +146,3 @@ foreach( testsourcefile ${VANE_SIM_SOURCES} )
   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 endforeach( testsourcefile ${VANE_SIM_SOURCES} )
 
- 
