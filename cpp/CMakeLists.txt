@@ -1,6 +1,6 @@
 # Version required.
 cmake_minimum_required (VERSION 2.8)
-
+ 
 project (LIDAR_SIM)
 
 set (CMAKE_BUILD_TYPE "Debug")
@@ -119,13 +119,13 @@ foreach( testsourcefile ${TESTS_SOURCES} )
 endforeach( testsourcefile ${TESTS_SOURCES} )
 
 # analyze taylor data
-file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
-foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
-  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-  string( REPLACE "analyze_taylor_data/" "" testname ${testnamewithdir})
-  add_executable( ${testname} ${testsourcefile} )
-  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+# file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
+# foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+#   string( REPLACE "analyze_taylor_data/" "" testname ${testnamewithdir})
+#   add_executable( ${testname} ${testsourcefile} )
+#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
   
 # vtk examples
 # file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vtk_examples/*.cpp )

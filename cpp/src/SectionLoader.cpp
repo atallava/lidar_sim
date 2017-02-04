@@ -22,6 +22,13 @@ void SectionLoader::m_loadSection(std::string rel_path_section)
 {
     m_rel_path_section = rel_path_section;
     std::ifstream section_file(rel_path_section);
+    if (!section_file)
+    {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "failed to open file " << rel_path_section;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
     std::string current_line;
     int prev_packet_id = -1;
 

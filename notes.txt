@@ -132,7 +132,8 @@ code comments
 metric for comparing point clouds
 
 params:
-max pts in a block
+block logic:
+dt for nodes
 
 flann
 alglib
@@ -164,6 +165,8 @@ can modulate transparencies with permeabilities
 flann includes pt as its own nearest nbr, check code for this!
 
 one of the sources of error is that the imu posn is not the laser posn!
+
+you don't know how to save objects. boost serialize.
 
 --------------------------------------------------
 
