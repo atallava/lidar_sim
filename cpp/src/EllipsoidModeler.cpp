@@ -66,8 +66,9 @@ void EllipsoidModeler::clusterPts()
     alglib::clusterizerrunahc(clusterizer_state, ahc_report);
 
     // get clusters
-    int m_n_clusters = calcNClusters();
+    m_n_clusters = calcNClusters();
     alglib::clusterizergetkclusters(ahc_report, m_n_clusters, m_pt_cluster_ids, cz);
+
 }
 
 void EllipsoidModeler::filterClusters()
@@ -77,6 +78,7 @@ void EllipsoidModeler::filterClusters()
 
     // retain those with min pts
     std::vector<int> n_pts_per_cluster = getNumPtsPerCluster(m_pt_cluster_ids, m_n_clusters);
+
     for(size_t i = 0; i < n_pts_per_cluster.size(); ++i)
 	if (n_pts_per_cluster[i] >= m_min_pts_per_cluster)
 	    m_selected_cluster_ids.push_back(i);

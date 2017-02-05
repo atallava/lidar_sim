@@ -166,7 +166,10 @@ flann includes pt as its own nearest nbr, check code for this!
 
 one of the sources of error is that the imu posn is not the laser posn!
 
-you don't know how to save objects. boost serialize.
+how to save objects? boost serialize
+
+saw error due to playing around too much with private variables. m_n_clusters
+error happened. what is a good way to avoid that error.
 
 --------------------------------------------------
 
