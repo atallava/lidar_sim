@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     // load ellipsoids
     std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
     EllipsoidModels ellipsoid_models = 
-	loadEllipsoidModels(rel_path_ellipsoid_models);
+	loadEllipsoidModelsFromFile(rel_path_ellipsoid_models);
 
     // load points
     std::string rel_path_xyz = "data/rim_stretch_veg_train.asc";

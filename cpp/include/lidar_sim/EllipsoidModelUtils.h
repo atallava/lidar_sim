@@ -20,7 +20,7 @@ namespace lidar_sim {
     
     EllipsoidModel createEllipsoidModel(Pts pts);
     void writeEllipsoidModelsToFile(EllipsoidModels ellipsoid_models, std::string rel_path_output);
-    EllipsoidModels loadEllipsoidModels(std::string rel_path_input);
+    EllipsoidModels loadEllipsoidModelsFromFile(std::string rel_path_input);
     void dispEllipsoidModel(EllipsoidModel model);
 }
 

@@ -21,6 +21,11 @@ LaserIntrinsics::LaserIntrinsics()
     max_range = 70;
 }
 
+int LaserIntrinsics::getNRays()
+{
+    return alpha_vec.size()*theta_vec.size();
+}
+
 LaserExtrinsics::LaserExtrinsics()
 {
     Eigen::MatrixXd T(4,4);

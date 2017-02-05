@@ -16,8 +16,8 @@ namespace lidar_sim {
     class EllipsoidModelSim {
     public:
 	EllipsoidModelSim();
+	void loadEllipsoidModels(const std::string rel_path_models);
 	void setEllipsoidModels(const EllipsoidModels &ellipsoid_models);
-	void setEllipsoidModels(const std::string rel_path_models);
 	void setLaserCalibParams(const LaserCalibParams laser_calib_params);
 	void setDebugFlag(const int value);
 

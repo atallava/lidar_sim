@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     // load ellipsoids
     std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
     EllipsoidModels ellipsoid_models = 
-	loadEllipsoidModels(rel_path_ellipsoid_models);
+	loadEllipsoidModelsFromFile(rel_path_ellipsoid_models);
 
     // load section
     std::string rel_path_section = "data/section_08_world_frame_subsampled_timed.xyz";

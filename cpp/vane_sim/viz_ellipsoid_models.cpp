@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     // triangles
     std::string rel_path_ellipsoids = "data/sections/section_03/section_03_block_03_non_ground_ellipsoids.txt";
     EllipsoidModels ellipsoid_models = 
-	loadEllipsoidModels(rel_path_ellipsoids);
+	loadEllipsoidModelsFromFile(rel_path_ellipsoids);
 
     // viz
     RangeDataVizer vizer;

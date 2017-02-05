@@ -104,6 +104,7 @@ add_library(lidar_sim SHARED
   src/TriangleModeler.cpp
   src/EllipsoidModeler.cpp
   src/GeometricSegmenter.cpp
+  src/SectionModelSim.cpp
   )
  
 # Executables

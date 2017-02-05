@@ -242,6 +242,31 @@ namespace lidar_sim {
 
 	return std::make_tuple(x, y, z);
     }
+
+    std::vector<std::vector<double> > loadArray(std::string rel_path_file, int n_cols)
+    {
+	// open input file
+	std::ifstream file(rel_path_file);
+	std::cout << "Reading from: " << rel_path_file << std::endl;
+	
+	std::vector<std::vector<double> > array;
+
+	std::string current_line;
+	while(std::getline(file,current_line))
+	{
+	    std::istringstream iss(current_line);
+	    
+	    std::vector<double> vec(n_cols, 0);
+	    for(size_t i = 0; i < (size_t)n_cols; ++i)
+		iss >> n_cols;
+
+	    array.push_back(vec);
+	}
+
+	file.close();
+
+	return array;
+    }
     
     alglib::real_2d_array convertStlPtsToAlglibPts(const std::vector<std::vector<double> > &pts)
     {
@@ -294,6 +319,17 @@ namespace lidar_sim {
 
 	return array_stl;
     }
+
+    std::vector<std::vector<int> > doubleToIntArray(const std::vector<std::vector<double> > &array)
+    {
+	std::vector<std::vector<int> > int_array(array.size(), std::vector<int>(array[0].size()));
+	for(size_t i = 0; i < array.size(); ++i)
+	    for(size_t j = 0; j < array[0].size(); ++j)
+		int_array[i][j] = array[i][j];
+
+	return int_array;
+    }
+
 
     flann::Matrix<double> stlArrayToFlannMatrix(const std::vector<std::vector<double> > &array)
     {

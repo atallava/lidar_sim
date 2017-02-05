@@ -43,7 +43,7 @@ namespace lidar_sim {
 	file.close();
     }
 
-    EllipsoidModels loadEllipsoidModels(std::string rel_path_input)
+    EllipsoidModels loadEllipsoidModelsFromFile(std::string rel_path_input)
     {
 	// open input file
 	std::ifstream file(rel_path_input);

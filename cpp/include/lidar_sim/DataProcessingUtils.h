@@ -25,6 +25,8 @@ namespace lidar_sim {
     std::tuple<std::vector<double>, std::vector<double>, std::vector<double> >
 	getVecsFromPts(const std::vector<std::vector<double> > &pts);
 
+    std::vector<std::vector<double> > loadArray(std::string rel_path_file, int n_cols);
+
     // data types conversions
     alglib::real_2d_array convertStlPtsToAlglibPts(const std::vector<std::vector<double> > &pts);
     std::vector<int> convertAlglib1DIntArrayToStlVector(const alglib::integer_1d_array &vec);
@@ -32,6 +34,7 @@ namespace lidar_sim {
     Eigen::MatrixXd stlVecToEigen(const std::vector<double> &vec);
     Eigen::MatrixXd stlArrayToEigen(const std::vector<std::vector<double> > &array);
     std::vector<std::vector<double> > EigenToStlArray(const Eigen::MatrixXd &array);
+    std::vector<std::vector<int> > doubleToIntArray(const std::vector<std::vector<double> > &array);
 
     flann::Matrix<double> stlArrayToFlannMatrix(const std::vector<std::vector<double> > &array);    
 

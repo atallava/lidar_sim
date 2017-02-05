@@ -27,9 +27,9 @@ void EllipsoidModelSim::setEllipsoidModels(const EllipsoidModels &ellipsoid_mode
     m_ellipsoid_models = ellipsoid_models;
 }
 
-void EllipsoidModelSim::setEllipsoidModels(const std::string rel_path_models)
+void EllipsoidModelSim::loadEllipsoidModels(const std::string rel_path_models)
 {
-    m_ellipsoid_models = loadEllipsoidModels(rel_path_models);
+    m_ellipsoid_models = loadEllipsoidModelsFromFile(rel_path_models);
 }
 
 void EllipsoidModelSim::setLaserCalibParams(const LaserCalibParams laser_calib_params)

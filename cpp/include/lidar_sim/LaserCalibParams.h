@@ -5,6 +5,7 @@
 namespace lidar_sim {
     struct LaserIntrinsics {
 	LaserIntrinsics();
+	int getNRays();
 	std::vector<double> alpha_vec;
 	std::vector<double> theta_vec;
 	double min_range;
