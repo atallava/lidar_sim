@@ -43,12 +43,13 @@ namespace lidar_sim {
 	    assignEllipsoidHitCredits(const std::vector<double> &maha_dists_to_ellipsoids, 
 				      const std::vector<int> &sorted_intersecting_ids);
 
-	std::vector<std::vector<double> > simPtsGivenPose(const std::vector<double> &imu_pose);
+	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+	    simPtsGivenPose(const std::vector<double> &imu_pose);
 
-	std::vector<std::vector<double> > simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
+	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+	    simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
 
 	EllipsoidModels m_ellipsoid_models;
-
     private:
 	double m_max_maha_dist_for_hit;
 	int m_debug_flag;

@@ -145,3 +145,4 @@ foreach( testsourcefile ${VANE_SIM_SOURCES} )
   add_executable( ${testname} ${testsourcefile} )
   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 endforeach( testsourcefile ${VANE_SIM_SOURCES} )
+ 

@@ -255,7 +255,8 @@ TriangleModelSim::simPtsGivenIntersections(std::vector<double> ray_origin, std::
     return std::make_tuple(sim_pts, hit_flag);
 }
 
-std::vector<std::vector<double> > TriangleModelSim::simPtsGivenPose(std::vector<double> imu_pose)
+std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+TriangleModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 {
     // rays
     Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
@@ -273,24 +274,33 @@ std::vector<std::vector<double> > TriangleModelSim::simPtsGivenPose(std::vector<
     std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(ray_origin, ray_dirns,
 							   intersection_flag, dist_along_ray);
 
-    // throw away vectors which are zeros
-    std::vector<std::vector<double> > sim_pts_hit;
-    for(size_t i = 0; i < hit_flag.size(); ++i)
-	if (hit_flag[i])
-	    sim_pts_hit.push_back(sim_pts[i]);
+    // // throw away vectors which are zeros
+    // std::vector<std::vector<double> > sim_pts_hit;
+    // for(size_t i = 0; i < hit_flag.size(); ++i)
+    // 	if (hit_flag[i])
+    // 	    sim_pts_hit.push_back(sim_pts[i]);
 
-    return sim_pts_hit;
+    // return sim_pts_hit;
+
+    return std::make_tuple(sim_pts, hit_flag);
 }
 
-std::vector<std::vector<double> > TriangleModelSim::simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses)
+std::tuple<std::vector<std::vector<double> >, std::vector<int> > 
+TriangleModelSim::simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses)
 {
     std::vector<std::vector<double> > sim_pts;
+    std::vector<int> hit_flag;
     for(size_t i = 0; i < imu_poses.size(); ++i)
     {
-	std::vector<std::vector<double> > this_sim_pts = simPtsGivenPose(imu_poses[i]); 
+	std::vector<std::vector<double> > this_sim_pts;
+	std::vector<int> this_hit_flag;
+	std::tie(this_sim_pts, this_hit_flag) = simPtsGivenPose(imu_poses[i]); 
 	for(size_t j = 0; j < this_sim_pts.size(); ++j)
+	{
 	    sim_pts.push_back(this_sim_pts[j]);
+	    hit_flag.push_back(this_hit_flag[j]);
+	}
     }
 
-    return sim_pts;
+    return std::make_tuple(sim_pts, hit_flag);
 }

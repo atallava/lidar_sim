@@ -54,7 +54,10 @@ int main(int argc, char **argv)
     sim.setEllipsoidModels(ellipsoid_models);
     sim.setLaserCalibParams(laser_calib_params);
 
-    std::vector<std::vector<double> > sim_pts = sim.simPtsGivenPoses(imu_poses);
+    std::vector<std::vector<double> > sim_pts_all;
+    std::vector<int> hit_flag;
+    std::tie(sim_pts_all, hit_flag) = sim.simPtsGivenPoses(imu_poses);
+    std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write sim pts
     std::string rel_path_output = "data/rim_stretch_veg_validation_sim.xyz";

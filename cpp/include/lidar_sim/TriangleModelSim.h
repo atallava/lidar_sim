@@ -33,8 +33,11 @@ namespace lidar_sim {
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 	    simPtsGivenIntersections(std::vector<double> ray_origin, std::vector<std::vector<double> > ray_dirns,
 				     std::vector<std::vector<int> > intersection_flag, std::vector<std::vector<double> > dist_along_ray);
-	std::vector<std::vector<double> > simPtsGivenPose(std::vector<double> imu_pose);
-	std::vector<std::vector<double> > simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
+	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+	    simPtsGivenPose(const std::vector<double> &imu_pose);
+
+	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
+	    simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
 
 	std::vector<std::vector<int> > m_triangles;
 	std::vector<std::vector<double> > m_fit_pts;
