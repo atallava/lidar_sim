@@ -25,10 +25,11 @@ namespace lidar_sim {
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> > 
 	    simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
 
-    private:
-	LaserCalibParams m_laser_calib_params;
 	std::vector<EllipsoidModelSim> m_ellipsoid_model_sims;
 	std::vector<TriangleModelSim> m_triangle_model_sims;
+
+    private:
+	LaserCalibParams m_laser_calib_params;
 	std::vector<std::vector<double> > m_imu_posn_nodes;
 	std::vector<std::vector<int> > m_block_node_ids_ground;
 	std::vector<std::vector<int> > m_block_node_ids_non_ground;

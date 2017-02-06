@@ -48,6 +48,12 @@ namespace lidar_sim {
 	// open input file
 	std::ifstream file(rel_path_input);
 	std::cout << "Reading ellipsoid models from: " << rel_path_input << std::endl;
+	if (!file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_input;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
 
 	EllipsoidModels ellipsoid_models;
 

@@ -8,6 +8,7 @@
 #include <string>
 
 #include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/VizUtils.h>
 
 namespace lidar_sim {
     std::string exec(const char* cmd) {
@@ -76,6 +77,12 @@ namespace lidar_sim {
 	// open input file
 	std::ifstream file(rel_path_file);
 	std::cout << "Reading from: " << rel_path_file << std::endl;
+	if (!file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_file;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
 
 	// open output file
 	std::ofstream subsampled_file(rel_path_file_subsampled);
@@ -104,6 +111,12 @@ namespace lidar_sim {
 	// open input file
 	std::ifstream input_file(rel_path_input);
 	std::cout << "Reading from: " << rel_path_input << std::endl;
+	if (!input_file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_input;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
 
 	std::ofstream output_file(rel_path_output);
 	std::cout << "Writing to: " << rel_path_output << std::endl;
@@ -144,6 +157,12 @@ namespace lidar_sim {
     {
 	std::ifstream input_file(rel_path_input);
 	std::cout << "Reading from: " << rel_path_input << std::endl;
+	if (!input_file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_input;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
 
 	std::ofstream output_file(rel_path_output);
 	std::cout << "Writing to: " << rel_path_output << std::endl;
@@ -248,7 +267,13 @@ namespace lidar_sim {
 	// open input file
 	std::ifstream file(rel_path_file);
 	std::cout << "Reading from: " << rel_path_file << std::endl;
-	
+	if (!file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_file;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
+
 	std::vector<std::vector<double> > array;
 
 	std::string current_line;
@@ -258,7 +283,7 @@ namespace lidar_sim {
 	    
 	    std::vector<double> vec(n_cols, 0);
 	    for(size_t i = 0; i < (size_t)n_cols; ++i)
-		iss >> n_cols;
+		iss >> vec[i];
 
 	    array.push_back(vec);
 	}

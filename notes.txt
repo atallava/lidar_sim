@@ -84,6 +84,8 @@ labels
 viewpoints
 saving figures
 
+why does viz ellipsoids need one at the origin?
+
 just like you have functions written in matlab for matlab processing, you need
 to write emacs lisp to do simple operations in emacs
 

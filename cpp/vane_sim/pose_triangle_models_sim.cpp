@@ -51,7 +51,6 @@ int main(int argc, char **argv)
     // viz
     RangeDataVizer vizer;
     std::vector<vtkSmartPointer<vtkActor> > actors;
-    bool use_intersected_flag = false;
     bool use_hit_flag = true;
 
     // debug

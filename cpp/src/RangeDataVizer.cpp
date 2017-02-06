@@ -210,3 +210,64 @@ void RangeDataVizer::vizSegmentation(const std::vector<std::vector<double> >& pt
 
     vizComparePts(pts1, pts0);
 }
+
+void RangeDataVizer::vizSectionModels(const SectionModelSim &sim)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+
+    int ellipsoid_skip = 5;
+    // ellipsoids
+    for(size_t i = 0; i < sim.m_ellipsoid_model_sims.size(); ++i)
+    {
+    	EllipsoidModels this_ellipsoid_models = sim.m_ellipsoid_model_sims[i].m_ellipsoid_models;
+    	for(size_t j = 0; j < this_ellipsoid_models.size(); j = j + ellipsoid_skip)
+    	{
+    	    EllipsoidModel this_ellipsoid_model = this_ellipsoid_models[j];
+    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat));
+    	}
+    }
+			     
+    // triangles
+    for(size_t i = 0; i < sim.m_triangle_model_sims.size(); ++i)
+    {
+    	TriangleModelSim this_tri_sim = sim.m_triangle_model_sims[i];
+	vtkSmartPointer<vtkActor> tri_actor = 
+	    m_triangles_actor_server.genTrianglesActor(this_tri_sim.m_triangles, this_tri_sim.m_fit_pts);
+	tri_actor->GetProperty()->SetColor(0.5451, 0.2706, 0.0745);
+	actors.push_back(tri_actor);
+    }
+
+    takeItAway(actors);
+}
+
+std::vector<vtkSmartPointer<vtkActor> >
+RangeDataVizer::genSectionModelsActors(const SectionModelSim &sim)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+
+    int ellipsoid_skip = 5;
+    // ellipsoids
+    for(size_t i = 0; i < sim.m_ellipsoid_model_sims.size(); ++i)
+    {
+    	EllipsoidModels this_ellipsoid_models = sim.m_ellipsoid_model_sims[i].m_ellipsoid_models;
+    	for(size_t j = 0; j < this_ellipsoid_models.size(); j = j + ellipsoid_skip)
+    	{
+    	    EllipsoidModel this_ellipsoid_model = this_ellipsoid_models[j];
+    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat));
+    	}
+    }
+			     
+    // triangles
+    for(size_t i = 0; i < sim.m_triangle_model_sims.size(); ++i)
+    {
+    	TriangleModelSim this_tri_sim = sim.m_triangle_model_sims[i];
+	vtkSmartPointer<vtkActor> tri_actor = 
+	    m_triangles_actor_server.genTrianglesActor(this_tri_sim.m_triangles, this_tri_sim.m_fit_pts);
+	tri_actor->GetProperty()->SetColor(0.5451, 0.2706, 0.0745);
+	actors.push_back(tri_actor);
+    }
+
+    return actors;
+}
+
+

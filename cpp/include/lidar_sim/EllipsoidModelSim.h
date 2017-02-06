@@ -50,6 +50,7 @@ namespace lidar_sim {
 	    simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
 
 	EllipsoidModels m_ellipsoid_models;
+
     private:
 	double m_max_maha_dist_for_hit;
 	int m_debug_flag;

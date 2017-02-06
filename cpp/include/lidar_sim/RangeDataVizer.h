@@ -13,6 +13,7 @@
 #include <lidar_sim/TrianglesVtkActorServer.h>
 #include <lidar_sim/EllipsoidModelUtils.h>
 #include <lidar_sim/TriangleModeler.h>
+#include <lidar_sim/SectionModelSim.h>
 
 namespace lidar_sim {
     class RangeDataVizer {
@@ -30,6 +31,9 @@ namespace lidar_sim {
 	void vizTriangles(const std::vector<std::vector<int> > &triangle_vertex_ids,
 			  const std::vector<std::vector<double> > &pts);
 	void vizSegmentation(const std::vector<std::vector<double> >& pts, const std::vector<int> &segmentation);
+	void vizSectionModels(const SectionModelSim &sim);
+	std::vector<vtkSmartPointer<vtkActor> >
+	    genSectionModelsActors(const SectionModelSim &sim);
 
 	PointsVtkActorServer m_points_actor_server;
 	LineVtkActorServer m_line_actor_server;
