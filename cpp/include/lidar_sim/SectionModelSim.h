@@ -27,12 +27,12 @@ namespace lidar_sim {
 
 	std::vector<EllipsoidModelSim> m_ellipsoid_model_sims;
 	std::vector<TriangleModelSim> m_triangle_model_sims;
-
-    private:
-	LaserCalibParams m_laser_calib_params;
 	std::vector<std::vector<double> > m_imu_posn_nodes;
 	std::vector<std::vector<int> > m_block_node_ids_ground;
 	std::vector<std::vector<int> > m_block_node_ids_non_ground;
+
+    private:
+	LaserCalibParams m_laser_calib_params;
 	double m_max_dist_to_node_for_membership;
     };
 }

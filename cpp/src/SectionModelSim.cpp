@@ -91,13 +91,25 @@ SectionModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 
     // sim over ellipsoid blocks
     std::vector<int> ellipsoid_blocks_to_sim = getPoseBlockMembership(imu_pose, m_block_node_ids_non_ground);
+    std::vector<int> ellipsoid_blocks_hit;
     for(size_t i = 0; i < ellipsoid_blocks_to_sim.size(); ++i)
     {
 	std::vector<std::vector<double> > sim_pts_can;
 	std::vector<int> hit_flag_can;
 	int block_id = ellipsoid_blocks_to_sim[i];
-	std::tie(sim_pts_can, hit_flag_can) = 
-	    m_ellipsoid_model_sims[block_id].simPtsGivenPose(imu_pose);
+	try
+	{	
+	    std::tie(sim_pts_can, hit_flag_can) = 
+		m_ellipsoid_model_sims[block_id].simPtsGivenPose(imu_pose);
+	}
+	catch (const std::exception& e)
+	{
+	    std::cout << "error" << std::endl;
+	    std::cout << block_id << std::endl;
+	    exit(0);
+	}
+	if (anyNonzeros(hit_flag_can))
+	    ellipsoid_blocks_hit.push_back(block_id);
 	
 	sim_pts_over_blocks.push_back(sim_pts_can);
 	hit_flag_over_blocks.push_back(hit_flag_can);
@@ -105,17 +117,21 @@ SectionModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 
     // sim over tri blocks
     std::vector<int> triangle_blocks_to_sim = getPoseBlockMembership(imu_pose, m_block_node_ids_ground);
-    for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
-    {
-	std::vector<std::vector<double> > sim_pts_can;
-	std::vector<int> hit_flag_can;
-	int block_id = triangle_blocks_to_sim[i];
-	std::tie(sim_pts_can, hit_flag_can) = 
-	    m_triangle_model_sims[block_id].simPtsGivenPose(imu_pose);
+    std::vector<int> triangle_blocks_hit;
+    // todo: enable triangle sim
+    // for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
+    // {
+    // 	std::vector<std::vector<double> > sim_pts_can;
+    // 	std::vector<int> hit_flag_can;
+    // 	int block_id = triangle_blocks_to_sim[i];
+    // 	std::tie(sim_pts_can, hit_flag_can) = 
+    // 	    m_triangle_model_sims[block_id].simPtsGivenPose(imu_pose);
+	// if (anyNonzeros(hit_flag_can))
+	//     triangle_blocks_hit.push_back(block_id);
 	
-	sim_pts_over_blocks.push_back(sim_pts_can);
-	hit_flag_over_blocks.push_back(hit_flag_can);
-    }
+    // 	sim_pts_over_blocks.push_back(sim_pts_can);
+    // 	hit_flag_over_blocks.push_back(hit_flag_can);
+    // }
 
     // marginalize 
     int n_rays = m_laser_calib_params.intrinsics.getNRays();
@@ -145,7 +161,6 @@ SectionModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 	    hit_flag[i] = 1;
 	}
     }
-    
     
     return std::make_tuple(sim_pts, hit_flag);
 }

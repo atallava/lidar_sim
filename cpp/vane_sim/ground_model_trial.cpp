@@ -19,8 +19,8 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     // pts from xyz
-    // std::string rel_path_xyz = "data/rim_stretch_ground_train.asc";
-    std::string rel_path_xyz = "data/block_trial.asc";
+    std::string rel_path_xyz = "data/rim_stretch_ground_train.asc";
+    // std::string rel_path_xyz = "data/block_trial.asc";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_xyz);
 
     // fit smoothed pts

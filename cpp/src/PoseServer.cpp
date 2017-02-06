@@ -9,6 +9,7 @@
 #include <Eigen/Geometry>
 
 #include <lidar_sim/PoseServer.h>
+#include <lidar_sim/MathUtils.h>
 
 using namespace lidar_sim;
 
@@ -156,4 +157,13 @@ Eigen::Matrix<float,4,4> PoseServer::getTransfAtTime(double t)
     return T_pose;
 }
 
-
+std::tuple<std::vector<double>, int> 
+PoseServer::getNearestPoseInLog(const std::vector<double> pose)
+{
+    std::vector<std::vector<int> > nn_ids;
+    std::vector<std::vector<double> > wrapped_pose;
+    wrapped_pose.push_back(pose);
+    std::tie(nn_ids, std::ignore) = nearestNeighbors(m_pose_log, wrapped_pose, 1);
+    
+    return std::make_tuple(m_pose_log[nn_ids[0][0]], nn_ids[0][0]);
+}

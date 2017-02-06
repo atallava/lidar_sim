@@ -38,6 +38,7 @@ namespace lidar_sim {
 	void writeTrianglesToFile(std::string rel_path_output);
 	void setDebugFlag(int flag);
 	void calcHitProb(std::string rel_path_section, PoseServer imu_poses_server);
+	void subsamplePts();
 
 	std::vector<std::vector<double> > m_pts;
 	alglib::rbfmodel m_surface_model;

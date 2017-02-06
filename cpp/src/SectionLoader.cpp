@@ -68,3 +68,12 @@ void SectionLoader::m_loadSection(std::string rel_path_section)
     std::cout << "Loaded section: " << rel_path_section << std::endl;
 }
 
+std::vector<std::vector<double> > SectionLoader::getPtsAtTime(double t)
+{
+    std::vector<std::vector<double> > pts;
+    for(size_t i = 0; i < m_pt_timestamps.size(); ++i)
+	if (m_pt_timestamps[i] == t)
+	    pts.push_back(m_pts[i]);
+
+    return pts;    
+}

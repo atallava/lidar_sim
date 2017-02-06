@@ -18,7 +18,7 @@ using namespace lidar_sim;
 
 TriangleModeler::TriangleModeler() :
     m_debug_flag(0),
-    m_rbf_radius(0.1),
+    m_rbf_radius(5),
     m_rbf_layers(1),
     m_rbf_reg(1e-3),
     m_fit_pts_padding(5),
@@ -46,6 +46,9 @@ void TriangleModeler::createTriangleModels(const std::string rel_path_pts)
 void TriangleModeler::loadPts(const std::string rel_path_pts)
 {
     m_pts = loadPtsFromXYZFile(rel_path_pts);
+
+    // todo: subsample or not
+    subsamplePts();
 }
 
 void TriangleModeler::fitSmoothedSurface()
@@ -289,4 +292,25 @@ void TriangleModeler::calcHitProb(std::string rel_path_section, PoseServer imu_p
 
     double range_var = calcVariance(filtered_residual_ranges);
     std::cout << "range variance: " << range_var << std::endl;
+}
+
+void TriangleModeler::subsamplePts()
+{
+    if (m_debug_flag)
+    {
+	std::cout << "TriangleModeler: subsampling pts... " << std::endl;
+	std::cout << "n pts before subsample: " << m_pts.size() << std::endl;
+    }
+
+    int skip = 10;
+    std::vector<std::vector<double> > pts_sub;
+    for(size_t i = 0; i < m_pts.size(); i += skip)
+	pts_sub.push_back(m_pts[i]);
+
+    m_pts = pts_sub;
+
+    if (m_debug_flag)
+    {
+	std::cout << "n pts after subsample: " << m_pts.size() << std::endl;
+    }
 }
