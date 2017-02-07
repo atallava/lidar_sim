@@ -49,6 +49,7 @@ namespace lidar_sim {
 
     private:
 	int m_debug_flag;
+	double m_max_pts_for_surface;
 	double m_rbf_radius;
 	double m_rbf_layers;
 	double m_rbf_reg;

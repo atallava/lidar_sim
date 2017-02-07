@@ -38,8 +38,11 @@ using namespace lidar_sim;
 RangeDataVizer::RangeDataVizer() :
     m_points_actor_server(),
     m_line_actor_server(),
-    m_ellipsoid_actor_server()
+    m_ellipsoid_actor_server(),
+    m_brown_color{0.5451, 0.2706, 0.0645},
+    m_ellipsoid_skip(5)
 {    
+    
 }
 
 void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models)
@@ -269,5 +272,47 @@ RangeDataVizer::genSectionModelsActors(const SectionModelSim &sim)
 
     return actors;
 }
+
+std::vector<vtkSmartPointer<vtkActor> >
+RangeDataVizer::genTriangleModelsActors(const std::vector<TriangleModelSim> &sims)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+
+    // triangles
+    for(size_t i = 0; i < sims.size(); ++i)
+    {
+	vtkSmartPointer<vtkActor> tri_actor = 
+	    m_triangles_actor_server.genTrianglesActor(sims[i].m_triangles, sims[i].m_fit_pts);
+	tri_actor->GetProperty()->SetColor(m_brown_color[0], m_brown_color[1], m_brown_color[2]);
+	actors.push_back(tri_actor);
+    }
+
+    return actors;
+}
+
+std::vector<vtkSmartPointer<vtkActor> >
+RangeDataVizer::genEllipsoidModelsActors(const std::vector<EllipsoidModelSim> &sims)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+
+    // ellipsoids
+    for(size_t i = 0; i < sims.size(); ++i)
+    {
+    	EllipsoidModels this_ellipsoid_models = sims[i].m_ellipsoid_models;
+    	for(size_t j = 0; j < this_ellipsoid_models.size(); j = j + 1)
+    	{
+    	    EllipsoidModel this_ellipsoid_model = this_ellipsoid_models[j];
+    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat));
+    	}
+    }
+			     
+    return actors;
+}
+
+vtkSmartPointer<vtkActor> RangeDataVizer::genPointsActor(std::vector<std::vector<double> > points)
+{
+    return m_points_actor_server.genPointsActor(points);
+}
+
 
 

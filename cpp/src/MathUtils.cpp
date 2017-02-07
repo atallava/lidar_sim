@@ -263,5 +263,14 @@ namespace lidar_sim {
 
 	return intersected_flag;
     }
+
+    std::vector<int> genLogicalVecFromIds(std::vector<int> ids, int vec_size)
+    {
+	std::vector<int> vec(vec_size, 0);
+	for(auto i : ids)
+	    vec[i] = 1;
+
+	return vec;
+    }
 }
 

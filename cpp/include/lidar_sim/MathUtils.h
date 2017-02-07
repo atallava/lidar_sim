@@ -56,5 +56,36 @@ namespace lidar_sim {
     std::tuple<int, bool>
 	sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &sorted_intersecting_ids);
     std::vector<int> getIntersectedFlag(const std::vector<std::vector<int> > &intersection_flag);
+    std::vector<int> genLogicalVecFromIds(std::vector<int> ids, int vec_size);
+
+    // intervals are [a,b]
+    // interval1 ids which overlap with any of interval2
+    template <typename T>
+	std::vector<int> getOverlappingIntervals(std::vector<std::vector<T> > intervals_1, std::vector<std::vector<T> > intervals_2)
+    {
+	std::vector<int> ids;
+	for(size_t i = 0; i < intervals_1.size(); ++i)
+	    for(size_t j = 0; j < intervals_2.size(); ++j)
+	    {
+		bool condn_1 = ((intervals_2[j][0] <= intervals_1[i][0]) &&
+				(intervals_1[i][0] <= intervals_2[j][1]));
+		bool condn_2 = ((intervals_2[j][0] <= intervals_1[i][1]) &&
+				(intervals_1[i][1] <= intervals_2[j][1]));
+
+		if (condn_1 || condn_2)
+		    ids.push_back(i);
+	    }
+
+	return ids;
+    }
+
+    template<typename T>
+	std::vector<T> wrapDataInVec(T data)
+    {
+	std::vector<T> vec;
+	vec.push_back(data);
+	
+	return vec;
+    }
 }
 

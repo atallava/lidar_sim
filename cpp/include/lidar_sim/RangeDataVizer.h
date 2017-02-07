@@ -34,11 +34,19 @@ namespace lidar_sim {
 	void vizSectionModels(const SectionModelSim &sim);
 	std::vector<vtkSmartPointer<vtkActor> >
 	    genSectionModelsActors(const SectionModelSim &sim);
+	std::vector<vtkSmartPointer<vtkActor> >
+	    genTriangleModelsActors(const std::vector<TriangleModelSim> &sims);
+	std::vector<vtkSmartPointer<vtkActor> >
+	    genEllipsoidModelsActors(const std::vector<EllipsoidModelSim> &sims);
+	vtkSmartPointer<vtkActor> genPointsActor(std::vector<std::vector<double> > points);
+
 
 	PointsVtkActorServer m_points_actor_server;
 	LineVtkActorServer m_line_actor_server;
 	EllipsoidVtkActorServer m_ellipsoid_actor_server;
 	TrianglesVtkActorServer m_triangles_actor_server;
+	std::vector<double> m_brown_color;
+	int m_ellipsoid_skip;
 
     private:
 	
