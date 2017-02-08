@@ -1,4 +1,4 @@
-function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEllipsoids,sortedIntersectingIds,maxDistForHit)
+function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEllipsoids,sortedIntersectingIds,sortedDistAlongRay,observedRange,maxDistForHit)
     %ASSIGNELLIPSOIDHITCREDITS
     %
     % [ellipsoidHitId,ellipsoidMissIds] = ASSIGNELLIPSOIDHITCREDITS(distsToEllipsoids,sortedIntersectingIds,modelingParams)
@@ -15,17 +15,9 @@ function [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distsToEl
     flag = distsToEllipsoids < maxDistForHit;
     
     if ~any(flag)
-        if distsToEllipsoids(1) < distsToEllipsoids(end)
-            % hit before any ellipsoids
-            ellipsoidHitId = [];
-            ellipsoidMissIds = [];
-            return;
-        else
-            % miss all 
-            ellipsoidHitId = [];
-            ellipsoidMissIds = sortedIntersectingIds;
-            return;
-        end            
+        ellipsoidHitId = [];
+        ellipsoidMissIds = sortedIntersectingIds(sortedDistAlongRay < observedRange);
+        return;
     end
     
     posns = find(flag);

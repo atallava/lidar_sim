@@ -25,7 +25,7 @@
 using namespace lidar_sim;
 
 EllipsoidVtkActorServer::EllipsoidVtkActorServer() :
-    m_opacity(0.3),
+    m_max_opacity(0.4),
     m_level(9)
 {
     // ellipsoids are green, for vegetation
@@ -34,7 +34,7 @@ EllipsoidVtkActorServer::EllipsoidVtkActorServer() :
 }
 
 vtkSmartPointer<vtkActor> EllipsoidVtkActorServer::genEllipsoidActor(std::vector<double> mu, 
-						       Eigen::MatrixXd cov_mat)
+								     Eigen::MatrixXd cov_mat, double hit_prob)
 {
     // parametric ellipsoid
     vtkSmartPointer<vtkParametricFunction> 
@@ -83,9 +83,14 @@ vtkSmartPointer<vtkActor> EllipsoidVtkActorServer::genEllipsoidActor(std::vector
     	actor = vtkSmartPointer<vtkActor>::New();
     actor->SetMapper(mapper);
     actor->GetProperty()->SetColor(m_color[0], m_color[1], m_color[2]);
-    actor->GetProperty()->SetOpacity(m_opacity);
+    actor->GetProperty()->SetOpacity(mapHitProbToOpacity(hit_prob));
 
     return actor;
 }
 
+double EllipsoidVtkActorServer::mapHitProbToOpacity(double hit_prob)
+{
+    // linear scale
+    return hit_prob*m_max_opacity;
+}
 

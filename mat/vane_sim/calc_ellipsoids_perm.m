@@ -38,8 +38,12 @@ ellipsoidMissCountPrior = ones(1,nEllipsoids);
 ellipsoidHitCount = ellipsoidHitCountPrior;
 ellipsoidMissCount = ellipsoidMissCountPrior;
 
+ellipsoidIntersectedCount = zeros(1,nEllipsoids);
+
+ptIntersectedFlag = [];
+
 clockLocal = tic();
-for scanId = 67232%scanIdsToProcess
+for scanId = scanIdsToProcess(1:100)
     % get imu pose
     t = scanPtsTLog(scanId);
     poseIndex = indexOfNearestTime(t,poseTLog);
@@ -54,8 +58,11 @@ for scanId = 67232%scanIdsToProcess
     [intersectionFlag,distAlongRay] = calcEllipsoidIntersections(rayOrigin,rayDirn,ellipsoidModels,laserCalibParams,modelingParams);
     
     if sum(intersectionFlag) == 0
+        ptIntersectedFlag(end+1) = 0;
         % no credits to assign
         continue;
+    else
+        ptIntersectedFlag(end+1) = 1;
     end
     
     % viz for debug
@@ -78,11 +85,20 @@ for scanId = 67232%scanIdsToProcess
     % maha distances to ellipsoids
     distToEllipsoids = mahalanobisDistsToEllipsoids(ellipsoidModels(sortedIntersectingIds),thisPt);
     % get credits
-    [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distToEllipsoids,sortedIntersectingIds,modelingParams.ellipsoidParams.maxDistForHit);
+    [ellipsoidHitId,ellipsoidMissIds] = assignEllipsoidHitCredits(distToEllipsoids,sortedIntersectingIds, ...
+        sortedDistAlongRay,observedDistance,modelingParams.ellipsoidParams.maxDistForHit);
+    
+    ellipsoidIntersectedCount(sortedIntersectingIds) = ellipsoidIntersectedCount(sortedIntersectingIds)+1;
+    
+    % debug
+%     if ~isempty(ellipsoidMissIds)
+%         fprintf('scanId: %d\n', scanId);
+%     end
     
     % assign credits
     ellipsoidHitCount(ellipsoidHitId) = ellipsoidHitCount(ellipsoidHitId)+1;
     ellipsoidMissCount(ellipsoidMissIds) = ellipsoidMissCount(ellipsoidMissIds)+1;
+    
 end
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);

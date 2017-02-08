@@ -5,11 +5,18 @@
 
 #include <Eigen/Dense>
 
+#include <lidar_sim/PoseServer.h>
+
 namespace lidar_sim {
     class SectionLoader {
     public:
 	SectionLoader(std::string rel_path_section);
 	std::vector<std::vector<double> > getPtsAtTime(double t);
+	std::vector<int> getPtIdsAtTime(double t);
+	std::vector<std::vector<double> > getSectionImuPoses(const PoseServer &imu_pose_server);
+	std::vector<std::vector<double> > getSectionImuPosns(const PoseServer &imu_pose_server);
+	// 'log' corresponds to the packet timestamps vec
+	std::tuple<int, int> getLogIdsBracketingImuPosns(const std::vector<std::vector<double> > &posns, const PoseServer &imu_pose_server);
 
 	std::vector<std::vector<double>> m_pts;
 	std::vector<double> m_pt_timestamps;

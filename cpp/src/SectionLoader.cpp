@@ -9,6 +9,8 @@
 #include <Eigen/Geometry>
 
 #include <lidar_sim/SectionLoader.h>
+#include <lidar_sim/PoseUtils.h>
+#include <lidar_sim/MathUtils.h>
 
 using namespace lidar_sim;
 
@@ -77,3 +79,61 @@ std::vector<std::vector<double> > SectionLoader::getPtsAtTime(double t)
 
     return pts;    
 }
+
+std::vector<int> SectionLoader::getPtIdsAtTime(double t)
+{
+    std::vector<int> ids;
+    for(size_t i = 0; i < m_pt_timestamps.size(); ++i)
+	if (m_pt_timestamps[i] == t)
+	    ids.push_back(i);
+
+    return ids;    
+}
+
+std::vector<std::vector<double> > SectionLoader::getSectionImuPoses(const PoseServer &imu_pose_server)
+{
+    std::vector<std::vector<double> > section_imu_poses;
+    for(size_t i = 0; i < m_packet_timestamps.size(); ++i)
+    {
+	double t = m_packet_timestamps[i];
+	section_imu_poses.push_back(imu_pose_server.getPoseAtTime(t));
+    }
+
+    return section_imu_poses;
+}
+
+std::vector<std::vector<double> > SectionLoader::getSectionImuPosns(const PoseServer &imu_pose_server)
+{
+    std::vector<std::vector<double> > section_imu_posns;
+    for(size_t i = 0; i < m_packet_timestamps.size(); ++i)
+    {
+	double t = m_packet_timestamps[i];
+	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
+	section_imu_posns.push_back(posnFromImuPose(imu_pose));
+    }
+
+    return section_imu_posns;
+}
+
+std::tuple<int, int> SectionLoader::getLogIdsBracketingImuPosns(const std::vector<std::vector<double> > &imu_posns, const PoseServer &imu_pose_server)
+{
+    // section imu posns
+    std::vector<std::vector<double> > section_imu_posns = getSectionImuPosns(imu_pose_server);
+
+    // nearest section posns to slice posns
+    std::vector<std::vector<int> > nn_ids;
+    std::tie(nn_ids, std::ignore) = nearestNeighbors(section_imu_posns, imu_posns, 1);
+
+    // slice section log ids
+    int start_section_log_id = nn_ids[0][0];
+    int end_section_log_id = nn_ids.back()[0];
+
+    // add some padding to log ids
+    // todo: make padding private member
+    int padding = 1000;
+    start_section_log_id = std::max(0, start_section_log_id - padding);
+    end_section_log_id = std::min(end_section_log_id + padding, (int)m_packet_timestamps.size());
+
+    return std::make_tuple(start_section_log_id, end_section_log_id);
+}
+

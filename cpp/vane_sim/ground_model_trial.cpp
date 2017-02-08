@@ -19,20 +19,14 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     // pts from xyz
-    std::string rel_path_xyz = "data/rim_stretch_ground_train.asc";
-    // std::string rel_path_xyz = "data/block_trial.asc";
-    std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_xyz);
+    // std::string rel_path_xyz = "data/rim_stretch_ground_train.asc";
+    std::string rel_path_pts = "data/block_trial.asc";
+    std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // fit smoothed pts
     TriangleModeler modeler;
     modeler.setDebugFlag(1);
-    modeler.m_pts = pts;
-    modeler.fitSmoothedPts();
-
-    // delaunay triangulate
-    std::cout << "triangulating " << std::endl;
-    modeler.delaunayTriangulate();
-    modeler.calcTrianglesFromTriangulation();
+    modeler.createTriangleModels(rel_path_pts);
 
     // viz
     RangeDataVizer vizer;
@@ -46,8 +40,8 @@ int main(int argc, char **argv)
     vizer.takeItAway(actors);
 
     // write out
-    // std::string rel_path_triangles = "data/triangle_models.txt";
-    // modeler.writeTrianglesToFile(rel_path_triangles);
+    std::string rel_path_triangles = "data/triangle_models.txt";
+    modeler.writeTrianglesToFile(rel_path_triangles);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

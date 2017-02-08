@@ -38,10 +38,9 @@ int main(int argc, char **argv)
     pts_actor->GetProperty()->SetColor(1, 1, 1);
     actors.push_back(pts_actor);
 
-    vtkSmartPointer<vtkActor> tri_actor = 
-	vizer.m_triangles_actor_server.genTrianglesActor(sim.m_triangles, sim.m_fit_pts);
-    tri_actor->GetProperty()->SetColor(0.5451, 0.2706, 0.0745);
-    actors.push_back(tri_actor);
+    std::vector<vtkSmartPointer<vtkActor> > tri_actors = 
+	vizer.m_triangles_actor_server.genTrianglesActors(sim.m_triangles, sim.m_fit_pts);
+    actors.insert(actors.end(), tri_actors.begin(), tri_actors.end());
 
     vizer.takeItAway(actors);
     

@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    int n_poses_to_sim = 100;
+    int n_poses_to_sim = 500;
 
     std::vector<std::vector<double> > imu_poses;
     double t_max = section.m_pt_timestamps.back();

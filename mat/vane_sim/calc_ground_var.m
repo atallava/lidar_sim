@@ -1,5 +1,5 @@
 % load data
-relPathGroundModel = 'ground_model';
+relPathGroundModel = 'ground_model_cgal';
 load(relPathGroundModel,'groundTriModel');
 
 relPathPts = 'rim_stretch_ground_train';
@@ -48,7 +48,7 @@ triMissCount = triMissCountPrior;
 
 count = 0;
 clockLocal = tic();
-for scanId = scanIdsToProcess
+for scanId = 13023%scanIdsToProcess
     % get imu pose
     t = scanPtsTLog(scanId);
     poseIndex = indexOfNearestTime(t,poseTLog);
@@ -61,31 +61,38 @@ for scanId = scanIdsToProcess
     
     % intersection with triangles
     [intersectionFlag,distsToTriangles] = TriangleRayIntersection(rayOrigin,rayDirn,triVert1,triVert2,triVert3);
+    intersectionFlag = flipVecToRow(intersectionFlag);
     if sum(intersectionFlag) == 0
         % nothing to do
         continue;
     end
         
     % viz for debug
-%     plotStructVars = {'rayData','triData','plotStruct'};
-%     clear(plotStructVars{:});
-%     rayData.rayOrigin = rayOrigin;
-%     rayData.rayDirns = rayDirn;
-%     rayData.rayLengthToPlot = 20;
-%     plotStruct.rayData = rayData;
-%     
-%     triModelData = groundTriModel;
-%     triModelData.intersectionFlag = intersectionFlag;
-%     plotStruct.triModelData = triModelData;
-%     
-%     plotStruct.pts = thisPt;
-%     
-%     hfig = plotRangeData(plotStruct);
+    plotStructVars = {'rayData','triData','plotStruct'};
+    clear(plotStructVars{:});
+    rayData.rayOrigin = rayOrigin;
+    rayData.rayDirns = rayDirn;
+    rayData.rayLengthToPlot = 20;
+    plotStruct.rayData = rayData;
+    
+    triModelData = groundTriModel;
+    triModelData.intersectionFlag = intersectionFlag;
+    plotStruct.triModelData = triModelData;
+    
+    plotStruct.pts = thisPt;
+    
+    hfig = plotRangeData(plotStruct);
 
     % sorted distances along ray
     [sortedIntersectingIds,sortedDistsToTri] = sortIntersectionFlag(intersectionFlag,distsToTriangles);
     % get credits
     [triHitId,triMissIds,thisResidualRange] = assignTriHitCredits(sortedDistsToTri,sortedIntersectingIds,observedDistance,triParams.maxResidualForHit);
+  
+    % debug
+%     if (length(triMissIds) > 1) && (triHitId > 0)
+%         fprintf('scanId: %d\n', scanId);
+%     end
+    
     % assign credits
     triHitCount(triHitId) = triHitCount(triHitId)+1;
     triMissCount(triMissIds) = triMissCount(triMissIds)+1;

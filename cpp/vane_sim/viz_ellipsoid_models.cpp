@@ -21,11 +21,11 @@ using namespace lidar_sim;
 int main(int argc, char **argv)
 {
     // pts
-    std::string rel_path_pts = "data/sections/section_03/section_03_block_10_non_ground.xyz";
+    std::string rel_path_pts = "data/sections/section_03/section_03_block_01_non_ground.xyz";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // triangles
-    std::string rel_path_ellipsoids = "data/sections/section_03/section_03_block_10_non_ground_ellipsoids.txt";
+    std::string rel_path_ellipsoids = "data/sections/section_03/section_03_block_01_non_ground_ellipsoids.txt";
     EllipsoidModels ellipsoid_models = 
 	loadEllipsoidModelsFromFile(rel_path_ellipsoids);
 

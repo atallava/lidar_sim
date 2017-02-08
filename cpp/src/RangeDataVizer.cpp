@@ -62,7 +62,7 @@ void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models)
     for(size_t i = 0; i < n_ellipsoids; ++i)
 	actors.push_back(
     	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
-    						       ellipsoid_models[i].cov_mat));
+    						       ellipsoid_models[i].cov_mat, ellipsoid_models[i].hit_prob));
 
     takeItAway(actors);
 }
@@ -87,7 +87,7 @@ void RangeDataVizer::vizEllipsoidModels(const EllipsoidModels &ellipsoid_models,
     for(size_t i = 0; i < n_ellipsoids; ++i)
     	actors.push_back(
     	    m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, 
-    						       ellipsoid_models[i].cov_mat));
+    						       ellipsoid_models[i].cov_mat, ellipsoid_models[i].hit_prob));
 
     // pts
     vtkSmartPointer<vtkActor> pts_actor = 
@@ -226,7 +226,7 @@ void RangeDataVizer::vizSectionModels(const SectionModelSim &sim)
     	for(size_t j = 0; j < this_ellipsoid_models.size(); j = j + ellipsoid_skip)
     	{
     	    EllipsoidModel this_ellipsoid_model = this_ellipsoid_models[j];
-    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat));
+    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat, this_ellipsoid_model.hit_prob));
     	}
     }
 			     
@@ -256,7 +256,7 @@ RangeDataVizer::genSectionModelsActors(const SectionModelSim &sim)
     	for(size_t j = 0; j < this_ellipsoid_models.size(); j = j + ellipsoid_skip)
     	{
     	    EllipsoidModel this_ellipsoid_model = this_ellipsoid_models[j];
-    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat));
+    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat, this_ellipsoid_model.hit_prob));
     	}
     }
 			     
@@ -302,7 +302,7 @@ RangeDataVizer::genEllipsoidModelsActors(const std::vector<EllipsoidModelSim> &s
     	for(size_t j = 0; j < this_ellipsoid_models.size(); j = j + 1)
     	{
     	    EllipsoidModel this_ellipsoid_model = this_ellipsoid_models[j];
-    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat));
+    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat, this_ellipsoid_model.hit_prob));
     	}
     }
 			     

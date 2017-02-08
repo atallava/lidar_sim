@@ -56,6 +56,9 @@ int main(int argc, char **argv)
     std::vector<double> residual_ranges;
     std::vector<double> filtered_residual_ranges;
 
+    std::vector<int> tri_intersected_count(sim.m_triangles.size(), 0);
+    std::vector<int> pt_intersected_flag;
+
     std::cout << "processing section pts..." << std::endl;
     for(size_t i = 0; i < section_pt_ids_to_process.size()
     	    ; ++i)
@@ -66,23 +69,34 @@ int main(int argc, char **argv)
     	std::vector<double> this_pt = section.m_pts[id];
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, laser_calib_params);
-    	std::vector<double> ray_dirn;
+
+	std::vector<double> ray_dirn;
     	double meas_dist;
+
     	std::tie(ray_dirn, meas_dist) = calcRayDirn(ray_origin, this_pt);
-	
+
     	std::vector<int> intersection_flag;
     	std::vector<double> dists_to_tri;
     	std::tie(intersection_flag, dists_to_tri) = sim.calcTriIntersections(
     	    ray_origin, ray_dirn);
 
     	if (!anyNonzeros(intersection_flag))
-    	    continue; 	// no hits
+	{
+    	    continue; 	// no intersections
+	    pt_intersected_flag.push_back(0);
+	}
+	else
+	    pt_intersected_flag.push_back(1);
 
     	// intersections
 	std::vector<int> sorted_intersecting_ids;
     	std::vector<double> sorted_dists_to_tri;
     	std::tie(sorted_intersecting_ids, sorted_dists_to_tri) =
     	    sortIntersectionFlag(intersection_flag, dists_to_tri);
+	
+    	// log ellipsoid intersections
+	for(auto j : sorted_intersecting_ids)
+	    tri_intersected_count[j] += 1;
 	
 	// hit miss credits
 	int tri_hit_id;
@@ -99,8 +113,29 @@ int main(int argc, char **argv)
 		tri_miss_count[tri_miss_ids[j]] += 1;
 
 	residual_ranges.push_back(this_residual_range);
-	if (this_residual_range < sim.getMaxResidualForHit())
+	if (std::abs(this_residual_range) < sim.getMaxResidualForHit())
 	    filtered_residual_ranges.push_back(this_residual_range);
+
+	// debug
+	// std::cout << "section pt id: " << id << std::endl;
+	// std::cout << "t: " << t << std::endl;
+	// std::cout << "this pt: " << std::endl;
+	// dispVec(this_pt);
+	// std::cout << "imu_pose " << std::endl;
+	// dispVec(imu_pose);
+	// std::cout << "ray origin " << std::endl;
+	// dispVec(ray_origin);
+	// std::cout << "ray dirn " << std::endl;
+	// dispVec(ray_dirn);
+	// std::cout << "meas dist " << meas_dist << std::endl;
+	// std::cout << "residual range " << this_residual_range << std::endl;
+	// std::cout << "sorted intersecting ids " << std::endl;
+	// dispVec(sorted_intersecting_ids);
+	// std::cout << "sorted dists to tri " << std::endl;
+	// dispVec(sorted_dists_to_tri);
+	// std::cout << "tri hit id: " << tri_hit_id << std::endl;
+	// std::cout << "tri miss ids: "  << std::endl;
+	// dispVec(tri_miss_ids);
     }
 
     std::cout << "n rays intersected: " << residual_ranges.size() << std::endl;
@@ -114,6 +149,12 @@ int main(int argc, char **argv)
 
     double range_var = calcVariance(filtered_residual_ranges);
     std::cout << "range variance: " << range_var << std::endl;
+
+    // stats
+    std::cout << "n pts: " << section_pt_ids_to_process.size() << std::endl;
+    std::cout << "fracs pts intersected: " << std::accumulate(pt_intersected_flag.begin(), pt_intersected_flag.end(), 0.0)/(double)section_pt_ids_to_process.size() << std::endl;
+    std::vector<int> tri_missed_flag = negateLogicalVec(tri_intersected_count);
+    std::cout << "fracs tri missed: " << std::accumulate(std::begin(tri_missed_flag), std::end(tri_missed_flag), 0.0)/(double)tri_missed_flag.size() << std::endl;
 
     // write out
     std::string rel_path_triangles = "data/triangle_models_updated_hit_prob.txt";

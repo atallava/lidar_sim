@@ -27,8 +27,8 @@ EllipsoidModeler::EllipsoidModeler() :
     m_min_pts_per_cluster(9),
     m_default_hit_prob(1),
 
-    m_hit_count_prior(1),
-    m_miss_count_prior(0)
+    m_hit_count_prior(0),
+    m_miss_count_prior(1)
 {    
     m_n_clusters_per_pt = 250/(double)12016; // hack based on rim stretch test
 }
@@ -150,16 +150,22 @@ void EllipsoidModeler::writeEllipsoidsToFile(std::string rel_path_output)
     file.close();
 }
 
-void EllipsoidModeler::calcHitProb(std::string rel_path_section, PoseServer imu_pose_server)
+void EllipsoidModeler::calcHitProb(std::string rel_path_section, const PoseServer &imu_pose_server)
 {
-    if (m_debug_flag)
-	std::cout << "EllipsoidModeler: calculating hot probs..." << std::endl;
-
     SectionLoader section(rel_path_section);
 
     // section ids to process
     std::vector<int> section_pt_ids_to_process;
     std::tie(section_pt_ids_to_process, std::ignore) = nearestNeighbors(section.m_pts, m_pts);
+
+    calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
+}
+
+void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, 
+				   const PoseServer &imu_pose_server)
+{
+    if (m_debug_flag)
+	std::cout << "EllipsoidModeler: calculating hit probs..." << std::endl;
 
     // sim object
     // odd that modeler needs a sim
@@ -174,6 +180,9 @@ void EllipsoidModeler::calcHitProb(std::string rel_path_section, PoseServer imu_
 
     std::vector<int> ellipsoid_hit_count = ellipsoid_hit_count_prior;
     std::vector<int> ellipsoid_miss_count = ellipsoid_miss_count_prior;
+
+    std::vector<int> ellipsoid_intersected_count(m_ellipsoid_models.size(), 0);
+    std::vector<int> pt_intersected_flag;
 
     for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
     {
@@ -193,7 +202,12 @@ void EllipsoidModeler::calcHitProb(std::string rel_path_section, PoseServer imu_
     	    ray_origin, ray_dirn);
 
     	if (!anyNonzeros(intersection_flag))
-    	    continue; 	// no hits
+	{
+    	    continue; 	// no intersections
+	    pt_intersected_flag.push_back(0);
+	}
+	else
+	    pt_intersected_flag.push_back(1);
 
     	std::vector<int> sorted_intersecting_ids;
     	std::vector<double> sorted_dist_along_ray;
@@ -202,10 +216,15 @@ void EllipsoidModeler::calcHitProb(std::string rel_path_section, PoseServer imu_
     	std::vector<double> maha_dists_to_ellipsoids = 
     	    sim.calcMahaDistPtToEllipsoids(sorted_intersecting_ids, this_pt);
 	
+    	// log ellipsoid intersections
+	for(auto j : sorted_intersecting_ids)
+	    ellipsoid_intersected_count[j] += 1;
+	
     	int ellipsoid_hit_id;
     	std::vector<int> ellipsoid_miss_ids;
     	std::tie(ellipsoid_hit_id, ellipsoid_miss_ids) = 
-    	    sim.assignEllipsoidHitCredits(maha_dists_to_ellipsoids, sorted_intersecting_ids);
+    	    sim.assignEllipsoidHitCredits(maha_dists_to_ellipsoids, sorted_intersecting_ids,
+					  sorted_dist_along_ray, meas_dist);
 
 	// assign credits
 	if (ellipsoid_hit_id != -1)
@@ -238,13 +257,21 @@ void EllipsoidModeler::calcHitProb(std::string rel_path_section, PoseServer imu_
 	// dispVec(ellipsoid_miss_ids);
     }
 
-	// calc hit prob and add to models
-	std::vector<double> hit_prob_vec(m_ellipsoid_models.size(), 1);
-	for(size_t i = 0; i < hit_prob_vec.size(); ++i)
-	{
-	    hit_prob_vec[i] = (double)(ellipsoid_hit_count[i]/(double)(ellipsoid_hit_count[i] + ellipsoid_miss_count[i]));
-	    m_ellipsoid_models[i].hit_prob = hit_prob_vec[i];
-	}
+    // stats
+    if (m_debug_flag)
+    {
+	std::cout << "fracs pts intersected: " << std::accumulate(pt_intersected_flag.begin(), pt_intersected_flag.end(), 0.0)/(double)section_pt_ids_to_process.size() << std::endl;
+	std::vector<int> ellipsoid_missed_flag = negateLogicalVec(ellipsoid_intersected_count);
+	std::cout << "fracs ellipsoids missed: " << std::accumulate(std::begin(ellipsoid_missed_flag), std::end(ellipsoid_missed_flag), 0.0)/(double)ellipsoid_missed_flag.size() << std::endl;
+    }
+
+    // calc hit prob and add to models
+    std::vector<double> hit_prob_vec(m_ellipsoid_models.size(), 1);
+    for(size_t i = 0; i < hit_prob_vec.size(); ++i)
+    {
+	hit_prob_vec[i] = (double)(ellipsoid_hit_count[i]/(double)(ellipsoid_hit_count[i] + ellipsoid_miss_count[i]));
+	m_ellipsoid_models[i].hit_prob = hit_prob_vec[i];
+    }
 }
 
 void EllipsoidModeler::setDebugFlag(int flag)

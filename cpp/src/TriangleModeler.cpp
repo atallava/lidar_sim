@@ -26,8 +26,8 @@ TriangleModeler::TriangleModeler() :
     m_fit_pts_node_resn(1),
     m_max_dist_to_projn(1.5),
     m_default_hit_prob(1),
-    m_hit_count_prior(1),
-    m_miss_count_prior(0)
+    m_hit_count_prior(0),
+    m_miss_count_prior(1)
 {    
 }
 
@@ -212,8 +212,23 @@ void TriangleModeler::setDebugFlag(int flag)
     m_debug_flag = flag;
 }
 
-void TriangleModeler::calcHitProb(std::string rel_path_section, PoseServer imu_pose_server)
+void TriangleModeler::calcHitProb(std::string rel_path_section, const PoseServer &imu_pose_server)
 {
+    // section
+    SectionLoader section(rel_path_section);
+    
+    // section ids to process
+    std::vector<int> section_pt_ids_to_process;
+    std::tie(section_pt_ids_to_process, std::ignore) = nearestNeighbors(section.m_pts, m_pts);
+
+    calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
+}
+
+void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_pose_server)
+{
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: calculating hit probs..." << std::endl;
+
     // sim object
     TriangleModelSim sim;
     const LaserCalibParams laser_calib_params;
@@ -221,13 +236,7 @@ void TriangleModeler::calcHitProb(std::string rel_path_section, PoseServer imu_p
     sim.m_triangles = m_triangles;
     sim.m_fit_pts = m_fit_pts;
     sim.m_hit_prob_vec = m_hit_prob_vec;
-
-    // section
-    SectionLoader section(rel_path_section);
-    
-    // section ids to process
-    std::vector<int> section_pt_ids_to_process;
-    std::tie(section_pt_ids_to_process, std::ignore) = nearestNeighbors(section.m_pts, m_pts);
+    sim.fillCgalData();
 
     size_t n_tris = sim.m_triangles.size();
     std::vector<int> tri_hit_count_prior(n_tris, m_hit_count_prior);
@@ -238,6 +247,9 @@ void TriangleModeler::calcHitProb(std::string rel_path_section, PoseServer imu_p
 
     std::vector<double> residual_ranges;
     std::vector<double> filtered_residual_ranges;
+
+    std::vector<int> tri_intersected_count(m_triangles.size(), 0);
+    std::vector<int> pt_intersected_flag;
 
     for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
     {
@@ -253,17 +265,25 @@ void TriangleModeler::calcHitProb(std::string rel_path_section, PoseServer imu_p
 	
     	std::vector<int> intersection_flag;
     	std::vector<double> dists_to_tri;
-    	std::tie(intersection_flag, dists_to_tri) = sim.calcTriIntersections(
-    	    ray_origin, ray_dirn);
+    	std::tie(intersection_flag, dists_to_tri) = sim.calcTriIntersections(ray_origin, ray_dirn);
 
     	if (!anyNonzeros(intersection_flag))
-    	    continue; 	// no hits
+	{
+    	    continue; 	// no intersections
+	    pt_intersected_flag.push_back(0);
+	}
+	else
+	    pt_intersected_flag.push_back(1);
 
     	// intersections
 	std::vector<int> sorted_intersecting_ids;
     	std::vector<double> sorted_dists_to_tri;
     	std::tie(sorted_intersecting_ids, sorted_dists_to_tri) =
     	    sortIntersectionFlag(intersection_flag, dists_to_tri);
+	
+    	// log ellipsoid intersections
+	for(auto j : sorted_intersecting_ids)
+	    tri_intersected_count[j] += 1;
 	
 	// hit miss credits
 	int tri_hit_id;
@@ -280,19 +300,24 @@ void TriangleModeler::calcHitProb(std::string rel_path_section, PoseServer imu_p
 		tri_miss_count[tri_miss_ids[j]] += 1;
 
 	residual_ranges.push_back(this_residual_range);
-	if (this_residual_range < sim.getMaxResidualForHit())
+	if (std::abs(this_residual_range) < sim.getMaxResidualForHit())
 	    filtered_residual_ranges.push_back(this_residual_range);
     }
 
+    // stats
     if (m_debug_flag)
-	std::cout << "TriangleModeler: n rays intersected: " << residual_ranges.size() << std::endl;
+    {
+	std::cout << "n pts: " << section_pt_ids_to_process.size() << std::endl;
+	std::cout << "fracs pts intersected: " << std::accumulate(pt_intersected_flag.begin(), pt_intersected_flag.end(), 0.0)/(double)section_pt_ids_to_process.size() << std::endl;
+	std::vector<int> tri_missed_flag = negateLogicalVec(tri_intersected_count);
+	std::cout << "fracs tri missed: " << std::accumulate(std::begin(tri_missed_flag), std::end(tri_missed_flag), 0.0)/(double)tri_missed_flag.size() << std::endl;
+	double range_var = calcVariance(filtered_residual_ranges);
+	std::cout << "range variance: " << range_var << std::endl;
+    }
 
     // calculate hit prob
     for(size_t i = 0; i < m_triangles.size(); ++i)
 	m_hit_prob_vec[i] = (double)(tri_hit_count[i]/(double)(tri_hit_count[i] + tri_miss_count[i]));
-
-    double range_var = calcVariance(filtered_residual_ranges);
-    std::cout << "range variance: " << range_var << std::endl;
 }
 
 void TriangleModeler::subsamplePts()

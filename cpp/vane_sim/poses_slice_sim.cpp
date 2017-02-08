@@ -122,10 +122,8 @@ int main(int argc, char **argv)
     int slice_start_section_log_id = nn_ids[0][0];
     int slice_end_section_log_id = nn_ids[1][0];
     int slice_n_section_log_ids = slice_end_section_log_id - slice_start_section_log_id;
-    double slice_start_time = section.m_packet_timestamps[slice_start_section_log_id];
-    double slice_end_time = section.m_packet_timestamps[slice_end_section_log_id];
 
-    int n_poses_to_sim = 10;
+    int n_poses_to_sim = 100;
     int section_log_id_skip = slice_n_section_log_ids/n_poses_to_sim;
 
     // sim object
@@ -167,6 +165,7 @@ int main(int argc, char **argv)
     // and there is skip
     std::vector<std::vector<double> > slice_pts;
     std::vector<std::vector<double> > slice_pts_sim;
+    std::vector<int> n_hits_per_pose;
 
     for(size_t i = slice_start_section_log_id; i <= (size_t)slice_end_section_log_id; i += section_log_id_skip)
     {
@@ -180,7 +179,13 @@ int main(int argc, char **argv)
 	std::tie(this_pts_sim_all, hit_flag) = sim.simPtsGivenPose(this_pose);
 	std::vector<std::vector<double> > this_pts_sim = logicalSubsetArray(this_pts_sim_all, hit_flag);
 	slice_pts_sim.insert(slice_pts_sim.end(), this_pts_sim.begin(), this_pts_sim.end());
+	n_hits_per_pose.push_back(std::accumulate(hit_flag.begin(), hit_flag.end(), 0.0));
     }
+    
+    double mean_hits_per_pose;
+    double var_hits_per_pose;
+    std::tie(mean_hits_per_pose, var_hits_per_pose) = calcVecMeanVar(n_hits_per_pose);
+    std::cout << "mean hits per pose: " << mean_hits_per_pose << " var: " << var_hits_per_pose << std::endl;
 
     // write out
     std::string rel_path_pts = "data/section_03_slice.xyz";

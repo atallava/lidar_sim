@@ -10,7 +10,7 @@ namespace lidar_sim {
 	PoseServer(std::string rel_path_pose_log);
 	void printLogAtIndex(int data_id);
 	void printPose(const std::vector<double> pose);
-	std::vector<double> getPoseAtTime(double t);
+	std::vector<double> getPoseAtTime (double t) const;
 	Eigen::Matrix<float,4,4> getTransfAtTime(double t);
 	std::tuple<std::vector<double>, int> 
 	    getNearestPoseInLog(const std::vector<double> pose);

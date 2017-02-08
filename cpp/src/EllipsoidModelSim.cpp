@@ -229,7 +229,9 @@ double EllipsoidModelSim::calcMahaDistPtToEllipsoid(const std::vector<double> &m
 
 std::tuple<int, std::vector<int> >
 EllipsoidModelSim::assignEllipsoidHitCredits(const std::vector<double> &maha_dists_to_ellipsoids, 
-					     const std::vector<int> &sorted_intersecting_ids)
+					     const std::vector<int> &sorted_intersecting_ids,
+					     const std::vector<double> &sorted_dist_along_ray,
+					     const double measured_range)
 {
     std::vector<int> flag(maha_dists_to_ellipsoids.size(), 0);
     for(size_t i = 0; i < flag.size(); ++i)
@@ -241,15 +243,11 @@ EllipsoidModelSim::assignEllipsoidHitCredits(const std::vector<double> &maha_dis
 
     if (!anyNonzeros(flag))
 	{
-	    if (maha_dists_to_ellipsoids[0] < maha_dists_to_ellipsoids.back())
-		// no ellipsoids hit
-		return std::make_tuple(-1, ellipsoid_miss_ids);
-	    else
-	    {
-		// all ellipsoids missed
-		ellipsoid_miss_ids = sorted_intersecting_ids;
-		return std::make_tuple(-1, ellipsoid_miss_ids);
-	    }
+	    for(size_t i = 0; i < sorted_dist_along_ray.size(); ++i)
+		if (sorted_dist_along_ray[i] < measured_range)
+		    ellipsoid_miss_ids.push_back(sorted_intersecting_ids[i]);
+
+	    return std::make_tuple(-1, ellipsoid_miss_ids);
 	}
 
     std::vector<int> posns = findNonzeroIds(flag);

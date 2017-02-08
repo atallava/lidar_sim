@@ -101,10 +101,8 @@ int main(int argc, char **argv)
     int slice_start_section_log_id = nn_ids[0][0];
     int slice_end_section_log_id = nn_ids[1][0];
     int slice_n_section_log_ids = slice_end_section_log_id - slice_start_section_log_id;
-    double slice_start_time = section.m_packet_timestamps[slice_start_section_log_id];
-    double slice_end_time = section.m_packet_timestamps[slice_end_section_log_id];
 
-    int n_poses_to_sim = 500;
+    int n_poses_to_sim = 40*100;
     int section_log_id_skip = slice_n_section_log_ids/n_poses_to_sim;
 
     // true and sim pts

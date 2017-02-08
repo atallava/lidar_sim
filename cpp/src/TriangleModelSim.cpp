@@ -106,9 +106,16 @@ std::tuple<std::vector<int>,
 	   std::vector<double> > 
 TriangleModelSim::calcTriIntersections(std::vector<double> ray_origin, std::vector<double> ray_dirn)
 {
+    if (m_triangles_cgal.empty())
+    {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "TriangleModelSim: m_triangles_cgal is empty!";
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+	
     std::vector<int> intersection_flag(m_triangles.size(), 0);
     std::vector<double> dist_along_ray(m_triangles.size(), 0);
-
+    
     Point_3_cgal ray_origin_cgal(ray_origin[0], ray_origin[1], ray_origin[2]);
     Direction_3_cgal ray_dirn_cgal(ray_dirn[0], ray_dirn[1], ray_dirn[2]);
     Ray_3_cgal ray_cgal(ray_origin_cgal, ray_dirn_cgal);
@@ -117,6 +124,7 @@ TriangleModelSim::calcTriIntersections(std::vector<double> ray_origin, std::vect
     for(size_t i = 0; i < m_triangles.size(); ++i)
     {
 	CGAL::Object obj_intersection = intersection(ray_cgal, m_triangles_cgal[i]);
+
 	if(assign(pt_intersection, obj_intersection))
 	{
 	    intersection_flag[i] = 1;

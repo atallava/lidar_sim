@@ -95,7 +95,7 @@ void PoseServer::printPose(std::vector<double> pose)
     std::cout << std::endl;
 }
 
-std::vector<double> PoseServer::getPoseAtTime(double t)
+std::vector<double> PoseServer::getPoseAtTime (double t) const
 {
     auto it = std::lower_bound(m_t_log.begin(), m_t_log.end(), t);
     size_t index_2 = std::distance(m_t_log.begin(), it);

@@ -33,7 +33,9 @@
 
 using namespace lidar_sim;
 
-TrianglesVtkActorServer::TrianglesVtkActorServer()
+TrianglesVtkActorServer::TrianglesVtkActorServer() :
+    m_max_opacity(0.9),
+    m_brown_color{0.5451, 0.2706, 0.0645}
 {
 }
 
@@ -68,7 +70,7 @@ vtkSmartPointer<vtkActor> TrianglesVtkActorServer::genTrianglesActor(const Delau
     polyData->SetPoints(points);
     polyData->SetPolys(triangles);
  
-        // extract edges
+    // extract edges
     vtkSmartPointer<vtkExtractEdges> edges = 
 	vtkSmartPointer<vtkExtractEdges>::New();
     edges->SetInput(polyData);
@@ -115,16 +117,17 @@ TrianglesVtkActorServer::genTrianglesActor(const std::vector<std::vector<int> > 
     polyData->SetPoints(points);
     polyData->SetPolys(triangles);
  
-        // extract edges
-    vtkSmartPointer<vtkExtractEdges> edges = 
-	vtkSmartPointer<vtkExtractEdges>::New();
-    edges->SetInput(polyData);
+    // extract edges
+    // vtkSmartPointer<vtkExtractEdges> edges = 
+    // 	vtkSmartPointer<vtkExtractEdges>::New();
+    // edges->SetInput(polyData);
 
     // mapper
     vtkSmartPointer<vtkPolyDataMapper>
     	mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapper->SetInput(edges->GetOutput());
-    
+    // mapper->SetInput(edges->GetOutput());
+    mapper->SetInput(polyData);
+
     // actor
     vtkSmartPointer<vtkActor>
     	actor = vtkSmartPointer<vtkActor>::New();
@@ -133,5 +136,71 @@ TrianglesVtkActorServer::genTrianglesActor(const std::vector<std::vector<int> > 
     return actor;
 }
 
+std::vector<vtkSmartPointer<vtkActor> > 
+TrianglesVtkActorServer::genTrianglesActors(const std::vector<std::vector<int> > &triangle_vertex_ids, 
+					    const std::vector<std::vector<double> > &pts, const std::vector<double> hit_prob_vec)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
 
+    // each triangle is its own actor
+    for(size_t i = 0; i < triangle_vertex_ids.size(); ++i)
+    {
+	vtkSmartPointer<vtkPoints> points =
+	    vtkSmartPointer<vtkPoints>::New();
+	for(size_t j = 0; j < 3; ++j)
+	{
+	    int v_id = triangle_vertex_ids[i][j];
+	    points->InsertNextPoint(pts[v_id][0], pts[v_id][1], pts[v_id][2]);
+	}
+
+	vtkSmartPointer<vtkTriangle> triangle =
+	    vtkSmartPointer<vtkTriangle>::New();
+	
+	for(size_t j = 0; j < 3; ++j)
+	    triangle->GetPointIds()->SetId (j, j);
+
+	vtkSmartPointer<vtkCellArray> triangles =
+	    vtkSmartPointer<vtkCellArray>::New();
+	triangles->InsertNextCell(triangle);
+
+	// polydata
+	vtkSmartPointer<vtkPolyData> polyData =
+	    vtkSmartPointer<vtkPolyData>::New();
+	polyData->SetPoints(points);
+	polyData->SetPolys(triangles);
+
+	// mapper
+	vtkSmartPointer<vtkPolyDataMapper>
+	    mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+	mapper->SetInput(polyData);
+
+	// actor
+	vtkSmartPointer<vtkActor>
+	    actor = vtkSmartPointer<vtkActor>::New();
+	actor->SetMapper(mapper);
+
+	// set color and opacity
+	actor->GetProperty()->SetColor(m_brown_color[0], m_brown_color[1], m_brown_color[2]);
+	actor->GetProperty()->SetOpacity(mapHitProbToOpacity(hit_prob_vec[i]));
+
+	actors.push_back(actor);
+    }
+
+    return actors;
+}							      
+
+std::vector<vtkSmartPointer<vtkActor> > 
+TrianglesVtkActorServer::genTrianglesActors(const std::vector<std::vector<int> > &triangle_vertex_ids, 
+					    const std::vector<std::vector<double> > &pts)
+{
+    // todo: how to make this default?
+    std::vector<double> hit_prob_vec(triangle_vertex_ids.size(), 1);
+    return genTrianglesActors(triangle_vertex_ids, pts, hit_prob_vec);
+}
+
+double TrianglesVtkActorServer::mapHitProbToOpacity(double hit_prob)
+{
+    // linear scale
+    return hit_prob*m_max_opacity;
+}
 

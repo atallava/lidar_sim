@@ -30,15 +30,15 @@ int main(int argc, char **argv)
     // load section
     std::string rel_path_section = "data/section_03_world_frame_subsampled_timed.xyz";
     SectionLoader section(rel_path_section);
-
+    
     // pts from xyz
     std::string rel_path_xyz = "data/rim_stretch_veg_train.asc";
     std::vector<std::vector<double> > train_pts = loadPtsFromXYZFile(rel_path_xyz);
-
+    
     // pose server
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
-
+    
     std::cout << "calculating section ids to process..." << std::endl;
     // section ids to process
     std::vector<int> section_pt_ids_to_process;
@@ -57,6 +57,9 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_hit_count = ellipsoid_hit_count_prior;
     std::vector<int> ellipsoid_miss_count = ellipsoid_miss_count_prior;
 
+    std::vector<int> ellipsoid_intersected_count(ellipsoid_models.size(), 0);
+    std::vector<int> pt_intersected_flag;
+
     std::cout << "processing section pts..." << std::endl;
     for(size_t i = 0; i < section_pt_ids_to_process.size()
 	    ; ++i)
@@ -68,6 +71,7 @@ int main(int argc, char **argv)
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, laser_calib_params);
     	std::vector<double> ray_dirn;
+	
     	double meas_dist;
     	std::tie(ray_dirn, meas_dist) = calcRayDirn(ray_origin, this_pt);
 	
@@ -77,19 +81,29 @@ int main(int argc, char **argv)
     	    ray_origin, ray_dirn);
 
     	if (!anyNonzeros(intersection_flag))
-    	    continue; 	// no hits
+	{
+    	    continue; 	// no intersections
+	    pt_intersected_flag.push_back(0);
+	}
+	else
+	    pt_intersected_flag.push_back(1);
 
-    	std::vector<int> sorted_intersecting_ids;
+	std::vector<int> sorted_intersecting_ids;
     	std::vector<double> sorted_dist_along_ray;
     	std::tie(sorted_intersecting_ids, sorted_dist_along_ray) =
     	    sortIntersectionFlag(intersection_flag, dist_along_ray);
     	std::vector<double> maha_dists_to_ellipsoids = 
     	    sim.calcMahaDistPtToEllipsoids(sorted_intersecting_ids, this_pt);
+
+    	// log ellipsoid intersections
+	for(auto j : sorted_intersecting_ids)
+	    ellipsoid_intersected_count[j] += 1;
 	
     	int ellipsoid_hit_id;
     	std::vector<int> ellipsoid_miss_ids;
     	std::tie(ellipsoid_hit_id, ellipsoid_miss_ids) = 
-    	    sim.assignEllipsoidHitCredits(maha_dists_to_ellipsoids, sorted_intersecting_ids);
+    	    sim.assignEllipsoidHitCredits(maha_dists_to_ellipsoids, sorted_intersecting_ids, 
+					  sorted_dist_along_ray, meas_dist);
 
 	// assign credits
 	if (ellipsoid_hit_id != -1)
@@ -127,9 +141,13 @@ int main(int argc, char **argv)
     for(size_t i = 0; i < hit_prob_vec.size(); ++i)
     {
 	hit_prob_vec[i] = (double)(ellipsoid_hit_count[i]/(double)(ellipsoid_hit_count[i] + ellipsoid_miss_count[i]));
-	std::cout << ellipsoid_hit_count[i] << " " << ellipsoid_miss_count[i] << " " << hit_prob_vec[i] << std::endl;
 	ellipsoid_models[i].hit_prob = hit_prob_vec[i];
     }
+    
+    // stats
+    std::cout << "fracs pts intersected: " << std::accumulate(pt_intersected_flag.begin(), pt_intersected_flag.end(), 0.0)/(double)section_pt_ids_to_process.size() << std::endl;
+    std::vector<int> ellipsoid_missed_flag = negateLogicalVec(ellipsoid_intersected_count);
+    std::cout << "fracs ellipsoids missed: " << std::accumulate(std::begin(ellipsoid_missed_flag), std::end(ellipsoid_missed_flag), 0.0)/(double)ellipsoid_missed_flag.size() << std::endl;
 
     // write to file
     std::cout << "writing out..." << std::endl;

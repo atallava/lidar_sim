@@ -87,5 +87,17 @@ namespace lidar_sim {
 	
 	return vec;
     }
+
+    template<typename T>
+	std::tuple<double, double> calcVecMeanVar(std::vector<T> data)
+    {
+	double mu = std::accumulate(data.begin(), data.end(), 0.0)/(double)data.size();
+	double var = 0;
+	for(size_t i = 0; i < data.size(); ++i)
+	    var += std::pow(data[i]-mu, 2.0);
+	var = var/(double)data.size();
+
+	return std::make_tuple(mu, var);
+    }
 }
 

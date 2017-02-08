@@ -1,5 +1,13 @@
 function triModel = loadTriModels(rel_path_input)
-    fid = fopen(rel_path_input,'r');
+    %LOADTRIMODELS
+    %
+    % triModel = LOADTRIMODELS(rel_path_input)
+    %
+    % rel_path_input -
+    %
+    % triModel       -
+    
+ fid = fopen(rel_path_input,'r');
     line = fgetl(fid);
     ptsFit = [];
     tri = [];

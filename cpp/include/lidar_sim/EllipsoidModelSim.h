@@ -41,7 +41,9 @@ namespace lidar_sim {
 
 	std::tuple<int, std::vector<int> >
 	    assignEllipsoidHitCredits(const std::vector<double> &maha_dists_to_ellipsoids, 
-				      const std::vector<int> &sorted_intersecting_ids);
+				      const std::vector<int> &sorted_intersecting_ids,
+				      const std::vector<double> &sorted_dist_alon_ray,
+				      const double measured_range);
 
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 	    simPtsGivenPose(const std::vector<double> &imu_pose);
