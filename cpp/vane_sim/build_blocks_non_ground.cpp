@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     // vizer.vizPts(imu_posn_nodes);
 
     // pts
-    std::string rel_path_pts = "data/sections/section_03/section_pts_03_non_ground.xyz";
+    std::string rel_path_pts = "data/sections/section_03/manual_segmentation/section_pts_03_non_ground.asc";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // nearest neighbor for pts in nodes
