@@ -99,5 +99,9 @@ namespace lidar_sim {
 
 	return std::make_tuple(mu, var);
     }
+
+    double vectorNorm(const std::vector<double> &a);
+    double dotProduct(const std::vector<double> &a, const std::vector<double> &b);
+    std::vector<double> vectorDiff(const std::vector<double> &a, const std::vector<double> &b);
 }
 

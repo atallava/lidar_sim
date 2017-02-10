@@ -72,7 +72,6 @@ for scanId = 13023%scanIdsToProcess
     clear(plotStructVars{:});
     rayData.rayOrigin = rayOrigin;
     rayData.rayDirns = rayDirn;
-    rayData.rayLengthToPlot = 20;
     plotStruct.rayData = rayData;
     
     triModelData = groundTriModel;

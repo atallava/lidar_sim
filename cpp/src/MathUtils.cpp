@@ -272,5 +272,33 @@ namespace lidar_sim {
 
 	return vec;
     }
+
+    double vectorNorm(const std::vector<double> &a)
+    {
+	double res = 0;
+	for(size_t i = 0; i < a.size(); ++i)
+	    res += std::pow(a[i], 2.0);
+	res = std::sqrt(res);
+
+	return res;
+    }
+
+    double dotProduct(const std::vector<double> &a, const std::vector<double> &b)
+    {
+	double res = 0;
+	for(size_t i = 0; i < a.size(); ++i)
+	    res += a[i]*b[i];
+
+	return res;
+    }
+
+    std::vector<double> vectorDiff(const std::vector<double> &a, const std::vector<double> &b)
+    {
+	std::vector<double> c(3, 0.0);
+	for(size_t i = 0; i < a.size(); ++i)
+	    c[i] = a[i]-b[i];
+
+	return c;
+    }
 }
 

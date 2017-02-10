@@ -104,7 +104,7 @@ void RangeDataVizer::takeItAway(const std::vector<vtkSmartPointer<vtkActor> > &a
     vtkSmartPointer<vtkRenderer>
     	renderer = vtkSmartPointer<vtkRenderer>::New();
 
-    // TODO: how to decide renderer size?
+    // todo: how to decide renderer size?
     int renderer_size = 500;
 
     // (xmin, ymin, xmax, ymax)
@@ -218,7 +218,7 @@ void RangeDataVizer::vizSectionModels(const SectionModelSim &sim)
 {
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
-    int ellipsoid_skip = 5;
+    int ellipsoid_skip = 2;
     // ellipsoids
     for(size_t i = 0; i < sim.m_ellipsoid_model_sims.size(); ++i)
     {
@@ -226,18 +226,19 @@ void RangeDataVizer::vizSectionModels(const SectionModelSim &sim)
     	for(size_t j = 0; j < this_ellipsoid_models.size(); j = j + ellipsoid_skip)
     	{
     	    EllipsoidModel this_ellipsoid_model = this_ellipsoid_models[j];
-    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat, this_ellipsoid_model.hit_prob));
+    	    // actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat, this_ellipsoid_model.hit_prob));
+    	    actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(this_ellipsoid_model.mu, this_ellipsoid_model.cov_mat));
     	}
     }
 			     
     // triangles
+	
     for(size_t i = 0; i < sim.m_triangle_model_sims.size(); ++i)
     {
     	TriangleModelSim this_tri_sim = sim.m_triangle_model_sims[i];
-	vtkSmartPointer<vtkActor> tri_actor = 
-	    m_triangles_actor_server.genTrianglesActor(this_tri_sim.m_triangles, this_tri_sim.m_fit_pts);
-	tri_actor->GetProperty()->SetColor(0.5451, 0.2706, 0.0745);
-	actors.push_back(tri_actor);
+	std::vector<vtkSmartPointer<vtkActor> > tri_actors = 
+	    m_triangles_actor_server.genTrianglesActors(this_tri_sim.m_triangles, this_tri_sim.m_fit_pts, this_tri_sim.m_hit_prob_vec);
+	actors.insert(actors.end(), tri_actors.begin(), tri_actors.end());
     }
 
     takeItAway(actors);

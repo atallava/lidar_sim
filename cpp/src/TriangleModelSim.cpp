@@ -268,7 +268,7 @@ TriangleModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 {
     // rays
     Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
-    std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
+    std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, m_laser_calib_params);
     std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, m_laser_calib_params);
 
     // intersections
@@ -281,14 +281,6 @@ TriangleModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
     std::vector<int> hit_flag;
     std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(ray_origin, ray_dirns,
 							   intersection_flag, dist_along_ray);
-
-    // // throw away vectors which are zeros
-    // std::vector<std::vector<double> > sim_pts_hit;
-    // for(size_t i = 0; i < hit_flag.size(); ++i)
-    // 	if (hit_flag[i])
-    // 	    sim_pts_hit.push_back(sim_pts[i]);
-
-    // return sim_pts_hit;
 
     return std::make_tuple(sim_pts, hit_flag);
 }

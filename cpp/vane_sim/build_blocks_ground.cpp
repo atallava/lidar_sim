@@ -82,10 +82,8 @@ int main(int argc, char **argv)
     std::tie(nn_ids, nn_dists) = nearestNeighbors(imu_posn_nodes, pts, 1);
     
     // for each node, which pts are in it
-    std::vector<std::vector<int> > node_pts_map;
-    // TODO: vector of empty vectors. better way?
-    for(size_t i = 0; i < imu_posn_nodes.size(); ++i)
-	node_pts_map.push_back(std::vector<int> ());
+    std::vector<std::vector<int> > node_pts_map(imu_posn_nodes.size(), 
+						std::vector<int> ());
     
     for(size_t i = 0; i < pts.size(); ++i)
 	node_pts_map[nn_ids[i][0]].push_back(i);

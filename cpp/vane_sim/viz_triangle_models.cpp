@@ -34,12 +34,12 @@ int main(int argc, char **argv)
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
     vtkSmartPointer<vtkActor> pts_actor = 
-	vizer.m_points_actor_server.genPointsActor(pts);
+    	vizer.m_points_actor_server.genPointsActor(pts);
     pts_actor->GetProperty()->SetColor(1, 1, 1);
     actors.push_back(pts_actor);
 
     std::vector<vtkSmartPointer<vtkActor> > tri_actors = 
-	vizer.m_triangles_actor_server.genTrianglesActors(sim.m_triangles, sim.m_fit_pts);
+	vizer.m_triangles_actor_server.genTrianglesActors(sim.m_triangles, sim.m_fit_pts, sim.m_hit_prob_vec);
     actors.insert(actors.end(), tri_actors.begin(), tri_actors.end());
 
     vizer.takeItAway(actors);

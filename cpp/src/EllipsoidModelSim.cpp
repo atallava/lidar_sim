@@ -108,7 +108,8 @@ std::tuple<std::vector<int>,
 
 std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat)
 {
-    // TODO: bad conversion work
+    // todo: bad conversion work. 
+    // fill eigen directly with pointers to stl stuff?
     // but these eigen matrixxds are small in size
     
     Eigen::MatrixXd v(3,1);
@@ -177,8 +178,10 @@ EllipsoidModelSim::simPtsGivenIntersections(const std::vector<std::vector<int> >
 	    sortIntersectionFlag(intersection_flag[i], dist_along_ray[i]);
 
 	std::vector<double> hit_prob_vec(sorted_intersecting_ids.size());
+	// todo: major hack. hit prob set to 1
 	for(size_t j = 0; j < sorted_intersecting_ids.size(); ++j)
-	    hit_prob_vec[j] = m_ellipsoid_models[sorted_intersecting_ids[j]].hit_prob;
+	    // hit_prob_vec[j] = m_ellipsoid_models[sorted_intersecting_ids[j]].hit_prob;
+	    hit_prob_vec[j] = 1;
 
 	int hit_ellipsoid_id;
 	bool hit_bool;
@@ -242,13 +245,13 @@ EllipsoidModelSim::assignEllipsoidHitCredits(const std::vector<double> &maha_dis
     std::vector<int> ellipsoid_miss_ids;
 
     if (!anyNonzeros(flag))
-	{
-	    for(size_t i = 0; i < sorted_dist_along_ray.size(); ++i)
-		if (sorted_dist_along_ray[i] < measured_range)
-		    ellipsoid_miss_ids.push_back(sorted_intersecting_ids[i]);
+    {
+	for(size_t i = 0; i < sorted_dist_along_ray.size(); ++i)
+	    if (sorted_dist_along_ray[i] < measured_range)
+		ellipsoid_miss_ids.push_back(sorted_intersecting_ids[i]);
 
-	    return std::make_tuple(-1, ellipsoid_miss_ids);
-	}
+	return std::make_tuple(-1, ellipsoid_miss_ids);
+    }
 
     std::vector<int> posns = findNonzeroIds(flag);
     int posn = posns[0]; // take first hit
@@ -265,7 +268,7 @@ EllipsoidModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 {
     // rays
     Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);
-    std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
+    std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, m_laser_calib_params);
     std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, m_laser_calib_params);
 
     // intersections
@@ -278,14 +281,6 @@ EllipsoidModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
     std::vector<std::vector<double> > sim_pts;
     std::vector<int> hit_flag;
     std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(intersection_flag, dist_along_ray);
-
-    // // throw away vectors which are zeros
-    // std::vector<std::vector<double> > sim_pts_hit;
-    // for(size_t i = 0; i < hit_flag.size(); ++i)
-    // 	if (hit_flag[i])
-    // 	    sim_pts_hit.push_back(sim_pts[i]);
-
-    // return sim_pts_hit;
 
     return std::make_tuple(sim_pts, hit_flag);
 }

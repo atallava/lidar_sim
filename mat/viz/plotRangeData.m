@@ -102,10 +102,10 @@ function hfig = plotRangeData(inputStruct)
                 end
             end
             rayPts = genPtsRay(rayOrigin,rayDirns(i,:),rayLengthToPlot);
-            plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'g--');
+            plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r--');
             hold on;
         end
-        plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'gx');
+        plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'rx');
     end
     
     %% ellipsoids
@@ -124,7 +124,7 @@ function hfig = plotRangeData(inputStruct)
             thisCovMat = ellipsoidModels(i).covMat;
             
             [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
-            surf(xEll,yEll,zEll,'facecolor','r','facealpha',0.2,'meshstyle','none');
+            surf(xEll,yEll,zEll,'facecolor','g','facealpha',0.2,'meshstyle','none');
             hold on;
         end
     end
@@ -150,7 +150,7 @@ function hfig = plotRangeData(inputStruct)
         else
             ptPlotIds = logical(1:size(pts,1));
         end
-        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'go','markerfacecolor','g');
+        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'ro','markerfacecolor','r');
     end
     
     %% extra

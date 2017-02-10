@@ -12,6 +12,6 @@ clear(plotStructVars{:});
 triModelData = groundTriModel;
 plotStruct.triModelData = triModelData;
 
-plotStruct.pts = pts(1:10:end,:);
+plotStruct.pts = pts(1:15:end,:);
 
 hfig = plotRangeData(plotStruct);

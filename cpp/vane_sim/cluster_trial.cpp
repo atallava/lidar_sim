@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     size_t n_clusters = 250;
     alglib::clusterizergetkclusters(ahc_report, n_clusters, pt_cluster_ids, cz);
 
-    // todo: delete
+    // todo: delete.
     std::cout << "pt cluster ids: " << std::endl;
     for(size_t i = 0; i < 10; ++i)
     	std::cout << pt_cluster_ids[i] << " " ;

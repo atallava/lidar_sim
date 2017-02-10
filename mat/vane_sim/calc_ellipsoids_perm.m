@@ -43,7 +43,7 @@ ellipsoidIntersectedCount = zeros(1,nEllipsoids);
 ptIntersectedFlag = [];
 
 clockLocal = tic();
-for scanId = scanIdsToProcess(1:100)
+for scanId = 161664%scanIdsToProcess
     % get imu pose
     t = scanPtsTLog(scanId);
     poseIndex = indexOfNearestTime(t,poseTLog);
@@ -66,19 +66,21 @@ for scanId = scanIdsToProcess(1:100)
     end
     
     % viz for debug
-%     plotStructVars = {'rayData','ellipsoidData','plotStruct'};
-%     clear(plotStructVars{:});
-%     rayData.rayOrigin = rayOrigin;
-%     rayData.rayDirns = rayDirn;
-%     plotStruct.rayData = rayData;
-%     
-%     ellipsoidData.ellipsoidModels = ellipsoidModels;
-%     ellipsoidData.intersectionFlag = intersectionFlag;
-%     plotStruct.ellipsoidData = ellipsoidData;
-%     
+    plotStructVars = {'rayData','ellipsoidData','plotStruct'};
+    clear(plotStructVars{:});
+    rayData.rayOrigin = rayOrigin;
+    rayData.rayLengthToPlot = 37.7611;
+    rayData.rayDirns = rayDirn;
+    
+    plotStruct.rayData = rayData;
+    
+    ellipsoidData.ellipsoidModels = ellipsoidModels;
+    ellipsoidData.intersectionFlag = intersectionFlag;
+    plotStruct.ellipsoidData = ellipsoidData;
+    
 %     plotStruct.pts = thisPt;
-%     
-%     hfig = plotRangeData(plotStruct);
+    
+    hfig = plotRangeData(plotStruct);
 
     % sorted distances along ray
     [sortedIntersectingIds,sortedDistAlongRay] = sortIntersectionFlag(intersectionFlag,distAlongRay);
@@ -91,10 +93,10 @@ for scanId = scanIdsToProcess(1:100)
     ellipsoidIntersectedCount(sortedIntersectingIds) = ellipsoidIntersectedCount(sortedIntersectingIds)+1;
     
     % debug
-%     if ~isempty(ellipsoidMissIds)
+%     if (length(ellipsoidMissIds) > 1) && (ellipsoidHitId > -1)
 %         fprintf('scanId: %d\n', scanId);
 %     end
-    
+%     
     % assign credits
     ellipsoidHitCount(ellipsoidHitId) = ellipsoidHitCount(ellipsoidHitId)+1;
     ellipsoidMissCount(ellipsoidMissIds) = ellipsoidMissCount(ellipsoidMissIds)+1;

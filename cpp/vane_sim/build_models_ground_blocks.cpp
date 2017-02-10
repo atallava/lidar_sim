@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     int section_id = 3;
-    // TODO: function to determine what block ids are
+    // todo: function to determine what block ids are
     std::vector<int> block_ids;
     for(size_t i = 1; i <= 4; ++i)
 	block_ids.push_back(i);
