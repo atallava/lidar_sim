@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // triangles
-    std::string rel_path_triangles = "data/sections/section_03/section_03_block_02_ground_triangles_train.txt";
+    std::string rel_path_triangles = "data/sections/section_03/section_03_block_02_ground_triangles.txt";
     TriangleModelSim sim;
     sim.loadTriangleModels(rel_path_triangles);
 
@@ -33,10 +33,10 @@ int main(int argc, char **argv)
     RangeDataVizer vizer;
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
-    vtkSmartPointer<vtkActor> pts_actor = 
-    	vizer.m_points_actor_server.genPointsActor(pts);
-    pts_actor->GetProperty()->SetColor(1, 1, 1);
-    actors.push_back(pts_actor);
+    // vtkSmartPointer<vtkActor> pts_actor = 
+    // 	vizer.m_points_actor_server.genPointsActor(pts);
+    // pts_actor->GetProperty()->SetColor(1, 1, 1);
+    // actors.push_back(pts_actor);
 
     std::vector<vtkSmartPointer<vtkActor> > tri_actors = 
 	vizer.m_triangles_actor_server.genTrianglesActors(sim.m_triangles, sim.m_fit_pts, sim.m_hit_prob_vec);

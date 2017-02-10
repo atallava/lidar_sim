@@ -14,60 +14,19 @@
 #include <vtkCamera.h>
 
 #include <lidar_sim/PointsVtkActorServer.h>
-#include <lidar_sim/VizUtils.h>
+#include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/RangeDataVizer.h>
 
 using namespace lidar_sim;
  
 int main(int, char *[])
 {
-    // std::string rel_path_input = "../data/taylorJune2014/sections/world_frame/section_pts_01_world_frame_subsampled.xyz";
-    // std::string rel_path_input = "../data/taylorJune2014/vane/rim_stretch_veg_train.asc";
-    std::string rel_path_input = "../data/taylorJune2014/vane/rim_stretch_veg_validation_sim.xyz";
+    std::string rel_path_pts = "data/sections/section_03/section_03_block_02_ground_triangles_fit_pts.txt";
 
-    // actor
-    PointsVtkActorServer points_actor_server;
-    vtkSmartPointer<vtkActor> actor = points_actor_server.genPointsActor(rel_path_input);
+    std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
-    // renderer
-    vtkSmartPointer<vtkRenderer> renderer =
-	vtkSmartPointer<vtkRenderer>::New();
-    renderer->AddActor(actor);
-    renderer->SetBackground(.0, .0, .0);
-    renderer->ResetCamera();
-    renderer->GetActiveCamera()->Elevation(-90);
- 
-    // render window
-    vtkSmartPointer<vtkRenderWindow> renderWindow =
-	vtkSmartPointer<vtkRenderWindow>::New();
-    renderWindow->AddRenderer(renderer);
+    RangeDataVizer vizer;
+    vizer.vizPts(pts);
 
-    // interactor
-    vtkSmartPointer<vtkRenderWindowInteractor> interactor =
-	vtkSmartPointer<vtkRenderWindowInteractor>::New();
-    interactor->SetRenderWindow(renderWindow);
-
-    // coordinate axes
-    vtkSmartPointer<vtkAxesActor> axes = 
-    	vtkSmartPointer<vtkAxesActor>::New();
- 
-    vtkSmartPointer<vtkOrientationMarkerWidget> widget = 
-    	vtkSmartPointer<vtkOrientationMarkerWidget>::New();
-    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
-    widget->SetOrientationMarker( axes );
-    widget->SetInteractor( interactor );
-    double axes_viewport[4] = {0.0, 0.0, 0.4, 0.4};
-    widget->SetViewport(axes_viewport[0], axes_viewport[1], axes_viewport[2], axes_viewport[3]);
-    widget->SetEnabled( 1 );
-    widget->InteractiveOn();
-
-    // interactor style
-    vtkSmartPointer<vtkInteractorStyleTrackballCamera> style = 
-    	vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New();
-    interactor->SetInteractorStyle( style );
-
-    // fire up
-    renderWindow->Render();
-    interactor->Start();
- 
     return EXIT_SUCCESS;
 }

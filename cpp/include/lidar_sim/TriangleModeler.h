@@ -36,10 +36,13 @@ namespace lidar_sim {
 	void delaunayTriangulate();
 	void calcTrianglesFromTriangulation();
 	void writeTrianglesToFile(std::string rel_path_output);
+	void writeTrianglesFitPtsToFile(std::string rel_path_output);
 	void setDebugFlag(int flag);
 	void calcHitProb(std::string rel_path_section, const PoseServer &imu_poses_server);
 	void calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_poses_server);
 	void subsamplePts();
+	void filterPts();
+	void filterTriangles();
 
 	std::vector<std::vector<double> > m_pts;
 	alglib::rbfmodel m_surface_model;
@@ -60,5 +63,6 @@ namespace lidar_sim {
 	double m_default_hit_prob;
 	int m_hit_count_prior;
 	int m_miss_count_prior;
+	double m_max_triangle_side;
     };
 }

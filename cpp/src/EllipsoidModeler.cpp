@@ -24,13 +24,13 @@ using namespace lidar_sim;
 
 EllipsoidModeler::EllipsoidModeler() :
     m_debug_flag(0),
-    m_min_pts_per_cluster(9),
+    m_min_pts_per_cluster(5),
     m_default_hit_prob(1),
 
     m_hit_count_prior(0),
     m_miss_count_prior(1)
 {    
-    m_n_clusters_per_pt = 250/(double)12016; // hack based on rim stretch test
+    m_n_clusters_per_pt = 1000/(double)12016; // hack based on rim stretch test
 }
 
 void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)

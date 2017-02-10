@@ -27,7 +27,8 @@ TriangleModeler::TriangleModeler() :
     m_max_dist_to_projn(1.5),
     m_default_hit_prob(1),
     m_hit_count_prior(0),
-    m_miss_count_prior(1)
+    m_miss_count_prior(1),
+    m_max_triangle_side(5)
 {    
 }
 
@@ -37,9 +38,11 @@ void TriangleModeler::createTriangleModels(const std::string rel_path_pts)
 	std::cout << "TriangleModeler: creating triangle models..." << std::endl;
 
     loadPts(rel_path_pts);
+    filterPts();
     fitSmoothedPts();
     delaunayTriangulate();
     calcTrianglesFromTriangulation();
+    filterTriangles();
     std::vector<double> default_hit_prob_vec(m_triangles.size(), m_default_hit_prob);
     m_hit_prob_vec = default_hit_prob_vec;
 }
@@ -207,6 +210,19 @@ void TriangleModeler::writeTrianglesToFile(std::string rel_path_output)
     file.close();
 }
 
+void TriangleModeler::writeTrianglesFitPtsToFile(std::string rel_path_output)
+{
+    std::ofstream file(rel_path_output);
+    std::cout << "TriangleModeler: writing triangles fit pts to: " << rel_path_output << std::endl;
+
+    for(size_t i = 0; i < m_fit_pts.size(); ++i)
+	file << m_fit_pts[i][0] << " " <<
+	    m_fit_pts[i][1] << " " <<
+	    m_fit_pts[i][2] << std::endl;
+
+    file.close();
+}
+
 void TriangleModeler::setDebugFlag(int flag)
 {
     m_debug_flag = flag;
@@ -331,4 +347,64 @@ void TriangleModeler::subsamplePts()
 	pts_sub.push_back(m_pts[i]);
 
     m_pts = pts_sub;
+}
+
+void TriangleModeler::filterPts()
+{
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: filtering pts... " << std::endl;
+
+    std::vector<double> z;
+    for(size_t i = 0; i < m_pts.size(); ++i)
+	z.push_back(m_pts[i][2]);
+    
+    double mean, var;
+    std::tie(mean, var) = calcVecMeanVar(z);
+    double stdev = std::sqrt(var);
+    
+    // throw away pts with large z value
+    std::vector<int> flag(m_pts.size(), 0);
+    for(size_t i = 0; i < m_pts.size(); ++i)
+	if (z[i] < mean + 0.8*stdev)
+	    flag[i] = 1;
+
+    std::vector<std::vector<double> > filtered_pts = logicalSubsetArray(m_pts, flag);
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: fracn pts retained: " 
+		  << filtered_pts.size()/(double)m_pts.size() << std::endl;
+
+    m_pts = filtered_pts;
+}
+
+void TriangleModeler::filterTriangles()
+{
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: filtering triangles..." << std::endl;
+
+    std::vector<int> flag(m_triangles.size(), 1);
+    for(size_t i = 0; i < m_triangles.size(); ++i)
+    {
+	std::vector<double> v0 = m_fit_pts[m_triangles[i][0]];
+	std::vector<double> v1 = m_fit_pts[m_triangles[i][1]];
+	std::vector<double> v2 = m_fit_pts[m_triangles[i][2]];
+
+	double s0 = euclideanDist(v0, v1);
+	double s1 = euclideanDist(v1, v2);
+	double s2 = euclideanDist(v2, v0);
+	
+	bool condn = (s0 > m_max_triangle_side) || 
+	    (s1 > m_max_triangle_side) ||
+	    (s2 > m_max_triangle_side);
+
+	if (condn)
+	    flag[i] = 0;
+    }
+
+    std::vector<std::vector<int> > filtered_triangles = 
+	logicalSubsetArray(m_triangles, flag);
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: fracn triangles retained: " 
+		  << filtered_triangles.size()/(double)m_triangles.size() << std::endl;
+
+    m_triangles = filtered_triangles;
 }

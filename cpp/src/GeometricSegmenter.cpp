@@ -18,7 +18,7 @@ GeometricSegmenter::GeometricSegmenter() :
     m_spherical_variation_threshold(0.09),
     m_debug_flag(0),
 
-    m_smooth_features(1),
+    m_smooth_features(0),
     m_smoothing_distance_weight(1),
     m_smoothing_score_weight(0),
     m_smoothing_max_nbrs(10),
