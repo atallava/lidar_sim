@@ -42,21 +42,21 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // load sim pts
-    std::string rel_path_sim = "data/rim_stretch_validation_sim.xyz";
+    std::string rel_path_pts_sim = "data/rim_stretch_validation_sim.xyz";
     std::vector<std::vector<double> > pts_sim = loadPtsFromXYZFile(rel_path_pts_sim);
 
     // load sim pts
-    std::string rel_path_sim_nn = "data/rim_stretch_validation_sim_nn.xyz";
-    std::vector<std::vector<double> > pts_sim_nn = loadPtsFromXYZFile(rel_path_pts_sim_nn);
+    std::string rel_path_pts_sim_nbr = "data/rim_stretch_validation_sim_nn.xyz";
+    std::vector<std::vector<double> > pts_sim_nn = loadPtsFromXYZFile(rel_path_pts_sim_nbr);
 
     // error metric
-    PtsError metric;
+    // PtsError metric;
 
-    double error_sim = metric.calcError(pts, pts_sim);
-    std::cout << "sim error: " << error_sim << std::endl;
+    // double error_sim = metric.calcError(pts, pts_sim);
+    // std::cout << "sim error: " << error_sim << std::endl;
 
-    double error_sim_nn = metric.calcError(pts, pts_sim_nn);
-    std::cout << "sim nn error: " << error_sim_nn << std::endl;
+    // double error_sim_nn = metric.calcError(pts, pts_sim_nn);
+    // std::cout << "sim nn error: " << error_sim_nn << std::endl;
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

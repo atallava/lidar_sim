@@ -300,5 +300,24 @@ namespace lidar_sim {
 
 	return c;
     }
+
+    std::vector<double> getPerpUnitVec2(const std::vector<double> &a)
+    {
+	std::vector<double> b(2, 0);
+	b[0] = -a[1];
+	b[1] = a[0];
+
+	return normalizeVec(b);
+    }
+    
+    std::vector<double> normalizeVec(const std::vector<double> &a)
+    {
+	double norm = vectorNorm(a);
+	std::vector<double> b(a.size(), 0);
+	for(size_t i = 0; i < a.size(); ++i)
+	    b[i] = a[i]/norm;
+
+	return b;
+    }
 }
 

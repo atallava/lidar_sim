@@ -106,6 +106,8 @@ add_library(lidar_sim SHARED
   src/GeometricSegmenter.cpp
   src/SectionModelSim.cpp
   src/NearestNeighborSim.cpp
+  src/PtsError.cpp
+  src/GroundTrianglesGenerator.cpp
   )
  
 # Executables

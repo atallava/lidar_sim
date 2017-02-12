@@ -103,5 +103,7 @@ namespace lidar_sim {
     double vectorNorm(const std::vector<double> &a);
     double dotProduct(const std::vector<double> &a, const std::vector<double> &b);
     std::vector<double> vectorDiff(const std::vector<double> &a, const std::vector<double> &b);
+    std::vector<double> getPerpUnitVec2(const std::vector<double> &a);
+    std::vector<double> normalizeVec(const std::vector<double> &a);
 }
 

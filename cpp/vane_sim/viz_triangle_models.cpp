@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // triangles
-    std::string rel_path_triangles = "data/sections/section_03/section_03_block_02_ground_triangles.txt";
+    std::string rel_path_triangles = "data/sections/section_04/section_04_block_01_ground_triangles.txt";
     TriangleModelSim sim;
     sim.loadTriangleModels(rel_path_triangles);
 

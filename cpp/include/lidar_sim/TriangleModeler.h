@@ -64,5 +64,6 @@ namespace lidar_sim {
 	int m_hit_count_prior;
 	int m_miss_count_prior;
 	double m_max_triangle_side;
+	double m_max_pts_dist_to_nbrs;
     };
 }

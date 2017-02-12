@@ -21,14 +21,15 @@ TriangleModeler::TriangleModeler() :
     m_max_pts_for_surface(10000),
     m_rbf_radius(5),
     m_rbf_layers(1),
-    m_rbf_reg(1e-3),
+    m_rbf_reg(1e-4),
     m_fit_pts_padding(5),
     m_fit_pts_node_resn(1),
     m_max_dist_to_projn(1.5),
     m_default_hit_prob(1),
     m_hit_count_prior(0),
     m_miss_count_prior(1),
-    m_max_triangle_side(5)
+    m_max_triangle_side(5),
+    m_max_pts_dist_to_nbrs(5)
 {    
 }
 
@@ -38,7 +39,7 @@ void TriangleModeler::createTriangleModels(const std::string rel_path_pts)
 	std::cout << "TriangleModeler: creating triangle models..." << std::endl;
 
     loadPts(rel_path_pts);
-    filterPts();
+    // filterPts();
     fitSmoothedPts();
     delaunayTriangulate();
     calcTrianglesFromTriangulation();
@@ -354,6 +355,7 @@ void TriangleModeler::filterPts()
     if (m_debug_flag)
 	std::cout << "TriangleModeler: filtering pts... " << std::endl;
 
+    // throw away pts with large z value
     std::vector<double> z;
     for(size_t i = 0; i < m_pts.size(); ++i)
 	z.push_back(m_pts[i][2]);
@@ -362,7 +364,6 @@ void TriangleModeler::filterPts()
     std::tie(mean, var) = calcVecMeanVar(z);
     double stdev = std::sqrt(var);
     
-    // throw away pts with large z value
     std::vector<int> flag(m_pts.size(), 0);
     for(size_t i = 0; i < m_pts.size(); ++i)
 	if (z[i] < mean + 0.8*stdev)
@@ -370,7 +371,25 @@ void TriangleModeler::filterPts()
 
     std::vector<std::vector<double> > filtered_pts = logicalSubsetArray(m_pts, flag);
     if (m_debug_flag)
-	std::cout << "TriangleModeler: fracn pts retained: " 
+	std::cout << "TriangleModeler: fracn pts retained after z filter: " 
+		  << filtered_pts.size()/(double)m_pts.size() << std::endl;
+
+    m_pts = filtered_pts;
+
+    // throw away pts which are isolated
+    std::vector<std::vector<int> > nn_ids;
+    std::tie(nn_ids, std::ignore) = nearestNeighbors(m_pts, m_pts, 2);
+    std::vector<double> min_dists_to_nbrs(m_pts.size(), 0);
+    flag = std::vector<int>(m_pts.size(), 1);
+    for(size_t i = 0; i < m_pts.size(); ++i)
+    {
+	min_dists_to_nbrs[i] = euclideanDist(m_pts[i], m_pts[nn_ids[i][1]]);
+	if (min_dists_to_nbrs[i] > m_max_pts_dist_to_nbrs)
+	    flag[i] = 0;
+    }
+    filtered_pts = logicalSubsetArray(m_pts, flag);
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: fracn pts retained after nn filter: " 
 		  << filtered_pts.size()/(double)m_pts.size() << std::endl;
 
     m_pts = filtered_pts;

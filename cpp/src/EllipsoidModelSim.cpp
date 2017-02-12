@@ -178,7 +178,6 @@ EllipsoidModelSim::simPtsGivenIntersections(const std::vector<std::vector<int> >
 	    sortIntersectionFlag(intersection_flag[i], dist_along_ray[i]);
 
 	std::vector<double> hit_prob_vec(sorted_intersecting_ids.size());
-	// todo: major hack. hit prob set to 1
 	for(size_t j = 0; j < sorted_intersecting_ids.size(); ++j)
 	    hit_prob_vec[j] = m_ellipsoid_models[sorted_intersecting_ids[j]].hit_prob;
 

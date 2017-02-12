@@ -229,21 +229,6 @@ namespace lidar_sim {
 
 	return pts;
     }
-    
-    void writePtsToXYZFile(const std::vector<std::vector<double> > &pts, const std::string rel_path_output)
-    {
-	std::ofstream file(rel_path_output);
-	std::cout << "Writing pts to: " << rel_path_output << std::endl;
-
-	for(size_t i = 0; i < pts.size(); ++i)
-	{
-	    std::ostringstream ss;
-	    ss << pts[i][0] << " " << pts[i][1] << " " << pts[i][2] << std::endl;
-	    file << ss.str();
-	}
-
-	file.close();
-    }
 
     std::tuple<std::vector<double>, std::vector<double>, std::vector<double> >
     getVecsFromPts(const std::vector<std::vector<double> > &pts)

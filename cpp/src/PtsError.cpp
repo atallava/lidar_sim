@@ -1,4 +1,7 @@
+#include <numeric>
+
 #include <lidar_sim/PtsError.h>
+#include <lidar_sim/MathUtils.h>
 
 using namespace lidar_sim;
 
@@ -13,6 +16,12 @@ double PtsError::calcError(const std::vector<std::vector<double> > &pts1,
 
     std::vector<std::vector<int> > nn_ids;
     std::vector<std::vector<double> > nn_dists;
-    double mean = std::accumulate(nn_dists.begin(), nn_dists.end(), 0.0)/nn_dists.size();
+    std::tie(nn_ids, nn_dists) = nearestNeighbors(pts1, pts2, 1);
+
+    double mean = 0;
+    for(size_t i = 0; i < nn_dists.size(); ++i)
+	mean += nn_dists[i][0];
+
+    mean /= pts2.size();
     return mean;
 }
