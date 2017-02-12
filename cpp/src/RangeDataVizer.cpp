@@ -26,6 +26,12 @@
 #include <vtkTransform.h>
 #include <vtkTransformPolyDataFilter.h>
 #include <vtkInteractorStyleTrackballCamera.h>
+#include <vtkPolygon.h>
+#include <vtkPolyData.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkVersion.h>
+#include <vtkCellArray.h>
+#include <vtkExtractEdges.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
@@ -310,10 +316,55 @@ RangeDataVizer::genEllipsoidModelsActors(const std::vector<EllipsoidModelSim> &s
     return actors;
 }
 
-vtkSmartPointer<vtkActor> RangeDataVizer::genPointsActor(std::vector<std::vector<double> > points)
+vtkSmartPointer<vtkActor> RangeDataVizer::genPointsActor(const std::vector<std::vector<double> > &points)
 {
     return m_points_actor_server.genPointsActor(points);
 }
 
+vtkSmartPointer<vtkActor> RangeDataVizer::genPolyActor(const std::vector<std::vector<double> > &pts)
+{
+    // setup points
+    vtkSmartPointer<vtkPoints> points =
+	vtkSmartPointer<vtkPoints>::New();
+    size_t pts_dim = pts[0].size();
+    
+    for(size_t i = 0; i < pts.size(); ++i)
+	if (pts_dim == 2)
+	    points->InsertNextPoint(pts[i][0], pts[i][1], 0);
+	else
+	    points->InsertNextPoint(pts[i][0], pts[i][1], pts[i][2]);
 
+    // polygon
+    vtkSmartPointer<vtkPolygon> polygon =
+	vtkSmartPointer<vtkPolygon>::New();
+    polygon->GetPointIds()->SetNumberOfIds(pts.size()); //make a quad
+    for(size_t i = 0; i < pts.size(); ++i)
+	polygon->GetPointIds()->SetId(i, i);
 
+    // Add the polygon to a list of polygons
+    vtkSmartPointer<vtkCellArray> polygons =
+	vtkSmartPointer<vtkCellArray>::New();
+    polygons->InsertNextCell(polygon);
+
+    // Create a PolyData
+    vtkSmartPointer<vtkPolyData> polygonPolyData =
+	vtkSmartPointer<vtkPolyData>::New();
+    polygonPolyData->SetPoints(points);
+    polygonPolyData->SetPolys(polygons);
+ 
+    // extract edges
+    vtkSmartPointer<vtkExtractEdges> edges = 
+	vtkSmartPointer<vtkExtractEdges>::New();
+    edges->SetInput(polygonPolyData);
+
+    // Create a mapper and actor
+    vtkSmartPointer<vtkPolyDataMapper> mapper =
+	vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInput(edges->GetOutput());
+ 
+    vtkSmartPointer<vtkActor> actor =
+	vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);
+
+    return actor;
+}

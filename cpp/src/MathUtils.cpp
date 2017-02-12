@@ -12,16 +12,60 @@
 
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/VizUtils.h>
 
 namespace lidar_sim {
+    OrientedBox::OrientedBox()
+    {
+    }
+    
+    void OrientedBox::dispBox()
+    {
+	std::cout << "center: " << std::endl;
+	dispVec(center);
+	std::cout << "axes: " << std::endl;
+	dispMat(axes);
+	std::cout << "intervals: " << std::endl;
+	dispMat(intervals);
+    }
+
+    void OrientedBox::calcVertices()
+    {
+	for(size_t i = 0; i < 2; ++i)
+	{
+	    std::vector<double> v0(2, 0);
+	    for(size_t k = 0; k < 2; ++k)
+		v0[k] += (int)(2*i-1)*sides_p5[0]*axes[0][k];
+	    
+	    for(size_t j = 0; j < 2; ++j) 
+	    {
+		std::vector<double> v1(2, 0);
+		for(size_t k = 0; k < 2; ++k)
+		    v1[k] += (int)(2*j-1)*sides_p5[1]*axes[1][k];
+
+		std::vector<double> vertex(2, 0);
+		for(size_t k = 0; k < 2; ++k)
+		    vertex[k] = center[k] + v0[k] + v1[k];
+
+		vertices.push_back(vertex);
+	    }
+	}
+
+	// flip last two rows to maintain cyclic order
+	std::vector<double> v = vertices[2];
+	vertices[2] = vertices[3];
+	vertices[3] = v;
+    }
+
     std::vector<double> calcPtsMean(const Pts &pts)
     {
-	std::vector<double> mu(3,0);
+	size_t pts_dim = pts[0].size();
+	std::vector<double> mu(pts_dim, 0);
 	for(size_t i = 0; i < pts.size(); ++i)
-	    for(size_t j = 0; j < 3; ++j)
+	    for(size_t j = 0; j < pts_dim; ++j)
 		mu[j] = mu[j]+pts[i][j];
 
-	for(size_t i = 0; i < 3; ++i)
+	for(size_t i = 0; i < pts_dim; ++i)
 	    mu[i] = mu[i]/pts.size();
 
 	return mu;
@@ -30,10 +74,11 @@ namespace lidar_sim {
     Eigen::MatrixXd calcPtsCovMat(const std::vector<std::vector<double> > &pts)
     {
 	Pts centered_pts = calcCenteredPts(pts);
+	size_t pts_dim = pts[0].size();
 	
-	Eigen::MatrixXd cov_mat(3,3);
-	for(size_t i = 0; i < 3; ++i)
-	    for(size_t j = 0; j < 3; ++j)
+	Eigen::MatrixXd cov_mat(pts_dim, pts_dim);
+	for(size_t i = 0; i < (size_t)pts_dim; ++i)
+	    for(size_t j = 0; j < (size_t)pts_dim; ++j)
 		cov_mat(i,j) = 0;
 
 	for(size_t i = 0; i < pts.size(); ++i)
@@ -49,9 +94,10 @@ namespace lidar_sim {
 
     Eigen::MatrixXd calcOuterProd(const std::vector<double> &pt)
     {
-	Eigen::MatrixXd outer_prod(3,3);
-	for(size_t i = 0; i < 3; ++i)
-	    for(size_t j = 0; j < 3; ++j)
+	size_t pt_dim = pt.size();
+	Eigen::MatrixXd outer_prod(pt_dim, pt_dim);
+	for(size_t i = 0; i < pt_dim; ++i)
+	    for(size_t j = 0; j < pt_dim; ++j)
 		outer_prod(i,j) = pt[i]*pt[j];
 
 	return outer_prod;
@@ -318,6 +364,61 @@ namespace lidar_sim {
 	    b[i] = a[i]/norm;
 
 	return b;
+    }
+
+    std::vector<std::vector<double> > calcPrincipalAxes2D(const std::vector<std::vector<double> > &pts)
+    {
+	Eigen::MatrixXd cov_mat = calcPtsCovMat(pts);
+	Eigen::EigenSolver<Eigen::MatrixXd> es(cov_mat);
+	Eigen::MatrixXcd V = es.eigenvectors();
+
+	std::vector<std::vector<double> > eigenvectors(2, std::vector<double>(2, 0));
+	for(size_t i = 0; i < 2; ++i)
+	    for(size_t j = 0; j < 2; ++j)
+		eigenvectors[i][j] = std::real(V(i,j));
+
+	return eigenvectors;
+    }
+
+    OrientedBox
+    calcObb(const std::vector<std::vector<double> > &pts)
+    {
+	OrientedBox obb;
+	std::vector<std::vector<double> > xy(pts.size(), std::vector<double>(2, 0));
+	for(size_t i = 0; i < pts.size(); ++i)
+	    for(size_t j = 0; j < 2; ++j)
+		xy[i][j] = pts[i][j];
+
+	obb.center = calcPtsMean(xy);
+	obb.axes = calcPrincipalAxes2D(xy);
+	obb.intervals = std::vector<std::vector<double> > {{0, 0}, {0, 0}};
+
+	for(size_t i = 0; i < xy.size(); ++i)
+	{
+	    std::vector<double> centered_pt(2, 0);
+	    for(size_t j = 0; j < 2; ++j)
+		centered_pt[j] = xy[i][j] - obb.center[j];
+	
+	    for(size_t j = 0; j < 2; ++j)
+	    {
+		double projn = std::abs(dotProduct(centered_pt, obb.axes[j]));
+		if (projn > obb.sides_p5[j])
+		    obb.sides_p5[j] = projn;
+	    }
+	}
+	return obb;
+    }
+
+    std::vector<std::vector<double> > centerPts(const std::vector<std::vector<double> > &pts)
+    {
+	size_t pts_dim = pts[0].size();
+	std::vector<double> mu = calcPtsMean(pts);
+	std::vector<std::vector<double> > centered_pts(pts.size(), std::vector<double>(pts_dim, 0));
+	for(size_t i = 0; i < pts.size(); ++i)
+	    for(size_t j = 0; j < pts_dim; ++j)
+		centered_pts[i][j] = pts[i][j] - mu[j];
+
+	return centered_pts;
     }
 }
 

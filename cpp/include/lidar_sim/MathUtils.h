@@ -5,6 +5,16 @@
 #include <Eigen/Dense>
 
 namespace lidar_sim {
+    struct OrientedBox {
+	OrientedBox();
+	void dispBox();
+	void calcVertices();
+	std::vector<double> center;
+	std::vector<std::vector<double> > axes;
+	std::vector<std::vector<double> > intervals;
+	std::vector<std::vector<double> > vertices;
+    };
+
     typedef std::vector<std::vector<double> > Pts;
 
     std::vector<double> calcPtsMean(const std::vector<std::vector<double> > &pts);
@@ -105,5 +115,8 @@ namespace lidar_sim {
     std::vector<double> vectorDiff(const std::vector<double> &a, const std::vector<double> &b);
     std::vector<double> getPerpUnitVec2(const std::vector<double> &a);
     std::vector<double> normalizeVec(const std::vector<double> &a);
+    std::vector<std::vector<double> > calcPrincipalAxes2D(const std::vector<std::vector<double> > &pts);
+    OrientedBox calcObb(const std::vector<std::vector<double> > &pts);
+    std::vector<std::vector<double> > centerPts(const std::vector<std::vector<double> > &pts);
 }
 

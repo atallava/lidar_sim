@@ -38,7 +38,10 @@ namespace lidar_sim {
 	    genTriangleModelsActors(const std::vector<TriangleModelSim> &sims);
 	std::vector<vtkSmartPointer<vtkActor> >
 	    genEllipsoidModelsActors(const std::vector<EllipsoidModelSim> &sims);
-	vtkSmartPointer<vtkActor> genPointsActor(std::vector<std::vector<double> > points);
+	vtkSmartPointer<vtkActor> genPointsActor(const std::vector<std::vector<double> > &points);
+
+	// pts are required in cyclic order
+	vtkSmartPointer<vtkActor> genPolyActor(const std::vector<std::vector<double> > &pts);
 
 
 	PointsVtkActorServer m_points_actor_server;

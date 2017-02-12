@@ -47,7 +47,10 @@ vtkSmartPointer<vtkPolyData> PointsVtkActorServer::genPointsPolyData(std::vector
 {
     vtkSmartPointer<vtkPoints> points_vtk = vtkSmartPointer<vtkPoints>::New();
     for(size_t i = 0; i < points.size(); ++i)
-	points_vtk->InsertNextPoint(points[i][0], points[i][1], points[i][2]);
+	if (points[0].size() == 2)
+	    points_vtk->InsertNextPoint(points[i][0], points[i][1], 0);
+	else
+	    points_vtk->InsertNextPoint(points[i][0], points[i][1], points[i][2]);
 
     vtkSmartPointer<vtkPolyData> poly_data = vtkSmartPointer<vtkPolyData>::New();
     poly_data->SetPoints(points_vtk);
