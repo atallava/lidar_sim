@@ -10,6 +10,7 @@
 
 #include <lidar_sim/OrientedBox.h>
 #include <lidar_sim/VizUtils.h>
+#include <lidar_sim/MathUtils.h>
 
 using namespace lidar_sim;
 
@@ -63,5 +64,24 @@ void OrientedBox::padIntervals()
 	m_intervals[j][0] -= m_interval_padding;
 	m_intervals[j][1] += m_interval_padding;
     }
+}
+
+bool OrientedBox::checkPtInBox(const std::vector<double> &pt)
+{
+    std::vector<double> centered_pt(2, 0);
+    for(size_t i = 0; i < 2; ++i)
+	centered_pt[i] = pt[i] - m_center[i];
+
+    std::vector<double> projns(2, 0);
+    for(size_t i = 0; i < 2; ++i)
+	projns[i] = dotProduct(centered_pt, m_axes[i]);
+
+    bool condn1 = (m_intervals[0][0] <= projns[0]);
+    bool condn2 = (projns[0] <= m_intervals[0][1]);
+    bool condn3 = (m_intervals[1][0] <= projns[1]);
+    bool condn4 = (projns[1] <= m_intervals[1][1]);
+
+    bool res = condn1 && condn2 && condn3 && condn4;
+    return res;
 }
 

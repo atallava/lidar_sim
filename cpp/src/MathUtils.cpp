@@ -368,6 +368,7 @@ namespace lidar_sim {
 	}
 
 	obb.padIntervals();
+	obb.calcVertices();
 	return obb;
     }
 

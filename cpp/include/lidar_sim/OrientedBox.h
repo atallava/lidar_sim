@@ -9,6 +9,8 @@ namespace lidar_sim {
 	void dispBox();
 	void calcVertices();
 	void padIntervals();
+	bool checkPtInBox(const std::vector<double> &pt);
+
 	std::vector<double> m_center;
 	std::vector<std::vector<double> > m_axes;
 	std::vector<std::vector<double> > m_intervals;
