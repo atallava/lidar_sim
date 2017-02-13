@@ -4,17 +4,9 @@
 
 #include <Eigen/Dense>
 
-namespace lidar_sim {
-    struct OrientedBox {
-	OrientedBox();
-	void dispBox();
-	void calcVertices();
-	std::vector<double> center;
-	std::vector<std::vector<double> > axes;
-	std::vector<std::vector<double> > intervals;
-	std::vector<std::vector<double> > vertices;
-    };
+#include <lidar_sim/OrientedBox.h>
 
+namespace lidar_sim {
     typedef std::vector<std::vector<double> > Pts;
 
     std::vector<double> calcPtsMean(const std::vector<std::vector<double> > &pts);

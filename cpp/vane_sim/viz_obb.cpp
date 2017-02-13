@@ -28,21 +28,20 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     // pts
-    std::string rel_path_pts = "data/sections/section_03/primitives/pts/large_tree_10.asc";
+    std::string rel_path_pts = "data/sections/section_03/primitives/pts/large_tree_1.asc";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
     std::vector<std::vector<double> > centered_pts = centerPts(pts);
 
     // obb
     OrientedBox obb = calcObb(centered_pts);
-    // obb.dispBox();
+    obb.dispBox();
     obb.calcVertices();
-    dispMat(obb.vertices);
     
     // viz
     RangeDataVizer vizer;
     std::vector<vtkSmartPointer<vtkActor> > actors;
     actors.push_back(vizer.m_points_actor_server.genPointsActor(centered_pts));
-    actors.push_back(vizer.genPolyActor(obb.vertices));
+    actors.push_back(vizer.genPolyActor(obb.m_vertices));
     vizer.takeItAway(actors);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

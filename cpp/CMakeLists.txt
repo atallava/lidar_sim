@@ -108,6 +108,7 @@ add_library(lidar_sim SHARED
   src/NearestNeighborSim.cpp
   src/PtsError.cpp
   src/GroundTrianglesGenerator.cpp
+  src/OrientedBox.cpp
   )
  
 # Executables

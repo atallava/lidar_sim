@@ -15,48 +15,6 @@
 #include <lidar_sim/VizUtils.h>
 
 namespace lidar_sim {
-    OrientedBox::OrientedBox()
-    {
-    }
-    
-    void OrientedBox::dispBox()
-    {
-	std::cout << "center: " << std::endl;
-	dispVec(center);
-	std::cout << "axes: " << std::endl;
-	dispMat(axes);
-	std::cout << "intervals: " << std::endl;
-	dispMat(intervals);
-    }
-
-    void OrientedBox::calcVertices()
-    {
-	for(size_t i = 0; i < 2; ++i)
-	{
-	    std::vector<double> v0(2, 0);
-	    for(size_t k = 0; k < 2; ++k)
-		v0[k] += (int)(2*i-1)*sides_p5[0]*axes[0][k];
-	    
-	    for(size_t j = 0; j < 2; ++j) 
-	    {
-		std::vector<double> v1(2, 0);
-		for(size_t k = 0; k < 2; ++k)
-		    v1[k] += (int)(2*j-1)*sides_p5[1]*axes[1][k];
-
-		std::vector<double> vertex(2, 0);
-		for(size_t k = 0; k < 2; ++k)
-		    vertex[k] = center[k] + v0[k] + v1[k];
-
-		vertices.push_back(vertex);
-	    }
-	}
-
-	// flip last two rows to maintain cyclic order
-	std::vector<double> v = vertices[2];
-	vertices[2] = vertices[3];
-	vertices[3] = v;
-    }
-
     std::vector<double> calcPtsMean(const Pts &pts)
     {
 	size_t pts_dim = pts[0].size();
@@ -389,23 +347,27 @@ namespace lidar_sim {
 	    for(size_t j = 0; j < 2; ++j)
 		xy[i][j] = pts[i][j];
 
-	obb.center = calcPtsMean(xy);
-	obb.axes = calcPrincipalAxes2D(xy);
-	obb.intervals = std::vector<std::vector<double> > {{0, 0}, {0, 0}};
+	obb.m_center = calcPtsMean(xy);
+	obb.m_axes = calcPrincipalAxes2D(xy);
+	obb.m_intervals = std::vector<std::vector<double> > {{0, 0}, {0, 0}};
 
 	for(size_t i = 0; i < xy.size(); ++i)
 	{
-	    std::vector<double> centered_pt(2, 0);
+	    std::vector<double> m_centered_pt(2, 0);
 	    for(size_t j = 0; j < 2; ++j)
-		centered_pt[j] = xy[i][j] - obb.center[j];
+		m_centered_pt[j] = xy[i][j] - obb.m_center[j];
 	
 	    for(size_t j = 0; j < 2; ++j)
 	    {
-		double projn = std::abs(dotProduct(centered_pt, obb.axes[j]));
-		if (projn > obb.sides_p5[j])
-		    obb.sides_p5[j] = projn;
+		double projn = dotProduct(m_centered_pt, obb.m_axes[j]);
+		if (projn < obb.m_intervals[j][0])
+		    obb.m_intervals[j][0] = projn;
+		if (projn > obb.m_intervals[j][1])
+		    obb.m_intervals[j][1] = projn;
 	    }
 	}
+
+	obb.padIntervals();
 	return obb;
     }
 
