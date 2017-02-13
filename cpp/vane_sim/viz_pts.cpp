@@ -21,8 +21,8 @@ using namespace lidar_sim;
  
 int main(int, char *[])
 {
-    std::string rel_path_pts = "data/sections/section_04/section_04_block_01_ground_triangles_fit_pts.txt";
-
+    // std::string rel_path_pts = "data/sections/section_04/section_04_block_01_ground_triangles_fit_pts.txt";
+    std::string rel_path_pts = "data/sections/section_03/primitives/pts/medium_tree_1.asc";
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     RangeDataVizer vizer;

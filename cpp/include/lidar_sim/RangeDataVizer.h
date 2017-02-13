@@ -4,6 +4,7 @@
 
 #include <vtkSmartPointer.h>
 #include <vtkActor.h>
+#include <vtkRenderWindow.h>
 
 #include <Eigen/Dense>
 
@@ -38,10 +39,15 @@ namespace lidar_sim {
 	    genTriangleModelsActors(const std::vector<TriangleModelSim> &sims);
 	std::vector<vtkSmartPointer<vtkActor> >
 	    genEllipsoidModelsActors(const std::vector<EllipsoidModelSim> &sims);
+	std::vector<vtkSmartPointer<vtkActor> >
+	    genEllipsoidModelsActors(const EllipsoidModels &ellipsoid_models);
 	vtkSmartPointer<vtkActor> genPointsActor(const std::vector<std::vector<double> > &points);
 
 	// pts are required in cyclic order
 	vtkSmartPointer<vtkActor> genPolyActor(const std::vector<std::vector<double> > &pts);
+	void writeActorsToFile(const std::vector<vtkSmartPointer<vtkActor> > &actors,
+					       const std::string rel_path_fig);
+	void writeRenderWindowToFile(vtkSmartPointer<vtkRenderWindow> renderWindow, const std::string rel_path_fig);
 
 
 	PointsVtkActorServer m_points_actor_server;
@@ -49,6 +55,7 @@ namespace lidar_sim {
 	EllipsoidVtkActorServer m_ellipsoid_actor_server;
 	TrianglesVtkActorServer m_triangles_actor_server;
 	std::vector<double> m_brown_color;
+	std::vector<double> m_bg_color;
 	int m_ellipsoid_skip;
 
     private:

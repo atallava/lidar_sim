@@ -32,6 +32,10 @@
 #include <vtkVersion.h>
 #include <vtkCellArray.h>
 #include <vtkExtractEdges.h>
+#include <vtkWindowToImageFilter.h>
+#include <vtkPNGWriter.h>
+#include <vtkGraphicsFactory.h>
+#include <vtkImagingFactory.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
@@ -46,6 +50,7 @@ RangeDataVizer::RangeDataVizer() :
     m_line_actor_server(),
     m_ellipsoid_actor_server(),
     m_brown_color{0.5451, 0.2706, 0.0645},
+    m_bg_color{0, 0, 0},
     m_ellipsoid_skip(5)
 {    
     
@@ -123,7 +128,7 @@ void RangeDataVizer::takeItAway(const std::vector<vtkSmartPointer<vtkActor> > &a
 
     for(size_t i = 0; i < actors.size(); ++i)
 	renderer->AddActor(actors[i]);
-    renderer->SetBackground(0, 0, 0);
+    renderer->SetBackground(m_bg_color[0], m_bg_color[1], m_bg_color[2]);
     renderer->ResetCamera();
     renderer->GetActiveCamera()->Elevation(-90);
     renderer->GetActiveCamera()->Zoom(0.9);
@@ -316,6 +321,19 @@ RangeDataVizer::genEllipsoidModelsActors(const std::vector<EllipsoidModelSim> &s
     return actors;
 }
 
+std::vector<vtkSmartPointer<vtkActor> >
+RangeDataVizer::genEllipsoidModelsActors(const EllipsoidModels &ellipsoid_models)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+    for(size_t i = 0; i < ellipsoid_models.size(); ++i)
+    {
+	EllipsoidModel ellipsoid_model = ellipsoid_models[i];
+	actors.push_back(m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_model.mu, ellipsoid_model.cov_mat, ellipsoid_model.hit_prob));
+    }
+
+    return actors;
+}
+
 vtkSmartPointer<vtkActor> RangeDataVizer::genPointsActor(const std::vector<std::vector<double> > &points)
 {
     return m_points_actor_server.genPointsActor(points);
@@ -367,4 +385,78 @@ vtkSmartPointer<vtkActor> RangeDataVizer::genPolyActor(const std::vector<std::ve
     actor->SetMapper(mapper);
 
     return actor;
+}
+
+void RangeDataVizer::writeActorsToFile(const std::vector<vtkSmartPointer<vtkActor> > &actors,
+				       const std::string rel_path_fig)
+{
+    // Setup offscreen rendering
+    vtkSmartPointer<vtkGraphicsFactory> graphics_factory = 
+	vtkSmartPointer<vtkGraphicsFactory>::New();
+    graphics_factory->SetOffScreenOnlyMode( 1);
+    graphics_factory->SetUseMesaClasses( 1 );
+ 
+    vtkSmartPointer<vtkImagingFactory> imaging_factory = 
+	vtkSmartPointer<vtkImagingFactory>::New();
+    imaging_factory->SetUseMesaClasses( 1 ); 
+
+    // renderer
+      vtkSmartPointer<vtkRenderer> renderer = 
+    vtkSmartPointer<vtkRenderer>::New();
+    for(size_t i = 0; i < actors.size(); ++i)
+	renderer->AddActor(actors[i]);
+    renderer->ResetCamera();
+    renderer->GetActiveCamera()->Elevation(-90);
+    renderer->GetActiveCamera()->Zoom(0.9);
+    renderer->ResetCameraClippingRange();
+
+    // render window
+    int renderer_size = 500;
+    vtkSmartPointer<vtkRenderWindow> renderWindow =
+    	vtkSmartPointer<vtkRenderWindow>::New();
+    renderWindow->SetSize(
+    	renderer_size, renderer_size);
+    renderWindow->SetOffScreenRendering( 1 ); 
+    renderWindow->AddRenderer(renderer);
+    
+    renderWindow->Render();
+
+    // interactor
+    vtkSmartPointer<vtkRenderWindowInteractor> interactor =
+    	vtkSmartPointer<vtkRenderWindowInteractor>::New();
+    interactor->SetRenderWindow(renderWindow);
+
+    // coordinate axes
+    vtkSmartPointer<vtkAxesActor> axes = 
+    	vtkSmartPointer<vtkAxesActor>::New();
+ 
+    vtkSmartPointer<vtkOrientationMarkerWidget> widget = 
+    	vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    widget->SetOrientationMarker( axes );
+    widget->SetInteractor( interactor );
+    double axes_viewport[4] = {0.0, 0.0, 0.4, 0.4};
+    widget->SetViewport(axes_viewport[0], axes_viewport[1], axes_viewport[2], axes_viewport[3]);
+    widget->SetEnabled( 1 );
+    widget->InteractiveOn();
+
+    // write to file
+    writeRenderWindowToFile(renderWindow, rel_path_fig);
+}
+
+void RangeDataVizer::writeRenderWindowToFile(vtkSmartPointer<vtkRenderWindow> renderWindow, const std::string rel_path_fig)
+{
+    // write to file
+    vtkSmartPointer<vtkWindowToImageFilter> windowToImageFilter = 
+	vtkSmartPointer<vtkWindowToImageFilter>::New();
+    windowToImageFilter->SetInput(renderWindow);
+    windowToImageFilter->Update();
+
+    std::cout << "Writing image to file: " << rel_path_fig << std::endl;
+ 
+    vtkSmartPointer<vtkPNGWriter> writer = 
+	vtkSmartPointer<vtkPNGWriter>::New();
+    writer->SetFileName(rel_path_fig.c_str());
+    writer->SetInputConnection(windowToImageFilter->GetOutputPort());
+    writer->Write();
 }
