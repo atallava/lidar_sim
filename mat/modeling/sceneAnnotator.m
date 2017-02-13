@@ -1,6 +1,7 @@
-function annotations = ptsAnnotator(pts)
+function annotations = sceneAnnotator(pts)
 
 %% set up figure
+
 % set figure to full screen
 figure('units','normalized','outerposition',[0 0 1 1])
 
@@ -28,6 +29,7 @@ keys = struct(...
 
 fprintf('%s : record\n',keys.record);
 fprintf('%s : kill\n',keys.kill);
+fprintf('class legend:\n 1: low shrub\n 2: low shrub patch\n 3: medium shrub\n 4: medium shrub patch\n 5: thin shrub\n 6: large shrub\n 7: large shrub patch\n 8: medium tree\n 9: large tree\n');
 
 %% initialize
 state = 1;
@@ -51,8 +53,10 @@ end
                 state = 0;
             case keys.record
                 [x,y] = ginput;
-                class = input('class name: ','s');
+                class = input('class name: ');
                 for i = 1:length(x)
+                    hold on;
+                    plot3(x(i),y(i),0,'rx','markersize',20,'linewidth',5);
                     ann.x = x(i);
                     ann.y = y(i);
                     ann.class = class;
@@ -64,4 +68,4 @@ end
     end
 
 end
-    
+     

@@ -7,6 +7,8 @@
 
 #include <Eigen/Dense>
 
+#include <boost/regex.hpp>
+
 #include "stdafx.h"
 #include "dataanalysis.h"
 
@@ -24,6 +26,8 @@ namespace lidar_sim {
     std::string genDetailLine(double packet_timestamp, std::vector<double> imu_pose, Eigen::Matrix<float,4,1> pt);
     void sectionOfSection(std::string rel_path_input, std::string rel_path_output, double start_time, double end_time);
     std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_file);
+    std::tuple<std::vector<std::string>, std::vector<std::vector<double> > >
+	loadAnnotations(const std::string rel_path_annotations);
 
     template<typename T>
 	void writePtsToXYZFile(const std::vector<std::vector<T> > &pts, const std::string rel_path_output, const int pt_dim = 3)
@@ -82,4 +86,6 @@ namespace lidar_sim {
 
 	return array_subsampled;
     }
+
+    std::vector<std::string> getPatternMatchingFiles(std::string rel_path_dir, boost::regex pattern);
 }

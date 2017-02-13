@@ -17,7 +17,7 @@ list( APPEND LIDAR_SIM_LIBRARIES ${CMAKE_THREAD_LIBS_INIT} )
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 
 # Boost
-find_package( Boost COMPONENTS system thread log REQUIRED )
+find_package( Boost COMPONENTS system thread log regex REQUIRED )
 include_directories( ${Boost_INCLUDE_DIRS} )
 list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_thread" ) # Force linking against thread
@@ -109,6 +109,7 @@ add_library(lidar_sim SHARED
   src/PtsError.cpp
   src/GroundTrianglesGenerator.cpp
   src/OrientedBox.cpp
+  src/SceneObjectServer.cpp
   )
  
 # Executables
@@ -142,11 +143,14 @@ add_library(lidar_sim SHARED
 # endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
  
 # vane sim
-file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )
-foreach( testsourcefile ${VANE_SIM_SOURCES} )
-  string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-  string( REPLACE "vane_sim/" "" testname ${testnamewithdir})
+# file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )
+# foreach( testsourcefile ${VANE_SIM_SOURCES} )
+#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
+#   string( REPLACE "vane_sim/" "" testname ${testnamewithdir})
    
-  add_executable( ${testname} ${testsourcefile} )
-  target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-endforeach( testsourcefile ${VANE_SIM_SOURCES} )
+#   add_executable( ${testname} ${testsourcefile} )
+#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# endforeach( testsourcefile ${VANE_SIM_SOURCES} )
+ 
+add_executable(build_sim_scene vane_sim/build_sim_scene.cpp)
+  target_link_libraries(build_sim_scene lidar_sim ${LIDAR_SIM_LIBRARIES} )

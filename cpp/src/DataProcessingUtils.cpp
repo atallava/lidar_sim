@@ -6,6 +6,10 @@
 #include <cstring>
 #include <fstream>
 #include <string>
+#include <regex>
+
+#include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/VizUtils.h>
@@ -230,6 +234,41 @@ namespace lidar_sim {
 	return pts;
     }
 
+    std::tuple<std::vector<std::string>, std::vector<std::vector<double> > >
+    loadAnnotations(const std::string rel_path_file)
+    {
+	std::ifstream file(rel_path_file);
+	std::cout << "Reading from: " << rel_path_file << std::endl;
+	if (!file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_file;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
+
+	std::vector<std::string> object_classes;
+	std::vector<std::vector<double> > object_posns;
+
+	std::string current_line;
+	while(std::getline(file,current_line))
+	{
+	    std::istringstream iss(current_line);
+
+	    std::string object_class;
+	    iss >> object_class;
+	    object_classes.push_back(object_class);
+
+	    std::vector<double> xy(2, 0);
+	    iss >> xy[0]; iss >> xy[1];
+	    object_posns.push_back(xy);
+	}
+
+	file.close();
+
+	return std::make_tuple(object_classes, object_posns);
+    }
+
+
     std::tuple<std::vector<double>, std::vector<double>, std::vector<double> >
     getVecsFromPts(const std::vector<std::vector<double> > &pts)
     {
@@ -349,5 +388,23 @@ namespace lidar_sim {
 		mat[i][j] = array[i][j];
 
 	return mat;
+    }
+
+    std::vector<std::string> getPatternMatchingFiles(std::string rel_path_dir, boost::regex pattern)
+    {
+	std::vector< std::string > matching_filenames;
+
+	boost::filesystem::directory_iterator end_itr; // Default ctor yields past-the-end
+	for( boost::filesystem::directory_iterator i( rel_path_dir ); i != end_itr; ++i )
+	{
+	    if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
+
+	    std::string filename = i->path().filename().string();
+
+	    if (boost::regex_search(filename, pattern))
+		matching_filenames.push_back(filename);
+	}
+
+	return matching_filenames;
     }
 }
