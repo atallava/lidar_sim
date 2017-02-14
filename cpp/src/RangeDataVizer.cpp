@@ -260,7 +260,7 @@ RangeDataVizer::genSectionModelsActors(const SectionModelSim &sim)
 {
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
-    int ellipsoid_skip = 5;
+    int ellipsoid_skip = 20;
     // ellipsoids
     for(size_t i = 0; i < sim.m_ellipsoid_model_sims.size(); ++i)
     {
@@ -406,12 +406,13 @@ void RangeDataVizer::writeActorsToFile(const std::vector<vtkSmartPointer<vtkActo
     for(size_t i = 0; i < actors.size(); ++i)
 	renderer->AddActor(actors[i]);
     renderer->ResetCamera();
-    renderer->GetActiveCamera()->Elevation(-90);
-    renderer->GetActiveCamera()->Zoom(0.9);
+    // renderer->GetActiveCamera()->Elevation(-90);
+    renderer->GetActiveCamera()->Elevation(0);
+    renderer->GetActiveCamera()->Zoom(1);
     renderer->ResetCameraClippingRange();
 
     // render window
-    int renderer_size = 500;
+    int renderer_size = 2000;
     vtkSmartPointer<vtkRenderWindow> renderWindow =
     	vtkSmartPointer<vtkRenderWindow>::New();
     renderWindow->SetSize(

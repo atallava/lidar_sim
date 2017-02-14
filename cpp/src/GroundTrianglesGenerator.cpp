@@ -13,7 +13,7 @@ using namespace lidar_sim;
 GroundTrianglesGenerator::GroundTrianglesGenerator() :
     m_debug_flag(0),
     m_avg_ground_depth_from_imu(6),
-    m_lateral_dist(30),
+    m_lateral_dist(15),
     m_fit_pts_node_resn(1),
     m_max_triangle_side(15),
     m_default_hit_prob(1)

@@ -152,5 +152,17 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${VANE_SIM_SOURCES} )
  
-add_executable(build_sim_scene vane_sim/build_sim_scene.cpp)
-  target_link_libraries(build_sim_scene lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(build_sim_scene vane_sim/build_sim_scene.cpp)
+#   target_link_libraries(build_sim_scene lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(write_section_models_fig vane_sim/write_section_models_fig.cpp)
+  target_link_libraries(write_section_models_fig lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(viz_section_models vane_sim/viz_section_models.cpp)
+  target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(gen_ground_triangles vane_sim/gen_ground_triangles.cpp)
+  target_link_libraries(gen_ground_triangles lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(poses_section_models_sim vane_sim/poses_section_models_sim.cpp)
+  target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )

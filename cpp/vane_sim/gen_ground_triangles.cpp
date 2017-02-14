@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     block_node_ids_ground[0][1] = imu_posn_nodes.size();
 
     // write out
-    writePtsToXYZFile(block_node_ids_ground, genRelPathBlockNodeIdsGround(section_id), 2);
+    writePtsToXYZFile(block_node_ids_ground, genRelPathBlockNodeIdsGround(section_id));
     gen.writeTrianglesToFile(genRelPathTriangles(section_id, block_id));
     gen.writeTrianglesFitPtsToFile(genRelPathTrianglesFitPts(section_id, block_id));
     
