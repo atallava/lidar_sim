@@ -22,5 +22,9 @@ namespace lidar_sim {
     void writeEllipsoidModelsToFile(EllipsoidModels ellipsoid_models, std::string rel_path_output);
     EllipsoidModels loadEllipsoidModelsFromFile(std::string rel_path_input);
     void dispEllipsoidModel(EllipsoidModel model);
+
+    std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > >
+	buildBlocks(const std::vector<std::vector<double> > &imu_posn_nodes,
+		    const std::vector<std::vector<double> > &pts, int pts_per_block);
 }
 

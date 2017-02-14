@@ -8,7 +8,7 @@
 
 #include <lidar_sim/SceneObjectServer.h>
 #include <lidar_sim/VizUtils.h>
-#include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>

@@ -3,7 +3,7 @@
 #include <vector>
 #include <ctime>
 
-#include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/SceneObjectServer.h>
 

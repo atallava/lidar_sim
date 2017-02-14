@@ -9,7 +9,7 @@
 #include <Eigen/Geometry>
 
 #include <lidar_sim/MathUtils.h>
-#include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/LaserCalibParams.h>
 #include <lidar_sim/CgalTypedefs.h>
 

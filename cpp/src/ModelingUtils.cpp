@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 
-#include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/ModelingUtils.h>
 
 namespace lidar_sim {
     EllipsoidModel createEllipsoidModel(Pts pts)
@@ -101,4 +101,61 @@ namespace lidar_sim {
 	std::cout << model.hit_prob << std::endl;
     }
 
+    std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > > 
+    buildBlocks(const std::vector<std::vector<double> > &imu_posn_nodes,
+		const std::vector<std::vector<double> > &pts, int pts_per_block)
+    {
+	// nearest neighbor for pts in nodes
+	std::vector<std::vector<int> > nn_ids;
+	std::vector<std::vector<double> > nn_dists;
+	std::tie(nn_ids, nn_dists) = nearestNeighbors(imu_posn_nodes, pts, 1);
+    
+	// for each node, which pts are in it
+	std::vector<std::vector<int> > node_pts_map(imu_posn_nodes.size(), 
+						    std::vector<int> ());
+    
+	for(size_t i = 0; i < pts.size(); ++i)
+	    node_pts_map[nn_ids[i][0]].push_back(i);
+    
+	// block node ids
+	std::vector<std::vector<int> > block_node_ids;
+	std::vector<int> current_block_node_ids(2, 0);
+	current_block_node_ids[0] = 0;
+
+	int block_id = 1;
+
+	int pts_in_current_block = 0;
+	for(size_t i = 0; i < node_pts_map.size(); ++i)
+	{
+	    pts_in_current_block += node_pts_map[i].size();
+
+	    if (pts_in_current_block >= pts_per_block)
+	    {
+		if (i == node_pts_map.size()-1)
+		    break;
+
+		// block node ids
+		current_block_node_ids[1] = i;
+		block_node_ids.push_back(current_block_node_ids);
+		current_block_node_ids[0] = i+1;
+
+		// increment block id
+		block_id++;
+
+		// reset counter
+		pts_in_current_block = 0;
+	    }
+	}
+	current_block_node_ids[1] = node_pts_map.size()-1;
+	block_node_ids.push_back(current_block_node_ids);
+
+	
+	// pts ids in each block
+	std::vector<std::vector<int> > block_pts_ids(block_node_ids.size(), std::vector<int>());
+	for(size_t i = 0; i < block_node_ids.size(); ++i)
+	    for(size_t j = block_node_ids[i][0]; j <= (size_t)block_node_ids[i][1]; ++j)
+		block_pts_ids[i].insert(block_pts_ids[i].end(), node_pts_map[j].begin(), node_pts_map[j].end());
+
+	return std::make_tuple(block_node_ids, block_pts_ids);
+    }
 }

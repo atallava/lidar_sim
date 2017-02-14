@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-// #include <vector>
 
 #include "eigenmvn.h"
 
@@ -26,7 +25,7 @@
 #include <lidar_sim/Test.h>
 #include <lidar_sim/Visualizer.h>
 #include <lidar_sim/PoseServer.h>
-#include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
