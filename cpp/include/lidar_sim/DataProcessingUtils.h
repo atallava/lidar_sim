@@ -30,7 +30,7 @@ namespace lidar_sim {
 	loadAnnotations(const std::string rel_path_annotations);
 
     template<typename T>
-	void writePtsToXYZFile(const std::vector<std::vector<T> > &pts, const std::string rel_path_output, const int pt_dim = 3)
+	void writePtsToXYZFile(const std::vector<std::vector<T> > &pts, const std::string rel_path_output)
     {
 	std::ofstream file(rel_path_output);
 	std::cout << "Writing pts to: " << rel_path_output << std::endl;
@@ -38,7 +38,7 @@ namespace lidar_sim {
 	for(size_t i = 0; i < pts.size(); ++i)
 	{
 	    std::ostringstream ss;
-	    for(size_t j = 0; j < pt_dim; ++j)
+	    for(size_t j = 0; j < pts[i].size(); ++j)
 		ss << pts[i][j] << " ";
 	    ss << std::endl;
 	    

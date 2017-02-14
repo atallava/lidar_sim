@@ -3,6 +3,8 @@
 
 #include <lidar_sim/ModelingUtils.h>
 
+using namespace lidar_sim;
+
 namespace lidar_sim {
     EllipsoidModel createEllipsoidModel(Pts pts)
     {

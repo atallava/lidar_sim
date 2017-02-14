@@ -144,7 +144,7 @@ int main(int argc, char **argv)
     // block info 
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
     std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(rel_path_imu_posn_nodes, 3);
     std::vector<std::vector<int> > block_node_ids_non_ground = 
 	doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
 

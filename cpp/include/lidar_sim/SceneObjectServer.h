@@ -22,6 +22,10 @@ namespace lidar_sim {
 	int getElementIdFromFilename(const std::string filename, const std::string class_name);
 	std::string genRelPathPrimitiveEllipsoidModels(const std::string rel_path_primitive_models_dir,
 						       const std::string class_name, const int element_id);
+	EllipsoidModels genObjectModelsAtPosn(const std::string class_name, const std::vector<double> &posn);
+	int classIdFromName(const std::string class_name);
+	void setEllipsoidModelsCentroid(EllipsoidModels &models, 
+					const std::vector<double> &posn);
 
 	EllipsoidModels m_ellipsoid_models;
 	std::vector<std::string> m_primitive_class_names;

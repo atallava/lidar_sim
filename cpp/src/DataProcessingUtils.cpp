@@ -247,7 +247,7 @@ namespace lidar_sim {
 	}
 
 	std::vector<std::string> object_classes;
-	std::vector<std::vector<double> > object_posns;
+	std::vector<std::vector<double> > object_xy_posns;
 
 	std::string current_line;
 	while(std::getline(file,current_line))
@@ -260,12 +260,12 @@ namespace lidar_sim {
 
 	    std::vector<double> xy(2, 0);
 	    iss >> xy[0]; iss >> xy[1];
-	    object_posns.push_back(xy);
+	    object_xy_posns.push_back(xy);
 	}
 
 	file.close();
 
-	return std::make_tuple(object_classes, object_posns);
+	return std::make_tuple(object_classes, object_xy_posns);
     }
 
 

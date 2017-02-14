@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <chrono>
 #include <random>
 
 #include <Eigen/Dense>
@@ -82,4 +83,47 @@ std::string SceneObjectServer::genRelPathPrimitiveEllipsoidModels(const std::str
     ss << rel_path_primitive_models_dir << "/" << class_name << "_" << element_id << m_model_files_ext;
 
     return ss.str();
+}
+
+EllipsoidModels SceneObjectServer::genObjectModelsAtPosn(const std::string class_name, const std::vector<double> &posn)
+ {
+     // pick element at random
+     int class_id = classIdFromName(class_name);
+     std::vector<int> shuffled_ids(m_primitive_ellipsoid_models[class_id].size());
+     std::iota(shuffled_ids.begin(), shuffled_ids.end(), 0);
+     uint64_t seed = std::chrono::duration_cast<std::chrono::nanoseconds>
+	 (std::chrono::steady_clock::now().time_since_epoch()).count();
+     std::shuffle(std::begin(shuffled_ids), std::end(shuffled_ids),
+		  std::default_random_engine(seed));
+     int primitive_id = shuffled_ids[0];
+
+     // shift models
+     EllipsoidModels models = m_primitive_ellipsoid_models[class_id][primitive_id];
+     setEllipsoidModelsCentroid(models, posn);
+
+     return models;
+ }
+
+void SceneObjectServer::setEllipsoidModelsCentroid(EllipsoidModels &models, 
+						   const std::vector<double> &posn)
+{
+    // gather means
+    std::vector<std::vector<double> > mus;
+    for(size_t i = 0; i < models.size(); ++i)
+	mus.push_back(models[i].mu);
+    std::vector<double> current_centroid = calcPtsMean(mus);
+
+    for(size_t i = 0; i < models.size(); ++i)
+	for(size_t j = 0; j < 3; ++j)
+	    models[i].mu[j] = posn[j] + (models[i].mu[j] - current_centroid[j]);
+}
+
+int SceneObjectServer::classIdFromName(const std::string class_name)
+{
+    int class_id = -1;
+    for(size_t i = 0; i < m_primitive_class_names.size(); ++i)
+	if (m_primitive_class_names[i].compare(class_name) != 0)
+	    class_id = i;
+    
+    return class_id;
 }
