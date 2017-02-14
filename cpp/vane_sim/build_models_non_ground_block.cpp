@@ -4,7 +4,7 @@
 #include <ctime>
 
 #include <lidar_sim/SectionLoader.h>
-#include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/MathUtils.h>

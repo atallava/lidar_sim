@@ -2,7 +2,7 @@
 
 #include <vtkProperty.h>
 
-#include <lidar_sim/EllipsoidModelUtils.h>
+#include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseUtils.h>
