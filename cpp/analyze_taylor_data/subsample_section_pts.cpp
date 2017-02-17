@@ -26,8 +26,8 @@ std::string genRelPathSectionPts(int section_id)
 std::string genRelPathSubsampledPts(int section_id)
 {
     std::ostringstream ss;
-    ss << "../mat/data/section_pts_"
-       << std::setw(2) << std::setfill('0') << section_id << "_world_frame_subsampled.xyz";
+    ss << "data/section_pts_"
+       << std::setw(2) << std::setfill('0') << section_id << "_world_frame_subsampled_1e5.xyz";
 
     return ss.str();
 }
@@ -35,7 +35,7 @@ std::string genRelPathSubsampledPts(int section_id)
 int main() {
     clock_t start_time = clock();
 
-    int section_id = 4;
+    int section_id = 8;
     int max_pts = 1e5;
 
     //input file path

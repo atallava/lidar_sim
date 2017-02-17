@@ -44,8 +44,8 @@ int main(int argc, char **argv)
     // write results
     std::string rel_path_ground = "data/sections/section_03/section_pts_03_ground.xyz";
     std::string rel_path_non_ground = "data/sections/section_03/section_pts_03_non_ground.xyz";
-    writePtsToXYZFile(pts_ground, rel_path_ground);
-    writePtsToXYZFile(pts_non_ground, rel_path_non_ground);
+    // writePtsToXYZFile(pts_ground, rel_path_ground);
+    // writePtsToXYZFile(pts_non_ground, rel_path_non_ground);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

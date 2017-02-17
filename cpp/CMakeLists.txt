@@ -114,6 +114,8 @@ add_library(lidar_sim SHARED
  
 # Executables
 
+####################################################################################################
+
 # tests
 # file( GLOB TESTS_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp )
 # MESSAGE( STATUS "tests sources: " ${TESTS_SOURCES} )
@@ -124,6 +126,8 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${TESTS_SOURCES} )
 
+####################################################################################################
+
 # analyze taylor data
 # file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
 # foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
@@ -133,6 +137,19 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
   
+## pattern
+
+# # add_executable(pattern analyze_taylor_data/pattern.cpp)
+# #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+# add_executable(subsample_section_pts analyze_taylor_data/subsample_section_pts.cpp)
+#   target_link_libraries(subsample_section_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(transform_sections_to_world analyze_taylor_data/transform_sections_to_world.cpp)
+  target_link_libraries(transform_sections_to_world lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+####################################################################################################
+
 # vtk examples
 # file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vtk_examples/*.cpp )
 # foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
@@ -141,6 +158,8 @@ add_library(lidar_sim SHARED
 #   add_executable( ${testname} ${testsourcefile} )
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+
+####################################################################################################
  
 # vane sim
 # file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )
@@ -152,17 +171,41 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${VANE_SIM_SOURCES} )
  
+## pattern
+
+# # add_executable(pattern vane_sim/pattern.cpp)
+# #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+## data processing
+
+# add_executable(sieve_section vane_sim/sieve_section.cpp)
+#   target_link_libraries(sieve_section lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+## segmentation
+
+# add_executable(segmentation_trial vane_sim/segmentation_trial.cpp)
+#   target_link_libraries(segmentation_trial lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+## modeling
+
+## state mapping
+
+# add_executable(gen_ground_triangles vane_sim/gen_ground_triangles.cpp)
+#   target_link_libraries(gen_ground_triangles lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 # add_executable(build_sim_scene vane_sim/build_sim_scene.cpp)
 #   target_link_libraries(build_sim_scene lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(write_section_models_fig vane_sim/write_section_models_fig.cpp)
-  target_link_libraries(write_section_models_fig lidar_sim ${LIDAR_SIM_LIBRARIES} )
+## sim
 
-add_executable(viz_section_models vane_sim/viz_section_models.cpp)
-  target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(poses_section_models_sim vane_sim/poses_section_models_sim.cpp)
+#   target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(gen_ground_triangles vane_sim/gen_ground_triangles.cpp)
-  target_link_libraries(gen_ground_triangles lidar_sim ${LIDAR_SIM_LIBRARIES} )
+## viz
 
-add_executable(poses_section_models_sim vane_sim/poses_section_models_sim.cpp)
-  target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(write_section_models_fig vane_sim/write_section_models_fig.cpp)
+#   target_link_libraries(write_section_models_fig lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+# add_executable(viz_section_models vane_sim/viz_section_models.cpp)
+#   target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+

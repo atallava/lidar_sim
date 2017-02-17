@@ -21,8 +21,8 @@ GeometricSegmenter::GeometricSegmenter() :
     m_smooth_features(1),
     m_smoothing_distance_weight(1),
     m_smoothing_score_weight(0),
-    m_smoothing_max_nbrs(10),
-    m_smoothing_max_dist(3)
+    m_smoothing_max_nbrs(100),
+    m_smoothing_max_dist(100)
 {
 }
 

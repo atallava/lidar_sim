@@ -18,6 +18,39 @@
 
 using namespace lidar_sim;
 
+std::string genRelPathSectionLaserFrame(int section_id)
+{
+    std::ostringstream ss;
+
+    ss << "../data/taylorJune2014/sections/laser_frame/section_"
+       << std::setw(2) << std::setfill('0') << section_id 
+       << ".xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathSectionWorldFrame(int section_id)
+{
+    std::ostringstream ss;
+
+    ss << "../data/taylorJune2014/sections/world_frame/section_"
+       << std::setw(2) << std::setfill('0') << section_id 
+       << "_world_frame.xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathSectionPtsWorldFrame(int section_id)
+{
+    std::ostringstream ss;
+
+    ss << "../data/taylorJune2014/sections/world_frame/section_pts_"
+       << std::setw(2) << std::setfill('0') << section_id 
+       << "_world_frame.xyz";
+
+    return ss.str();
+}
+
 int main() {
     std::string rel_path_section_pre = "../data/taylorJune2014/sections/laser_frame/section_";
     std::string rel_path_section_post = "_subsampled.xyz";
@@ -53,27 +86,20 @@ int main() {
     clock_t start_time = clock();
     for (size_t i = 0; i < section_ids.size(); ++i)
     {
+	int section_id = i;
+
 	// open section file
-	int section_id = section_ids[i];
-	std::ostringstream ss;
-	ss << rel_path_section_pre << std::setw(2) << std::setfill('0') << section_id << rel_path_section_post;
-	std::string rel_path_section = ss.str();
+	std::string rel_path_section = genRelPathSectionLaserFrame(section_id);
 	std::ifstream section_file(rel_path_section);
 	std::cout << "Reading from: " << rel_path_section << std::endl;
 
 	// open section world frame file
-	ss.str("");
-	ss.clear();
-	ss << rel_path_section_world_frame_pre << std::setw(2) << std::setfill('0') << section_id << rel_path_section_world_frame_post;
-	std::string rel_path_section_world_frame = ss.str();
+	std::string rel_path_section_world_frame = genRelPathSectionWorldFrame(section_id);
 	std::ofstream section_world_frame_file(rel_path_section_world_frame);
 	std::cout << "Writing to: " << rel_path_section_world_frame << std::endl;
 
 	// open section detail world frame file
-	ss.str("");
-	ss.clear();
-	ss << rel_path_section_pts_world_frame_pre << std::setw(2) << std::setfill('0') << section_id << rel_path_section_pts_world_frame_post;
-	std::string rel_path_section_pts_world_frame = ss.str();
+	std::string rel_path_section_pts_world_frame = genRelPathSectionPtsWorldFrame(section_id);
 	std::ofstream section_pts_world_frame_file(rel_path_section_pts_world_frame);
 	std::cout << "Writing to: " << rel_path_section_pts_world_frame << std::endl;
 
@@ -122,6 +148,7 @@ int main() {
 		continue;
 	    
 	    // write to file
+	    std::ostringstream ss;
 	    std::string output_line;
 	    ss.str("");
 	    ss.clear();

@@ -66,6 +66,15 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
     return ss.str();
 }
 
+std::string genRelPathSimPts(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/section_pts_" << std::setw(2) << std::setfill('0') << section_id 
+       << "_sim.xyz";
+
+    return ss.str();
+}
+
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
@@ -122,7 +131,7 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write sim pts
-    std::string rel_path_output = "data/rim_stretch_validation_sim.xyz";
+    std::string rel_path_output = genRelPathSimPts(section_id);;
     writePtsToXYZFile(sim_pts, rel_path_output);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
