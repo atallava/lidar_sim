@@ -23,7 +23,7 @@ std::string genRelPathEllipsoids(int section_id, int block_id)
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids_train.txt";
+       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
 
     return ss.str();
 }
@@ -50,7 +50,7 @@ std::string genRelPathNonGroundPts(int section_id, int block_id)
 int main(int argc, char **argv)
 {
     int section_id = 3;
-    int block_id = 23;
+    int block_id = 3;
 
     // pts
     std::string rel_path_pts = genRelPathNonGroundPts(section_id, block_id);

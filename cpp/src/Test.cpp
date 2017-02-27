@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <Eigen/Geometry>
+
 #include "eigenmvn.h"
 
 #include <flann/flann.hpp>
@@ -349,5 +351,23 @@ bool Test::testVizEllipsoid()
     RangeDataVizer vizer;
     vizer.vizEllipsoidModels(models, pts);
     
+    return true;
+}
+
+bool Test::testGetEllipseTransform()
+{
+    Pts pts { {1,2,3},
+	{6,7,6},
+	{5,1,5},
+	{9,7,8}};
+    
+    Eigen::MatrixXd cov_mat = calcPtsCovMat(pts);
+    Eigen::Quaterniond quat;
+    Eigen::Vector3d scale;
+    GetEllipseTransform(cov_mat, quat, scale);
+    std::cout << "quat weight: " << quat.w() << std::endl;
+    std::cout << "quat vec: " << quat.vec() << std::endl;
+    std::cout << "scales: " << scale << std::endl;
+
     return true;
 }

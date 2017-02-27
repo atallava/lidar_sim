@@ -6,6 +6,9 @@
 #include <time.h>
 #include <algorithm>
 
+#include <Eigen/SVD>
+#include <Eigen/Geometry>
+
 #include "eigenmvn.h"
 
 #include <flann/flann.hpp>
@@ -382,6 +385,28 @@ namespace lidar_sim {
 		centered_pts[i][j] = pts[i][j] - mu[j];
 
 	return centered_pts;
+    }
+
+    void GetEllipseTransform(const Eigen::Matrix3d &input, Eigen::Quaterniond &quat, 
+			     Eigen::Vector3d &scale, double level)
+    {
+	Eigen::Matrix3d levelled_input(input*level);
+	Eigen::JacobiSVD<Eigen::MatrixXd> svd(levelled_input, Eigen::ComputeThinU | Eigen::ComputeThinV);
+	Eigen::Matrix3d U = svd.matrixU();
+	Eigen::Vector3d singular_values = svd.singularValues();
+
+	quat = Eigen::Quaterniond(U);
+
+	// scales
+	for(size_t i = 0; i < 3; ++i)
+	    scale(i) = 1/std::sqrt(singular_values(i));
+
+	// debug
+	// std::cout << "U: " << U << std::endl;
+	// std::cout << "sv: " << singular_values << std::endl;
+	// std::cout << "quat weight: " << quat.w() << std::endl;
+	// std::cout << "quat vec: " << quat.vec() << std::endl;
+	// std::cout << "scales: " << scale << std::endl;
     }
 }
 

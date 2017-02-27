@@ -126,6 +126,10 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${TESTS_SOURCES} )
 
+add_executable(run_tests tests/run_tests.cpp)
+  target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+
 ####################################################################################################
 
 # analyze taylor data
@@ -208,4 +212,10 @@ add_executable(transform_sections_to_world analyze_taylor_data/transform_section
 
 # add_executable(viz_section_models vane_sim/viz_section_models.cpp)
 #   target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+# add_executable(viz_ellipsoid_models vane_sim/viz_ellipsoid_models.cpp)
+#   target_link_libraries(viz_ellipsoid_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+# add_executable(viz_triangle_models vane_sim/viz_triangle_models.cpp)
+#   target_link_libraries(viz_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 

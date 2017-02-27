@@ -16,7 +16,7 @@ function [xEll,yEll,zEll] = genSurfXyzEllipse(covMat,mu,level)
     end
     
     R = chol(inv(level*covMat)); 
-    [xSph,ySph,zSph] = sphere(25);
+    [xSph,ySph,zSph] = sphere(10);
     n = size(xSph,1);
     ptsSph = [xSph(:)'; ySph(:)'; zSph(:)'];
     ptsEll = R\ptsSph;

@@ -18,14 +18,37 @@
 
 using namespace lidar_sim;
 
+std::string genRelPathTriangles(int section_id, int block_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground_triangles.txt";
+
+    return ss.str();
+}
+
+std::string genRelPathGroundPts(int section_id, int block_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground.xyz";
+
+    return ss.str();
+}
+
 int main(int argc, char **argv)
 {
+    int section_id = 3;
+    int block_id = 2;
+
     // pts
-    std::string rel_path_pts = "data/sections/section_03/section_03_block_02_ground.xyz";
+    std::string rel_path_pts = genRelPathGroundPts(section_id, block_id);
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // triangles
-    std::string rel_path_triangles = "data/sections/section_04/section_04_block_01_ground_triangles.txt";
+    std::string rel_path_triangles = genRelPathTriangles(section_id, block_id);
     TriangleModelSim sim;
     sim.loadTriangleModels(rel_path_triangles);
 
@@ -33,10 +56,10 @@ int main(int argc, char **argv)
     RangeDataVizer vizer;
     std::vector<vtkSmartPointer<vtkActor> > actors;
 
-    // vtkSmartPointer<vtkActor> pts_actor = 
-    // 	vizer.m_points_actor_server.genPointsActor(pts);
-    // pts_actor->GetProperty()->SetColor(1, 1, 1);
-    // actors.push_back(pts_actor);
+    vtkSmartPointer<vtkActor> pts_actor = 
+    	vizer.m_points_actor_server.genPointsActor(pts);
+    pts_actor->GetProperty()->SetColor(1, 1, 1);
+    actors.push_back(pts_actor);
 
     std::vector<vtkSmartPointer<vtkActor> > tri_actors = 
 	vizer.m_triangles_actor_server.genTrianglesActors(sim.m_triangles, sim.m_fit_pts, sim.m_hit_prob_vec);

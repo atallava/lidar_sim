@@ -102,7 +102,8 @@ function hfig = plotRangeData(inputStruct)
                 end
             end
             rayPts = genPtsRay(rayOrigin,rayDirns(i,:),rayLengthToPlot);
-            plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r--');
+%             plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r--');
+            plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r','linewidth',2);
             hold on;
         end
         plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'rx');
@@ -138,8 +139,9 @@ function hfig = plotRangeData(inputStruct)
             triIdsToPlot = 1:size(triModelData.tri,1);
         end
         
+        mudBrownColor = [210 180 140]/255.0;
         trimesh(triModelData.tri(triIdsToPlot,:), ...
-            triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3));
+            triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3),'edgecolor',mudBrownColor);
         hold on;
     end
     
@@ -150,7 +152,7 @@ function hfig = plotRangeData(inputStruct)
         else
             ptPlotIds = logical(1:size(pts,1));
         end
-        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'ro','markerfacecolor','r');
+        scatter3(pts(ptPlotIds,1),pts(ptPlotIds,2),pts(ptPlotIds,3),'r.','markerfacecolor','r');
     end
     
     %% extra

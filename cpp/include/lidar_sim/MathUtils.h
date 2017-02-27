@@ -110,6 +110,7 @@ namespace lidar_sim {
     std::vector<std::vector<double> > calcPrincipalAxes2D(const std::vector<std::vector<double> > &pts);
     OrientedBox calcObb(const std::vector<std::vector<double> > &pts);
     std::vector<std::vector<double> > centerPts(const std::vector<std::vector<double> > &pts);
-
+    void GetEllipseTransform(const Eigen::Matrix3d &input, Eigen::Quaterniond &quat, 
+			     Eigen::Vector3d &scale, double level = 9);
 }
 

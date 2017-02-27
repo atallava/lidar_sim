@@ -18,5 +18,6 @@ namespace lidar_sim {
 	bool testEigenvalues();
 	bool testPtsLine();
 	bool testVizEllipsoid();
+	bool testGetEllipseTransform();
     };
 }

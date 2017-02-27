@@ -55,6 +55,10 @@ nbrs or min nbrs
 segmentation works with subsampled dataset. so will have to transfer labels to
 points in full dataset, just do nearest neighbors
 
+figs:
+saving fig with 16000 3d points seems like reasonable capacity, takes about 25s. 
+remember that each ellipsoid is specified with a number of points. scale number of points based on size?
+
 --------------------------------------------------
 
 taylor data:
