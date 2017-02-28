@@ -35,7 +35,7 @@ std::string genRelPathSubsampledPts(int section_id)
 int main() {
     clock_t start_time = clock();
 
-    int section_id = 8;
+    int section_id = 3;
     int max_pts = 1e5;
 
     //input file path

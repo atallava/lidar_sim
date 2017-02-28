@@ -391,7 +391,7 @@ namespace lidar_sim {
 			     Eigen::Vector3d &scale, double level)
     {
 	Eigen::Matrix3d levelled_input(input*level);
-	Eigen::JacobiSVD<Eigen::MatrixXd> svd(levelled_input, Eigen::ComputeThinU | Eigen::ComputeThinV);
+	Eigen::JacobiSVD<Eigen::MatrixXd> svd(levelled_input.inverse(), Eigen::ComputeThinU | Eigen::ComputeThinV);
 	Eigen::Matrix3d U = svd.matrixU();
 	Eigen::Vector3d singular_values = svd.singularValues();
 

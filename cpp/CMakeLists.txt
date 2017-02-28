@@ -126,8 +126,8 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${TESTS_SOURCES} )
 
-add_executable(run_tests tests/run_tests.cpp)
-  target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(run_tests tests/run_tests.cpp)
+#   target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 
 ####################################################################################################
@@ -146,11 +146,11 @@ add_executable(run_tests tests/run_tests.cpp)
 # # add_executable(pattern analyze_taylor_data/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(subsample_section_pts analyze_taylor_data/subsample_section_pts.cpp)
-#   target_link_libraries(subsample_section_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(subsample_section_pts analyze_taylor_data/subsample_section_pts.cpp)
+  target_link_libraries(subsample_section_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(transform_sections_to_world analyze_taylor_data/transform_sections_to_world.cpp)
-  target_link_libraries(transform_sections_to_world lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(transform_sections_to_world analyze_taylor_data/transform_sections_to_world.cpp)
+#   target_link_libraries(transform_sections_to_world lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
 
