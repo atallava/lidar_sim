@@ -165,57 +165,57 @@ add_executable(subsample_section_pts analyze_taylor_data/subsample_section_pts.c
 
 ####################################################################################################
  
-# vane sim
-# file( GLOB VANE_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vane_sim/*.cpp )
-# foreach( testsourcefile ${VANE_SIM_SOURCES} )
+# hybrid_geometric sim
+# file( GLOB HYBRID_GEOMETRIC_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} hybrid_geometric_sim/*.cpp )
+# foreach( testsourcefile ${HYBRID_GEOMETRIC_SIM_SOURCES} )
 #   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-#   string( REPLACE "vane_sim/" "" testname ${testnamewithdir})
+#   string( REPLACE "hybrid_geometric_sim/" "" testname ${testnamewithdir})
    
 #   add_executable( ${testname} ${testsourcefile} )
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-# endforeach( testsourcefile ${VANE_SIM_SOURCES} )
+# endforeach( testsourcefile ${HYBRID_GEOMETRIC_SIM_SOURCES} )
  
 ## pattern
 
-# # add_executable(pattern vane_sim/pattern.cpp)
+# # add_executable(pattern hybrid_geometric_sim/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## data processing
 
-# add_executable(sieve_section vane_sim/sieve_section.cpp)
+# add_executable(sieve_section hybrid_geometric_sim/sieve_section.cpp)
 #   target_link_libraries(sieve_section lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## segmentation
 
-# add_executable(segmentation_trial vane_sim/segmentation_trial.cpp)
+# add_executable(segmentation_trial hybrid_geometric_sim/segmentation_trial.cpp)
 #   target_link_libraries(segmentation_trial lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## modeling
 
 ## state mapping
 
-# add_executable(gen_ground_triangles vane_sim/gen_ground_triangles.cpp)
+# add_executable(gen_ground_triangles hybrid_geometric_sim/gen_ground_triangles.cpp)
 #   target_link_libraries(gen_ground_triangles lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(build_sim_scene vane_sim/build_sim_scene.cpp)
+# add_executable(build_sim_scene hybrid_geometric_sim/build_sim_scene.cpp)
 #   target_link_libraries(build_sim_scene lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## sim
 
-# add_executable(poses_section_models_sim vane_sim/poses_section_models_sim.cpp)
+# add_executable(poses_section_models_sim hybrid_geometric_sim/poses_section_models_sim.cpp)
 #   target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## viz
 
-# add_executable(write_section_models_fig vane_sim/write_section_models_fig.cpp)
+# add_executable(write_section_models_fig hybrid_geometric_sim/write_section_models_fig.cpp)
 #   target_link_libraries(write_section_models_fig lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(viz_section_models vane_sim/viz_section_models.cpp)
+# add_executable(viz_section_models hybrid_geometric_sim/viz_section_models.cpp)
 #   target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(viz_ellipsoid_models vane_sim/viz_ellipsoid_models.cpp)
+# add_executable(viz_ellipsoid_models hybrid_geometric_sim/viz_ellipsoid_models.cpp)
 #   target_link_libraries(viz_ellipsoid_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(viz_triangle_models vane_sim/viz_triangle_models.cpp)
+# add_executable(viz_triangle_models hybrid_geometric_sim/viz_triangle_models.cpp)
 #   target_link_libraries(viz_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
