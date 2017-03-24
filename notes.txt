@@ -181,6 +181,10 @@ change sim pts logic: always return hit flag.
 
 there can be other functions which deal with filtering out non-hit points.
 
+catkin ws:
+
+* how to cleanly include liblidar_sim? with all its dependent libraries?
+
 --------------------------------------------------
 
 while installing cloudcompare:
@@ -201,3 +205,12 @@ http://askubuntu.com/questions/435564/qt5-installation-and-path-configuration
 
 * in cmake gui, changed the qt root path + qt cmake refs to the directories in ~
 which worked
+
+--------------------------------------------------
+
+ros install:
+
+* installing indigo. when installing desktop-full, had problems with installing
+  the simulators. a gazebo bug is noted on the website. i deleted all gazebo-7
+  filed i had, yet didn't go away. installing only desktop for now, since i
+  mainly need rviz.

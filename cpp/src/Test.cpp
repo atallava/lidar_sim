@@ -12,9 +12,6 @@
 
 #include "interpolation.h"
 
-#include "gp.h"
-#include "gp_utils.h"
-
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
@@ -150,37 +147,6 @@ bool Test::testFLANN()
     dispVec(nn_ids);
 
     return true;
-}
-
- 
-bool Test::testLibgp()
-{
-    int n=4000, m=1000;
-    double tss = 0, error, f, y;
-    // initialize Gaussian process for 2-D input using the squared exponential 
-    // covariance function with additive white noise.
-    libgp::GaussianProcess gp(2, "CovSum ( CovSEiso, CovNoise)");
-    // initialize hyper parameter vector
-    Eigen::VectorXd params(gp.covf().get_param_dim());
-    params << 0.0, 0.0, -2.0;
-    // set parameters of covariance function
-    gp.covf().set_loghyper(params);
-    // add training patterns
-    for(int i = 0; i < n; ++i) {
-	double x[] = {drand48()*4-2, drand48()*4-2};
-	y = libgp::Utils::hill(x[0], x[1]) + libgp::Utils::randn() * 0.1;
-	gp.add_pattern(x, y);
-    }
-    // total squared error
-    for(int i = 0; i < m; ++i) {
-	double x[] = {drand48()*4-2, drand48()*4-2};
-	f = gp.f(x);
-	y = libgp::Utils::hill(x[0], x[1]);
-	error = f - y;
-	tss += error*error;
-    }
-    std::cout << "mse = " << tss/m << std::endl;
-    return EXIT_SUCCESS;
 }
 
 bool Test::testAlglibRbf()
