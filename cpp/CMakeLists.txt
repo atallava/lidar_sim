@@ -71,8 +71,8 @@ include_directories(${LIDAR_SIM_INCLUDE_DIRECTORIES})
 # Add files here to compile them
 add_library(lidar_sim SHARED 	
 
-  src/Visualizer.cpp
   src/Test.cpp
+  src/Visualizer.cpp
   
   src/PoseServer.cpp
   src/FrameTimeServer.cpp

@@ -22,7 +22,6 @@
 #include <boost/variant.hpp>
 
 #include <lidar_sim/Test.h>
-#include <lidar_sim/Visualizer.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/VizUtils.h>
@@ -31,14 +30,6 @@
 #include <lidar_sim/RangeDataVizer.h>
 
 using namespace lidar_sim;
-
-bool Test::testVizPCD(std::string file_name, int is_rgb = 1)
-{
-    std::cout << "Visualizing: " << file_name << std::endl;
-    Visualizer viz;
-    viz.visualize(file_name, is_rgb);
-    return true;
-}
 
 bool Test::testPoseServer(std::string rel_path_pose_log)
 {

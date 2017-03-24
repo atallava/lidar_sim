@@ -4,8 +4,6 @@
 namespace lidar_sim {
     class Test {
     public:
-        bool testVizPCD(std::string file_name, int is_rgb);
-        bool testVizPoints();
 	bool testPoseServer(std::string rel_path_pose_log);
 	bool testGetPoseAtTime(std::string rel_path_pose_log, double t);
 	bool testCovMat();
