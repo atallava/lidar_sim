@@ -10,13 +10,18 @@ namespace lidar_sim {
     typedef std::vector<std::vector<double> > Pts;
 
     std::vector<double> calcPtsMean(const std::vector<std::vector<double> > &pts);
+    // find mean and subtract from pts
     Pts calcCenteredPts(const Pts &pts);
     Eigen::MatrixXd calcPtsCovMat(const std::vector<std::vector<double> > &pts);
+    // pt*pt'
     Eigen::MatrixXd calcOuterProd(const std::vector<double> &pt);
     double deg2rad(double angle_deg);
-    bool anyNonzeros(const std::vector<int> &vec);
+
     std::vector<double> sampleFromMvn(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat);
 
+    // mimicking matlab any()
+    bool anyNonzeros(const std::vector<int> &vec);
+    
     // mimicking matlab mat(flag,:)
     template <typename T>
 	std::vector<T> logicalSubsetArray(const std::vector<T> &array, const std::vector<int> &logical_flag)
@@ -29,6 +34,7 @@ namespace lidar_sim {
 	return array_subset;
     }
 
+    // mimicking matlab find(vec)
     template <typename T>
 	std::vector<int> findNonzeroIds(const std::vector<T> &vec)
     {
@@ -40,25 +46,24 @@ namespace lidar_sim {
 	return nonzero_ids;
     }
 
-    std::tuple<std::vector<int>, std::vector<double> >
-	sortIntersectionFlag(const std::vector<int> &intersection_flag, const std::vector<double> &dist_along_ray);
-
+    // mimicking matlab ~vec
     std::vector<int> negateLogicalVec(const std::vector<int> &vec);
+
+    // mimicking matlab pdist2
+    std::vector<std::vector<double> > pdist2(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2);
+
+    // todo: template this
+    // mimicking matlab logical(ids)
+    std::vector<int> genLogicalVecFromIds(std::vector<int> ids, int vec_size);
 
     // nearest neighbor ids for pts2 in pts1
     std::tuple<std::vector<int>, std::vector<double> >
 	nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2);
-    std::vector<std::vector<double> > pdist2(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2);
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 	nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2, const int nn);
 
     double euclideanDist(const std::vector<double> &pt1, const std::vector<double> &pt2);
     double calcVariance(const std::vector<double> &vec);
-
-    std::tuple<int, bool>
-	sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &sorted_intersecting_ids);
-    std::vector<int> getIntersectedFlag(const std::vector<std::vector<int> > &intersection_flag);
-    std::vector<int> genLogicalVecFromIds(std::vector<int> ids, int vec_size);
 
     // intervals are [a,b]
     // interval1 ids which overlap with any of interval2
@@ -81,6 +86,8 @@ namespace lidar_sim {
 	return ids;
     }
 
+    // useful when sometimes passing a single element to a function that needs a 
+    // vector of elements as input
     template<typename T>
 	std::vector<T> wrapDataInVec(T data)
     {
@@ -90,6 +97,7 @@ namespace lidar_sim {
 	return vec;
     }
 
+    // handy version
     template<typename T>
 	std::tuple<double, double> calcVecMeanVar(std::vector<T> data)
     {
@@ -107,6 +115,7 @@ namespace lidar_sim {
     std::vector<double> vectorDiff(const std::vector<double> &a, const std::vector<double> &b);
     std::vector<double> getPerpUnitVec2(const std::vector<double> &a);
     std::vector<double> normalizeVec(const std::vector<double> &a);
+
     std::vector<std::vector<double> > calcPrincipalAxes2D(const std::vector<std::vector<double> > &pts);
     OrientedBox calcObb(const std::vector<std::vector<double> > &pts);
     std::vector<std::vector<double> > centerPts(const std::vector<std::vector<double> > &pts);

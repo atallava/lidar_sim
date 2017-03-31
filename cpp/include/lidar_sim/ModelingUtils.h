@@ -26,5 +26,11 @@ namespace lidar_sim {
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > >
 	buildBlocks(const std::vector<std::vector<double> > &imu_posn_nodes,
 		    const std::vector<std::vector<double> > &pts, int pts_per_block);
+
+    std::vector<int> getIntersectedFlag(const std::vector<std::vector<int> > &intersection_flag);
+    std::tuple<std::vector<int>, std::vector<double> >
+	sortIntersectionFlag(const std::vector<int> &intersection_flag, const std::vector<double> &dist_along_ray);
+    std::tuple<int, bool>
+	sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &sorted_intersecting_ids);
 }
 

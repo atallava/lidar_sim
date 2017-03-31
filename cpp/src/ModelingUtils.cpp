@@ -160,4 +160,67 @@ namespace lidar_sim {
 
 	return std::make_tuple(block_node_ids, block_pts_ids);
     }
+
+    std::vector<int> getIntersectedFlag(const std::vector<std::vector<int> > &intersection_flag)
+    {
+	std::vector<int> intersected_flag(intersection_flag[0].size(), 0);
+	for(size_t i = 0; i < intersection_flag[0].size(); ++i)
+	    for(size_t j = 0; j < intersection_flag.size(); ++j)
+		intersected_flag[i] += intersection_flag[j][i];
+
+	return intersected_flag;
+    }
+
+    std::tuple<std::vector<int>, std::vector<double> >
+    sortIntersectionFlag(const std::vector<int> &intersection_flag, const std::vector<double> &dist_along_ray)
+    {
+	std::vector<int> intersecting_ids;
+	std::vector<double> dist_along_ray_intersections;
+	for(size_t i = 0; i < intersection_flag.size(); ++i)
+	    if (intersection_flag[i] == 1)
+	    {
+		intersecting_ids.push_back(i);
+		dist_along_ray_intersections.push_back(dist_along_ray[i]);
+	    }
+    
+	// get indices of ascending sort
+	std::vector<int> sorted_ids(intersecting_ids.size());
+	std::size_t n(0);
+	std::generate(std::begin(sorted_ids), std::end(sorted_ids), [&]{ return n++; });
+
+	std::sort( std::begin(sorted_ids), std::end(sorted_ids), 
+		   [&](int i1, int i2) { return dist_along_ray_intersections[i1] < dist_along_ray_intersections[i2]; });
+
+	std::vector<int> sorted_intersecting_ids(intersecting_ids.size());
+	std::vector<double> sorted_dist_along_ray_intersections(dist_along_ray_intersections.size());
+	for(size_t i = 0; i < sorted_ids.size(); ++i)
+	{
+	    sorted_intersecting_ids[i] = intersecting_ids[sorted_ids[i]];
+	    sorted_dist_along_ray_intersections[i] = dist_along_ray_intersections[sorted_ids[i]];
+	}
+    
+	return std::make_tuple(sorted_intersecting_ids, sorted_dist_along_ray_intersections);
+    }
+
+    std::tuple<int, bool>
+    sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &target_ids)
+    {
+	size_t n_targets = hit_prob_vec.size();
+	std::random_device rd;
+	std::mt19937 gen(rd());
+   	std::uniform_real_distribution<> dis(0, 1);
+
+	int hit_id;
+	bool hit_bool;
+	for(size_t i = 0; i < n_targets; ++i)
+	    if (dis(gen) < hit_prob_vec[i])
+	    {
+		hit_id = target_ids[i];
+		hit_bool = true;
+		return std::make_tuple(hit_id, hit_bool);
+	    }
+	hit_id = -1;
+	hit_bool = false;
+	return std::make_tuple(hit_id, hit_bool);
+    }
 }
