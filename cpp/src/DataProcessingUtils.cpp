@@ -407,4 +407,89 @@ namespace lidar_sim {
 
 	return matching_filenames;
     }
+
+    std::tuple<std::vector<std::string>, std::vector<std::vector<std::string> > >
+    getPatternMatchingFiles(std::string rel_path_dir, boost::regex pattern, int num_captures)
+    {
+	std::vector< std::string > matching_filenames;
+	std::vector<std::vector<std::string> > captures;
+
+	boost::filesystem::directory_iterator end_itr; // Default ctor yields past-the-end
+	for( boost::filesystem::directory_iterator i( rel_path_dir ); i != end_itr; ++i )
+	{
+	    if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
+
+	    std::string filename = i->path().filename().string();
+
+	    std::vector<std::string> this_match_captures;
+	    boost::match_results<std::string::const_iterator> what;
+	    if (boost::regex_search(filename, what, pattern))
+	    {
+		matching_filenames.push_back(filename);
+
+		if ( (int)(what.size()-1) != num_captures )
+		{
+		    std::stringstream ss_err_msg;
+		    ss_err_msg << "number of boost regex captures:" << what.size()-1 << " does not match expected: " << num_captures;
+		    throw std::logic_error(ss_err_msg.str().c_str());
+		}
+		
+		// 1 because what[0] is entire string
+		for(size_t j = 1; j < (size_t)num_captures+1; ++j)
+		    this_match_captures.push_back(what[j]);
+
+		captures.push_back(this_match_captures);
+	    }
+	}
+
+	return std::make_tuple(matching_filenames, captures);
+    }
+
+    std::vector<int> getEllipsoidModelBlockIds(const std::string rel_path_ellipsoid_models_dir, const int section_id)
+    {
+	std::ostringstream ss;
+	ss << "section_" << std::setw(2) << std::setfill('0') 
+	   << section_id << "_block" << "_([0-9]+)" 
+	   << "_non_ground_ellipsoids.txt";
+	boost::regex pattern(ss.str());
+	int num_captures = 1; // who checks consistency between num_captures and pattern?
+
+	std::vector<std::string> matching_filenames;
+	std::vector<std::vector<std::string> > captures;
+	std::tie(matching_filenames, captures) = 
+	    getPatternMatchingFiles(rel_path_ellipsoid_models_dir, pattern, num_captures);
+
+	std::vector<int> ids;
+	for(size_t i = 0; i < captures.size(); ++i)
+	    ids.push_back(std::stoi(captures[i][0]));
+
+	// note: important that ids are sorted!
+	std::sort(ids.begin(), ids.end());
+
+	return ids;
+    }
+
+    std::vector<int> getTriangleModelBlockIds(const std::string rel_path_triangle_models_dir, const int section_id)
+    {
+	std::ostringstream ss;
+	ss << "section_" << std::setw(2) << std::setfill('0') 
+	   << section_id << "_block" << "_([0-9]+)" 
+	   << "_ground_triangles.txt";
+	boost::regex pattern(ss.str());
+	int num_captures = 1; // who checks consistency between num_captures and pattern?
+
+	std::vector<std::string> matching_filenames;
+	std::vector<std::vector<std::string> > captures;
+	std::tie(matching_filenames, captures) = 
+	    getPatternMatchingFiles(rel_path_triangle_models_dir, pattern, num_captures);
+
+	std::vector<int> ids;
+	for(size_t i = 0; i < captures.size(); ++i)
+	    ids.push_back(std::stoi(captures[i][0]));
+
+	// note: important that ids are sorted!
+	std::sort(ids.begin(), ids.end());
+
+	return ids;
+    }
 }
