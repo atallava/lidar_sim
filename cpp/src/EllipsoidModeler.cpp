@@ -28,7 +28,8 @@ EllipsoidModeler::EllipsoidModeler() :
     m_default_hit_prob(1),
 
     m_hit_count_prior(0),
-    m_miss_count_prior(1)
+    m_miss_count_prior(1),
+    m_max_pts_dist_to_nbrs(5)
 {    
     m_n_clusters_per_pt = 1000/(double)12016; // hack based on rim stretch test
 }
@@ -39,6 +40,7 @@ void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
 	std::cout << "EllipsoidModeler: creating ellipsoid models..." << std::endl;
 
     loadPts(rel_path_pts);
+    // filterPts();
     clusterPts();
     filterClusters();
     fillEllipsoidModels();
@@ -272,6 +274,30 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
 	hit_prob_vec[i] = (double)(ellipsoid_hit_count[i]/(double)(ellipsoid_hit_count[i] + ellipsoid_miss_count[i]));
 	m_ellipsoid_models[i].hit_prob = hit_prob_vec[i];
     }
+}
+
+void EllipsoidModeler::filterPts()
+{
+    if (m_debug_flag)
+	std::cout << "EllipsoidModeler: filtering pts... " << std::endl;
+
+    // throw away pts which are isolated
+    std::vector<std::vector<int> > nn_ids;
+    std::tie(nn_ids, std::ignore) = nearestNeighbors(m_pts, m_pts, 2);
+    std::vector<double> min_dists_to_nbrs(m_pts.size(), 0);
+    std::vector<int> flag = std::vector<int>(m_pts.size(), 1);
+    for(size_t i = 0; i < m_pts.size(); ++i)
+    {
+	min_dists_to_nbrs[i] = euclideanDist(m_pts[i], m_pts[nn_ids[i][1]]);
+	if (min_dists_to_nbrs[i] > m_max_pts_dist_to_nbrs)
+	    flag[i] = 0;
+    }
+    auto filtered_pts = logicalSubsetArray(m_pts, flag);
+    if (m_debug_flag)
+	std::cout << "TriangleModeler: fracn pts retained after nn filter: " 
+		  << filtered_pts.size()/(double)m_pts.size() << std::endl;
+
+    m_pts = filtered_pts;
 }
 
 void EllipsoidModeler::setDebugFlag(int flag)

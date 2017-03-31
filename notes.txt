@@ -7,55 +7,46 @@ for using in a transformation
 
 mat:
 
-analyze taylor data:
+* brigthened image by contrast. how it works is a mystery to me.
 
-brigthened image by contrast. how it works is a mystery to me.
+* scatter3 can handle about a max of 1e5 points smoothly. 
 
-scatter3 can handle about a max of 1e5 points smoothly. 
+* there is a simple way of vizing the segments from each pcd, fill in the holes
+of one pcd with the segmentation from another
 
-vane sim:
+* manual segmentation, can use coarse hierarchical clustering output from
+  matlab.
 
-there is a simple way of vizing the segments from each pcd, fill in the holes of
-one pcd with the segmentation from another
+* grep todos in code
 
-manual segmentation, can use coarse hierarchical clustering output from matlab.
-
-grep todos in code
-
-params:
+* params:
 viz:
 segment length in plot
 levels in plotting ellipse
 
-sortintersectionflag used by mesh and ellipse, might want to change comments
+* sortintersectionflag used by mesh and ellipse, might want to change comments
 
-selection of scan ids to process
+* metric of comparing point clouds
 
-metric of comparing point clouds
+* what is the default value when nothing is returned from laser? and laser scanning pattern
 
-what is the default value when nothing is returned from laser?
-laser scanning pattern
-
-names getting confusing 
+* names getting confusing 
 scanPts, for the driveby
 trainPts, makes sense
 
-maybe instead of making cell blocks inside a long function, write subfunctions.
+* maybe instead of making cell blocks inside a long function, write subfunctions.
 
-actually, perm value is opacity.
+* actually, perm value is opacity.
 
 70% of ellipsoids scan rays hit
 75% of tri scan rays hit
 
-segment:
+* remember that values of segmentationparams depend on point cloud density,
+e.g. max dist to nbrs or min nbrs. segmentation works with subsampled
+dataset. so will have to transfer labels to points in full dataset, just do
+nearest neighbors
 
-remember that values of params depend on point cloud density, e.g. max dist to
-nbrs or min nbrs
-
-segmentation works with subsampled dataset. so will have to transfer labels to
-points in full dataset, just do nearest neighbors
-
-figs:
+* figs:
 saving fig with 16000 3d points seems like reasonable capacity, takes about 25s. 
 remember that each ellipsoid is specified with a number of points. scale number of points based on size?
 
@@ -81,7 +72,7 @@ num velodyne packets: 4624457
 
 cpp:
 
-vtk:
+* vtk:
 axes ticks
 subfigures
 labels
@@ -90,43 +81,35 @@ saving figures
 
 why does viz ellipsoids need one at the origin?
 
-just like you have functions written in matlab for matlab processing, you need
+* just like you have functions written in matlab for matlab processing, you need
 to write emacs lisp to do simple operations in emacs
 
-cpp:
-hierarchical clustering
-pdist2
-flann, nearest neighbors
-vector to eigen, vector to flann, better than copying
-many class members are public
+* other implementations of hierarchical clustering. flann has one.
 
-flann has hierarchical clustering also
-check perm logic
-matlab pdist2 very fast compared to for looping cpp
-there is a smarter way to line walk instead of checking intersection with all triangles
+* your version of pdist2
 
-alglib rbf fit also very slow. for rim stretch ground train, with 1e6 pts, takes
-729 s with rbfdist = 1, level = 1, smoothness = 1e-3 10s with radius = 0.1m.
+* better implementation of vector to eigen, vector to flann, etc, than your
+copying code
 
-how does matlab manage griddata fast? probably does it only for query points
+* there is a smarter way to line walk instead of checking intersection with all
+  triangles
 
-maybe sorted intersection flag should be in a modeling utils
+* alglib rbf fit also very slow. for rim stretch ground train, with 1e6 pts,
+takes 729 s with rbfdist = 1, level = 1, smoothness = 1e-3 10s with radius =
+0.1m.
 
-write triangles also shouldn't be attached to a class?
+* how does matlab manage griddata fast? probably does it only for query
+  points. matlab pdist2 very fast compared to for looping cpp
 
-perm, var for meshes debug
+* write triangles also shouldn't be attached to a class?
 
-sim with alglib ellipsoids in matlab to debug
+* maybe flann nn should be a class so nchecks and nkdtrees can be set?  haven't
+found need for this yet.
 
-maybe flann nn should be a class so nchecks and nkdtrees can be set?
+* write good code comments
 
-flann nn different from pdist2. because inexact?
+* different params
 
-code comments
-
-metric for comparing point clouds
-
-params:
 block logic:
 dt for nodes
 
@@ -135,42 +118,33 @@ alglib
 vtk
 cgal
 
+* tools for slow code
 boost scope cpu timer
 valgrind
-ellipsoids kd tree
 
-for each modeling, do a cleanup: remove pts that are far from any neighbors
+* ellipsoids kd tree, if simming is very slow from the entire model. this can
+take very long to implement.
 
-segmentation optim: debug the nn calculation, smoothing, look at block 1 in
-matlab to see what is going in, plot the spherical variation directly.
-maybe block 1 doesn't have enough point density.
-
-in cpp, one function after another, only operating on member data, who knows
+* in cpp, one function after another, only operating on member data, who knows
 what comes when?
 
-abstract modeler class
+* abstract modeler class?
 
-vtk bulbs when giving it only sim points, why?
+* vtk bulbs when giving it only sim points, why?
 
-so there was an error in the rng in eigenmvn. watch out, there could be similar
-errors in the rest of the code
+* many class members are public. so there was an error in the rng in
+eigenmvn. watch out, there could be similar errors in the rest of the code
 
-can modulate transparencies with permeabilities
+* flann includes pt as its own nearest nbr, check code for this!
 
-flann includes pt as its own nearest nbr, check code for this!
+* one of the sources of error is that the imu posn is not the laser posn!
 
-one of the sources of error is that the imu posn is not the laser posn!
+* how to save objects? boost serialize
 
-how to save objects? boost serialize
-
-saw error due to playing around too much with private variables. m_n_clusters
+* saw error due to playing around too much with private variables. m_n_clusters
 error happened. what is a good way to avoid that error.
 
-change sim pts logic: always return hit flag.
-
-there can be other functions which deal with filtering out non-hit points.
-
-i want to throw away visualizer.cpp and pcl includes in cmakelists, but for
+* i want to throw away visualizer.cpp and pcl includes in cmakelists, but for
 unidentified reason, just commenting out visualizer breaks compilation in ways
 related to vtk and boost.
 

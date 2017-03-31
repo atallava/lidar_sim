@@ -88,5 +88,16 @@ namespace lidar_sim {
 	return array_subsampled;
     }
 
+    // useful when sometimes passing a single element to a function that needs a 
+    // vector of elements as input
+    template<typename T>
+	std::vector<T> wrapDataInVec(T data)
+    {
+	std::vector<T> vec;
+	vec.push_back(data);
+	
+	return vec;
+    }
+
     std::vector<std::string> getPatternMatchingFiles(std::string rel_path_dir, boost::regex pattern);
 }

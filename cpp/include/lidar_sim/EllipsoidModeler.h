@@ -31,10 +31,11 @@ namespace lidar_sim {
 	void writeEllipsoidsToFile(std::string rel_path_output);
 	void calcHitProb(std::string rel_path_section, const PoseServer &imu_poses_server);
 	void calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_poses_server);
+	void filterPts();
+	void setDebugFlag(int flag);
 
 	std::vector<std::vector<double> > m_pts;
 	EllipsoidModels m_ellipsoid_models;
-	void setDebugFlag(int flag);
 
     private:
 	int m_debug_flag;
@@ -47,5 +48,6 @@ namespace lidar_sim {
 
 	int m_hit_count_prior;
 	int m_miss_count_prior;
+	double m_max_pts_dist_to_nbrs; // used to filter out pts before modeling
     };
 }

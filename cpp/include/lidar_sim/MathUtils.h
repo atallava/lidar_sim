@@ -86,17 +86,6 @@ namespace lidar_sim {
 	return ids;
     }
 
-    // useful when sometimes passing a single element to a function that needs a 
-    // vector of elements as input
-    template<typename T>
-	std::vector<T> wrapDataInVec(T data)
-    {
-	std::vector<T> vec;
-	vec.push_back(data);
-	
-	return vec;
-    }
-
     // handy version
     template<typename T>
 	std::tuple<double, double> calcVecMeanVar(std::vector<T> data)
@@ -112,13 +101,18 @@ namespace lidar_sim {
 
     double vectorNorm(const std::vector<double> &a);
     double dotProduct(const std::vector<double> &a, const std::vector<double> &b);
+    // c = a - b
     std::vector<double> vectorDiff(const std::vector<double> &a, const std::vector<double> &b);
+    // calc b s.t. b.a = 0
     std::vector<double> getPerpUnitVec2(const std::vector<double> &a);
+    // a/norm(a)
     std::vector<double> normalizeVec(const std::vector<double> &a);
 
     std::vector<std::vector<double> > calcPrincipalAxes2D(const std::vector<std::vector<double> > &pts);
     OrientedBox calcObb(const std::vector<std::vector<double> > &pts);
     std::vector<std::vector<double> > centerPts(const std::vector<std::vector<double> > &pts);
+
+    // this was for the ellipse transform needed by sanjiban
     void GetEllipseTransform(const Eigen::Matrix3d &input, Eigen::Quaterniond &quat, 
 			     Eigen::Vector3d &scale, double level = 9);
 }
