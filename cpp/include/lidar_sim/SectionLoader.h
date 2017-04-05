@@ -31,4 +31,3 @@ namespace lidar_sim {
 	int m_num_logs;
     };
 }
-
