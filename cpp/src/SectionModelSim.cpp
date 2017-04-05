@@ -83,7 +83,7 @@ std::vector<int> SectionModelSim::getPoseBlockMembership(const std::vector<doubl
 std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 SectionModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 {
-    typedef std::vector<std::vector<double> > SimPts; // is this expensive?
+    typedef std::vector<std::vector<double> > SimPts; 
     typedef std::vector<int> HitFlag;
 
     std::vector<SimPts> sim_pts_over_blocks;
