@@ -269,19 +269,6 @@ EllipsoidModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
     std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, m_laser_calib_params);
 
     return simPtsGivenRays(ray_origin, ray_dirns);
-
-    // // intersections
-    // std::vector<std::vector<int> > intersection_flag;
-    // std::vector<std::vector<double> > dist_along_ray;
-    // std::tie(intersection_flag, dist_along_ray) = calcEllipsoidIntersections(
-    // 	ray_origin, ray_dirns);
-
-    // // sim
-    // std::vector<std::vector<double> > sim_pts;
-    // std::vector<int> hit_flag;
-    // std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(intersection_flag, dist_along_ray);
-
-    // return std::make_tuple(sim_pts, hit_flag);
 }
 
 std::tuple<std::vector<std::vector<double> >, std::vector<int> > 

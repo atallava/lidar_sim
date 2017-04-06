@@ -99,10 +99,16 @@ namespace lidar_sim {
 	    mean(i) = mu[i];
 
 	bool use_cholesky = false;
-	// todo: correct this
-	// uint64_t seed = std::chrono::duration_cast<std::chrono::nanoseconds>
-	//     (std::chrono::steady_clock::now().time_since_epoch()).count();
-	uint64_t seed = 1;
+
+	// todo: make sampling stochastic again!
+	bool deterministic_sampling = true;
+	uint64_t seed;
+	if (deterministic_sampling)
+	    seed = 1;
+	else
+	    seed = std::chrono::duration_cast<std::chrono::nanoseconds>
+		(std::chrono::steady_clock::now().time_since_epoch()).count();
+
 	Eigen::EigenMultivariateNormal<double> normX_solver(mean, cov_mat, use_cholesky, seed);
 	Eigen::MatrixXd sample = normX_solver.samples(1);
 
