@@ -118,19 +118,19 @@ SectionModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
     // sim over tri blocks
     std::vector<int> triangle_blocks_to_sim = getPoseBlockMembership(imu_pose, m_block_node_ids_ground);
     std::vector<int> triangle_blocks_hit;
-    // for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
-    // {
-    // 	std::vector<std::vector<double> > sim_pts_can;
-    // 	std::vector<int> hit_flag_can;
-    // 	int block_id = triangle_blocks_to_sim[i];
-    // 	std::tie(sim_pts_can, hit_flag_can) = 
-    // 	    m_triangle_model_sims[block_id].simPtsGivenPose(imu_pose);
-    // 	if (anyNonzeros(hit_flag_can))
-    // 	    triangle_blocks_hit.push_back(block_id);
+    for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
+    {
+    	std::vector<std::vector<double> > sim_pts_can;
+    	std::vector<int> hit_flag_can;
+    	int block_id = triangle_blocks_to_sim[i];
+    	std::tie(sim_pts_can, hit_flag_can) = 
+    	    m_triangle_model_sims[block_id].simPtsGivenPose(imu_pose);
+    	if (anyNonzeros(hit_flag_can))
+    	    triangle_blocks_hit.push_back(block_id);
 	
-    // 	sim_pts_over_blocks.push_back(sim_pts_can);
-    // 	hit_flag_over_blocks.push_back(hit_flag_can);
-    // }
+    	sim_pts_over_blocks.push_back(sim_pts_can);
+    	hit_flag_over_blocks.push_back(hit_flag_can);
+    }
 
     // marginalize 
     int n_rays = m_laser_calib_params.intrinsics.getNRays();
