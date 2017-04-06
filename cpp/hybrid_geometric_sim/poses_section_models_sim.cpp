@@ -102,26 +102,6 @@ int main(int argc, char **argv)
     std::string rel_path_section = genRelPathSection(section_sim_id);
     SectionLoader section(rel_path_section);
 
-    // pose server
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
-    PoseServer imu_pose_server(rel_path_poses_log);
-
-    int n_poses_to_sim = 1;
-
-    std::vector<std::vector<double> > imu_poses;
-    double t_max = section.m_pt_timestamps.back();
-    double t_min = section.m_pt_timestamps[0];
-    double dt = (t_max-t_min)/n_poses_to_sim;
-
-    // get poses
-    double t = t_min;
-    while(t < t_max)
-    {
-	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
-	imu_poses.push_back(imu_pose);
-	t += dt;
-    }
-    
     // sim object
     int section_models_id = 3;
     std::string rel_path_models_dir = genRelPathModelsDir(section_models_id);;
@@ -140,9 +120,9 @@ int main(int argc, char **argv)
     for(auto i : triangle_model_block_ids)
     	rel_path_triangle_model_blocks.push_back(genRelPathTriangles(section_models_id, i));
 
+    // create sim object
     SectionModelSim sim;
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
-    
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
@@ -151,10 +131,61 @@ int main(int argc, char **argv)
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 
-    // simulate
+    // pose server
+    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
+    PoseServer imu_pose_server(rel_path_poses_log);
+
+    int n_poses_to_sim = 1;
+
+    // sim
+    // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> hit_flag;
-    std::tie(sim_pts_all, hit_flag) = sim.simPtsGivenPoses(imu_poses);
+    int packet_array_step = std::floor(section.m_packet_ids.size()/ n_poses_to_sim);
+    for(size_t i = 0; i < section.m_packet_ids.size(); i += packet_array_step)
+    {
+	double t = section.m_packet_timestamps[i];
+
+	// pose, ray origin
+	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
+	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
+
+	// packet pts
+	std::vector<std::vector<double> > this_pts = section.getPtsAtTime(t);
+	
+	// ray dirns
+	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
+
+	// simulate 
+	std::vector<std::vector<double> > this_sim_pts;
+	std::vector<int> this_hit_flag;
+	std::tie(this_sim_pts, this_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
+
+	// add to big list
+	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts.begin(), this_sim_pts.end());
+	hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
+    }
+
+    // // get poses
+    // std::vector<std::vector<double> > imu_poses;
+    // double t_max = section.m_pt_timestamps.back();
+    // double t_min = section.m_pt_timestamps[0];
+    // double dt = (t_max-t_min)/n_poses_to_sim;
+
+    // double t = t_min;
+    // while(t < t_max)
+    // {
+    // 	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
+    // 	imu_poses.push_back(imu_pose);
+    // 	t += dt;
+    // }
+    
+    // // simulate
+    // std::vector<std::vector<double> > sim_pts_all;
+    // std::vector<int> hit_flag;
+    // std::tie(sim_pts_all, hit_flag) = sim.simPtsGivenPoses(imu_poses);
+    
+    // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write sim pts

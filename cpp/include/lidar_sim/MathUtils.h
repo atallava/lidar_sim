@@ -107,7 +107,7 @@ namespace lidar_sim {
     std::vector<double> getPerpUnitVec2(const std::vector<double> &a);
     // a/norm(a)
     std::vector<double> normalizeVec(const std::vector<double> &a);
-
+    
     std::vector<std::vector<double> > calcPrincipalAxes2D(const std::vector<std::vector<double> > &pts);
     OrientedBox calcObb(const std::vector<std::vector<double> > &pts);
     std::vector<std::vector<double> > centerPts(const std::vector<std::vector<double> > &pts);

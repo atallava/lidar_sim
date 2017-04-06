@@ -193,7 +193,17 @@ namespace lidar_sim {
     {
 	double dist = 0;
 	for(size_t i = 0; i < pt1.size(); ++i)
-	    dist = dist + std::pow(pt1[i]-pt2[i], 2);
+	{
+	    try
+	    {
+		dist = dist + std::pow(pt1[i]-pt2[i], 2);
+	    }
+	    catch (const std::exception& e)
+	    {
+		std::cout << "error. something bad happened" << std::endl;
+		exit(0);
+	    }
+	}
 
 	dist = std::sqrt(dist);
 	return dist;
