@@ -135,62 +135,53 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    int n_poses_to_sim = 1;
+    int n_poses_to_sim = 10;
 
     // sim
     // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> hit_flag;
+    std::vector<std::vector<double> > real_pts;
     int packet_array_step = std::floor(section.m_packet_ids.size()/ n_poses_to_sim);
     for(size_t i = 0; i < section.m_packet_ids.size(); i += packet_array_step)
     {
-	double t = section.m_packet_timestamps[i];
+    	double t = section.m_packet_timestamps[i];
 
-	// pose, ray origin
-	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
-	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
+    	// pose, ray origin
+    	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
+    	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
 
-	// packet pts
-	std::vector<std::vector<double> > this_pts = section.getPtsAtTime(t);
+    	// packet pts
+    	std::vector<std::vector<double> > this_pts = section.getPtsAtTime(t);
+
+    	// add to big list of real pts
+    	real_pts.insert(real_pts.end(), this_pts.begin(), this_pts.end());
 	
-	// ray dirns
-	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
+    	// ray dirns
+	// here is where you could alternately get directions from laser intrinsics
+    	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
 
-	// simulate 
-	std::vector<std::vector<double> > this_sim_pts;
-	std::vector<int> this_hit_flag;
-	std::tie(this_sim_pts, this_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
+    	// simulate 
+    	std::vector<std::vector<double> > this_sim_pts;
+    	std::vector<int> this_hit_flag;
+    	std::tie(this_sim_pts, this_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
 
-	// add to big list
-	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts.begin(), this_sim_pts.end());
-	hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
+    	// add to big list of sim pts
+    	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts.begin(), this_sim_pts.end());
+    	hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
     }
 
-    // // get poses
-    // std::vector<std::vector<double> > imu_poses;
-    // double t_max = section.m_pt_timestamps.back();
-    // double t_min = section.m_pt_timestamps[0];
-    // double dt = (t_max-t_min)/n_poses_to_sim;
-
-    // double t = t_min;
-    // while(t < t_max)
-    // {
-    // 	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
-    // 	imu_poses.push_back(imu_pose);
-    // 	t += dt;
-    // }
-    
-    // // simulate
-    // std::vector<std::vector<double> > sim_pts_all;
-    // std::vector<int> hit_flag;
-    // std::tie(sim_pts_all, hit_flag) = sim.simPtsGivenPoses(imu_poses);
-    
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
+    // write real pts
+    std::string rel_path_real_pts = "data/real_pts.xyz";
+    writePtsToXYZFile(real_pts, rel_path_real_pts);
+
     // write sim pts
-    std::string rel_path_output = genRelPathSimPts(section_sim_id);;
-    writePtsToXYZFile(sim_pts, rel_path_output);
+    // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
+    std::string rel_path_sim_pts = "data/sim_pts.xyz";
+    writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

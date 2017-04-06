@@ -156,6 +156,9 @@ triangles: sample hit id, add gaussian noise to range
 
 ellipsoid: sample hit id, draw from ellipsoid mvn
 
+* the block of taking a real section, laser posn, real pts, ray dirns, etc,
+  should that be its own function?
+
 --------------------------------------------------
 
 catkin ws:

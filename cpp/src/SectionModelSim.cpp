@@ -92,85 +92,11 @@ std::vector<int> SectionModelSim::getPosnBlockMembership(const std::vector<doubl
 std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 SectionModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 {
-    typedef std::vector<std::vector<double> > SimPts; 
-    typedef std::vector<int> HitFlag;
+    // rays
+    std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, m_laser_calib_params);
+    std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, m_laser_calib_params);
 
-    std::vector<SimPts> sim_pts_over_blocks;
-    std::vector<HitFlag> hit_flag_over_blocks;
-
-    // sim over ellipsoid blocks
-    std::vector<int> ellipsoid_blocks_to_sim = getPoseBlockMembership(imu_pose, m_block_node_ids_non_ground);
-    std::vector<int> ellipsoid_blocks_hit;
-    for(size_t i = 0; i < ellipsoid_blocks_to_sim.size(); ++i)
-    {
-    	std::vector<std::vector<double> > sim_pts_can;
-    	std::vector<int> hit_flag_can;
-    	int block_id = ellipsoid_blocks_to_sim[i];
-    	try
-    	{	
-    	    std::tie(sim_pts_can, hit_flag_can) = 
-    		m_ellipsoid_model_sims[block_id].simPtsGivenPose(imu_pose);
-    	}
-    	catch (const std::exception& e)
-    	{
-    	    std::cout << "error" << std::endl;
-    	    std::cout << block_id << std::endl;
-    	    exit(0);
-    	}
-    	if (anyNonzeros(hit_flag_can))
-    	    ellipsoid_blocks_hit.push_back(block_id);
-	
-    	sim_pts_over_blocks.push_back(sim_pts_can);
-    	hit_flag_over_blocks.push_back(hit_flag_can);
-    }
-
-    // sim over tri blocks
-    std::vector<int> triangle_blocks_to_sim = getPoseBlockMembership(imu_pose, m_block_node_ids_ground);
-    std::vector<int> triangle_blocks_hit;
-    for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
-    {
-    	std::vector<std::vector<double> > sim_pts_can;
-    	std::vector<int> hit_flag_can;
-    	int block_id = triangle_blocks_to_sim[i];
-    	std::tie(sim_pts_can, hit_flag_can) = 
-    	    m_triangle_model_sims[block_id].simPtsGivenPose(imu_pose);
-    	if (anyNonzeros(hit_flag_can))
-    	    triangle_blocks_hit.push_back(block_id);
-	
-    	sim_pts_over_blocks.push_back(sim_pts_can);
-    	hit_flag_over_blocks.push_back(hit_flag_can);
-    }
-
-    // marginalize 
-    int n_rays = m_laser_calib_params.intrinsics.getNRays();
-    std::vector<std::vector<double> > sim_pts(n_rays, std::vector<double> (3,0));
-    std::vector<int> hit_flag(n_rays, 0);
-
-    std::vector<double> laser_posn = laserPosnFromImuPose(imu_pose, m_laser_calib_params);
-    // loop over rays
-    for(size_t i = 0; i < (size_t)n_rays; ++i)
-    {
-	std::vector<double> ranges_over_blocks(sim_pts_over_blocks.size(), 1e7); // just some big value
-	int misses = 0;
-	// loop over each block
-	for(size_t j = 0; j < sim_pts_over_blocks.size(); ++j)
-	    if (hit_flag_over_blocks[j][i])
-		ranges_over_blocks[j] = euclideanDist(laser_posn, sim_pts_over_blocks[j][i]);
-	    else
-		misses += 1;
-
-	// if hit a block
-	// take closest range value
-	if (misses < (int)sim_pts_over_blocks.size())
-	{
-	    auto min_it = std::min_element(std::begin(ranges_over_blocks), std::end(ranges_over_blocks));
-	    int min_posn = std::distance(std::begin(ranges_over_blocks), min_it);
-	    sim_pts[i] = sim_pts_over_blocks[min_posn][i];
-	    hit_flag[i] = 1;
-	}
-    }
-    
-    return std::make_tuple(sim_pts, hit_flag);
+    return simPtsGivenRays(ray_origin, ray_dirns);
 }
 
 std::tuple<std::vector<std::vector<double> >, std::vector<int> > 

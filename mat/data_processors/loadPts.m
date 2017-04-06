@@ -1,4 +1,13 @@
-function pts = ptsFromXyz(relPathFile)
+function pts = loadPts(relPathFile)
+    %LOADPTS 
+    % assumes each line of file is x y z
+    %
+    % pts = LOADPTS(relPathFile)
+    %
+    % relPathFile - string. 
+    %
+    % pts         - [nPts,3] array.
+    
     fid = fopen(relPathFile,'r');
     pts = [];
     count = 0;
