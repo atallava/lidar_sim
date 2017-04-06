@@ -67,6 +67,8 @@ main.log
 main.out
 main.pdf
 
+##################################################
+
 # misc
 testApp.*
 
@@ -74,3 +76,4 @@ mat/figs/
 
 tex/figs/jpgs
 
+scratch.txt

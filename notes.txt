@@ -148,6 +148,14 @@ error happened. what is a good way to avoid that error.
 unidentified reason, just commenting out visualizer breaks compilation in ways
 related to vtk and boost.
 
+* deterministic simulation is useful for debugging. 
+
+useful therefore to know sources of randomness in sim. 
+
+triangles: sample hit id, add gaussian noise to range
+
+ellipsoid: sample hit id, draw from ellipsoid mvn
+
 --------------------------------------------------
 
 catkin ws:

@@ -99,10 +99,10 @@ namespace lidar_sim {
 	    mean(i) = mu[i];
 
 	bool use_cholesky = false;
-	// should the seed be passed as argument?
-	// what a long-winded seed. had to go to level o
-	uint64_t seed = std::chrono::duration_cast<std::chrono::nanoseconds>
-	    (std::chrono::steady_clock::now().time_since_epoch()).count();
+	// todo: correct this
+	// uint64_t seed = std::chrono::duration_cast<std::chrono::nanoseconds>
+	//     (std::chrono::steady_clock::now().time_since_epoch()).count();
+	uint64_t seed = 1;
 	Eigen::EigenMultivariateNormal<double> normX_solver(mean, cov_mat, use_cholesky, seed);
 	Eigen::MatrixXd sample = normX_solver.samples(1);
 

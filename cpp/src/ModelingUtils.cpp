@@ -210,15 +210,26 @@ namespace lidar_sim {
 	std::mt19937 gen(rd());
    	std::uniform_real_distribution<> dis(0, 1);
 
+	// todo: make sampling stochastic!
+	bool deterministic_sampling = true;
+
 	int hit_id;
 	bool hit_bool;
 	for(size_t i = 0; i < n_targets; ++i)
+	{
+	    if (deterministic_sampling)
+	    {
+		// std::cout << "determinstic hit id sampling!" << std::endl;
+		return std::make_tuple(target_ids[0], true);
+	    }
+
 	    if (dis(gen) < hit_prob_vec[i])
 	    {
 		hit_id = target_ids[i];
 		hit_bool = true;
 		return std::make_tuple(hit_id, hit_bool);
 	    }
+	}
 	hit_id = -1;
 	hit_bool = false;
 	return std::make_tuple(hit_id, hit_bool);

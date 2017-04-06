@@ -92,7 +92,6 @@ SectionModelSim::simPtsGivenPose(const std::vector<double> &imu_pose)
     // sim over ellipsoid blocks
     std::vector<int> ellipsoid_blocks_to_sim = getPoseBlockMembership(imu_pose, m_block_node_ids_non_ground);
     std::vector<int> ellipsoid_blocks_hit;
-    // todo: uncomment
     // for(size_t i = 0; i < ellipsoid_blocks_to_sim.size(); ++i)
     // {
     // 	std::vector<std::vector<double> > sim_pts_can;
