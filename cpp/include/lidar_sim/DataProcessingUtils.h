@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <algorithm>
 
 #include <Eigen/Dense>
 
@@ -48,6 +49,12 @@ namespace lidar_sim {
 
 	file.close();
     }
+
+    void writeQueriedBlocks(const std::string rel_path_file, const std::vector<int> &triangle_block_ids, 
+			    const std::vector<int> &ellipsoid_block_ids);
+    std::tuple<std::vector<int>, std::vector<int> >
+	readQueriedBlocks(const std::string rel_path_input);
+
 
     std::tuple<std::vector<double>, std::vector<double>, std::vector<double> >
 	getVecsFromPts(const std::vector<std::vector<double> > &pts);
@@ -96,6 +103,14 @@ namespace lidar_sim {
 	std::vector<T> vec;
 	vec.push_back(data);
 	
+	return vec;
+    }
+
+    template<typename T>
+	std::vector<T> getUniqueSortedVec(std::vector<T> vec)
+    {
+	std::sort(vec.begin(), vec.end());
+	vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 	return vec;
     }
 

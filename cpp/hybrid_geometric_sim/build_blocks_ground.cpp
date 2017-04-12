@@ -68,6 +68,11 @@ int main(int argc, char **argv)
     	}
     }
 
+    std::cout << "imu_posn_nodes: " << std::endl;
+    dispMat(imu_posn_nodes);
+
+    exit(0);
+
     // viz these nodes
     RangeDataVizer vizer;
     // vizer.vizPts(imu_posn_nodes);
@@ -142,9 +147,6 @@ int main(int argc, char **argv)
     // write block node ids;
     std::cout << "block node ids: " << std::endl;
     dispMat(block_node_ids);
-
-    std::cout << "imu_posn_nodes: " << std::endl;
-    dispMat(imu_posn_nodes);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

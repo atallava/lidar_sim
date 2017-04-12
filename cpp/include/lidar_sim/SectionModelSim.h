@@ -18,8 +18,8 @@ namespace lidar_sim {
 	void loadTriangleModelBlocks(const std::vector<std::string> &rel_path_model_blocks);
 	void loadBlockInfo(const std::string rel_path_imu_posn_nodes, const std::string rel_path_block_node_ids_ground, const std::string rel_path_block_node_ids_non_ground);
 
-	std::vector<int> getPoseEllipsoidBlockMembership(const std::vector<double> &imu_pose);
-	std::vector<int> getPoseTriangleBlockMembership(const std::vector<double> &imu_pose);
+	std::vector<int> getPosnEllipsoidBlockMembership(const std::vector<double> &imu_pose);
+	std::vector<int> getPosnTriangleBlockMembership(const std::vector<double> &imu_pose);
 	std::vector<int> getPoseBlockMembership(const std::vector<double> &imu_pose, const std::vector<std::vector<int> > &block_node_ids);
 	std::vector<int> getPosnBlockMembership(const std::vector<double> &posn, const std::vector<std::vector<int> > &block_node_ids);
 	

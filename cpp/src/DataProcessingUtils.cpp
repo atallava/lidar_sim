@@ -268,6 +268,61 @@ namespace lidar_sim {
 	return std::make_tuple(object_classes, object_xy_posns);
     }
 
+    void writeQueriedBlocks(const std::string rel_path_output, const std::vector<int> &triangle_block_ids, 
+			    const std::vector<int> &ellipsoid_block_ids)
+    {
+	std::ofstream file(rel_path_output);
+	std::cout << "Writing queried blocks to: " << rel_path_output << std::endl;
+
+	// write triangle block ids
+	std::ostringstream ss;
+	for(size_t i = 0; i < triangle_block_ids.size(); ++i)
+	    ss << triangle_block_ids[i] << " ";
+	ss << std::endl;
+
+	file << ss.str();
+
+	// write ellipsoid block ids
+	ss.str("");
+	ss.clear();
+	for(size_t i = 0; i < ellipsoid_block_ids.size(); ++i)
+	    ss << ellipsoid_block_ids[i] << " ";
+	ss << std::endl;
+
+	file << ss.str();
+    }
+
+    std::tuple<std::vector<int>, std::vector<int> >
+    readQueriedBlocks(const std::string rel_path_file)
+    {
+	std::ifstream file(rel_path_file);
+	std::cout << "Reading from: " << rel_path_file << std::endl;
+	if (!file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_file;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
+	
+	// read triangle block ids
+	std::vector<int> triangle_block_ids;
+	std::string current_line;
+	std::getline(file, current_line);
+	std::istringstream iss(current_line);
+	int id;
+	while(iss >> id)
+	    triangle_block_ids.push_back(id);
+
+	// read ellipsoid block ids
+	std::vector<int> ellipsoid_block_ids;
+	std::getline(file, current_line);
+	iss.clear();
+	iss.str(current_line);
+	while(iss >> id)
+	    ellipsoid_block_ids.push_back(id);
+
+	return std::make_tuple(triangle_block_ids, ellipsoid_block_ids);
+    }
 
     std::tuple<std::vector<double>, std::vector<double>, std::vector<double> >
     getVecsFromPts(const std::vector<std::vector<double> > &pts)

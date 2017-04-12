@@ -51,15 +51,15 @@ void SectionModelSim::loadBlockInfo(const std::string rel_path_imu_posn_nodes, c
 }
 
 // ellipsoid block membership
-std::vector<int> SectionModelSim::getPoseEllipsoidBlockMembership(const std::vector<double> &imu_pose)
+std::vector<int> SectionModelSim::getPosnEllipsoidBlockMembership(const std::vector<double> &posn)
 {
-    return getPoseBlockMembership(imu_pose, m_block_node_ids_non_ground);
+    return getPosnBlockMembership(posn, m_block_node_ids_non_ground);
 }
 
 // triangle block membership
-std::vector<int> SectionModelSim::getPoseTriangleBlockMembership(const std::vector<double> &imu_pose)
+std::vector<int> SectionModelSim::getPosnTriangleBlockMembership(const std::vector<double> &posn)
 {
-    return getPoseBlockMembership(imu_pose, m_block_node_ids_ground);
+    return getPosnBlockMembership(posn, m_block_node_ids_ground);
 }
 
 std::vector<int> SectionModelSim::getPoseBlockMembership(const std::vector<double> &imu_pose, 
@@ -72,20 +72,63 @@ std::vector<int> SectionModelSim::getPoseBlockMembership(const std::vector<doubl
 std::vector<int> SectionModelSim::getPosnBlockMembership(const std::vector<double> &posn, 
 							 const std::vector<std::vector<int> > &block_node_ids)
 {
-    // distances to block boundary nodes
-    std::vector<std::vector<double> > dists_to_nodes(block_node_ids.size(), std::vector<double>(2));
+    // distances to imu posn nodes
+    std::vector<double> dists_to_imu_posn_nodes;
+    std::vector<int> flag;
+    for(size_t i = 0; i < m_imu_posn_nodes.size(); ++i)
+    {
+	auto begin = m_imu_posn_nodes[i].begin();
+	std::vector<double> node_posn(begin, begin + 3);
+
+	double dist_to_node = euclideanDist(posn, node_posn);
+	dists_to_imu_posn_nodes.push_back(dist_to_node);
+	if (dist_to_node > m_max_dist_to_node_for_membership)
+	    flag.push_back(0);
+	else
+	    flag.push_back(1);
+    }
+
+    // todo: delete
+    std::cout << "posn: " << std::endl; dispVec(posn);
+    std::cout << "flagged node ids: " << std::endl; dispVec(findNonzeroIds(flag)); 
+
+    // find which blocks have been activated
     std::vector<int> block_ids_belonging_to;
     for(size_t i = 0; i < block_node_ids.size(); ++i)
     {
-	for(size_t j = 0; j < 2; ++j)
-	    dists_to_nodes[i][j] = euclideanDist(posn, m_imu_posn_nodes[block_node_ids[i][j]]);
-	
-	if ((dists_to_nodes[i][0] <= m_max_dist_to_node_for_membership) || 
-	    (dists_to_nodes[i][1] <= m_max_dist_to_node_for_membership))
-	    block_ids_belonging_to.push_back(i);
+	// if any of the flagged nodes belongs to this block, activate
+	for(size_t j = 0; j < flag.size(); ++j)
+	    if (flag[j])
+	    {
+		bool condn1 = (block_node_ids[i][0] <= (int)j);
+		bool condn2 = ((int)j <= block_node_ids[i][1]);
+		bool condn3 = (condn1) && (condn2);
+		if (condn3)
+		{
+		    // note: push back i+1 because blocks begin indexing from 1, not 0
+		    block_ids_belonging_to.push_back(i+1);
+		    break; // since already activated
+		}
+	    }
     }
 
     return block_ids_belonging_to;
+
+    // // distances to block boundary nodes
+    // std::vector<std::vector<double> > dists_to_nodes(block_node_ids.size(), std::vector<double>(2));
+    // std::vector<int> block_ids_belonging_to;
+    // for(size_t i = 0; i < block_node_ids.size(); ++i)
+    // {
+    // 	for(size_t j = 0; j < 2; ++j)
+    // 	    dists_to_nodes[i][j] = euclideanDist(posn, m_imu_posn_nodes[block_node_ids[i][j]]);
+	
+    // 	if ((dists_to_nodes[i][0] <= m_max_dist_to_node_for_membership) || 
+    // 	    (dists_to_nodes[i][1] <= m_max_dist_to_node_for_membership))
+    // 	    // warning: push back i+1 because blocks begin indexing from 1, not 0
+    // 	    block_ids_belonging_to.push_back(i+1);
+    // }
+
+    // return block_ids_belonging_to;
 }
 
 // sim pt given pose
@@ -139,8 +182,9 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     	int block_id = ellipsoid_blocks_to_sim[i];
     	try
     	{	
+	    // block_id - 1, since blocks are indexed starting 1
     	    std::tie(sim_pts_can, hit_flag_can) = 
-    		m_ellipsoid_model_sims[block_id].simPtsGivenRays(ray_origin, ray_dirns);
+    		m_ellipsoid_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
     	}
     	catch (const std::exception& e)
     	{
@@ -163,8 +207,9 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     	std::vector<std::vector<double> > sim_pts_can;
     	std::vector<int> hit_flag_can;
     	int block_id = triangle_blocks_to_sim[i];
+	// block_id - 1, since blocks are indexed starting 1
     	std::tie(sim_pts_can, hit_flag_can) = 
-    	    m_triangle_model_sims[block_id].simPtsGivenRays(ray_origin, ray_dirns);
+    	    m_triangle_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
     	if (anyNonzeros(hit_flag_can))
     	    triangle_blocks_hit.push_back(block_id);
 	

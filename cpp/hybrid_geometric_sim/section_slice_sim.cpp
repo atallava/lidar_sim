@@ -135,15 +135,22 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    int n_poses_to_sim = 1000;
+    // slice ids
+    size_t packet_id_sim_start, packet_id_sim_end;
+    packet_id_sim_start = 60000;
+    //packet_id_sim_end = 10;
+    packet_id_sim_end = packet_id_sim_start + 1;
 
     // sim
     // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> hit_flag;
     std::vector<std::vector<double> > real_pts;
-    int packet_array_step = std::floor(section.m_packet_ids.size()/ n_poses_to_sim);
-    for(size_t i = 0; i < section.m_packet_ids.size(); i += packet_array_step)
+    std::vector<int> ellipsoid_blocks_queried;
+    std::vector<int> triangle_blocks_queried;
+    size_t packet_array_step = 1;
+    for(size_t i = packet_id_sim_start; 
+	i < packet_id_sim_end; i += packet_array_step)
     {
     	double t = section.m_packet_timestamps[i];
 
@@ -161,6 +168,25 @@ int main(int argc, char **argv)
 	// here is where you could alternately get directions from laser intrinsics
     	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
 
+	// blocks queried for this pose
+	std::vector<int> this_triangle_blocks_queried = 
+	    sim.getPosnTriangleBlockMembership(ray_origin);
+	triangle_blocks_queried.insert(triangle_blocks_queried.begin(),
+					this_triangle_blocks_queried.begin(), this_triangle_blocks_queried.end());
+	std::vector<int> this_ellipsoid_blocks_queried = 
+	    sim.getPosnEllipsoidBlockMembership(ray_origin);
+	ellipsoid_blocks_queried.insert(ellipsoid_blocks_queried.begin(),
+					this_ellipsoid_blocks_queried.begin(), this_ellipsoid_blocks_queried.end());
+
+	// debug
+	std::cout << "packet id: " << i << ". ray origin: " << std::endl;
+	dispVec(ray_origin);
+	dispVec(this_triangle_blocks_queried);
+	dispVec(this_ellipsoid_blocks_queried);
+
+	// todo: delete
+	exit(0);
+
     	// simulate 
     	std::vector<std::vector<double> > this_sim_pts;
     	std::vector<int> this_hit_flag;
@@ -171,17 +197,25 @@ int main(int argc, char **argv)
     	hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
     }
 
+    // retain unique block ids
+    ellipsoid_blocks_queried = getUniqueSortedVec(ellipsoid_blocks_queried);
+    triangle_blocks_queried = getUniqueSortedVec(triangle_blocks_queried);
+    
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = "data/real_pts.xyz";
+    std::string rel_path_real_pts = "data/real_pts_1.xyz";
     writePtsToXYZFile(real_pts, rel_path_real_pts);
 
     // write sim pts
     // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
-    std::string rel_path_sim_pts = "data/sim_pts.xyz";
+    std::string rel_path_sim_pts = "data/sim_pts_1.xyz";
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);
+
+    // write queried blocks
+    std::string rel_path_queried_blocks = "data/sim_queried_blocks.txt";
+    writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

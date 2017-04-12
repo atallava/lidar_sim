@@ -186,6 +186,9 @@ add_library(lidar_sim SHARED
 
 ## modeling
 
+# add_executable(build_blocks_ground hybrid_geometric_sim/build_blocks_ground.cpp)
+#   target_link_libraries(build_blocks_ground lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ## state mapping
 
 # add_executable(gen_ground_triangles hybrid_geometric_sim/gen_ground_triangles.cpp)
@@ -196,8 +199,11 @@ add_library(lidar_sim SHARED
 
 ## sim
 
-add_executable(poses_section_models_sim hybrid_geometric_sim/poses_section_models_sim.cpp)
-  target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(poses_section_models_sim hybrid_geometric_sim/poses_section_models_sim.cpp)
+#   target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+ 
+add_executable(section_slice_sim hybrid_geometric_sim/section_slice_sim.cpp)
+  target_link_libraries(section_slice_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## viz
 
