@@ -17,7 +17,8 @@ namespace lidar_sim {
     Eigen::MatrixXd calcOuterProd(const std::vector<double> &pt);
     double deg2rad(double angle_deg);
 
-    std::vector<double> sampleFromMvn(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat);
+    std::vector<double> sampleFromMvn(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat, 
+				      const bool deterministic_sampling = false);
 
     // mimicking matlab any()
     bool anyNonzeros(const std::vector<int> &vec);

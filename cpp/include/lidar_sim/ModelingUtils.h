@@ -31,7 +31,8 @@ namespace lidar_sim {
     std::tuple<std::vector<int>, std::vector<double> >
 	sortIntersectionFlag(const std::vector<int> &intersection_flag, const std::vector<double> &dist_along_ray);
     std::tuple<int, bool>
-	sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &sorted_intersecting_ids);
+	sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &sorted_intersecting_ids, 
+		    const bool deterministic_sampling = false);
 
     std::vector<std::vector<double> >
 	calcRayDirns(const std::vector<double> start_pt, const std::vector<std::vector<double> > end_pts);

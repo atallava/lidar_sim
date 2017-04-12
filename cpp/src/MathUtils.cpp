@@ -92,7 +92,8 @@ namespace lidar_sim {
 	return false;
     }
 
-    std::vector<double> sampleFromMvn(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat)
+    std::vector<double> sampleFromMvn(const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat,
+				      const bool deterministic_sampling)
     {
 	Eigen::MatrixXd mean(3,1);
 	for(size_t i = 0; i < 3; ++i)
@@ -100,8 +101,6 @@ namespace lidar_sim {
 
 	bool use_cholesky = false;
 
-	// todo: make sampling stochastic again!
-	bool deterministic_sampling = true;
 	uint64_t seed;
 	if (deterministic_sampling)
 	    seed = 1;

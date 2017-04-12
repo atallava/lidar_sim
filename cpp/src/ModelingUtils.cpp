@@ -203,15 +203,13 @@ namespace lidar_sim {
     }
 
     std::tuple<int, bool>
-    sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &target_ids)
+    sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &target_ids,
+		const bool deterministic_sampling)
     {
 	size_t n_targets = hit_prob_vec.size();
 	std::random_device rd;
 	std::mt19937 gen(rd());
    	std::uniform_real_distribution<> dis(0, 1);
-
-	// todo: make sampling stochastic!
-	bool deterministic_sampling = true;
 
 	int hit_id;
 	bool hit_bool;

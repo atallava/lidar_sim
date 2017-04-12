@@ -53,6 +53,7 @@ namespace lidar_sim {
 
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 	    simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
+	void setDeterministicSim(const bool choice);
 
 	EllipsoidModels m_ellipsoid_models;
 
@@ -61,5 +62,6 @@ namespace lidar_sim {
 	int m_debug_flag;
 	LaserCalibParams m_laser_calib_params;
 	std::mt19937 m_gen;
+	bool m_deterministic_sim;
     };
 }

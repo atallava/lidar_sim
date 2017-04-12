@@ -11,7 +11,8 @@
 using namespace lidar_sim;
 
 SectionModelSim::SectionModelSim() :
-    m_max_dist_to_node_for_membership(20)
+    m_max_dist_to_node_for_membership(20),
+    m_deterministic_sim(false)
 {    
 }
 
@@ -23,6 +24,7 @@ void SectionModelSim::loadEllipsoidModelBlocks(const std::vector<std::string> &r
 	EllipsoidModelSim sim;
 	sim.loadEllipsoidModels(rel_path_model_blocks[i]);
 	sim.setLaserCalibParams(m_laser_calib_params);
+	sim.setDeterministicSim(m_deterministic_sim);
 
 	m_ellipsoid_model_sims.push_back(sim);
     }
@@ -36,6 +38,7 @@ void SectionModelSim::loadTriangleModelBlocks(const std::vector<std::string> &re
 	TriangleModelSim sim;
 	sim.loadTriangleModels(rel_path_model_blocks[i]);
 	sim.setLaserCalibParams(m_laser_calib_params);
+	sim.setDeterministicSim(m_deterministic_sim);
 
 	m_triangle_model_sims.push_back(sim);
     }
@@ -87,10 +90,6 @@ std::vector<int> SectionModelSim::getPosnBlockMembership(const std::vector<doubl
 	else
 	    flag.push_back(1);
     }
-
-    // todo: delete
-    std::cout << "posn: " << std::endl; dispVec(posn);
-    std::cout << "flagged node ids: " << std::endl; dispVec(findNonzeroIds(flag)); 
 
     // find which blocks have been activated
     std::vector<int> block_ids_belonging_to;
@@ -246,4 +245,31 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     }
     
     return std::make_tuple(sim_pts, hit_flag);
+}
+
+void SectionModelSim::setDeterministicSim(const bool choice)
+{
+    m_deterministic_sim = choice;
+
+    // triangle model sims
+    if (m_triangle_model_sims.empty())
+    {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "SectionModelSim: m_triangle_model_sims is empty!";
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
+    for(size_t i = 0; i < m_triangle_model_sims.size(); ++i)
+	m_triangle_model_sims[i].setDeterministicSim(m_deterministic_sim);
+
+    // ellipsoid model sims
+    if (m_ellipsoid_model_sims.empty())
+    {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "SectionModelSim: m_ellipsoid_model_sims is empty!";
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
+    for(size_t i = 0; i < m_ellipsoid_model_sims.size(); ++i)
+	m_ellipsoid_model_sims[i].setDeterministicSim(m_deterministic_sim);
 }

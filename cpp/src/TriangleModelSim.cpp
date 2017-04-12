@@ -20,12 +20,12 @@ using namespace lidar_sim;
 TriangleModelSim::TriangleModelSim() :
     m_range_var(0.07),
     m_max_residual_for_hit(1),
-    m_normal_dist(0, m_range_var)
+    m_normal_dist(0, m_range_var),
+    m_deterministic_sim(false)
 {    
     std::random_device rd;
     std::mt19937 gen(rd());
     m_gen = gen;
-    
 }
 
 void TriangleModelSim::loadTriangleModels(std::string rel_path_input)
@@ -246,7 +246,7 @@ TriangleModelSim::simPtsGivenIntersections(std::vector<double> ray_origin, std::
 	int hit_ellipsoid_id;
 	bool hit_bool;
 	std::tie(hit_ellipsoid_id, hit_bool) =
-	    sampleHitId(hit_prob_vec, sorted_intersecting_ids);
+	    sampleHitId(hit_prob_vec, sorted_intersecting_ids, m_deterministic_sim);
 
 	if (!hit_bool)
 	{
@@ -254,10 +254,8 @@ TriangleModelSim::simPtsGivenIntersections(std::vector<double> ray_origin, std::
 	    continue;
 	}
 
-	// todo: made noise deterministic 0!
 	double noise;
-	bool deterministic_noise = true;
-	if (deterministic_noise)
+	if (m_deterministic_sim)
 	    noise = 0;
 	else
 	    noise = m_normal_dist(m_gen);
@@ -316,4 +314,9 @@ TriangleModelSim::simPtsGivenRays(const std::vector<double> &ray_origin, const s
 							   intersection_flag, dist_along_ray);
 
     return std::make_tuple(sim_pts, hit_flag);
+}
+
+void TriangleModelSim::setDeterministicSim(const bool choice)
+{
+    m_deterministic_sim = choice;
 }

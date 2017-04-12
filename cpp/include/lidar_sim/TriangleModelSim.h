@@ -41,6 +41,7 @@ namespace lidar_sim {
 
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 	    simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
+	void setDeterministicSim(const bool choice);
 
 	std::vector<std::vector<int> > m_triangles;
 	std::vector<std::vector<double> > m_fit_pts;
@@ -54,5 +55,6 @@ namespace lidar_sim {
 	double m_max_residual_for_hit;
 	std::mt19937 m_gen;
 	std::normal_distribution<> m_normal_dist;
+	bool m_deterministic_sim;
     };
 }

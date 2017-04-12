@@ -125,6 +125,9 @@ int main(int argc, char **argv)
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
+    // todo: make sim stochastic!
+    sim.setDeterministicSim(false);
+
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
     std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
     std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_models_id);
@@ -179,13 +182,10 @@ int main(int argc, char **argv)
 					this_ellipsoid_blocks_queried.begin(), this_ellipsoid_blocks_queried.end());
 
 	// debug
-	std::cout << "packet id: " << i << ". ray origin: " << std::endl;
-	dispVec(ray_origin);
-	dispVec(this_triangle_blocks_queried);
-	dispVec(this_ellipsoid_blocks_queried);
-
-	// todo: delete
-	exit(0);
+	// std::cout << "packet id: " << i << ". ray origin: " << std::endl;
+	// dispVec(ray_origin);
+	// dispVec(this_triangle_blocks_queried);
+	// dispVec(this_ellipsoid_blocks_queried);
 
     	// simulate 
     	std::vector<std::vector<double> > this_sim_pts;

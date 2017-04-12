@@ -15,7 +15,8 @@ using namespace lidar_sim;
 
 EllipsoidModelSim::EllipsoidModelSim() :
     m_max_maha_dist_for_hit(3.5),
-    m_debug_flag(0)
+    m_debug_flag(0),
+    m_deterministic_sim(false)
 {    
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -184,7 +185,7 @@ EllipsoidModelSim::simPtsGivenIntersections(const std::vector<std::vector<int> >
 	int hit_ellipsoid_id;
 	bool hit_bool;
 	std::tie(hit_ellipsoid_id, hit_bool) =
-	    sampleHitId(hit_prob_vec, sorted_intersecting_ids);
+	    sampleHitId(hit_prob_vec, sorted_intersecting_ids, m_deterministic_sim);
 
 	if (!hit_bool)
 	{
@@ -193,7 +194,8 @@ EllipsoidModelSim::simPtsGivenIntersections(const std::vector<std::vector<int> >
 	}
 	 
 	std::vector<double> sim_pt = sampleFromMvn(m_ellipsoid_models[hit_ellipsoid_id].mu,
-						   m_ellipsoid_models[hit_ellipsoid_id].cov_mat);
+						   m_ellipsoid_models[hit_ellipsoid_id].cov_mat,
+						   m_deterministic_sim);
 	for(size_t j = 0; j < 3; ++j)
 	    sim_pts[i][j] = sim_pt[j];
     }
@@ -306,4 +308,9 @@ EllipsoidModelSim::simPtsGivenRays(const std::vector<double> &ray_origin, const 
     std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(intersection_flag, dist_along_ray);
 
     return std::make_tuple(sim_pts, hit_flag);
+}
+
+void EllipsoidModelSim::setDeterministicSim(const bool choice)
+{
+    m_deterministic_sim = choice;
 }

@@ -135,7 +135,7 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    int n_poses_to_sim = 1000;
+    int n_poses_to_sim = 5000;
 
     // sim
     // loop over packets
