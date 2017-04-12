@@ -42,11 +42,11 @@ int main(int argc, char **argv)
     size_t n_clusters = 250;
     alglib::clusterizergetkclusters(ahc_report, n_clusters, pt_cluster_ids, cz);
 
-    // todo: delete.
-    std::cout << "pt cluster ids: " << std::endl;
-    for(size_t i = 0; i < 10; ++i)
-    	std::cout << pt_cluster_ids[i] << " " ;
-    std::cout << std::endl;
+    // debug
+    // std::cout << "pt cluster ids: " << std::endl;
+    // for(size_t i = 0; i < 10; ++i)
+    // 	std::cout << pt_cluster_ids[i] << " " ;
+    // std::cout << std::endl;
 
     // write clustering to file
     // std::string rel_path_output = "data/clustering.txt";
@@ -55,12 +55,11 @@ int main(int argc, char **argv)
     // retain those with min pts
     std::vector<int> n_pts_per_cluster = getNumPtsPerCluster(pt_cluster_ids, n_clusters);
     
-    // todo: delete
-    std::cout << "n pts per cluster: " << std::endl;
-    for(size_t i = 0; i < 10; ++i)
-    	std::cout << n_pts_per_cluster[i] << " " ;
-    std::cout << std::endl;
-    exit(0); 
+    // debug
+    // std::cout << "n pts per cluster: " << std::endl;
+    // for(size_t i = 0; i < 10; ++i)
+    // 	std::cout << n_pts_per_cluster[i] << " " ;
+    // std::cout << std::endl;
 
     int min_pts_per_cluster = 9;
     std::vector<int> selected_cluster_ids;

@@ -53,8 +53,7 @@ namespace lidar_sim {
     // mimicking matlab pdist2
     std::vector<std::vector<double> > pdist2(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2);
 
-    // todo: template this
-    // mimicking matlab logical(ids)
+    // vec[id] = 1, rest 0
     std::vector<int> genLogicalVecFromIds(std::vector<int> ids, int vec_size);
 
     // nearest neighbor ids for pts2 in pts1

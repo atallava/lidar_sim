@@ -71,8 +71,6 @@ int main(int argc, char **argv)
     std::cout << "imu_posn_nodes: " << std::endl;
     dispMat(imu_posn_nodes);
 
-    exit(0);
-
     // viz these nodes
     RangeDataVizer vizer;
     // vizer.vizPts(imu_posn_nodes);

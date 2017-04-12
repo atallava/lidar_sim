@@ -125,7 +125,6 @@ int main(int argc, char **argv)
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
-    // todo: make sim stochastic!
     sim.setDeterministicSim(false);
 
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
