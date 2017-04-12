@@ -313,6 +313,9 @@ TriangleModelSim::simPtsGivenRays(const std::vector<double> &ray_origin, const s
     std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(ray_origin, ray_dirns,
 							   intersection_flag, dist_along_ray);
 
+    applyMaxRangeFilter(ray_origin, sim_pts, hit_flag, 
+			m_laser_calib_params.intrinsics.max_range);
+
     return std::make_tuple(sim_pts, hit_flag);
 }
 

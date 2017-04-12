@@ -29,5 +29,6 @@ namespace lidar_sim {
 	std::vector<int> m_pt_packet_id;
 	std::string m_rel_path_section;
 	int m_num_logs;
+	int m_bracketing_padding;
     };
 }

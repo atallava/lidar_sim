@@ -249,5 +249,18 @@ namespace lidar_sim {
 
 	return ray_dirns;
     }
+
+    void applyMaxRangeFilter(const std::vector<double> ray_origin,
+			     std::vector<std::vector<double> > &sim_pts, std::vector<int> &hit_flag, 
+			     const double max_range)
+    {
+	for(size_t i = 0; i < sim_pts.size(); ++i)
+	    if (hit_flag[i])
+	    {
+		double range = euclideanDist(ray_origin, sim_pts[i]);
+		if (range > max_range)
+		    hit_flag[i] = 0;
+	    }
+    }
 }
 

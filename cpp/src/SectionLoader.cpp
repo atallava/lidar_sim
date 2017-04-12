@@ -15,7 +15,8 @@
 using namespace lidar_sim;
 
 SectionLoader::SectionLoader(std::string rel_path_section) :
-    m_num_logs(0)
+    m_num_logs(0),
+    m_bracketing_padding(1000)
 {
     m_loadSection(rel_path_section);
 }
@@ -129,10 +130,8 @@ std::tuple<int, int> SectionLoader::getLogIdsBracketingImuPosns(const std::vecto
     int end_section_log_id = nn_ids.back()[0];
 
     // add some padding to log ids
-    // todo: make padding private member
-    int padding = 1000;
-    start_section_log_id = std::max(0, start_section_log_id - padding);
-    end_section_log_id = std::min(end_section_log_id + padding, (int)m_packet_timestamps.size());
+    start_section_log_id = std::max(0, start_section_log_id - m_bracketing_padding);
+    end_section_log_id = std::min(end_section_log_id + m_bracketing_padding, (int)m_packet_timestamps.size());
 
     return std::make_tuple(start_section_log_id, end_section_log_id);
 }

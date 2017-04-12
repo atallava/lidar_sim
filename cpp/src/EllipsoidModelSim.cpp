@@ -109,10 +109,7 @@ std::tuple<std::vector<int>,
 
 std::tuple<double, double> EllipsoidModelSim::calcMahaDistRayToEllipsoid(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, const std::vector<double> &mu, const Eigen::MatrixXd &cov_mat)
 {
-    // todo: bad conversion work. 
-    // fill eigen directly with pointers to stl stuff?
-    // but these eigen matrixxds are small in size
-    
+    // conversion between types
     Eigen::MatrixXd v(3,1);
     for(size_t i = 0; i < 3; ++i)
 	v(i) = mu[i] - ray_origin[i];
@@ -196,6 +193,7 @@ EllipsoidModelSim::simPtsGivenIntersections(const std::vector<std::vector<int> >
 	std::vector<double> sim_pt = sampleFromMvn(m_ellipsoid_models[hit_ellipsoid_id].mu,
 						   m_ellipsoid_models[hit_ellipsoid_id].cov_mat,
 						   m_deterministic_sim);
+	
 	for(size_t j = 0; j < 3; ++j)
 	    sim_pts[i][j] = sim_pt[j];
     }
@@ -306,6 +304,9 @@ EllipsoidModelSim::simPtsGivenRays(const std::vector<double> &ray_origin, const 
     std::vector<std::vector<double> > sim_pts;
     std::vector<int> hit_flag;
     std::tie(sim_pts, hit_flag) = simPtsGivenIntersections(intersection_flag, dist_along_ray);
+
+    applyMaxRangeFilter(ray_origin, sim_pts, hit_flag, 
+			m_laser_calib_params.intrinsics.max_range);
 
     return std::make_tuple(sim_pts, hit_flag);
 }

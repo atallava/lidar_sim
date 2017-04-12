@@ -52,7 +52,7 @@ void TriangleModeler::loadPts(const std::string rel_path_pts)
 {
     m_pts = loadPtsFromXYZFile(rel_path_pts);
 
-    // todo: subsample or not
+    // todo: subsample or not?
     subsamplePts();
 }
 
