@@ -139,9 +139,8 @@ int main(int argc, char **argv)
 
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 60000;
-    //packet_id_sim_end = 10;
-    packet_id_sim_end = packet_id_sim_start + 1;
+    packet_id_sim_start = 50000;
+    packet_id_sim_end = packet_id_sim_start + 10000;
 
     // sim
     // loop over packets
@@ -150,7 +149,7 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > real_pts;
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
-    size_t packet_array_step = 1;
+    size_t packet_array_step = 20;
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
@@ -204,12 +203,12 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = "data/real_pts_1.xyz";
+    std::string rel_path_real_pts = "data/hg_real_pts.xyz";
     writePtsToXYZFile(real_pts, rel_path_real_pts);
 
     // write sim pts
     // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
-    std::string rel_path_sim_pts = "data/sim_pts_1.xyz";
+    std::string rel_path_sim_pts = "data/hg_sim_pts.xyz";
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     // write queried blocks
