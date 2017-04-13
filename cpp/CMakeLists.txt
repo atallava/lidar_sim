@@ -225,3 +225,9 @@ add_executable(section_slice_nbr_sim hybrid_geometric_sim/section_slice_nbr_sim.
 # add_executable(viz_triangle_models hybrid_geometric_sim/viz_triangle_models.cpp)
 #   target_link_libraries(viz_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+## eval
+
+add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
+  target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+

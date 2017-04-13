@@ -163,6 +163,8 @@ ellipsoid: sample hit id, draw from ellipsoid mvn
 
   this means that the nbr sim uses the same training section pts as hg sim
 
+* cpp pretty printing
+
 --------------------------------------------------
 
 catkin ws:

@@ -94,7 +94,7 @@ namespace lidar_sim {
 	double var = 0;
 	for(size_t i = 0; i < data.size(); ++i)
 	    var += std::pow(data[i]-mu, 2.0);
-	var = var/(double)data.size();
+	var = var/(double)(data.size()-1);
 
 	return std::make_tuple(mu, var);
     }

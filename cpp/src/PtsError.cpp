@@ -9,8 +9,9 @@ PtsError::PtsError()
 {
 }
 
-double PtsError::calcError(const std::vector<std::vector<double> > &pts1, 
-			   const std::vector<std::vector<double> > &pts2)
+std::tuple<double, double>
+PtsError::calcError(const std::vector<std::vector<double> > &pts1, 
+		    const std::vector<std::vector<double> > &pts2)
 {
     std::vector<double> error_vec(pts2.size(), 0);
 
@@ -18,10 +19,9 @@ double PtsError::calcError(const std::vector<std::vector<double> > &pts1,
     std::vector<std::vector<double> > nn_dists;
     std::tie(nn_ids, nn_dists) = nearestNeighbors(pts1, pts2, 1);
 
-    double mean = 0;
+    std::vector<double> pt_losses;
     for(size_t i = 0; i < nn_dists.size(); ++i)
-	mean += nn_dists[i][0];
-
-    mean /= pts2.size();
-    return mean;
+	pt_losses.push_back(nn_dists[i][0]);
+    
+    return calcVecMeanVar(pt_losses);
 }
