@@ -18,7 +18,7 @@ NearestNeighborSim::NearestNeighborSim() :
 }
 
 // load pts
-void NearestNeighborSim::loadPts(const std::string rel_path_pts)
+void NearestNeighborSim::loadTrainPts(const std::string rel_path_pts)
 {
     m_pts = loadPtsFromXYZFile(rel_path_pts);
 
@@ -58,7 +58,33 @@ NearestNeighborSim::simPtsGivenPose(const std::vector<double> &imu_pose)
     // get ray origin and ray dirn
     std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, m_laser_calib_params);
     std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, m_laser_calib_params);
-    
+
+    return simPtsGivenRays(ray_origin, ray_dirns);
+}
+
+std::tuple<std::vector<std::vector<double> >, std::vector<int> > 
+NearestNeighborSim::simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses)
+{
+    std::vector<std::vector<double> > sim_pts;
+    std::vector<int> hit_flag;
+    for(size_t i = 0; i < imu_poses.size(); ++i)
+    {
+	std::vector<std::vector<double> > this_sim_pts;
+	std::vector<int> this_hit_flag;
+	std::tie(this_sim_pts, this_hit_flag) = simPtsGivenPose(imu_poses[i]); 
+	for(size_t j = 0; j < this_sim_pts.size(); ++j)
+	{
+	    sim_pts.push_back(this_sim_pts[j]);
+	    hit_flag.push_back(this_hit_flag[j]);
+	}
+    }
+
+    return std::make_tuple(sim_pts, hit_flag);
+}
+
+std::tuple<std::vector<std::vector<double> >, std::vector<int> > 
+NearestNeighborSim::simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns)
+{
     std::vector<std::vector<double> > sim_pts(ray_dirns.size(), std::vector<double>(3,0));
     std::vector<int> hit_flag(ray_dirns.size(),0);
 
@@ -106,26 +132,6 @@ NearestNeighborSim::simPtsGivenPose(const std::vector<double> &imu_pose)
 
 	    // todo: add variance?
 	    sim_pts[i] = m_pts[closest_id];
-	}
-    }
-
-    return std::make_tuple(sim_pts, hit_flag);
-}
-
-std::tuple<std::vector<std::vector<double> >, std::vector<int> > 
-NearestNeighborSim::simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses)
-{
-    std::vector<std::vector<double> > sim_pts;
-    std::vector<int> hit_flag;
-    for(size_t i = 0; i < imu_poses.size(); ++i)
-    {
-	std::vector<std::vector<double> > this_sim_pts;
-	std::vector<int> this_hit_flag;
-	std::tie(this_sim_pts, this_hit_flag) = simPtsGivenPose(imu_poses[i]); 
-	for(size_t j = 0; j < this_sim_pts.size(); ++j)
-	{
-	    sim_pts.push_back(this_sim_pts[j]);
-	    hit_flag.push_back(this_hit_flag[j]);
 	}
     }
 

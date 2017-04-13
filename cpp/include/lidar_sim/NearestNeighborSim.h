@@ -14,7 +14,7 @@ namespace lidar_sim {
     class NearestNeighborSim {
     public:
 	NearestNeighborSim();;
-	void loadPts(const std::string rel_path_pts);
+	void loadTrainPts(const std::string rel_path_pts);
 	void setDebugFlag(const int value);
 	void subsamplePts();
 
@@ -22,6 +22,8 @@ namespace lidar_sim {
 	    simPtsGivenPose(const std::vector<double> &imu_pose);
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> > 
 	    simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
+	std::tuple<std::vector<std::vector<double> >, std::vector<int> > 
+	    simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
 
 	std::vector<std::vector<double> > m_pts;
     private:

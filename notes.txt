@@ -159,6 +159,10 @@ ellipsoid: sample hit id, draw from ellipsoid mvn
 * the block of taking a real section, laser posn, real pts, ray dirns, etc,
   should that be its own function?
 
+* note that all the sims being compared should use the same tranining data
+
+  this means that the nbr sim uses the same training section pts as hg sim
+
 --------------------------------------------------
 
 catkin ws:
