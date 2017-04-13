@@ -8,7 +8,7 @@ genRelPathBlockPts = @(sectionId,blockId) ...
     sectionId,sectionId,blockId);
 
 genRelPathFig = @(sectionId,blockId) ...
-    sprintf('../figs/sections/section_%02d/section_%02d_block_%02d_ground_triangles.fig', ...
+    sprintf('../figs/sections/section_%02d/section_%02d_block_%02d_ground_triangles_uniform_alpha.fig', ...
     sectionId,sectionId,blockId);
 
 %%
@@ -29,7 +29,9 @@ for i = 1:length(blockIds)
     
     clear(plotStructVars{:});
     
-    plotStruct.triModelData = triModels;
+    triModelData = triModels;
+    triModelData.uniformAlpha = true;
+    plotStruct.triModelData = triModelData;
     
     plotStruct.pts = pts;
     

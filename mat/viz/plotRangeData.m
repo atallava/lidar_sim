@@ -72,6 +72,12 @@ function hfig = plotRangeData(inputStruct)
             error('ptsFit not a field in triModelData');
         end
         
+        if isfield(triModelData,'uniformAlpha')
+            triUniformAlpha = triModelData.uniformAlpha;
+        else
+            triUniformAlpha = false;
+        end
+        
         if isfield(triModelData,'intersectionFlag')
             useIntersectionFlag = true;
             intersectionFlag = triModelData.intersectionFlag;
@@ -153,9 +159,18 @@ function hfig = plotRangeData(inputStruct)
             triIdsToPlot = 1:size(triModelData.tri,1);
         end
         
+        if triUniformAlpha
+            faceVertexAlpha = ones(size(triModelData.tri,1),1)*0.5;
+        else
+            faceVertexAlpha = flipVecToColumn(mapHitProbToAlpha(triModelData.hitProbVec));
+        end
+        
         mudBrownColor = [210 180 140]/255.0;
+        saddleBrownColor = [139 69 19]/255.0;
         trimesh(triModelData.tri(triIdsToPlot,:), ...
-            triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3),'edgecolor',mudBrownColor);
+            triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3), ...
+            'edgecolor',saddleBrownColor,'facecolor',mudBrownColor, ...
+            'facealpha','flat','FaceVertexAlphaData',faceVertexAlpha);
         hold on;
     end
     
@@ -182,5 +197,5 @@ end
 function transparency = mapHitProbToAlpha(hitProb)
     alphaLow = 0;
     alphaHigh = 0.5;
-    transparency = alphaLow + hitProb*alphaHigh;
+    transparency = alphaLow + hitProb.*alphaHigh;
 end
