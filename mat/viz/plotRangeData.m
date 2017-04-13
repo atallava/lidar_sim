@@ -49,6 +49,11 @@ function hfig = plotRangeData(inputStruct)
         else
             useIntersectionFlag = false;
         end
+        if isfield(ellipsoidData,'uniformAlpha')
+            ellipsoidUniformAlpha = ellipsoidData.uniformAlpha;
+        else
+            ellipsoidUniformAlpha = false;
+        end
     else
         plotEllipsoids = false;
     end
@@ -126,9 +131,15 @@ function hfig = plotRangeData(inputStruct)
             thisHitProb = ellipsoidModels(i).hitProb;
             
             [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
-            % transparencies are modulated with hitProb
+            
+            if ellipsoidUniformAlpha
+                thisAlpha = 0.5;
+            else
+                thisAlpha = mapHitProbToAlpha(thisHitProb);
+            end
+            
             surf(xEll,yEll,zEll,'facecolor','g','meshstyle','none', ...
-                'facealpha',mapHitProbToTransparency(thisHitProb));
+                'facealpha',thisAlpha);
             hold on;
         end
     end
@@ -168,9 +179,8 @@ function hfig = plotRangeData(inputStruct)
 end
 
 %% helpers
-function transparency = mapHitProbToTransparency(hitProb)
+function transparency = mapHitProbToAlpha(hitProb)
     alphaLow = 0;
     alphaHigh = 0.5;
-    transparency = alphaHigh;
-%     transparency = alphaLow + hitProb*alphaHigh;
+    transparency = alphaLow + hitProb*alphaHigh;
 end
