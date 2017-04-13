@@ -1,4 +1,12 @@
 function ellipsoidModels = loadEllipsoidModels(rel_path_ellipsoids)
+    %LOADELLIPSOIDMODELS
+    %
+    % ellipsoidModels = LOADELLIPSOIDMODELS(rel_path_ellipsoids)
+    %
+    % rel_path_ellipsoids -
+    %
+    % ellipsoidModels     -
+    
     fid = fopen(rel_path_ellipsoids,'r');
     ellipsoidModels = struct('mu',{},'covMat',{},'perm',{});
     count = 0;

@@ -125,6 +125,7 @@ function hfig = plotRangeData(inputStruct)
             thisCovMat = ellipsoidModels(i).covMat;
             
             [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
+            % transparencies not modulated with perm
             surf(xEll,yEll,zEll,'facecolor','g','facealpha',0.2,'meshstyle','none');
             hold on;
         end

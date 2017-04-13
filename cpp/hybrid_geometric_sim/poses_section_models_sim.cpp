@@ -125,6 +125,8 @@ int main(int argc, char **argv)
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
+    sim.setDeterministicSim(true);
+
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
     std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
     std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_models_id);
@@ -135,7 +137,7 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    int n_poses_to_sim = 5000;
+    int n_poses_to_sim = 1000;
 
     // sim
     // loop over packets

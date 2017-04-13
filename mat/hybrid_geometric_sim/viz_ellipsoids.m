@@ -1,9 +1,20 @@
 % load
-relPathEllipsoidModels = 'ellipsoid_models';
-load(relPathEllipsoidModels,'ellipsoidModels');
+genRelPathEllipsoidModels = @(sectionId,blockId) ...
+    sprintf('../../cpp/data/sections/section_%02d/section_%02d_block_%02d_non_ground_ellipsoids.txt', ...
+    sectionId,sectionId,blockId);
 
-relPathPts = 'rim_stretch_veg_train';
-load(relPathPts,'pts');
+genRelPathBlockPts = @(sectionId,blockId) ...
+    sprintf('../../cpp/data/sections/section_%02d/section_%02d_block_%02d_non_ground.xyz', ...
+    sectionId,sectionId,blockId);
+
+%%
+sectionId = 3;
+blockId = 1;
+relPathEllipsoidModels = genRelPathEllipsoidModels(sectionId,blockId);
+ellipsoidModels = loadEllipsoidModels(relPathEllipsoidModels);
+
+relPathBlockPts = genRelPathBlockPts(sectionId,blockId);
+pts = loadPts(relPathBlockPts);
 
 %% viz
 plotStructVars = {'rayData','triModelData','plotStruct'};
@@ -12,6 +23,6 @@ clear(plotStructVars{:});
 ellipsoidData.ellipsoidModels = ellipsoidModels;
 plotStruct.ellipsoidData = ellipsoidData;
 
-plotStruct.pts = pts(1:20:end,:);
+plotStruct.pts = pts;
 
 hfig = plotRangeData(plotStruct);
