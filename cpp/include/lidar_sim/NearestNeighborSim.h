@@ -26,9 +26,10 @@ namespace lidar_sim {
 	    simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
 
 	std::vector<std::vector<double> > m_pts;
+	LaserCalibParams m_laser_calib_params;
+
     private:
 	int m_debug_flag;
-	LaserCalibParams m_laser_calib_params;
 	double m_max_perp_dist_for_hit;
 	double m_range_var;
 	int m_max_pts;

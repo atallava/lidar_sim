@@ -199,14 +199,17 @@ add_library(lidar_sim SHARED
 
 ## sim
 
-add_executable(poses_nbr_sim hybrid_geometric_sim/poses_nbr_sim.cpp)
-  target_link_libraries(poses_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(poses_nbr_sim hybrid_geometric_sim/poses_nbr_sim.cpp)
+#   target_link_libraries(poses_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(poses_section_models_sim hybrid_geometric_sim/poses_section_models_sim.cpp)
 #   target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
  
 add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
   target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(section_slice_nbr_sim hybrid_geometric_sim/section_slice_nbr_sim.cpp)
+  target_link_libraries(section_slice_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## viz
 
