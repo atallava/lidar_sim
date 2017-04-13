@@ -12,7 +12,7 @@ nPtsPerCluster = getNPtsPerCluster(clusterIds);
 minPtsPerCluster = 15;
 selectedClusterIds = find(nPtsPerCluster >= minPtsPerCluster);
 
-ellipsoidModels = struct('mu',{},'covMat',{},'perm',{});
+ellipsoidModels = struct('mu',{},'covMat',{},'hitProb',{});
 
 % for those clusters only, get mean and cov
 nSelectedClusters = length(selectedClusterIds);

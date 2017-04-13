@@ -102,8 +102,8 @@ end
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
 
-%% calculate perm
-permVec = triHitCount./(triHitCount+triMissCount);
+%% calculate hitProb
+hitProbVec = triHitCount./(triHitCount+triMissCount);
 
 %% calculate variance
 filteredResidualRanges = residualRanges(residualRanges < triParams.maxResidualForHit);
@@ -111,7 +111,7 @@ rangeVar = var(filteredResidualRanges);
 
 %% add to models
 groundTriModel.rangeVar = rangeVar;
-groundTriModel.permVec = permVec;
+groundTriModel.hitProbVec = hitProbVec;
 
 %% stats
 nScanRaysHit = sum(triHitCount)-sum(triHitCountPrior);
@@ -119,8 +119,8 @@ fracScanRaysHit = nScanRaysHit/length(scanIdsToProcess);
 fprintf('Percent scan rays hit: %.2f\n',fracScanRaysHit*100);
 
 figure;
-hist(permVec);
-ylabel('perm');
+hist(hitProbVec);
+ylabel('hitProb');
 
 figure;
 hist(residualRanges)

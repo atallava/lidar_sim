@@ -11,7 +11,7 @@ function [pts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,elli
     % hitFlag          - length nRays array. Logical.
 
     [nRays,nEllipsoids] = size(intersectionFlag);
-    permVec = [ellipsoidModels.perm];
+    hitProbVec = [ellipsoidModels.hitProb];
     pts = zeros(nRays,3);
     hitFlag = zeros(1,nRays);
     for i = 1:nRays
@@ -29,8 +29,8 @@ function [pts,hitFlag] = simPtsFromEllipsoids(intersectionFlag,distAlongRay,elli
         % pick minimum
 %         hitEllipsoidId = sortedIntersectingIds(1);
         
-        % use permeabilities
-        [hitEllipsoidId,hitBool] = sampleHitId(permVec(sortedIntersectingIds), ...
+        % use hit probabilities
+        [hitEllipsoidId,hitBool] = sampleHitId(hitProbVec(sortedIntersectingIds), ...
             sortedIntersectingIds);
         if ~hitBool
             hitFlag(i) = 0;

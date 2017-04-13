@@ -21,7 +21,7 @@ nPtsPerCluster = getNPtsPerCluster(clusterIds);
 minPtsPerCluster = 20;
 impClusterIds = find(nPtsPerCluster >= minPtsPerCluster);
 
-ellispoidModels = struct('mu',{},'covMat',{},'perm',{});
+ellispoidModels = struct('mu',{},'covMat',{},'hitProb',{});
 
 % for those clusters only, get mean and cov
 nImpClusters = length(impClusterIds);
@@ -40,9 +40,9 @@ for i = 1:nImpClusters
     ellipsoidModels(i).covMat = thisCovMat;
 end
 
-%% permeability
+%% hit probability
 for i = 1:length(ellipsoidModels)
-    ellipsoidModels(i).perm = rand;
+    ellipsoidModels(i).hitProb = rand;
 end
 
 %% plot points

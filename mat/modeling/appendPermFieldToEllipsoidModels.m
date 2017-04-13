@@ -1,15 +1,15 @@
-function ellipsoidModels = appendPermFieldToEllipsoidModels(ellipsoidModels,permVec)
-    %APPENDPERMFIELDTOELLIPSOIDMODELS
+function ellipsoidModels = appendHitProbFieldToEllipsoidModels(ellipsoidModels,hitProbVec)
+    %APPENDHITPROBFIELDTOELLIPSOIDMODELS
     %
-    % ellipsoidModels = APPENDPERMFIELDTOELLIPSOIDMODELS(ellipsoidModels,permVec)
+    % ellipsoidModels = APPENDHITPROBFIELDTOELLIPSOIDMODELS(ellipsoidModels,hitProbVec)
     %
     % ellipsoidModels - nEllipsoids length struct array.
-    % permVec         - nEllipsoids length vector.
+    % hitProbVec         - nEllipsoids length vector.
     %
     % ellipsoidModels - nEllipsoids length struct array.
 
     nEllipsoids = length(ellipsoidModels);
     for i = 1:nEllipsoids
-        ellipsoidModels(i).perm = permVec(i);
+        ellipsoidModels(i).hitProb = hitProbVec(i);
     end
 end

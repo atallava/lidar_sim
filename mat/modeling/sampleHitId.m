@@ -1,20 +1,20 @@
-function [hitId,hitFlag] = sampleHitId(permVec,targetIds)
+function [hitId,hitFlag] = sampleHitId(hitProbVec,targetIds)
     %SAMPLEHITID
     %
-    % [hitId,hitFlag] = SAMPLEHITID(permVec,targetIds)
+    % [hitId,hitFlag] = SAMPLEHITID(hitProbVec,targetIds)
     %
-    % permVec   - length nTargets vector.
+    % hitProbVec   - length nTargets vector.
     % targetIds - length nTargets vector.
     %
     % hitId     - scalar.
     % hitFlag   - boolean.
     
-    nTargets = length(permVec);
+    nTargets = length(hitProbVec);
     if nargin < 2
         targetIds = 1:nTargets;
     end
     for i = 1:nTargets
-        if rand < permVec(i)
+        if rand < hitProbVec(i)
             hitId = targetIds(i);
             hitFlag = true;
             return;

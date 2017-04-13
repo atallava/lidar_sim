@@ -13,7 +13,7 @@ function [pts,hitFlag] = simPtsFromTri(rayOrigin,rayDirns,intersectionFlag,distA
 % hitFlag          - length nRays vector. logical.
 
     [nRays,nTri] = size(intersectionFlag);
-    permVec = triModel.permVec;
+    hitProbVec = triModel.hitProbVec;
     pts = zeros(nRays,3);
     hitFlag = zeros(1,nRays);
     for i = 1:nRays
@@ -28,8 +28,8 @@ function [pts,hitFlag] = simPtsFromTri(rayOrigin,rayDirns,intersectionFlag,distA
         [sortedIntersectingIds,sortedDistAlongRayIntersections] = ...
             sortIntersectionFlag(intersectionFlag(i,:),distAlongRay(i,:));
         
-        % use permeabilities
-        [hitTriId,hitBool] = sampleHitId(permVec(sortedIntersectingIds), ...
+        % use hit prob
+        [hitTriId,hitBool] = sampleHitId(hitProbVec(sortedIntersectingIds), ...
             sortedIntersectingIds);
         if ~hitBool
             hitFlag(i) = 0;

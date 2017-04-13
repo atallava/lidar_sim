@@ -8,7 +8,7 @@ function ellipsoidModels = loadEllipsoidModels(rel_path_ellipsoids)
     % ellipsoidModels     -
     
     fid = fopen(rel_path_ellipsoids,'r');
-    ellipsoidModels = struct('mu',{},'covMat',{},'perm',{});
+    ellipsoidModels = struct('mu',{},'covMat',{},'hitProb',{});
     count = 0;
     line = fgetl(fid);
     while ischar(line)
@@ -22,11 +22,11 @@ function ellipsoidModels = loadEllipsoidModels(rel_path_ellipsoids)
             covMatVec(i) = str2double(c{i+3});
         end
         covMat = reshape(covMatVec,3,3);
-        perm = str2double(c{end});
+        hitProb = str2double(c{end});
         
         ellipsoidModel.mu = mu;
         ellipsoidModel.covMat = covMat;
-        ellipsoidModel.perm = perm;
+        ellipsoidModel.hitProb = hitProb;
         
         count = count+1;
         ellipsoidModels(count) = ellipsoidModel;

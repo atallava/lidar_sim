@@ -1,4 +1,4 @@
-% this is from calc_perm_ellipsoids
+% this is from calc_ellipsoids_hit_prob
 
 % load data
 relPathEllipsoids = 'ellipsoid_models_alglib';

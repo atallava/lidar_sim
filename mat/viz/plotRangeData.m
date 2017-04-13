@@ -123,10 +123,12 @@ function hfig = plotRangeData(inputStruct)
             end
             thisMean = ellipsoidModels(i).mu;
             thisCovMat = ellipsoidModels(i).covMat;
+            thisHitProb = ellipsoidModels(i).hitProb;
             
             [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
-            % transparencies not modulated with perm
-            surf(xEll,yEll,zEll,'facecolor','g','facealpha',0.2,'meshstyle','none');
+            % transparencies are modulated with hitProb
+            surf(xEll,yEll,zEll,'facecolor','g','meshstyle','none', ...
+                'facealpha',mapHitProbToTransparency(thisHitProb));
             hold on;
         end
     end
@@ -162,4 +164,13 @@ function hfig = plotRangeData(inputStruct)
     xlabel('x (m)');
     ylabel('y (m)');
     zlabel('z (m)');
+    
+end
+
+%% helpers
+function transparency = mapHitProbToTransparency(hitProb)
+    alphaLow = 0;
+    alphaHigh = 0.5;
+    transparency = alphaHigh;
+%     transparency = alphaLow + hitProb*alphaHigh;
 end
