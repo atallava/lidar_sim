@@ -33,7 +33,7 @@ std::string genRelPathEllipsoids(int section_id, int block_id)
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids_train.txt";
+       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
 
     return ss.str();
 }
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     int section_id = 3;
-    int block_id = 23;
+    int block_id = 8;
     
     std::cout << "processing block " << block_id << "..." << std::endl;
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
     modeler.createEllipsoidModels(rel_path_pts);
 
     // prob hit calc
-    int calc_hit_prob = 0;
+    int calc_hit_prob = 1;
     if (calc_hit_prob) 
     {
 	// section
@@ -123,7 +123,10 @@ int main(int argc, char **argv)
 	std::cout << "skipping hit prob calc..." << std::endl;
 
     // write out
-    std::string rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
+    std::string rel_path_ellipsoids;
+    // rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
+    rel_path_ellipsoids = "data/ellipsoids_trial.txt";
+
     modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

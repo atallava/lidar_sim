@@ -33,6 +33,8 @@ namespace lidar_sim {
 	void calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_poses_server);
 	void filterPts();
 	void setDebugFlag(int flag);
+	// hack for debug calcHitProb
+	void setEllipsoidModels(const EllipsoidModels &ellipsoid_models);
 
 	std::vector<std::vector<double> > m_pts;
 	EllipsoidModels m_ellipsoid_models;

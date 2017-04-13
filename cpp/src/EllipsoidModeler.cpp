@@ -304,3 +304,9 @@ void EllipsoidModeler::setDebugFlag(int flag)
 {
     m_debug_flag = flag;
 }
+
+// hack for debug calcHitProb
+void EllipsoidModeler::setEllipsoidModels(const EllipsoidModels &ellipsoid_models)
+{
+    m_ellipsoid_models = ellipsoid_models;
+}
