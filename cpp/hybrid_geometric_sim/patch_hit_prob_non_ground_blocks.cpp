@@ -61,20 +61,11 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     int section_id = 3;
-    int block_id = 8;
-    
-    // load the ellipsoid models
-    std::string rel_path_ellipsoids;
-    rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
-    EllipsoidModels ellipsoidModels = 
-	loadEllipsoidModelsFromFile(rel_path_ellipsoids);
+    std::vector<int> block_ids;
+    for(size_t i = 1; i <= 23; ++i)
+	block_ids.push_back(i);
 
-    // jam models into a modeler
-    EllipsoidModeler modeler;
-    modeler.setEllipsoidModels(ellipsoidModels);
-    modeler.setDebugFlag(1);
-   
-    // section
+    // load section
     std::string rel_path_section = "data/section_03_world_frame_subsampled.xyz";
     SectionLoader section(rel_path_section);
 
@@ -82,35 +73,50 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    // block pts 
-    std::string rel_path_block_pts = genRelPathBlock(section_id, block_id);
-    std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_block_pts);
+    // loop over blocks
+    for(size_t i = 0; i < block_ids.size(); ++i)
+    {
+	int block_id = block_ids[i];
+	std::cout << "processing block " << block_id << "..." << std::endl;
+
+	// load the ellipsoid models
+	std::string rel_path_ellipsoids;
+	rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
+	EllipsoidModels ellipsoidModels = 
+	    loadEllipsoidModelsFromFile(rel_path_ellipsoids);
+
+	// jam models into a modeler
+	EllipsoidModeler modeler;
+	modeler.setEllipsoidModels(ellipsoidModels);
+	modeler.setDebugFlag(1);
+   
+	// load block pts 
+	std::string rel_path_block_pts = genRelPathBlock(section_id, block_id);
+	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_block_pts);
     
-    // section pts to process
-    int num_nbrs = 1;
-    std::vector<std::vector<int> > section_nbr_pt_ids; 
+	// calc section pts to process
+	int num_nbrs = 1;
+	std::vector<std::vector<int> > section_nbr_pt_ids; 
 
-    std::tie(section_nbr_pt_ids, std::ignore) = nearestNeighbors(section.m_pts, block_pts, num_nbrs);
+	std::tie(section_nbr_pt_ids, std::ignore) = nearestNeighbors(section.m_pts, block_pts, num_nbrs);
 
-    std::vector<std::vector<double> > section_pts_to_process;
-    std::vector<int> section_pt_ids_to_process;
-    for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
-	for(size_t j = 0; j < section_nbr_pt_ids[i].size(); ++j)
-	{
-	    int id = section_nbr_pt_ids[i][j];
-	    section_pt_ids_to_process.push_back(id);
-	    section_pts_to_process.push_back(
-		section.m_pts[id]);
-	}
+	std::vector<std::vector<double> > section_pts_to_process;
+	std::vector<int> section_pt_ids_to_process;
+	for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
+	    for(size_t j = 0; j < section_nbr_pt_ids[i].size(); ++j)
+	    {
+		int id = section_nbr_pt_ids[i][j];
+		section_pt_ids_to_process.push_back(id);
+		section_pts_to_process.push_back(
+		    section.m_pts[id]);
+	    }
 
-    // write the pts to process
-    // std::string rel_path_pts_for_hit_prob = "data/pts_for_hit_prob.xyz";
-    // writePtsToXYZFile(section_pts_to_process, rel_path_pts_for_hit_prob);
-    
-    modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
+	// calc hit prob
+	modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
 
-    std::string rel_path_ellipsoids_out = "data/ellipsoids_debug_hit_prob.txt";
-    modeler.writeEllipsoidsToFile(rel_path_ellipsoids_out);
+	std::string rel_path_ellipsoids_out = genRelPathEllipsoids(section_id, block_id);
+	modeler.writeEllipsoidsToFile(rel_path_ellipsoids_out);
+    }
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

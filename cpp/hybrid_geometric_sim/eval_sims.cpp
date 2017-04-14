@@ -29,8 +29,8 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > hg_sim_pts = loadPtsFromXYZFile(rel_path_hg_sim_pts);
 
     double hg_loss_mean, hg_loss_var;
-    // std::tie(hg_loss_mean, hg_loss_var) = metric.calcError(hg_real_pts, hg_sim_pts);
-    std::tie(hg_loss_mean, hg_loss_var) = metric.calcError(hg_sim_pts, hg_real_pts);
+    std::tie(hg_loss_mean, hg_loss_var) = metric.calcError(hg_real_pts, hg_sim_pts);
+    // std::tie(hg_loss_mean, hg_loss_var) = metric.calcError(hg_sim_pts, hg_real_pts);
     
     std::cout << "hg sim: " << std::endl;
     std::cout << "loss mean: " << hg_loss_mean << " loss var: " << hg_loss_var << std::endl;
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > nbr_sim_pts = loadPtsFromXYZFile(rel_path_nbr_sim_pts);
 
     double nbr_loss_mean, nbr_loss_var;
-    // std::tie(nbr_loss_mean, nbr_loss_var) = metric.calcError(nbr_real_pts, nbr_sim_pts);
-    std::tie(nbr_loss_mean, nbr_loss_var) = metric.calcError(nbr_sim_pts, nbr_real_pts);
+    std::tie(nbr_loss_mean, nbr_loss_var) = metric.calcError(nbr_real_pts, nbr_sim_pts);
+    // std::tie(nbr_loss_mean, nbr_loss_var) = metric.calcError(nbr_sim_pts, nbr_real_pts);
 
     std::cout << "nbr sim: " << std::endl;
     std::cout << "loss mean: " << nbr_loss_mean << " loss var: " << nbr_loss_var << std::endl;

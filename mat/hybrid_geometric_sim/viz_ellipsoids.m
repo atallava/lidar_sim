@@ -9,7 +9,7 @@ genRelPathBlockPts = @(sectionId,blockId) ...
 
 %%
 sectionId = 3;
-blockId = 1;
+blockId = 16;
 relPathEllipsoidModels = genRelPathEllipsoidModels(sectionId,blockId);
 ellipsoidModels = loadEllipsoidModels(relPathEllipsoidModels);
 
@@ -23,6 +23,11 @@ clear(plotStructVars{:});
 ellipsoidData.ellipsoidModels = ellipsoidModels;
 plotStruct.ellipsoidData = ellipsoidData;
 
-plotStruct.pts = pts;
+% plotStruct.pts = pts;
 
 hfig = plotRangeData(plotStruct);
+
+%%
+view(0,90);
+ps = plotStruct; ps.ellipsoidData.uniformAlpha = true;
+plotRangeData(ps); view(0,90);
