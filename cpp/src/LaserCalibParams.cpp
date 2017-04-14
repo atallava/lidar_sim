@@ -18,7 +18,7 @@ LaserIntrinsics::LaserIntrinsics()
     }
     
     min_range = 0;
-    max_range = 70;
+    max_range = 100;
 }
 
 int LaserIntrinsics::getNRays()
