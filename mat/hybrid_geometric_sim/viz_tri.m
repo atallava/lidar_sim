@@ -1,6 +1,6 @@
 % load
-relPathEllipsoidModels = 'ground_model';
-load(relPathEllipsoidModels,'groundTriModel');
+relPathTriModels = 'ground_model';
+load(relPathTriModels,'groundTriModel');
 
 relPathPts = 'rim_stretch_ground_train';
 load(relPathPts,'pts');
