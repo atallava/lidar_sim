@@ -186,6 +186,9 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
     std::vector<int> ellipsoid_intersected_count(m_ellipsoid_models.size(), 0);
     std::vector<int> pt_intersected_flag;
 
+    // todo:delete
+    std::cout << section_pt_ids_to_process.size() << std::endl;
+
     for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
     {
     	int id = section_pt_ids_to_process[i];
@@ -203,7 +206,23 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
 	std::tie(intersection_flag, dist_along_ray) = sim.calcEllipsoidIntersections(
     	    ray_origin, ray_dirn);
 
-    	if (!anyNonzeros(intersection_flag))
+	if (i == 20108)
+	{
+	std::cout << "section pt id: " << id << std::endl;
+	std::cout << "t: " << t << std::endl;
+	std::cout << "this pt: " << std::endl;
+	dispVec(this_pt);
+	std::cout << "imu_pose " << std::endl;
+	dispVec(imu_pose);
+	std::cout << "ray origin " << std::endl;
+	dispVec(ray_origin);
+	std::cout << "ray dirn " << std::endl;
+	dispVec(ray_dirn);
+	std::cout << "meas dist " << meas_dist << std::endl;
+	std::cout << "any non zeros: " << anyNonzeros(intersection_flag) << std::endl;
+	}
+	 
+   	if (!anyNonzeros(intersection_flag))
 	{
     	    continue; 	// no intersections
 	    pt_intersected_flag.push_back(0);
@@ -236,27 +255,31 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
 	    for(size_t j = 0; j < ellipsoid_miss_ids.size(); ++j)
 		ellipsoid_miss_count[ellipsoid_miss_ids[j]] += 1;
 
+	// todo: delete
 	// debug
-	// std::cout << "section pt id: " << id << std::endl;
-	// std::cout << "t: " << t << std::endl;
-	// std::cout << "this pt: " << std::endl;
-	// dispVec(this_pt);
-	// std::cout << "imu_pose " << std::endl;
-	// dispVec(imu_pose);
-	// std::cout << "ray origin " << std::endl;
-	// dispVec(ray_origin);
-	// std::cout << "ray dirn " << std::endl;
-	// dispVec(ray_dirn);
-	// std::cout << "meas dist " << meas_dist << std::endl;
-	// std::cout << "sorted intersecting ids " << std::endl;
-	// dispVec(sorted_intersecting_ids);
-	// std::cout << "sorted dist along ray " << std::endl;
-	// dispVec(sorted_dist_along_ray);
-	// std::cout << "maha dists to ellipsoids " << std::endl;
-	// dispVec(maha_dists_to_ellipsoids);
-	// std::cout << "ellipsoid hit id: " << ellipsoid_hit_id << std::endl;
-	// std::cout << "ellipsoid miss ids: "  << std::endl;
-	// dispVec(ellipsoid_miss_ids);
+	if (i == 20069)
+	{
+	std::cout << "section pt id: " << id << std::endl;
+	std::cout << "t: " << t << std::endl;
+	std::cout << "this pt: " << std::endl;
+	dispVec(this_pt);
+	std::cout << "imu_pose " << std::endl;
+	dispVec(imu_pose);
+	std::cout << "ray origin " << std::endl;
+	dispVec(ray_origin);
+	std::cout << "ray dirn " << std::endl;
+	dispVec(ray_dirn);
+	std::cout << "meas dist " << meas_dist << std::endl;
+	std::cout << "sorted intersecting ids " << std::endl;
+	dispVec(sorted_intersecting_ids);
+	std::cout << "sorted dist along ray " << std::endl;
+	dispVec(sorted_dist_along_ray);
+	std::cout << "maha dists to ellipsoids " << std::endl;
+	dispVec(maha_dists_to_ellipsoids);
+	std::cout << "ellipsoid hit id: " << ellipsoid_hit_id << std::endl;
+	std::cout << "ellipsoid miss ids: "  << std::endl;
+	dispVec(ellipsoid_miss_ids);
+	} 
     }
 
     // stats

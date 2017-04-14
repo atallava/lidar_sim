@@ -72,6 +72,7 @@ int main(int argc, char **argv)
     // jam models into a modeler
     EllipsoidModeler modeler;
     modeler.setEllipsoidModels(ellipsoidModels);
+    modeler.setDebugFlag(1);
    
     // section
     std::string rel_path_section = "data/section_03_world_frame_subsampled.xyz";
@@ -81,59 +82,38 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    // blocks info
-    // imu posn nodes
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    // block pts 
+    std::string rel_path_block_pts = genRelPathBlock(section_id, block_id);
+    std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_block_pts);
+    
+    // section pts to process
+    int num_nbrs = 1;
+    std::vector<std::vector<int> > section_nbr_pt_ids; 
 
-    // non ground block node ids
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id);
-    std::vector<std::vector<int> > block_node_ids_non_ground = 
-	doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
-
-    // slice imu posns
-    std::vector<std::vector<double> > slice_imu_posns;
-    // blocks are indexed from 1. sorry.
-    for(size_t i = 0; i < 2; ++i)
-    	slice_imu_posns.push_back(imu_posn_nodes[block_node_ids_non_ground[block_id-1][i]]);
-
-    // slice section log ids
-    int slice_start_section_log_id;
-    int slice_end_section_log_id;
-
-    std::tie(slice_start_section_log_id, slice_end_section_log_id) =
-    	section.getLogIdsBracketingImuPosns(slice_imu_posns, imu_pose_server);
-
-    // subsample log ids
-    int max_section_packets_to_process = 1e4;
-    int skip = (slice_end_section_log_id - slice_start_section_log_id)/max_section_packets_to_process;
-    if (skip < 1)
-    	skip = 1;
-    std::vector<int> section_pt_ids_to_process;
-    for(size_t i = slice_start_section_log_id; i <= (size_t)slice_end_section_log_id; i += skip)
-    {
-    	double t = section.m_packet_timestamps[i];
-    	std::vector<int> pt_ids = section.getPtIdsAtTime(t);
-    	section_pt_ids_to_process.insert(section_pt_ids_to_process.end(), 
-    					 pt_ids.begin(), pt_ids.end());
-    }
+    std::tie(section_nbr_pt_ids, std::ignore) = nearestNeighbors(section.m_pts, block_pts, num_nbrs);
 
     std::vector<std::vector<double> > section_pts_to_process;
-    for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
-	section_pts_to_process.push_back(
-	    section.m_pts[section_pt_ids_to_process[i]]);
-
-    // dispMat(slice_imu_posns);
-    // std::cout << slice_start_section_log_id << " " << slice_end_section_log_id << std::endl;
-    // std::cout << section.m_packet_timestamps[slice_start_section_log_id] 
-    // 	      << " " << section.m_packet_timestamps[slice_end_section_log_id] << std::endl;
-    // std::cout << "skip: " << skip << std::endl;
+    std::vector<int> section_pt_ids_to_process;
+    for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
+	for(size_t j = 0; j < section_nbr_pt_ids[i].size(); ++j)
+	{
+	    int id = section_nbr_pt_ids[i][j];
+	    section_pt_ids_to_process.push_back(id);
+	    section_pts_to_process.push_back(
+		section.m_pts[id]);
+	}
 
     // write the pts to process
-    std::string rel_path_pts_for_hit_prob = "data/pts_for_hit_prob.xyz";
-    writePtsToXYZFile(section_pts_to_process, rel_path_pts_for_hit_prob);
+    // std::string rel_path_pts_for_hit_prob = "data/pts_for_hit_prob.xyz";
+    // writePtsToXYZFile(section_pts_to_process, rel_path_pts_for_hit_prob);
     
-    // modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
+    modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
+
+    // std::string rel_path_ellipsoids_out = "data/ellipsoids_debug_hit_prob.txt";
+    // modeler.writeEllipsoidsToFile(rel_path_ellipsoids_out);
+
+    double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
+    std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
 
     return(1);
 }
