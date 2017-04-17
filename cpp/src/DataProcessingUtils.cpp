@@ -445,6 +445,15 @@ namespace lidar_sim {
 	return mat;
     }
 
+    std::vector<double> convertIntVecToDoubleVec(std::vector<int> vec_in)
+    {
+	std::vector<double> vec_out;
+	for(size_t i = 0; i < vec_in.size(); ++i)
+	    vec_out.push_back(vec_in[i]);
+
+	return vec_out;
+    }
+
     std::vector<std::string> getPatternMatchingFiles(std::string rel_path_dir, boost::regex pattern)
     {
 	std::vector< std::string > matching_filenames;

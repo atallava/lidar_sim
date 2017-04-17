@@ -24,6 +24,10 @@ ptsReal = loadPts(relPathRealPts);
 relPathSimPts = '../../cpp/data/hg_sim_pts.xyz';
 ptsSim = loadPts(relPathSimPts);
 
+%% sim detail
+relPathSimDetail = '../../cpp/data/hg_sim_detail.xyz';
+[rayOrigins,ptsRealCell,ptsSimCell,hitFlagCell] = loadSimDetail(relPathSimDetail);
+
 %% queried models
 relPathQueriedBlocks = '../../cpp/data/hg_sim_queried_blocks.txt';
 [triBlockIds, ellipsoidBlockIds] =  ...

@@ -114,6 +114,19 @@ namespace lidar_sim {
 	return vec;
     }
 
+    // mimicking matlab mat(:)
+    template<typename T>
+	std::vector<T> convertArrayToVec(std::vector<std::vector<T> > array)
+    {
+	std::vector<T> vec;
+	for(size_t i = 0; i < array.size(); ++i)
+	    vec.insert(vec.end(), array[i].begin(), array[i].end());
+
+	return vec;
+    }
+
+    std::vector<double> convertIntVecToDoubleVec(std::vector<int> vec);
+
     std::vector<std::string> getPatternMatchingFiles(std::string rel_path_dir, boost::regex pattern);
     // should both these be handled by one case?
     std::tuple<std::vector<std::string>, std::vector<std::vector<std::string> > >
