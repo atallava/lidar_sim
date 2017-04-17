@@ -171,6 +171,8 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     std::vector<SimPts> sim_pts_over_blocks;
     std::vector<HitFlag> hit_flag_over_blocks;
 
+    // todo: activate ell + tri
+
     // sim over ellipsoid blocks
     std::vector<int> ellipsoid_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_non_ground);
     std::vector<int> ellipsoid_blocks_hit;
@@ -181,7 +183,7 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     	int block_id = ellipsoid_blocks_to_sim[i];
     	try
     	{	
-	    // block_id - 1, since blocks are indexed starting 1
+    	    // block_id - 1, since blocks are indexed starting 1
     	    std::tie(sim_pts_can, hit_flag_can) = 
     		m_ellipsoid_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
     	}
@@ -201,20 +203,20 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     // sim over tri blocks
     std::vector<int> triangle_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_ground);
     std::vector<int> triangle_blocks_hit;
-    for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
-    {
-    	std::vector<std::vector<double> > sim_pts_can;
-    	std::vector<int> hit_flag_can;
-    	int block_id = triangle_blocks_to_sim[i];
-	// block_id - 1, since blocks are indexed starting 1
-    	std::tie(sim_pts_can, hit_flag_can) = 
-    	    m_triangle_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
-    	if (anyNonzeros(hit_flag_can))
-    	    triangle_blocks_hit.push_back(block_id);
+    // for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
+    // {
+    // 	std::vector<std::vector<double> > sim_pts_can;
+    // 	std::vector<int> hit_flag_can;
+    // 	int block_id = triangle_blocks_to_sim[i];
+    // 	// block_id - 1, since blocks are indexed starting 1
+    // 	std::tie(sim_pts_can, hit_flag_can) = 
+    // 	    m_triangle_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
+    // 	if (anyNonzeros(hit_flag_can))
+    // 	    triangle_blocks_hit.push_back(block_id);
 	
-    	sim_pts_over_blocks.push_back(sim_pts_can);
-    	hit_flag_over_blocks.push_back(hit_flag_can);
-    }
+    // 	sim_pts_over_blocks.push_back(sim_pts_can);
+    // 	hit_flag_over_blocks.push_back(hit_flag_can);
+    // }
 
     // marginalize 
     int n_rays = ray_dirns.size();

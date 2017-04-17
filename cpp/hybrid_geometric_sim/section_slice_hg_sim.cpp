@@ -149,21 +149,31 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > real_pts;
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
+    std::vector<std::vector<double> > sim_detail;
     size_t packet_array_step = 1000;
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
     	double t = section.m_packet_timestamps[i];
+	std::vector<double> this_sim_detail;
 
     	// pose, ray origin
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
 
-    	// packet pts
+	// add ray origin to sim detail
+	this_sim_detail.insert(this_sim_detail.end(), ray_origin.begin(), ray_origin.end());
+
+	// packet pts
     	std::vector<std::vector<double> > this_pts = section.getPtsAtTime(t);
 
     	// add to big list of real pts
     	real_pts.insert(real_pts.end(), this_pts.begin(), this_pts.end());
+
+	// add all pts to sim detail
+	for(size_t j = 0; j < this_pts.size(); ++j)
+	    this_sim_detail.insert(this_sim_detail.end(), 
+				   this_pts[j].begin(), this_pts[j].end());
 	
     	// ray dirns
 	// here is where you could alternately get directions from laser intrinsics
@@ -193,6 +203,9 @@ int main(int argc, char **argv)
     	// add to big list of sim pts
     	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts.begin(), this_sim_pts.end());
     	hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
+
+	// add to sim detail
+	sim_detail.push_back(this_sim_detail);
     }
 
     // retain unique block ids
@@ -211,8 +224,12 @@ int main(int argc, char **argv)
     std::string rel_path_sim_pts = "data/hg_sim_pts.xyz";
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
+    // write sim detail
+    std::string rel_path_sim_detail = "data/hg_sim_detail.xyz";
+    writePtsToXYZFile(sim_detail, rel_path_sim_detail);
+
     // write queried blocks
-    std::string rel_path_queried_blocks = "data/sim_queried_blocks.txt";
+    std::string rel_path_queried_blocks = "data/hg_sim_queried_blocks.txt";
     writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

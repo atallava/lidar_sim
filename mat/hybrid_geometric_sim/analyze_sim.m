@@ -1,3 +1,4 @@
+% load helpers
 genRelPathTriangleModels = @(sectionId,blockId) ...
     sprintf('../../cpp/data/sections/section_%02d/section_%02d_block_%02d_ground_triangles.txt', ...
     sectionId,sectionId,blockId);
@@ -24,7 +25,7 @@ relPathSimPts = '../../cpp/data/hg_sim_pts.xyz';
 ptsSim = loadPts(relPathSimPts);
 
 %% queried models
-relPathQueriedBlocks = '../../cpp/data/sim_queried_blocks.txt';
+relPathQueriedBlocks = '../../cpp/data/hg_sim_queried_blocks.txt';
 [triBlockIds, ellipsoidBlockIds] =  ...
     loadQueriedBlocks(relPathQueriedBlocks);
 
@@ -71,5 +72,7 @@ hfig = plotRangeData(plotStruct);
 hold on;
 scatter3(ptsReal(:,1),ptsReal(:,2),ptsReal(:,3),'r.','markerfacecolor','r');
 scatter3(ptsSim(:,1),ptsSim(:,2),ptsSim(:,3),'b.','markerfacecolor','b');
+axis equal; box on; grid on;
+xlabel('x'); ylabel('y'); zlabel('z');
 
 
