@@ -427,3 +427,11 @@ void TriangleModeler::filterTriangles()
 
     m_triangles = filtered_triangles;
 }
+
+// hack for patching calcHitProb
+void TriangleModeler::setTriangleModels(const TriangleModelSim &sim)
+{
+    m_triangles = sim.m_triangles;
+    m_fit_pts = sim.m_fit_pts;
+    m_hit_prob_vec = sim.m_hit_prob_vec;
+}

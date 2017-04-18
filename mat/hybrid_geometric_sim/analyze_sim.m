@@ -61,9 +61,9 @@ ellipsoidModels = stitchEllipsoidModels(ellipsoidModelCell);
 %% viz models
 plotStructVars = {'ellipsoidData','triModelData','plotStruct'};
 clear(plotStructVars{:});
-% 
-% ellipsoidData.ellipsoidModels = ellipsoidModels;
-% plotStruct.ellipsoidData = ellipsoidData;
+
+ellipsoidData.ellipsoidModels = ellipsoidModels;
+plotStruct.ellipsoidData = ellipsoidData;
 
 triModelData = triModels;
 % triModelData.uniformAlpha = true;
