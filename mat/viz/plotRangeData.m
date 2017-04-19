@@ -22,7 +22,7 @@ function hfig = plotRangeData(inputStruct)
         else
             rayLengthToPlot = 15;
         end
-        % note that the hit flag logic will be propagated to sim pts
+        % note that the hit flag logic will be propagated to pts
         if isfield(rayData,'hitFlag')
             useHitFlag = true;
             hitFlag = rayData.hitFlag;
@@ -117,7 +117,7 @@ function hfig = plotRangeData(inputStruct)
             plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r','linewidth',2);
             hold on;
         end
-        plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'rx');
+        plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'rx','linewidth',0.5);
     end
     
     %% ellipsoids

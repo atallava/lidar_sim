@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 	// todo: make this cleaner, make a triangleModels class
 	TriangleModelSim triangleModelSim;
 	triangleModelSim.loadTriangleModels(rel_path_triangles);
-
+	
 	// jam models into a modeler
 	TriangleModeler modeler;
 	modeler.setTriangleModels(triangleModelSim);

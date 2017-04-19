@@ -137,19 +137,27 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    // slice ids
-    size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 50000;
-    packet_id_sim_end = packet_id_sim_start + 10000;
-
     // sim
-    std::vector<double> ray_origin{-521.475,464.051,-5.1283};
-    std::vector<double> ray_dirn{0.10292,0.90161,-0.42012};
+    std::vector<double> ray_origin{-534.971,469.149,-5.1325};
+    std::vector<double> ray_dirn{-0.92933,0.36732,0.037755};
     std::vector<std::vector<double> > ray_dirns = wrapDataInVec(ray_dirn);
+
+    std::vector<int> triangle_blocks_queried = 
+	sim.getPosnTriangleBlockMembership(ray_origin);
+    std::vector<int> ellipsoid_blocks_queried = 
+	sim.getPosnEllipsoidBlockMembership(ray_origin);
+
     std::vector<std::vector<double> > sim_pts;
     std::vector<int> hit_flag;
     
     std::tie(sim_pts, hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns);
+
+    std::cout << "triangle blocks queried: " << std::endl;
+    dispVec(triangle_blocks_queried);
+    std::cout << "ellipsoid blocks queried: " << std::endl;
+    dispVec(ellipsoid_blocks_queried);
+    std::cout << "sim pt: " << std::endl;
+    dispVec(sim_pts[0]);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

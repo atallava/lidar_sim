@@ -11,7 +11,7 @@
 using namespace lidar_sim;
 
 SectionModelSim::SectionModelSim() :
-    m_max_dist_to_node_for_membership(20),
+    m_max_dist_to_node_for_membership(60), // todo: make this smaller?
     m_deterministic_sim(false)
 {    
 }
@@ -245,10 +245,10 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     }
 
     // todo: comment/ delete
-    std::cout << "SectionModelSim: ellipsoid blocks hit: " << std::endl;
-    dispVec(ellipsoid_blocks_hit);
-    std::cout << "SectionModelSim: triangle blocks hit: " << std::endl;
-    dispVec(triangle_blocks_hit);
+    // std::cout << "SectionModelSim: ellipsoid blocks hit: " << std::endl;
+    // dispVec(ellipsoid_blocks_hit);
+    // std::cout << "SectionModelSim: triangle blocks hit: " << std::endl;
+    // dispVec(triangle_blocks_hit);
     
     return std::make_tuple(sim_pts, hit_flag);
 }
