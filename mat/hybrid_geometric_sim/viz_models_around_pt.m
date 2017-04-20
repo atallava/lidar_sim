@@ -56,25 +56,25 @@ for i = 1:nEllipsoidBlocks
     container = load(relPathBlockNonGroundPts,'pts');
     nonGroundPtsCell{i} = container.pts;
 end
-ellipsoidModels = stitchEllipsoidModels(ellipsoidModelCell);
+[ellipsoidModels,ellipsoidModelsBlockMembershipMap] = stitchEllipsoidModels(ellipsoidModelCell);
 nonGroundPts = stitchPtsCell(nonGroundPtsCell);
 
 %% query pt
-pt =  [-581.4710  487.5280   -3.2434];
+pt =  [-590.4960  462.2360    0.4427];
 simPt = [-533.6150  484.7100  -12.5246];
     
-rayOrigin = [-534.9710  469.1490   -5.1325];
+rayOrigin = [ -546.8160  474.3310   -5.2340];
 rayEnd =  pt;
 [rayDirn,rayLength] = calcRayDirn(rayOrigin,rayEnd);
 
 %% get nbr models
-modelNbrRadius = 20;
+modelNbrRadius = 1;
 triModelsNbr = createTriModelsNbr(triModels,pt,modelNbrRadius);
 ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,pt,modelNbrRadius);
 
 % nbr pts
-groundPtsNbr = getPtsNbr(groundPts,pt,modelNbrRadius,1000);
-nonGroundPtsNbr = getPtsNbr(nonGroundPts,pt,modelNbrRadius,1000);
+groundPtsNbr = getPtsNbr(groundPts,pt,modelNbrRadius,500);
+nonGroundPtsNbr = getPtsNbr(nonGroundPts,pt,modelNbrRadius,500);
 
 %% plot
 plotStructVars = {'rayData','ellipsoidData','triModelData','pts','plotStruct'};
@@ -87,7 +87,7 @@ rayData.rayLengthToPlot = rayLength;
 plotStruct.rayData = rayData;
 
 ellipsoidData.ellipsoidModels = ellipsoidModelsNbr;
-ellipsoidData.uniformAlpha = true;
+% ellipsoidData.uniformAlpha = true;
 plotStruct.ellipsoidData = ellipsoidData;
 
 triModelData = triModelsNbr;

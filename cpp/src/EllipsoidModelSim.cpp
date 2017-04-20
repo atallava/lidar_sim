@@ -48,10 +48,6 @@ std::tuple<std::vector<std::vector<int> >,
 {
     size_t n_ellipsoids = m_ellipsoid_models.size();
     
-    // debug
-    if (m_debug_flag)
-	n_ellipsoids = 1;
-
     size_t n_rays = ray_dirns.size();
     std::vector<std::vector<double> > maha_dist_to_mu(n_rays, std::vector<double>(n_ellipsoids));
     std::vector<std::vector<double> > dist_along_ray(n_rays, std::vector<double>(n_ellipsoids));

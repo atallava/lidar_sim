@@ -11,7 +11,7 @@
 using namespace lidar_sim;
 
 SectionModelSim::SectionModelSim() :
-    m_max_dist_to_node_for_membership(60), // todo: make this smaller?
+    m_max_dist_to_node_for_membership(100), 
     m_deterministic_sim(false)
 {    
 }
