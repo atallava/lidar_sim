@@ -311,6 +311,19 @@ EllipsoidModelSim::simPtsGivenRays(const std::vector<double> &ray_origin, const 
     return std::make_tuple(sim_pts, hit_flag);
 }
 
+std::tuple<std::vector<double>, int >
+EllipsoidModelSim::simPtGivenRay(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn)
+{
+    auto ray_dirns = wrapDataInVec(ray_dirn);
+    std::vector<std::vector<double> > sim_pts;
+    std::vector<int> hits_flag;
+    std::tie(sim_pts, hits_flag) = simPtsGivenRays(ray_origin, ray_dirns);
+    std::vector<double> sim_pt = sim_pts[0];
+    int hit_flag = hits_flag[0];
+
+    return std::make_tuple(sim_pt, hit_flag);
+}
+
 void EllipsoidModelSim::setDeterministicSim(const bool choice)
 {
     m_deterministic_sim = choice;

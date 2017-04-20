@@ -34,6 +34,7 @@ namespace lidar_sim {
 	sampleHitId(const std::vector<double> &hit_prob_vec, const std::vector<int> &sorted_intersecting_ids, 
 		    const bool deterministic_sampling = false);
 
+    std::tuple<std::vector<double>, double> calcRayDirn(const std::vector<double> &ray_origin, const std::vector<double> &end_pt);
     std::vector<std::vector<double> >
 	calcRayDirns(const std::vector<double> start_pt, const std::vector<std::vector<double> > end_pts);
 

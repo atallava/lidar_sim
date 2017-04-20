@@ -60,15 +60,15 @@ end
 nonGroundPts = stitchPtsCell(nonGroundPtsCell);
 
 %% query pt
-pt =  [-590.4960  462.2360    0.4427];
-simPt = [-533.6150  484.7100  -12.5246];
+pt =  [-582.5390  462.0030    0.8647];
+simPt = [-532.1500  461.5530   -3.9844];
     
-rayOrigin = [ -546.8160  474.3310   -5.2340];
-rayEnd =  pt;
+rayOrigin = [-515.1300  461.6110   -5.1904];
+rayEnd =  simPt;
 [rayDirn,rayLength] = calcRayDirn(rayOrigin,rayEnd);
 
 %% get nbr models
-modelNbrRadius = 1;
+modelNbrRadius = 0.5;
 triModelsNbr = createTriModelsNbr(triModels,pt,modelNbrRadius);
 ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,pt,modelNbrRadius);
 

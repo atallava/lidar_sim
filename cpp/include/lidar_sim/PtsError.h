@@ -6,10 +6,15 @@ namespace lidar_sim {
     class PtsError {
     public:
 	PtsError();
+	// find pts in pts1 nearest to pts in pts2, and average the distances
 	std::tuple<double, double>
-	    calcError(const std::vector<std::vector<double> > &pts1, 
-		      const std::vector<std::vector<double> > &pts2);
-
+	    calcAsymmetricError(const std::vector<std::vector<double> > &pts1, 
+				const std::vector<std::vector<double> > &pts2);
+	// average of asymmetric error, calculated both ways
+	// todo: variance for this error?
+	double calcSymmetricError(const std::vector<std::vector<double> > &pts1, 
+				  const std::vector<std::vector<double> > &pts2);
+	
     private:
     };
 }

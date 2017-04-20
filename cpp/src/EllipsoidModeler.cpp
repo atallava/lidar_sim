@@ -31,7 +31,8 @@ EllipsoidModeler::EllipsoidModeler() :
     m_miss_count_prior(1),
     m_max_pts_dist_to_nbrs(5)
 {    
-    m_n_clusters_per_pt = 1000/(double)12016; // hack based on rim stretch test
+    // m_n_clusters_per_pt = 1000/(double)12016; // hack based on rim stretch test
+    m_n_clusters_per_pt = 100/(double)12016; // hack based on rim stretch test
 }
 
 void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
@@ -70,7 +71,6 @@ void EllipsoidModeler::clusterPts()
     // get clusters
     m_n_clusters = calcNClusters();
     alglib::clusterizergetkclusters(ahc_report, m_n_clusters, m_pt_cluster_ids, cz);
-
 }
 
 void EllipsoidModeler::filterClusters()
@@ -86,7 +86,16 @@ void EllipsoidModeler::filterClusters()
 	    m_selected_cluster_ids.push_back(i);
 
     if (m_debug_flag)
-	std::cout << "n selected clusters: " << m_selected_cluster_ids.size() << std::endl;
+    {
+	std::cout << "EllipsoidModeler: clusters requested: " << calcNClusters() << std::endl;
+	std::cout << "EllipsoidModeler: clusters selected: " << m_selected_cluster_ids.size() 
+		  << " fracn: " << m_selected_cluster_ids.size()/(double)calcNClusters() << std::endl;
+	int n_pts_in_clusters = 0;
+	for(size_t i = 0; i < m_selected_cluster_ids.size(); ++i)
+	    n_pts_in_clusters += n_pts_per_cluster[m_selected_cluster_ids[i]];
+	std::cout << "EllipsoidModeler: n pts in clusters: " << n_pts_in_clusters
+		  << " fracn: " << n_pts_in_clusters/(double)m_pts.size() << std::endl;
+    }
 }
 
 void EllipsoidModeler::fillEllipsoidModels()
@@ -308,6 +317,11 @@ void EllipsoidModeler::filterPts()
 void EllipsoidModeler::setDebugFlag(int flag)
 {
     m_debug_flag = flag;
+}
+
+void EllipsoidModeler::setNClustersPerPt(double n_clusters_per_pt)
+{
+    m_n_clusters_per_pt = n_clusters_per_pt;
 }
 
 // hack for patching calcHitProb

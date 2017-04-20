@@ -52,23 +52,6 @@ namespace lidar_sim {
 	return EigenToStlArray(ray_dirns_rotated_eigen.transpose());
     }
 
-    std::tuple<std::vector<double>, double> calcRayDirn(const std::vector<double> &ray_origin, const std::vector<double> &end_pt)
-    {
-	std::vector<double> ray_dirn(3,0);
-	double meas_dist = 0;
-
-	for(size_t i = 0; i < 3; ++i)
-	{
-	    ray_dirn[i] = end_pt[i] - ray_origin[i];
-	    meas_dist += std::pow(ray_dirn[i], 2);
-	}
-	meas_dist = std::sqrt(meas_dist);
-	for(size_t i = 0; i < 3; ++i)
-	    ray_dirn[i] /= meas_dist;
-
-	return std::make_tuple(ray_dirn, meas_dist);
-    }
-    
     std::vector<double> laserPosnFromImuPose(const std::vector<double> &imu_pose, const LaserCalibParams laser_calib_params)
     {
 	Eigen::MatrixXd T_imu_world = getImuTransfFromPose(imu_pose);

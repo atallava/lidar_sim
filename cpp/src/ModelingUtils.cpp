@@ -233,6 +233,23 @@ namespace lidar_sim {
 	return std::make_tuple(hit_id, hit_bool);
     }
 
+    std::tuple<std::vector<double>, double> calcRayDirn(const std::vector<double> &ray_origin, const std::vector<double> &end_pt)
+    {
+	std::vector<double> ray_dirn(3,0);
+	double meas_dist = 0;
+
+	for(size_t i = 0; i < 3; ++i)
+	{
+	    ray_dirn[i] = end_pt[i] - ray_origin[i];
+	    meas_dist += std::pow(ray_dirn[i], 2);
+	}
+	meas_dist = std::sqrt(meas_dist);
+	for(size_t i = 0; i < 3; ++i)
+	    ray_dirn[i] /= meas_dist;
+
+	return std::make_tuple(ray_dirn, meas_dist);
+    }
+    
     std::vector<std::vector<double> >
     calcRayDirns(const std::vector<double> start_pt, const std::vector<std::vector<double> > end_pts)
     {

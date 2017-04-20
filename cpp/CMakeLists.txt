@@ -201,6 +201,9 @@ add_executable(patch_hit_prob_ground_blocks hybrid_geometric_sim/patch_hit_prob_
 # add_executable(build_blocks_ground hybrid_geometric_sim/build_blocks_ground.cpp)
 #   target_link_libraries(build_blocks_ground lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(analyze_clustering hybrid_geometric_sim/analyze_clustering.cpp)
+  target_link_libraries(analyze_clustering lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ## state mapping
 
 # add_executable(gen_ground_triangles hybrid_geometric_sim/gen_ground_triangles.cpp)
@@ -242,7 +245,7 @@ add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
 
 ## eval
 
-# add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
-#   target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
+  target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 

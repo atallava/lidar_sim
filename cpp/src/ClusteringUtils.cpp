@@ -43,7 +43,7 @@ namespace lidar_sim {
     std::vector<int> getNumPtsPerCluster(std::vector<int> pt_cluster_ids, int n_clusters)
     {
 	std::vector<int> n_pts_per_cluster(n_clusters, 0);
-    
+
 	for(size_t i = 0; i < (size_t)n_clusters; ++i)
 	    for(size_t j = 0; j < pt_cluster_ids.size(); ++j)
 		if (pt_cluster_ids[j] == (int)i)
