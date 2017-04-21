@@ -31,68 +31,70 @@ TriangleModelSim::TriangleModelSim() :
 void TriangleModelSim::loadTriangleModels(std::string rel_path_input)
 {
     // open input file
-    std::ifstream file(rel_path_input);
-    std::cout << "Reading triangle models from: " << rel_path_input << std::endl;
+    // std::ifstream file(rel_path_input);
+    // std::cout << "Reading triangle models from: " << rel_path_input << std::endl;
 
-    std::string current_line;
-    std::string mode;
-    while(std::getline(file, current_line))
-    {
-    	if (strcmp(current_line.c_str(), "pts") == 0)
-    	{
-    	    mode = "pts";
-    	    continue;
-    	}
-    	if (strcmp(current_line.c_str(), "triangles") == 0)
-    	{
-    	    mode = "triangles";
-    	    continue;
-    	}
+    // std::string current_line;
+    // std::string mode;
+    // while(std::getline(file, current_line))
+    // {
+    // 	if (strcmp(current_line.c_str(), "pts") == 0)
+    // 	{
+    // 	    mode = "pts";
+    // 	    continue;
+    // 	}
+    // 	if (strcmp(current_line.c_str(), "triangles") == 0)
+    // 	{
+    // 	    mode = "triangles";
+    // 	    continue;
+    // 	}
 	
-    	std::istringstream iss(current_line);
+    // 	std::istringstream iss(current_line);
 
-    	if (strcmp(mode.c_str(), "pts") == 0)
-    	{
-    	    std::vector<double> pt(3,0);
-    	    for(size_t i = 0; i < 3; ++i)
-    		iss >> pt[i];
+    // 	if (strcmp(mode.c_str(), "pts") == 0)
+    // 	{
+    // 	    std::vector<double> pt(3,0);
+    // 	    for(size_t i = 0; i < 3; ++i)
+    // 		iss >> pt[i];
 
-    	    m_fit_pts.push_back(pt);
-    	}
+    // 	    m_fit_pts.push_back(pt);
+    // 	}
 
-    	if (strcmp(mode.c_str(), "triangles") == 0)
-    	{
-    	    std::vector<int> triangle(3,0);
-    	    for(size_t i = 0; i < 3; ++i)
-    		iss >> triangle[i];
+    // 	if (strcmp(mode.c_str(), "triangles") == 0)
+    // 	{
+    // 	    std::vector<int> triangle(3,0);
+    // 	    for(size_t i = 0; i < 3; ++i)
+    // 		iss >> triangle[i];
 
-    	    m_triangles.push_back(triangle);
+    // 	    m_triangles.push_back(triangle);
 
-    	    double hit_prob;
-    	    iss >> hit_prob;
-    	    m_hit_prob_vec.push_back(hit_prob);
-    	}
+    // 	    double hit_prob;
+    // 	    iss >> hit_prob;
+    // 	    m_triangle_models.m_hit_prob_vec.push_back(hit_prob);
+    // 	}
 		    
-    }
+    // }
 
-    file.close();
+    // file.close();
+
+    m_triangle_models = loadTriangleModelsFromFile(rel_path_input);
 
     fillCgalData();
 }
 
 void TriangleModelSim::fillCgalData()
 {
-    for(size_t i = 0; i < m_fit_pts.size(); ++i)
+    for(size_t i = 0; i < m_triangle_models.m_fit_pts.size(); ++i)
     {
-	Point_3_cgal pt(m_fit_pts[i][0], m_fit_pts[i][1], m_fit_pts[i][2]);
+	Point_3_cgal pt(m_triangle_models.m_fit_pts[i][0], m_triangle_models.m_fit_pts[i][1], m_triangle_models.m_fit_pts[i][2]);
 	m_fit_pts_cgal.push_back(pt);
     }
 
-    for(size_t i = 0; i < m_triangles.size(); ++i)
+    for(size_t i = 0; i < m_triangle_models.m_triangles.size(); ++i)
     {
-	Triangle_3_cgal t(m_fit_pts_cgal[m_triangles[i][0]],
-			  m_fit_pts_cgal[m_triangles[i][1]],
-			  m_fit_pts_cgal[m_triangles[i][2]]);
+	Triangle_3_cgal t(m_fit_pts_cgal[m_triangle_models.m_triangles[i][0]],
+			  m_fit_pts_cgal[m_triangle_models.m_triangles[i][1]],
+			  m_fit_pts_cgal[m_triangle_models.m_triangles[i][2]]);
 	m_triangles_cgal.push_back(t);
     }
 }
@@ -113,15 +115,15 @@ TriangleModelSim::calcTriIntersections(std::vector<double> ray_origin, std::vect
 	throw std::runtime_error(ss_err_msg.str().c_str());
     }
 	
-    std::vector<int> intersection_flag(m_triangles.size(), 0);
-    std::vector<double> dist_along_ray(m_triangles.size(), 0);
+    std::vector<int> intersection_flag(m_triangle_models.m_triangles.size(), 0);
+    std::vector<double> dist_along_ray(m_triangle_models.m_triangles.size(), 0);
     
     Point_3_cgal ray_origin_cgal(ray_origin[0], ray_origin[1], ray_origin[2]);
     Direction_3_cgal ray_dirn_cgal(ray_dirn[0], ray_dirn[1], ray_dirn[2]);
     Ray_3_cgal ray_cgal(ray_origin_cgal, ray_dirn_cgal);
     
     Point_3_cgal pt_intersection;
-    for(size_t i = 0; i < m_triangles.size(); ++i)
+    for(size_t i = 0; i < m_triangle_models.m_triangles.size(); ++i)
     {
 	CGAL::Object obj_intersection = intersection(ray_cgal, m_triangles_cgal[i]);
 
@@ -201,16 +203,16 @@ void TriangleModelSim::writeTrianglesToFile(std::string rel_path_output)
 
     file << "pts" << std::endl;
     
-    for(size_t i = 0; i < m_fit_pts.size(); ++i)
-	file << m_fit_pts[i][0] << " " <<
-	    m_fit_pts[i][1] << " " <<
-	    m_fit_pts[i][2] << std::endl;
+    for(size_t i = 0; i < m_triangle_models.m_fit_pts.size(); ++i)
+	file << m_triangle_models.m_fit_pts[i][0] << " " <<
+	    m_triangle_models.m_fit_pts[i][1] << " " <<
+	    m_triangle_models.m_fit_pts[i][2] << std::endl;
 
     file << "triangles" << std::endl;
-    for(size_t i = 0; i < m_triangles.size(); ++i)
-	file << m_triangles[i][0] << " " <<
-	    m_triangles[i][1] << " " <<
-	    m_triangles[i][2] << " " << m_hit_prob_vec[i] << std::endl;
+    for(size_t i = 0; i < m_triangle_models.m_triangles.size(); ++i)
+	file << m_triangle_models.m_triangles[i][0] << " " <<
+	    m_triangle_models.m_triangles[i][1] << " " <<
+	    m_triangle_models.m_triangles[i][2] << " " << m_triangle_models.m_hit_prob_vec[i] << std::endl;
     
     file.close();
 }
@@ -241,7 +243,7 @@ TriangleModelSim::simPtsGivenIntersections(std::vector<double> ray_origin, std::
 
 	std::vector<double> hit_prob_vec(sorted_intersecting_ids.size());
 	for(size_t j = 0; j < sorted_intersecting_ids.size(); ++j)
-	    hit_prob_vec[j] = m_hit_prob_vec[sorted_intersecting_ids[j]];
+	    hit_prob_vec[j] = m_triangle_models.m_hit_prob_vec[sorted_intersecting_ids[j]];
 
 	int hit_ellipsoid_id;
 	bool hit_bool;
