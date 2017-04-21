@@ -50,6 +50,21 @@ namespace lidar_sim {
 	file.close();
     }
 
+    template<typename T>
+	void writeVecToFile(const std::vector<T> &vec, const std::string rel_path_output)
+    {
+	std::ofstream file(rel_path_output);
+	std::cout << "Writing vec to: " << rel_path_output << std::endl;
+
+	std::ostringstream ss;
+	for(size_t i = 0; i < vec.size(); ++i)
+	    ss << vec[i] << " ";
+	ss << std::endl;
+	    
+	file << ss.str();
+	file.close();
+    }
+
     void writeQueriedBlocks(const std::string rel_path_file, const std::vector<int> &triangle_block_ids, 
 			    const std::vector<int> &ellipsoid_block_ids);
     std::tuple<std::vector<int>, std::vector<int> >

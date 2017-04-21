@@ -56,6 +56,14 @@ std::string genRelPathSimPts(int param_id)
     return ss.str();
 }
 
+std::string genRelPathParamVec()
+{
+    std::ostringstream ss;
+    ss << "data/analyze_clustering/param_vec.txt";
+
+    return ss.str();
+}
+
 int main(int argc, char **argv)
 {
     int section_id = 3;
@@ -91,8 +99,27 @@ int main(int argc, char **argv)
 	}
 
     // param vec
-    std::vector<double> n_clusters_per_pt_vec{100/(double)12016};
-    
+    double min_param_val = 0.001;
+    double max_param_val = 0.1;
+    double n_params = 80;
+    double param_step = (max_param_val-min_param_val)/n_params;
+    std::vector<double> param_vec;
+    double param = min_param_val;
+    while (param < max_param_val)
+    {
+	param_vec.push_back(param);
+	param += param_step;
+    }
+    std::vector<double> n_clusters_per_pt_vec = param_vec;
+    // std::vector<double> n_clusters_per_pt_vec{10/(double)12016};
+
+    // write param vec
+    std::string rel_path_param_vec = genRelPathParamVec();
+    writeVecToFile(n_clusters_per_pt_vec, rel_path_param_vec);
+
+    std::vector<double> comp_time_vec;
+    std::vector<double> sym_loss_mean_vec;
+
     // loop over params
     for(size_t i = 0; i < n_clusters_per_pt_vec.size(); ++i)
     {    
@@ -105,7 +132,6 @@ int main(int argc, char **argv)
 
 	// cluster
 	std::cout << "clustering..." << std::endl;
-	// min pts per cluster = 5, retain
 	double n_clusters_per_pt = n_clusters_per_pt_vec[i];
 	modeler.setNClustersPerPt(n_clusters_per_pt);
 	modeler.createEllipsoidModels(rel_path_block_pts);
@@ -161,15 +187,25 @@ int main(int argc, char **argv)
 	std::cout << "asym_loss_real_sim_mean: " << asym_loss_real_sim_mean << " asym_loss_real_sim_var: " << asym_loss_real_sim_var << std::endl;
 
 	double asym_loss_sim_real_mean,  asym_loss_sim_real_var;
-	std::tie(asym_loss_sim_real_mean, asym_loss_sim_real_var) = metric.calcAsymmetricError(sim_pts, sim_pts);
+	std::tie(asym_loss_sim_real_mean, asym_loss_sim_real_var) = metric.calcAsymmetricError(sim_pts, real_pts);
 	std::cout << "asym_loss_sim_real_mean: " << asym_loss_sim_real_mean << " asym_loss_sim_real_var: " << asym_loss_sim_real_var << std::endl;
 
 	double sym_loss_mean = (asym_loss_real_sim_mean + asym_loss_sim_real_mean)/2.0;
 	std::cout << "sym_loss_mean: " << sym_loss_mean << std::endl;
+	sym_loss_mean_vec.push_back(sym_loss_mean);
 
+	// compuation time
 	double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
 	std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
+	comp_time_vec.push_back(elapsed_time);
+	
+	std::cout << std::endl << std::endl;
     }
+
+    std::string rel_path_sym_loss_mean_vec = "data/analyze_clustering/sym_loss_mean_vec.txt";
+    writeVecToFile(sym_loss_mean_vec, rel_path_sym_loss_mean_vec);
+    std::string rel_path_comp_time_vec = "data/analyze_clustering/comp_time_vec.txt";
+    writeVecToFile(comp_time_vec, rel_path_comp_time_vec);
 
     return(1);
 }
