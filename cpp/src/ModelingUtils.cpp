@@ -176,6 +176,42 @@ namespace lidar_sim {
 	return triangle_models;
     }
 
+    TriangleModels stitchTriangleModels(std::vector<TriangleModels> &triangle_models_vec)
+    {
+	TriangleModels triangle_models;
+	for(size_t i = 0; i < triangle_models_vec.size(); ++i)
+	{
+	    TriangleModels this_triangle_models = triangle_models_vec[i];
+
+	    std::vector<std::vector<int> > this_triangles = this_triangle_models.m_triangles;
+	    int offset = triangle_models.m_fit_pts.size();
+	    // since triangles are pt ids
+	    for(size_t i = 0; i < this_triangles.size(); ++i)
+		for(size_t j = 0 ; j < this_triangles[i].size(); ++j)
+		    this_triangles[i][j] += offset;
+	    triangle_models.m_triangles.insert(triangle_models.m_triangles.end(),
+					       this_triangles.begin(), this_triangles.end());
+
+	    triangle_models.m_fit_pts.insert(triangle_models.m_fit_pts.end(),
+					     this_triangle_models.m_fit_pts.begin(), this_triangle_models.m_fit_pts.end());
+	    triangle_models.m_hit_prob_vec.insert(triangle_models.m_hit_prob_vec.end(),
+						  this_triangle_models.m_hit_prob_vec.begin(), this_triangle_models.m_hit_prob_vec.end());
+						  
+	}
+
+	return triangle_models;
+    }
+
+    EllipsoidModels stitchEllipsoidModels(std::vector<EllipsoidModels> &ellipsoid_models_vec)
+    {
+	EllipsoidModels ellipsoid_models;
+	for(size_t i = 0; i < ellipsoid_models_vec.size(); ++i)
+	    ellipsoid_models.insert(ellipsoid_models.end(), 
+				    ellipsoid_models_vec[i].begin(), ellipsoid_models_vec[i].end());
+
+	return ellipsoid_models;
+    }
+
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > > 
     buildBlocks(const std::vector<std::vector<double> > &imu_posn_nodes,
 		const std::vector<std::vector<double> > &pts, int pts_per_block)

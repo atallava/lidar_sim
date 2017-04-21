@@ -27,6 +27,9 @@ namespace lidar_sim {
     void writeTriangleModelsToFile(TriangleModels triangle_models, std::string rel_path_output);
     TriangleModels loadTriangleModelsFromFile(std::string rel_path_input);
 
+    TriangleModels stitchTriangleModels(std::vector<TriangleModels> &triangle_models_vec);
+    EllipsoidModels stitchEllipsoidModels(std::vector<EllipsoidModels> &ellipsoid_models_vec);
+
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > >
 	buildBlocks(const std::vector<std::vector<double> > &imu_posn_nodes,
 		    const std::vector<std::vector<double> > &pts, int pts_per_block);
