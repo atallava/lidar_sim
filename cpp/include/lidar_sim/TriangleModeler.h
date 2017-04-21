@@ -21,6 +21,7 @@
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/TriangleModelSim.h>
+#include <lidar_sim/TriangleModels.h>
 
 namespace lidar_sim {
     class TriangleModeler {
@@ -45,13 +46,11 @@ namespace lidar_sim {
 	void filterPts();
 	void filterTriangles();
 	// hack for patching calcHitProb
-	void setTriangleModels(const TriangleModelSim &triangleModelSim);
+	void setTriangleModels(const TriangleModels &triangle_models);
 
+	TriangleModels m_triangle_models;
 	std::vector<std::vector<double> > m_pts;
 	alglib::rbfmodel m_surface_model;
-	std::vector<std::vector<double> > m_fit_pts;
-	std::vector<std::vector<int> > m_triangles;
-	std::vector<double> m_hit_prob_vec;
 	Delaunay_cgal m_triangulation;
 
     private:

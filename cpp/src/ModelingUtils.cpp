@@ -103,6 +103,27 @@ namespace lidar_sim {
 	std::cout << model.hit_prob << std::endl;
     }
 
+    void writeTriangleModelsToFile(TriangleModels triangle_models, std::string rel_path_output)
+    {
+	std::ofstream file(rel_path_output);
+	std::cout << "ModelingUtils: writing triangles to: " << rel_path_output << std::endl;
+
+	file << "pts" << std::endl;
+    
+	for(size_t i = 0; i < triangle_models.m_fit_pts.size(); ++i)
+	    file << triangle_models.m_fit_pts[i][0] << " " <<
+		triangle_models.m_fit_pts[i][1] << " " <<
+		triangle_models.m_fit_pts[i][2] << std::endl;
+
+	file << "triangles" << std::endl;
+	for(size_t i = 0; i < triangle_models.m_triangles.size(); ++i)
+	    file << triangle_models.m_triangles[i][0] << " " <<
+		triangle_models.m_triangles[i][1] << " " <<
+		triangle_models.m_triangles[i][2] << " " << triangle_models.m_hit_prob_vec[i] << std::endl;
+    
+	file.close();
+    }
+
     TriangleModels loadTriangleModelsFromFile(std::string rel_path_input)
     {
 	// open input file

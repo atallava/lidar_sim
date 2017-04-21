@@ -24,6 +24,7 @@ namespace lidar_sim {
     EllipsoidModels loadEllipsoidModelsFromFile(std::string rel_path_input);
     void dispEllipsoidModel(EllipsoidModel model);
 
+    void writeTriangleModelsToFile(TriangleModels triangle_models, std::string rel_path_output);
     TriangleModels loadTriangleModelsFromFile(std::string rel_path_input);
 
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > >

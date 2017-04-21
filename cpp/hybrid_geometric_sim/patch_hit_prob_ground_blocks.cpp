@@ -13,7 +13,7 @@
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/LaserCalibParams.h>
-#include <lidar_sim/TriangleModelSim.h>
+#include <lidar_sim/TriangleModels.h>
 #include <lidar_sim/TriangleModeler.h>
 
 using namespace lidar_sim;
@@ -82,14 +82,12 @@ int main(int argc, char **argv)
 	// load the triangle models
 	std::string rel_path_triangles;
 	rel_path_triangles = genRelPathTriangles(section_id, block_id);
-	// unfortunately need a trianglemodelsim to load triangles
-	// todo: make this cleaner, make a triangleModels class
-	TriangleModelSim triangleModelSim;
-	triangleModelSim.loadTriangleModels(rel_path_triangles);
+	TriangleModels triangle_models = 
+	    loadTriangleModelsFromFile(rel_path_triangles);
 	
 	// jam models into a modeler
 	TriangleModeler modeler;
-	modeler.setTriangleModels(triangleModelSim);
+	modeler.setTriangleModels(triangle_models);
 	modeler.setDebugFlag(1);
    
 	// load block pts 

@@ -44,8 +44,8 @@ void TriangleModeler::createTriangleModels(const std::string rel_path_pts)
     delaunayTriangulate();
     calcTrianglesFromTriangulation();
     filterTriangles();
-    std::vector<double> default_hit_prob_vec(m_triangles.size(), m_default_hit_prob);
-    m_hit_prob_vec = default_hit_prob_vec;
+    std::vector<double> default_hit_prob_vec(m_triangle_models.m_triangles.size(), m_default_hit_prob);
+    m_triangle_models.m_hit_prob_vec = default_hit_prob_vec;
 }
 
 void TriangleModeler::loadPts(const std::string rel_path_pts)
@@ -95,7 +95,7 @@ void TriangleModeler::fitSmoothedPts()
     {
 	std::vector<double> vec = {xy_fit[i][0], xy_fit[i][1], 
 				   alglib::rbfcalc2(m_surface_model, xy_fit[i][0], xy_fit[i][1])};
-	m_fit_pts.push_back(vec);
+	m_triangle_models.m_fit_pts.push_back(vec);
     }
 }
 
@@ -167,9 +167,9 @@ void TriangleModeler::delaunayTriangulate()
 	std::cout << "TriangleModeler: delaunay triangulation..." << std::endl;
 
     std::vector< std::pair<Point_cgal, unsigned> > points_cgal;
-    for(size_t i = 0; i < m_fit_pts.size(); ++i)
+    for(size_t i = 0; i < m_triangle_models.m_fit_pts.size(); ++i)
 	points_cgal.push_back(
-	    std::make_pair(Point_cgal(m_fit_pts[i][0], m_fit_pts[i][1]), i));
+	    std::make_pair(Point_cgal(m_triangle_models.m_fit_pts[i][0], m_triangle_models.m_fit_pts[i][1]), i));
     
     m_triangulation.insert(points_cgal.begin(), points_cgal.end());
 }
@@ -186,29 +186,13 @@ void TriangleModeler::calcTrianglesFromTriangulation()
 	std::vector<int> triangle;
 	for(size_t i = 0; i < 3; ++i)
 	    triangle.push_back(face->vertex(i)->info());
-	m_triangles.push_back(triangle);
+	m_triangle_models.m_triangles.push_back(triangle);
     }
 }
 
 void TriangleModeler::writeTrianglesToFile(std::string rel_path_output)
 {
-    std::ofstream file(rel_path_output);
-    std::cout << "TriangleModeler: writing triangles to: " << rel_path_output << std::endl;
-
-    file << "pts" << std::endl;
-    
-    for(size_t i = 0; i < m_fit_pts.size(); ++i)
-	file << m_fit_pts[i][0] << " " <<
-	    m_fit_pts[i][1] << " " <<
-	    m_fit_pts[i][2] << std::endl;
-
-    file << "triangles" << std::endl;
-    for(size_t i = 0; i < m_triangles.size(); ++i)
-	file << m_triangles[i][0] << " " <<
-	    m_triangles[i][1] << " " <<
-	    m_triangles[i][2] << " " << m_hit_prob_vec[i] << std::endl;
-    
-    file.close();
+    writeTriangleModelsToFile(m_triangle_models, rel_path_output);
 }
 
 void TriangleModeler::writeTrianglesFitPtsToFile(std::string rel_path_output)
@@ -216,10 +200,10 @@ void TriangleModeler::writeTrianglesFitPtsToFile(std::string rel_path_output)
     std::ofstream file(rel_path_output);
     std::cout << "TriangleModeler: writing triangles fit pts to: " << rel_path_output << std::endl;
 
-    for(size_t i = 0; i < m_fit_pts.size(); ++i)
-	file << m_fit_pts[i][0] << " " <<
-	    m_fit_pts[i][1] << " " <<
-	    m_fit_pts[i][2] << std::endl;
+    for(size_t i = 0; i < m_triangle_models.m_fit_pts.size(); ++i)
+	file << m_triangle_models.m_fit_pts[i][0] << " " <<
+	    m_triangle_models.m_fit_pts[i][1] << " " <<
+	    m_triangle_models.m_fit_pts[i][2] << std::endl;
 
     file.close();
 }
@@ -250,9 +234,7 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
     TriangleModelSim sim;
     const LaserCalibParams laser_calib_params;
     sim.setLaserCalibParams(laser_calib_params);
-    sim.m_triangle_models.m_triangles = m_triangles;
-    sim.m_triangle_models.m_fit_pts = m_fit_pts;
-    sim.m_triangle_models.m_hit_prob_vec = m_hit_prob_vec;
+    sim.m_triangle_models = m_triangle_models;
     sim.fillCgalData();
 
     size_t n_tris = sim.m_triangle_models.m_triangles.size();
@@ -265,7 +247,7 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
     std::vector<double> residual_ranges;
     std::vector<double> filtered_residual_ranges;
 
-    std::vector<int> tri_intersected_count(m_triangles.size(), 0);
+    std::vector<int> tri_intersected_count(m_triangle_models.m_triangles.size(), 0);
     std::vector<int> pt_intersected_flag;
 
     for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
@@ -333,8 +315,8 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
     }
 
     // calculate hit prob
-    for(size_t i = 0; i < m_triangles.size(); ++i)
-	m_hit_prob_vec[i] = (double)(tri_hit_count[i]/(double)(tri_hit_count[i] + tri_miss_count[i]));
+    for(size_t i = 0; i < m_triangle_models.m_triangles.size(); ++i)
+	m_triangle_models.m_hit_prob_vec[i] = (double)(tri_hit_count[i]/(double)(tri_hit_count[i] + tri_miss_count[i]));
 }
 
 void TriangleModeler::subsamplePts()
@@ -400,12 +382,12 @@ void TriangleModeler::filterTriangles()
     if (m_debug_flag)
 	std::cout << "TriangleModeler: filtering triangles..." << std::endl;
 
-    std::vector<int> flag(m_triangles.size(), 1);
-    for(size_t i = 0; i < m_triangles.size(); ++i)
+    std::vector<int> flag(m_triangle_models.m_triangles.size(), 1);
+    for(size_t i = 0; i < m_triangle_models.m_triangles.size(); ++i)
     {
-	std::vector<double> v0 = m_fit_pts[m_triangles[i][0]];
-	std::vector<double> v1 = m_fit_pts[m_triangles[i][1]];
-	std::vector<double> v2 = m_fit_pts[m_triangles[i][2]];
+	std::vector<double> v0 = m_triangle_models.m_fit_pts[m_triangle_models.m_triangles[i][0]];
+	std::vector<double> v1 = m_triangle_models.m_fit_pts[m_triangle_models.m_triangles[i][1]];
+	std::vector<double> v2 = m_triangle_models.m_fit_pts[m_triangle_models.m_triangles[i][2]];
 
 	double s0 = euclideanDist(v0, v1);
 	double s1 = euclideanDist(v1, v2);
@@ -420,18 +402,16 @@ void TriangleModeler::filterTriangles()
     }
 
     std::vector<std::vector<int> > filtered_triangles = 
-	logicalSubsetArray(m_triangles, flag);
+	logicalSubsetArray(m_triangle_models.m_triangles, flag);
     if (m_debug_flag)
 	std::cout << "TriangleModeler: fracn triangles retained: " 
-		  << filtered_triangles.size()/(double)m_triangles.size() << std::endl;
+		  << filtered_triangles.size()/(double)m_triangle_models.m_triangles.size() << std::endl;
 
-    m_triangles = filtered_triangles;
+    m_triangle_models.m_triangles = filtered_triangles;
 }
 
 // hack for patching calcHitProb
-void TriangleModeler::setTriangleModels(const TriangleModelSim &sim)
+void TriangleModeler::setTriangleModels(const TriangleModels &triangle_models)
 {
-    m_triangles = sim.m_triangle_models.m_triangles;
-    m_fit_pts = sim.m_triangle_models.m_fit_pts;
-    m_hit_prob_vec = sim.m_triangle_models.m_hit_prob_vec;
+    m_triangle_models = triangle_models;
 }
