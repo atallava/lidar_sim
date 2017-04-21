@@ -6,6 +6,7 @@
 #include <Eigen/Dense>
 
 #include <lidar_sim/MathUtils.h>
+#include <lidar_sim/TriangleModels.h>
 
 namespace lidar_sim {
     struct EllipsoidModel {
@@ -22,6 +23,8 @@ namespace lidar_sim {
     void writeEllipsoidModelsToFile(EllipsoidModels ellipsoid_models, std::string rel_path_output);
     EllipsoidModels loadEllipsoidModelsFromFile(std::string rel_path_input);
     void dispEllipsoidModel(EllipsoidModel model);
+
+    TriangleModels loadTriangleModelsFromFile(std::string rel_path_input);
 
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > >
 	buildBlocks(const std::vector<std::vector<double> > &imu_posn_nodes,

@@ -103,6 +103,58 @@ namespace lidar_sim {
 	std::cout << model.hit_prob << std::endl;
     }
 
+    TriangleModels loadTriangleModelsFromFile(std::string rel_path_input)
+    {
+	// open input file
+	std::ifstream file(rel_path_input);
+	std::cout << "Reading triangle models from: " << rel_path_input << std::endl;
+
+	TriangleModels triangle_models;
+	std::string current_line;
+	std::string mode;
+	while(std::getline(file, current_line))
+	{
+	    if (strcmp(current_line.c_str(), "pts") == 0)
+	    {
+		mode = "pts";
+		continue;
+	    }
+	    if (strcmp(current_line.c_str(), "triangles") == 0)
+	    {
+		mode = "triangles";
+		continue;
+	    }
+	
+	    std::istringstream iss(current_line);
+
+	    if (strcmp(mode.c_str(), "pts") == 0)
+	    {
+		std::vector<double> pt(3,0);
+		for(size_t i = 0; i < 3; ++i)
+		    iss >> pt[i];
+
+		triangle_models.m_fit_pts.push_back(pt);
+	    }
+
+	    if (strcmp(mode.c_str(), "triangles") == 0)
+	    {
+		std::vector<int> triangle(3,0);
+		for(size_t i = 0; i < 3; ++i)
+		    iss >> triangle[i];
+
+		triangle_models.m_triangles.push_back(triangle);
+
+		double hit_prob;
+		iss >> hit_prob;
+		triangle_models.m_hit_prob_vec.push_back(hit_prob);
+	    }
+		    
+	}
+	file.close();
+
+	return triangle_models;
+    }
+
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<int> > > 
     buildBlocks(const std::vector<std::vector<double> > &imu_posn_nodes,
 		const std::vector<std::vector<double> > &pts, int pts_per_block)

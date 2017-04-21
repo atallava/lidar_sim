@@ -12,6 +12,7 @@
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/LaserCalibParams.h>
 #include <lidar_sim/CgalTypedefs.h>
+#include <lidar_sim/TriangleModels.h>
 
 namespace lidar_sim {
     class TriangleModelSim {
