@@ -45,9 +45,6 @@ namespace lidar_sim {
 	void setDeterministicSim(const bool choice);
 
 	TriangleModels m_triangle_models;
-	std::vector<std::vector<int> > m_triangles;
-	std::vector<std::vector<double> > m_fit_pts;
-	std::vector<double> m_hit_prob_vec;
 	double m_range_var;
 	std::vector<Triangle_3_cgal> m_triangles_cgal;
 	std::vector<Point_3_cgal> m_fit_pts_cgal;

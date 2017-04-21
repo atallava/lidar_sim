@@ -243,12 +243,13 @@ void RangeDataVizer::vizSectionModels(const SectionModelSim &sim)
     }
 			     
     // triangles
-	
     for(size_t i = 0; i < sim.m_triangle_model_sims.size(); ++i)
     {
-    	TriangleModelSim this_tri_sim = sim.m_triangle_model_sims[i];
+	TriangleModels this_triangle_models = sim.m_triangle_model_sims[i].m_triangle_models;
 	std::vector<vtkSmartPointer<vtkActor> > tri_actors = 
-	    m_triangles_actor_server.genTrianglesActors(this_tri_sim.m_triangles, this_tri_sim.m_fit_pts, this_tri_sim.m_hit_prob_vec);
+	    m_triangles_actor_server.genTrianglesActors(this_triangle_models.m_triangles, 
+							this_triangle_models.m_fit_pts, this_triangle_models.m_hit_prob_vec);
+
 	actors.insert(actors.end(), tri_actors.begin(), tri_actors.end());
     }
 
@@ -275,9 +276,9 @@ RangeDataVizer::genSectionModelsActors(const SectionModelSim &sim)
     // triangles
     for(size_t i = 0; i < sim.m_triangle_model_sims.size(); ++i)
     {
-    	TriangleModelSim this_tri_sim = sim.m_triangle_model_sims[i];
+    	TriangleModels this_triangle_models = sim.m_triangle_model_sims[i].m_triangle_models;
 	vtkSmartPointer<vtkActor> tri_actor = 
-	    m_triangles_actor_server.genTrianglesActor(this_tri_sim.m_triangles, this_tri_sim.m_fit_pts);
+	    m_triangles_actor_server.genTrianglesActor(this_triangle_models.m_triangles, this_triangle_models.m_fit_pts);
 	tri_actor->GetProperty()->SetColor(0.5451, 0.2706, 0.0745);
 	actors.push_back(tri_actor);
     }
@@ -294,7 +295,8 @@ RangeDataVizer::genTriangleModelsActors(const std::vector<TriangleModelSim> &sim
     for(size_t i = 0; i < sims.size(); ++i)
     {
 	vtkSmartPointer<vtkActor> tri_actor = 
-	    m_triangles_actor_server.genTrianglesActor(sims[i].m_triangles, sims[i].m_fit_pts);
+	    m_triangles_actor_server.genTrianglesActor(sims[i].m_triangle_models.m_triangles, 
+						       sims[i].m_triangle_models.m_fit_pts);
 	tri_actor->GetProperty()->SetColor(m_brown_color[0], m_brown_color[1], m_brown_color[2]);
 	actors.push_back(tri_actor);
     }

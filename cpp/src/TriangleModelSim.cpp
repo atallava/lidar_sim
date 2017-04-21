@@ -30,55 +30,7 @@ TriangleModelSim::TriangleModelSim() :
 
 void TriangleModelSim::loadTriangleModels(std::string rel_path_input)
 {
-    // open input file
-    // std::ifstream file(rel_path_input);
-    // std::cout << "Reading triangle models from: " << rel_path_input << std::endl;
-
-    // std::string current_line;
-    // std::string mode;
-    // while(std::getline(file, current_line))
-    // {
-    // 	if (strcmp(current_line.c_str(), "pts") == 0)
-    // 	{
-    // 	    mode = "pts";
-    // 	    continue;
-    // 	}
-    // 	if (strcmp(current_line.c_str(), "triangles") == 0)
-    // 	{
-    // 	    mode = "triangles";
-    // 	    continue;
-    // 	}
-	
-    // 	std::istringstream iss(current_line);
-
-    // 	if (strcmp(mode.c_str(), "pts") == 0)
-    // 	{
-    // 	    std::vector<double> pt(3,0);
-    // 	    for(size_t i = 0; i < 3; ++i)
-    // 		iss >> pt[i];
-
-    // 	    m_fit_pts.push_back(pt);
-    // 	}
-
-    // 	if (strcmp(mode.c_str(), "triangles") == 0)
-    // 	{
-    // 	    std::vector<int> triangle(3,0);
-    // 	    for(size_t i = 0; i < 3; ++i)
-    // 		iss >> triangle[i];
-
-    // 	    m_triangles.push_back(triangle);
-
-    // 	    double hit_prob;
-    // 	    iss >> hit_prob;
-    // 	    m_triangle_models.m_hit_prob_vec.push_back(hit_prob);
-    // 	}
-		    
-    // }
-
-    // file.close();
-
     m_triangle_models = loadTriangleModelsFromFile(rel_path_input);
-
     fillCgalData();
 }
 

@@ -250,12 +250,12 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
     TriangleModelSim sim;
     const LaserCalibParams laser_calib_params;
     sim.setLaserCalibParams(laser_calib_params);
-    sim.m_triangles = m_triangles;
-    sim.m_fit_pts = m_fit_pts;
-    sim.m_hit_prob_vec = m_hit_prob_vec;
+    sim.m_triangle_models.m_triangles = m_triangles;
+    sim.m_triangle_models.m_fit_pts = m_fit_pts;
+    sim.m_triangle_models.m_hit_prob_vec = m_hit_prob_vec;
     sim.fillCgalData();
 
-    size_t n_tris = sim.m_triangles.size();
+    size_t n_tris = sim.m_triangle_models.m_triangles.size();
     std::vector<int> tri_hit_count_prior(n_tris, m_hit_count_prior);
     std::vector<int> tri_miss_count_prior(n_tris, m_miss_count_prior);
 
@@ -431,7 +431,7 @@ void TriangleModeler::filterTriangles()
 // hack for patching calcHitProb
 void TriangleModeler::setTriangleModels(const TriangleModelSim &sim)
 {
-    m_triangles = sim.m_triangles;
-    m_fit_pts = sim.m_fit_pts;
-    m_hit_prob_vec = sim.m_hit_prob_vec;
+    m_triangles = sim.m_triangle_models.m_triangles;
+    m_fit_pts = sim.m_triangle_models.m_fit_pts;
+    m_hit_prob_vec = sim.m_triangle_models.m_hit_prob_vec;
 }
