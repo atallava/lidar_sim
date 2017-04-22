@@ -42,15 +42,17 @@ namespace lidar_sim {
 
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 	    simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
+	std::tuple<std::vector<double>, int >
+	    simPtGivenRay(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn);
 	void setDeterministicSim(const bool choice);
 
 	TriangleModels m_triangle_models;
 	double m_range_var;
 	std::vector<Triangle_3_cgal> m_triangles_cgal;
 	std::vector<Point_3_cgal> m_fit_pts_cgal;
+	LaserCalibParams m_laser_calib_params;
 
     private:
-	LaserCalibParams m_laser_calib_params;
 	double m_max_residual_for_hit;
 	std::mt19937 m_gen;
 	std::normal_distribution<> m_normal_dist;

@@ -186,8 +186,8 @@ add_library(lidar_sim SHARED
 
 ## modeling
 
-add_executable(build_models_non_ground_blocks hybrid_geometric_sim/build_models_non_ground_blocks.cpp)
-  target_link_libraries(build_models_non_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(build_models_non_ground_blocks hybrid_geometric_sim/build_models_non_ground_blocks.cpp)
+#   target_link_libraries(build_models_non_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(debug_hit_prob hybrid_geometric_sim/debug_hit_prob.cpp)
 #   target_link_libraries(debug_hit_prob lidar_sim ${LIDAR_SIM_LIBRARIES} )
@@ -203,6 +203,9 @@ add_executable(patch_hit_prob_ground_blocks hybrid_geometric_sim/patch_hit_prob_
 
 # add_executable(analyze_clustering hybrid_geometric_sim/analyze_clustering.cpp)
 #   target_link_libraries(analyze_clustering lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(analyze_mesh hybrid_geometric_sim/analyze_mesh.cpp)
+  target_link_libraries(analyze_mesh lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(build_primitives scene_sim/build_primitives.cpp)
 #   target_link_libraries(build_primitives lidar_sim ${LIDAR_SIM_LIBRARIES} )

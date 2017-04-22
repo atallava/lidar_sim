@@ -29,7 +29,7 @@ TriangleModeler::TriangleModeler() :
     m_default_hit_prob(1),
     m_hit_count_prior(2),
     m_miss_count_prior(2),
-    m_max_triangle_side(5),
+    m_max_triangle_side(10), // 5
     m_max_pts_dist_to_nbrs(5)
 {    
 }
