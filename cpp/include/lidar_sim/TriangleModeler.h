@@ -52,6 +52,9 @@ namespace lidar_sim {
 	std::vector<std::vector<double> > m_pts;
 	alglib::rbfmodel m_surface_model;
 	Delaunay_cgal m_triangulation;
+	
+	// todo: make these private again
+	double m_max_triangle_side;
 
     private:
 	int m_debug_flag;
@@ -65,7 +68,6 @@ namespace lidar_sim {
 	double m_default_hit_prob;
 	int m_hit_count_prior;
 	int m_miss_count_prior;
-	double m_max_triangle_side;
 	double m_max_pts_dist_to_nbrs;
     };
 }

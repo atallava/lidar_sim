@@ -99,9 +99,9 @@ int main(int argc, char **argv)
 	}
 
     // param vec
-    double min_param_val = 0.001;
-    double max_param_val = 0.1;
-    double n_params = 1;
+    double min_param_val = 3;
+    double max_param_val = 15;
+    double n_params = 2;
     double param_step = (max_param_val-min_param_val)/n_params;
     std::vector<double> param_vec;
     double param = min_param_val;
@@ -110,18 +110,16 @@ int main(int argc, char **argv)
 	param_vec.push_back(param);
 	param += param_step;
     }
-    std::vector<double> n_clusters_per_pt_vec = param_vec;
-    // std::vector<double> n_clusters_per_pt_vec{10/(double)12016};
 
     // write param vec
     std::string rel_path_param_vec = genRelPathParamVec();
-    writeVecToFile(n_clusters_per_pt_vec, rel_path_param_vec);
+    writeVecToFile(param_vec, rel_path_param_vec);
 
     std::vector<double> comp_time_vec;
     std::vector<double> sym_loss_mean_vec;
 
     // loop over params
-    for(size_t i = 0; i < n_clusters_per_pt_vec.size(); ++i)
+    for(size_t i = 0; i < param_vec.size(); ++i)
     {    
 	std::cout << "parameter: " << i << std::endl;
 	clock_t start_time = clock();
@@ -131,7 +129,7 @@ int main(int argc, char **argv)
 	modeler.setDebugFlag(1);
 
 	// triangles
-	// double n_clusters_per_pt = n_clusters_per_pt_vec[i];
+	modeler.m_max_triangle_side = param_vec[i];
 	modeler.createTriangleModels(rel_path_block_pts);
 
 	// calc hit prob
