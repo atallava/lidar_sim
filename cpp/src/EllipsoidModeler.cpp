@@ -32,7 +32,7 @@ EllipsoidModeler::EllipsoidModeler() :
     m_max_pts_dist_to_nbrs(5)
 {    
     // m_n_clusters_per_pt = 1000/(double)12016; // hack based on rim stretch test
-    m_n_clusters_per_pt = 100/(double)12016; // hack based on rim stretch test
+    m_n_clusters_per_pt = 0.0146; // from param search on one block
 }
 
 void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)

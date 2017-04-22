@@ -89,38 +89,29 @@ int main(int argc, char **argv)
 	std::cout << "processing block " << block_id << "..." << std::endl;
 
 	std::string rel_path_pts = genRelPathBlock(section_id, block_id);
+	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
 
 	EllipsoidModeler modeler;
 	modeler.setDebugFlag(1);
 	modeler.createEllipsoidModels(rel_path_pts);
 	
-	// slice imu posns
-	std::vector<std::vector<double> > slice_imu_posns;
-	// blocks are indexed from 1. sorry.
-	for(size_t i = 0; i < 2; ++i)
-	    slice_imu_posns.push_back(imu_posn_nodes[block_node_ids_non_ground[block_id-1][i]]);
+	// calc hit prob
+	// calc section pts to process
+	int num_nbrs = 1;
+	std::vector<std::vector<int> > section_nbr_pt_ids; 
 
-	// slice section log ids
-	int slice_start_section_log_id;
-	int slice_end_section_log_id;
+	std::tie(section_nbr_pt_ids, std::ignore) = nearestNeighbors(section.m_pts, block_pts, num_nbrs);
 
-	std::tie(slice_start_section_log_id, slice_end_section_log_id) =
-	    section.getLogIdsBracketingImuPosns(slice_imu_posns, imu_pose_server);
-
-	// subsample log ids
-	int max_section_packets_to_process = 1e4;
-	int skip = (slice_end_section_log_id - slice_start_section_log_id)/max_section_packets_to_process;
-	if (skip < 1)
-	    skip = 1;
+	std::vector<std::vector<double> > section_pts_to_process;
 	std::vector<int> section_pt_ids_to_process;
-	for(size_t i = slice_start_section_log_id; i <= (size_t)slice_end_section_log_id; i += skip)
-	{
-	    double t = section.m_packet_timestamps[i];
-	    std::vector<int> pt_ids = section.getPtIdsAtTime(t);
-	    section_pt_ids_to_process.insert(section_pt_ids_to_process.end(), 
-					     pt_ids.begin(), pt_ids.end());
-	}
-
+	for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
+	    for(size_t j = 0; j < section_nbr_pt_ids[i].size(); ++j)
+	    {
+		int id = section_nbr_pt_ids[i][j];
+		section_pt_ids_to_process.push_back(id);
+		section_pts_to_process.push_back(
+		    section.m_pts[id]);
+	    }
 	modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
 
 	// write out
