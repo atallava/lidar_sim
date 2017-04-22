@@ -138,8 +138,8 @@ int main(int argc, char **argv)
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // sim
-    std::vector<double> ray_origin{-516.039,461.932,-5.1633};
-    std::vector<double> ray_dirn{0.50708,0.81012,-0.29423};
+    std::vector<double> ray_origin{-527.328,466.156,-5.1058};
+    std::vector<double> ray_dirn{-0.2305,0.93184,-0.28024};
     std::vector<std::vector<double> > ray_dirns = wrapDataInVec(ray_dirn);
 
     std::vector<int> triangle_blocks_queried = 

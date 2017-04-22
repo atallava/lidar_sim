@@ -60,21 +60,21 @@ end
 nonGroundPts = stitchPtsCell(nonGroundPtsCell);
 
 %% query pt
-pt =  [-582.5390  462.0030    0.8647];
-simPt = [-532.1500  461.5530   -3.9844];
+pt =  [-536.6980  492.3350  -15.4777];
+simPt = [-531.0470  479.6960  -10.3850];
     
-rayOrigin = [-515.1300  461.6110   -5.1904];
-rayEnd =  simPt;
+rayOrigin = [-525.9080  465.6510   -5.1426];
+rayEnd =  pt;
 [rayDirn,rayLength] = calcRayDirn(rayOrigin,rayEnd);
 
 %% get nbr models
-modelNbrRadius = 0.5;
+modelNbrRadius = 5;
 triModelsNbr = createTriModelsNbr(triModels,pt,modelNbrRadius);
 ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,pt,modelNbrRadius);
 
 % nbr pts
-groundPtsNbr = getPtsNbr(groundPts,pt,modelNbrRadius,500);
-nonGroundPtsNbr = getPtsNbr(nonGroundPts,pt,modelNbrRadius,500);
+groundPtsNbr = getPtsNbr(groundPts,pt,modelNbrRadius,900);
+nonGroundPtsNbr = getPtsNbr(nonGroundPts,pt,modelNbrRadius,900);
 
 %% plot
 plotStructVars = {'rayData','ellipsoidData','triModelData','pts','plotStruct'};
@@ -91,7 +91,8 @@ ellipsoidData.ellipsoidModels = ellipsoidModelsNbr;
 plotStruct.ellipsoidData = ellipsoidData;
 
 triModelData = triModelsNbr;
-% plotStruct.triModelData = triModelData;
+% triModelData.uniformAlpha = true;
+plotStruct.triModelData = triModelData;
 
 % plotStruct.pts = [groundPtsNbr; nonGroundPtsNbr];
 
@@ -104,7 +105,7 @@ scatter3(pt(:,1),pt(:,2),pt(:,3),'r.','sizedata',40);
 
 % nbr ground pts
 mudBrownColor = [210 180 140]/255.0;
-% scatter3(groundPtsNbr(:,1),groundPtsNbr(:,2),groundPtsNbr(:,3),'.','markeredgecolor',mudBrownColor);
+scatter3(groundPtsNbr(:,1),groundPtsNbr(:,2),groundPtsNbr(:,3),'.','markeredgecolor',mudBrownColor);
 % nbr non ground pts
 scatter3(nonGroundPtsNbr(:,1),nonGroundPtsNbr(:,2),nonGroundPtsNbr(:,3),'g.');
 axis equal; box on; grid on;

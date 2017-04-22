@@ -1,4 +1,12 @@
 function vec = loadVecFromFile(relPathInput)
+    %LOADVECFROMFILE
+    %
+    % vec = LOADVECFROMFILE(relPathInput)
+    %
+    % relPathInput -
+    %
+    % vec          -
+
     fid = fopen(relPathInput,'r');
     vec = [];
     line = fgetl(fid);

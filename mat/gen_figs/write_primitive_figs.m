@@ -30,7 +30,7 @@ for i = 1:length(classNames)
         elementId = elementIds{i}(j);
         
         % load data
-        pts = ptsFromXyz(genRelPathPrimitivePts(sectionId,className,elementId));
+        pts = loadPts(genRelPathPrimitivePts(sectionId,className,elementId));
         ellipsoidModels = loadEllipsoidModels(genRelPathPrimitiveEllipsoids(sectionId,className,elementId));
         
         % create fig
