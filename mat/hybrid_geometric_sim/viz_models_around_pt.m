@@ -60,7 +60,7 @@ end
 nonGroundPts = stitchPtsCell(nonGroundPtsCell);
 
 %% query pt
-pt =  [-536.6980  492.3350  -15.4777];
+pt =  [ -378.6550  351.0360   -6.8285];
 simPt = [-531.0470  479.6960  -10.3850];
     
 rayOrigin = [-525.9080  465.6510   -5.1426];

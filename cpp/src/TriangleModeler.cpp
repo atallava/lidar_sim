@@ -13,6 +13,7 @@
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>
 #include <lidar_sim/MathUtils.h>
+#include <lidar_sim/VizUtils.h>
 
 using namespace lidar_sim;
 
@@ -26,8 +27,8 @@ TriangleModeler::TriangleModeler() :
     m_fit_pts_node_resn(1),
     m_max_dist_to_projn(1.5),
     m_default_hit_prob(1),
-    m_hit_count_prior(0),
-    m_miss_count_prior(1),
+    m_hit_count_prior(2),
+    m_miss_count_prior(2),
     m_max_triangle_side(5),
     m_max_pts_dist_to_nbrs(5)
 {    
@@ -261,7 +262,7 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
     	std::vector<double> ray_dirn;
     	double meas_dist;
     	std::tie(ray_dirn, meas_dist) = calcRayDirn(ray_origin, this_pt);
-	
+
     	std::vector<int> intersection_flag;
     	std::vector<double> dists_to_tri;
     	std::tie(intersection_flag, dists_to_tri) = sim.calcTriIntersections(ray_origin, ray_dirn);

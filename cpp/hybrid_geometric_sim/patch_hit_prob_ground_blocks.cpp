@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     int section_id = 3;
     std::vector<int> block_ids;
     for(size_t i = 1; i <= 4; ++i)
-	block_ids.push_back(i);
+    	block_ids.push_back(i);
 
     // load section
     std::string rel_path_section = "data/section_03_world_frame_subsampled.xyz";
