@@ -46,7 +46,7 @@ std::string genRelPathPts(int section_id, int part_id)
 int main(int argc, char **argv)
 {
     int section_id = 4;
-    int part_id = 2;
+    int part_id = 4;
 
     std::string rel_path_pts = genRelPathPts(section_id, part_id);
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);

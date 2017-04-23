@@ -99,10 +99,10 @@ int main(int argc, char **argv)
 	}
 
     // param vec
-    double min_param_val = 0.1;
-    double max_param_val = 1.5;
-    double n_params = 25;
-    double param_step = (max_param_val-min_param_val)/n_params;
+    double min_param_val = 0.01;
+    double max_param_val = 0.1;
+    double n_params = 20;
+    double param_step = (max_param_val - min_param_val)/n_params;
     std::vector<double> param_vec;
     double param = min_param_val;
     while (param < max_param_val)
@@ -143,7 +143,7 @@ int main(int argc, char **argv)
 	// sim
 	std::cout << "simming..." << std::endl;
 	TriangleModelSim sim;
-	sim.m_max_residual_for_hit = param_vec[i];
+	sim.m_range_var = param_vec[i];
 	sim.loadTriangleModels(rel_path_triangles);
 	// loop over section pts
 	std::vector<std::vector<double> > real_pts;

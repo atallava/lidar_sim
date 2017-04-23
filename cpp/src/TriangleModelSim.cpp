@@ -19,7 +19,7 @@ using namespace lidar_sim;
 
 TriangleModelSim::TriangleModelSim() :
     m_range_var(0.07),
-    m_max_residual_for_hit(1),
+    m_max_residual_for_hit(0.75),
     m_normal_dist(0, m_range_var),
     m_deterministic_sim(false)
 {    

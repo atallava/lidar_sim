@@ -22,14 +22,14 @@ TriangleModeler::TriangleModeler() :
     m_max_pts_for_surface(10000),
     m_rbf_radius(5),
     m_rbf_layers(1),
-    m_rbf_reg(1e-4),
+    m_rbf_reg(1e-3),
     m_fit_pts_padding(5),
     m_fit_pts_node_resn(1),
     m_max_dist_to_projn(1.5),
     m_default_hit_prob(1),
     m_hit_count_prior(2),
     m_miss_count_prior(2),
-    m_max_triangle_side(10), // 5
+    m_max_triangle_side(10),
     m_max_pts_dist_to_nbrs(5)
 {    
 }
