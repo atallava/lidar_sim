@@ -55,13 +55,13 @@ namespace lidar_sim {
 	
 	// todo: make these private again
 	double m_max_triangle_side;
+	double m_rbf_reg;
 
     private:
 	int m_debug_flag;
 	double m_max_pts_for_surface;
 	double m_rbf_radius;
 	double m_rbf_layers;
-	double m_rbf_reg;
 	double m_fit_pts_padding;
 	double m_fit_pts_node_resn;
 	double m_max_dist_to_projn;

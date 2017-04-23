@@ -51,9 +51,9 @@ namespace lidar_sim {
 	std::vector<Triangle_3_cgal> m_triangles_cgal;
 	std::vector<Point_3_cgal> m_fit_pts_cgal;
 	LaserCalibParams m_laser_calib_params;
+	double m_max_residual_for_hit;
 
     private:
-	double m_max_residual_for_hit;
 	std::mt19937 m_gen;
 	std::normal_distribution<> m_normal_dist;
 	bool m_deterministic_sim;
