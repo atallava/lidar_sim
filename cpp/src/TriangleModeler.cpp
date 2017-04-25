@@ -27,7 +27,7 @@ TriangleModeler::TriangleModeler() :
     m_fit_pts_node_resn(1),
     m_max_dist_to_projn(1.5),
     m_default_hit_prob(1),
-    m_hit_count_prior(2),
+    m_hit_count_prior(1), // should be 1?
     m_miss_count_prior(2),
     m_max_triangle_side(10),
     m_max_pts_dist_to_nbrs(5)
