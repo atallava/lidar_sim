@@ -1,14 +1,13 @@
-function hfig = vizObb(obb,pts)
-    %VIZOBB
+function drawObb(hfig,obb,pts)
+    %DRAWOBB
     %
-    % hfig = VIZOBB(obb,pts)
+    % DRAWOBB(hfig,obb,pts)
     %
-    % obb  - struct.
-    % pts  - [nPts,3] array. Optional.
-    %
-    % hfig - figure handle.
+    % hfig -
+    % obb  -
+    % pts  -
     
-    hfig = figure;
+    figure(hfig);
     hold on; axis equal;
     box on; grid on;
     xlabel('x'); ylabel('y'); zlabel('z');
@@ -25,7 +24,7 @@ function hfig = vizObb(obb,pts)
         plotLine(vertices(i,:),vertices(i+4,:));
     end
     
-    if nargin > 1
+    if nargin > 2
         scatter3(pts(:,1),pts(:,2),pts(:,3),'r.');
     end
     

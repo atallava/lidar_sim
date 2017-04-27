@@ -1,4 +1,12 @@
 function obb = calcObb(pts)
+    %CALCOBB
+    %
+    % obb = CALCOBB(pts)
+    %
+    % pts - [nPts,3] array.
+    %
+    % obb - struct. fields ('center1','ax1','ax2','extents').
+    
     ptsXy = pts(:,1:2);
     covMat = cov(ptsXy);
     [V,~] = eig(covMat);
@@ -9,7 +17,7 @@ function obb = calcObb(pts)
     obb.ax2 = -V(:,1);
     nPts = size(pts,1);
     obb.extents = zeros(3,2);
-    lowLim = 1e-6;
+    lowLim = 1e-2;
     highLim = 1-lowLim;
     for i = 1:2
         vec = zeros(1,nPts);
