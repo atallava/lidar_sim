@@ -11,12 +11,17 @@ load(relPathPtsMat,'pts');
 obb = calcObb(pts);
 
 % viz the obb
-hfig = vizObb(obb,pts);
+vizObb(obb,pts);
 
 %% transf to obb frame
 T_obb_to_world = getObbTransf(obb);
 T_world_to_obb = inv(T_obb_to_world);
 ptsObb = applyTransf(pts,T_world_to_obb);
 obbOwnFrame = applyTransfToObb(obb,T_world_to_obb);
-vizObb(obbOwnFrame,ptsObb);
+hfig = vizObb(obbOwnFrame,ptsObb);
 
+%% transf to test frame
+T_test_to_obb = transfz([20 1 1],deg2rad(45));
+ptsTest = applyTransf(ptsObb,T_test_to_obb);
+obbTest = applyTransfToObb(obbOwnFrame,T_test_to_obb);
+drawObb(hfig,obbTest,ptsTest);

@@ -1,4 +1,13 @@
 function pts2 = applyTransf(pts1,T_1_to_2)
+    %APPLYTRANSF
+    %
+    % pts2 = APPLYTRANSF(pts1,T_1_to_2)
+    %
+    % pts1     -
+    % T_1_to_2 -
+    %
+    % pts2     -
+    
     if size(pts1,2) == 3
         hInput = false;
         pts1 = [pts1 ones(size(pts1,1),1)];

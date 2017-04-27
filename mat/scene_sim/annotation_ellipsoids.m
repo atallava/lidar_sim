@@ -39,13 +39,44 @@ clear(plotStructVars{:});
 ellipsoidData.ellipsoidModels = obbEllipsoids;
 ellipsoidData.uniformAlpha = false;
 plotStruct.ellipsoidData = ellipsoidData;
-hfigEll = plotRangeData(plotStruct);
-drawObb(hfigEll,obb);
+hfig = plotRangeData(plotStruct);
+drawObb(hfig,obb,pts);
 
 %% transf to obb frame
 T_obb_to_world = getObbTransf(obb);
 T_world_to_obb = inv(T_obb_to_world);
-ptsObb = applyTransf(pts,T_world_to_obb);
-obbOwnFrame = applyTransfToObb(obb,T_world_to_obb);
-vizObb(obbOwnFrame,ptsObb);
+pts_obb = applyTransf(pts,T_world_to_obb);
+obb_own = applyTransfToObb(obb,T_world_to_obb);
+obbEllipsoids_obb = applyTransfToEllipsoids(obbEllipsoids,T_world_to_obb);
+
+plotStructVars = {'ellipsoidData','plotStruct'};
+clear(plotStructVars{:});
+ellipsoidData.ellipsoidModels = obbEllipsoids_obb;
+ellipsoidData.uniformAlpha = false;
+plotStruct.ellipsoidData = ellipsoidData;
+hfig = plotRangeData(plotStruct);
+drawObb(hfig,obb_own,pts_obb);
+
+%% transf to test frame
+T_obb_to_test = transfz([20 2 10],deg2rad(45));
+pts_test = applyTransf(pts_obb,T_obb_to_test);
+obb_test = applyTransfToObb(obb_own,T_obb_to_test);
+obbEllipsoids_test = applyTransfToEllipsoids(obbEllipsoids_obb,T_obb_to_test);
+
+plotStructVars = {'ellipsoidData','plotStruct'};
+clear(plotStructVars{:});
+ellipsoidData.ellipsoidModels = stitchEllipsoidModels( ...
+    {obbEllipsoids_obb,obbEllipsoids_test});
+ellipsoidData.uniformAlpha = false;
+plotStruct.ellipsoidData = ellipsoidData;
+hfig = plotRangeData(plotStruct);
+drawObb(hfig,obb_own,pts_obb);
+drawObb(hfig,obb_test,pts_test);
+
+
+
+
+
+
+
 
