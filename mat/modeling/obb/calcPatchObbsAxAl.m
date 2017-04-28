@@ -24,7 +24,7 @@ function [obbCell,obbPtsCell] = calcPatchObbsAxAl(pts)
     globalZExtents = calcGlobalZExtents(pts);
    
     % grid
-    nodeResn = 1;
+    nodeResn = 2.2;
     numXNodes = ceil((frameExtents(1,2)-frameExtents(1,1))/nodeResn);
     numYNodes = ceil((frameExtents(2,2)-frameExtents(2,1))/nodeResn);
     xNodes = [0:(numXNodes-1)]*nodeResn + 0.5*nodeResn + frameCenter(1)+frameExtents(1,1);

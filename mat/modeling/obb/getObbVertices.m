@@ -1,4 +1,12 @@
 function vertices = getObbVertices(obb)
+    %GETOBBVERTICES
+    %
+    % vertices = GETOBBVERTICES(obb)
+    %
+    % obb      -
+    %
+    % vertices -
+    
     count = 1;
     for i = [2 1]
         if i == 2

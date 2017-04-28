@@ -30,7 +30,7 @@ load(relPathPrimitiveClasses,'primitiveClasses');
 
 %% divide into sets
 tape = calcPtsCellTape(ptsCell);
-maxPtsPerSet = 50;
+maxPtsPerSet = 40;
 setCell = splitVecIntoSets(tape,maxPtsPerSet);
 
 %% label
@@ -39,8 +39,11 @@ setId = 1;
 segmentIdsInSet = setCell{setId};
 nSegmentsInSet = length(segmentIdsInSet);
 
-relPathLabeling = 'labeling';
+labelingData.relPathLabelingOut = 'labeling_tmp';
+labelingData.loadPartialLabeling = 1;
+labelingData.relPathPartialLabeling = 'labeling_set_1';
+
 ptsCellToPass = ptsCell(segmentIdsInSet);
-labeling = labelingTool(ptsCellToPass,primitiveClasses,relPathLabeling);
+labeling = labelingTool(ptsCellToPass,primitiveClasses,labelingData);
 
 

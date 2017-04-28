@@ -1,4 +1,4 @@
-function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
+function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
     %LABELINGTOOL
     %
     % labeling = LABELINGTOOL(ptsCell,primitiveClasses,relPathLabeling)
@@ -26,22 +26,54 @@ function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
     shortStep = 1;
     longStep = 5;
     
-    legendFontSize = 8;
+    legendFontSize = 10;
     
     %% control keys
     keys = struct(...
         'select','space', ...
-        'quit','q',...
-        'longRwd','h','shortRwd','j',...
+        'vis','v', ...
+        'quit','q', ...
+        'save','s', ...
+        'longRwd','h','shortRwd','j', ...
         'shortFwd','k','longFwd','l');
     
     
     fprintf('%s : select/ unselect\n',keys.select);
+    fprintf('%s: when selected, toggle visibility\n',keys.vis);
     fprintf('(%s,%s,%s,%s) : (<<,<,>,>>) when paused\n',...
         keys.longRwd,keys.shortRwd,keys.shortFwd,keys.longFwd);
     fprintf('%s : quit\n',keys.quit);
+    fprintf('%s: save current labeling\n',keys.save);
     fprintf('1-%d: when segment is selected, label as\n',length(primitiveClasses));
     fprintf('0: when segment is selected, de-label\n');
+    
+    %% initialize
+    nSegments = length(ptsCell);
+    if ~isfield(labelingData,'loadPartialLabeling')
+        labelingData.loadPartialLabeling = 0;
+    end
+    if labelingData.loadPartialLabeling
+        load(labelingData.relPathPartialLabeling,'labeling');
+    else
+        labeling = zeros(1,nSegments);
+    end
+    
+    selected = 0;
+    currentSelectionId = 0;
+    segmentColors = cell(1,nSegments);
+    visibilityState = cell(1,nSegments);
+    for i = 1:nSegments
+        % if labeled, use class color
+        if labeling(i)
+            segmentColors{i} = ...
+                classColors(labeling(i),:);
+        else
+            colorId = modN(i,nColorsToCycleThrough);
+            segmentColors{i} = cycleColors(colorId,:);
+        end
+        
+        visibilityState{i} = 'on';
+    end
     
     %% set up figure
     hfig = figure;
@@ -49,16 +81,18 @@ function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
     box on; grid on;
     xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
     
-    nSegments = length(ptsCell);
-    labeling = zeros(1,nSegments);
     scatterHandles = gobjects(1,nSegments);
     for i = 1:nSegments
         segmentPts = ptsCell{i};
-        colorId = modN(i,nColorsToCycleThrough);
-        segmentPtsColor = cycleColors(colorId,:);
         
+        % if labeled, use apt marker
+        if labeling(i)
+            thisMarker = labeledMarker;
+        else
+            thisMarker = unlabeledMarker;
+        end
         scatterHandles(i) = scatter3(segmentPts(:,1),segmentPts(:,2),segmentPts(:,3),...
-            'marker',unlabeledMarker,'markerEdgeColor',segmentPtsColor);
+            'marker',thisMarker,'markerEdgeColor',segmentColors{i});
     end
     
     set(hfig,'KeyPressFcn',@myKeyPress);
@@ -86,13 +120,15 @@ function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
     % create tag handles
     tagHandles = gobjects(1,nSegments);
     for i = 1:nSegments
-        tagHandles(i) = text(tagLocations(i,1),tagLocations(i,2),tagLocations(i,3),'');
+        if labeling(i)
+            tagText = num2str(labeling(i));
+        else
+            tagText = '';
+        end
+        tagHandles(i) = text(tagLocations(i,1),tagLocations(i,2),tagLocations(i,3),tagText);
     end
     
-    %% initialize callback state
-    selected = 0;
-    currentSelectionId = 0;
-    colorBackup = zeros(1,3);
+%     drawBasePlane();
     
     %% callback
     function myKeyPress(hObj,event)
@@ -109,10 +145,19 @@ function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
                     updateCurrentSelection(newSelectionId);
                     selected = 1;
                 else
-                    set(scatterHandles(currentSelectionId),'markerEdgeColor',colorBackup);
-                    colorBackup = [];
+                    set(scatterHandles(currentSelectionId),'markerEdgeColor', ...
+                        segmentColors{currentSelectionId});
                     currentSelectionId = 0;
                     selected = 0;
+                end
+                
+            case keys.vis
+                if selected
+                    if strcmp(visibilityState{currentSelectionId},'on')
+                        visibilityState{currentSelectionId} = 'off';
+                    else
+                        visibilityState{currentSelectionId} = 'on';
+                    end
                 end
                 
             case keys.shortFwd
@@ -159,37 +204,50 @@ function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
                     updateCurrentSelection(newSelectionId);
                 end
                 
-            case numericCases
-                if selected
-                    classId = str2num(event.Key); classId = floor(classId);
-                    if ~strcmp(event.Key,'0')
-                        % assign class
-                        labeling(currentSelectionId) = classId;
-                        % class color
-                        colorForClass = classColors(classId,:);
-                        colorBackup = colorForClass;
-                        % labeled marker
-                        set(scatterHandles(currentSelectionId),'marker',labeledMarker);
-                        
-                        % tag
-                        set(tagHandles(currentSelectionId),'string',event.Key,'color',colorForClass);
-                    else
-                        % de-assign class
-                        labeling(currentSelectionId) = 0;
-                        % set one of the cycle colors
-                        unlabeledColorId = randperm(nColorsToCycleThrough,1);
-                        unlabeledColor = cycleColors(unlabeledColorId,:);
-                        colorBackup = unlabeledColor;
-                        % unlabeled marker
-                        set(scatterHandles(currentSelectionId),'marker',unlabeledMarker);
-                        
-                        % blank tag
-                        set(tagHandles(currentSelectionId),'string','');
-                    end
+            case 'c'
+                choice = inputdlg('label id:'); choice = choice{1};
+                switch choice
+                    case numericCases
+                        if selected
+                            classId = str2num(choice); classId = floor(classId);
+                            if ~strcmp(choice,'0')
+                                % assign class
+                                labeling(currentSelectionId) = classId;
+                                % class color
+                                colorForClass = classColors(classId,:);
+                                segmentColors{currentSelectionId} = colorForClass;
+                                % labeled marker
+                                set(scatterHandles(currentSelectionId),'marker',labeledMarker);
+                                
+                                % tag
+                                set(tagHandles(currentSelectionId),'string',choice,'color',colorForClass);
+                            else
+                                % de-assign class
+                                labeling(currentSelectionId) = 0;
+                                % set one of the cycle colors
+                                unlabeledColorId = randperm(nColorsToCycleThrough,1);
+                                unlabeledColor = cycleColors(unlabeledColorId,:);
+                                segmentColors{currentSelectionId} = unlabeledColor;
+                                % unlabeled marker
+                                set(scatterHandles(currentSelectionId),'marker',unlabeledMarker);
+                                
+                                % blank tag
+                                set(tagHandles(currentSelectionId),'string','');
+                            end
+                        end
+                    otherwise
+                        % do nothing
                 end
+                
+            case keys.save
+                fprintf('saving labeling to %s...\n',labelingData.relPathLabelingOut);
+                save(labelingData.relPathLabelingOut,'labeling');
+                
             case keys.quit
-                save(relPathLabeling,'labeling');
+                fprintf('saving labeling to %s...\n',labelingData.relPathLabelingOut);
+                save(labelingData.relPathLabelingOut,'labeling');
                 close(hfig);
+
             otherwise
                 % do nothing
         end
@@ -198,14 +256,15 @@ function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
     %% helpers
     function updateCurrentSelection(newSelectionId)
         % restore current selection's color
+        % restore current selection's visibility state
         if currentSelectionId ~= 0
-            set(scatterHandles(currentSelectionId),'markerEdgeColor',colorBackup);
+            set(scatterHandles(currentSelectionId),'markerEdgeColor',segmentColors{currentSelectionId});
+            set(scatterHandles(currentSelectionId),'visible',visibilityState{currentSelectionId});
         end
         
         currentSelectionId = newSelectionId;
-        colorBackup = get(scatterHandles(currentSelectionId), ...
-            'markerEdgeColor');
         set(scatterHandles(currentSelectionId),'markerEdgeColor',selectionColor);
+        set(scatterHandles(currentSelectionId),'visible','on');
     end
     
     function calcSegmentsTagLocations()
@@ -217,4 +276,19 @@ function labeling = labelingTool(ptsCell,primitiveClasses,relPathLabeling)
             tagLocations(i,:) = [centroid(1) centroid(2) zMax+tagZOffset];
         end
     end
+    
+    function drawBasePlane()
+        ptsAll = [];
+        for i = 1:length(ptsCell)
+            thisPts = ptsCell{i};
+            ptsAll = [ptsAll; thisPts];
+        end
+        obbAll = calcObb(ptsAll);
+        obbAllVertices = getObbVertices(obbAll);
+        xPlane = obbAllVertices(1:4,1);
+        yPlane = obbAllVertices(1:4,2);
+        zPlane = obbAllVertices(1:4,3);
+        fill3(xPlane,yPlane,zPlane,[0 0 1],'faceAlpha',0.2,'edgealpha',0);
+    end
+  
 end
