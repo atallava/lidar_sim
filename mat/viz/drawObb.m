@@ -29,10 +29,11 @@ function drawObb(hfig,obb,pts)
     end
     
     function plotLine(pt1,pt2)
+        lineWidth = 1.5;
         figure(hfig);
         x = [pt1(1) pt2(1)];
         y = [pt1(2) pt2(2)];
         z = [pt1(3) pt2(3)];
-        plot3(x,y,z,'b');
+        plot3(x,y,z,'b','linewidth',lineWidth);
     end
 end

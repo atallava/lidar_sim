@@ -41,7 +41,7 @@ patchEllipsoidsAll = stitchEllipsoidModels(patchEllipsoids);
 plotStructVars = {'ellipsoidData','plotStruct'};
 clear(plotStructVars{:});
 % ellipsoidData.ellipsoidModels = patchEllipsoidsAll;
-ellipsoidData.ellipsoidModels = patchEllipsoids{1};
+ellipsoidData.ellipsoidModels = patchEllipsoids{5};
 ellipsoidData.uniformAlpha = false;
 plotStruct.ellipsoidData = ellipsoidData;
 hfig = plotRangeData(plotStruct);
