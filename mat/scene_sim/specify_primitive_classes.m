@@ -7,4 +7,16 @@ primitiveClasses = ...
     'medium_tree', ...
     'large_tree'};
 
-save('../data/primitive_classes','primitiveClasses');
+nClasses = length(primitiveClasses);
+primitiveClassIsPatch = zeros(1,nClasses);
+for i = 1:nClasses
+    posn = strfind(primitiveClasses{i},'patch');
+    if isempty(posn)
+        primitiveClassIsPatch(i) = 0;
+    else
+        primitiveClassIsPatch(i) = 1;
+    end
+end
+    
+
+save('../data/primitive_classes','primitiveClasses','primitiveClassIsPatch');

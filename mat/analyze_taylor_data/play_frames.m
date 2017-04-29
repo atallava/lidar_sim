@@ -19,7 +19,7 @@ end
 numFrames = getNumFrames(dirRelPath); % assuming all have same number of frames
 
 %% specify frame ids to play
-startId = 8000;
+startId = 7800;
 endId = 9000;
 skip = 5;
 frameIds = startId:skip:endId;

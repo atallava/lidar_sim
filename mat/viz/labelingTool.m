@@ -1,4 +1,4 @@
-function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
+function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     %LABELINGTOOL
     %
     % labeling = LABELINGTOOL(ptsCell,primitiveClasses,relPathLabeling)
@@ -105,7 +105,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
             thisMarker = unlabeledMarker;
         end
         % todo: skipping!
-        skip = 15;
+        skip = 2;
         scatterHandles(i) = scatter3(segmentPts(1:skip:end,1),segmentPts(1:skip:end,2),segmentPts(1:skip:end,3),...
             'marker',thisMarker,'markerEdgeColor',segmentColors{i});
     end
@@ -144,6 +144,8 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
     end
     
     %drawBasePlane();
+    
+    drawImuObbs();
 
     dcmObj = datacursormode(hfig);
     
@@ -310,5 +312,21 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         zPlane = obbAllVertices(1:4,3);
         fill3(xPlane,yPlane,zPlane,[0 0 1],'faceAlpha',0.2,'edgealpha',0);
     end
-  
+    
+    function drawImuObbs()
+        % create a dummy obb
+        dummyObb.center = [1 0 0];
+        dummyObb.ax1 = [1 0]; dummyObb.ax2 = [0 1];
+        dummyObb.extents = [-1 1; -1 1; -1 1];
+        tImu = imuData.tExtents(1);
+        
+        while tImu < imuData.tExtents(2)
+            imuPose = getImuPoseAtTime(imuData.poseLog,imuData.tLog,tImu);
+            T_imu_world = getImuTransfFromImuPose(imuPose);
+            obb_world = applyTransfToObb(dummyObb,T_imu_world);
+            drawObb(hfig,obb_world);
+            tImu = tImu+imuData.tResn;
+        end
+        
+    end
 end

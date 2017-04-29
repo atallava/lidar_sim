@@ -1,4 +1,12 @@
 function T = getImuTransfFromImuPose(pose)
+    %GETIMUTRANSFFROMIMUPOSE
+    %
+    % T = GETIMUTRANSFFROMIMUPOSE(pose)
+    %
+    % pose - length 6 vector.
+    %
+    % T    - [4,4] array.
+    
     % annoying convention
     y = pose(1);
     x = pose(2);
