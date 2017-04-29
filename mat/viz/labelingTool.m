@@ -21,7 +21,8 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
     cycleColors = someDistinguishableColors(nClasses+1:end,:);
     
     unlabeledMarker = '.';
-    labeledMarker = 's';
+    % todo: change this back to s
+    labeledMarker = '.';
     
     shortStep = 1;
     longStep = 5;
@@ -34,6 +35,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         'vis','v', ...
         'quit','q', ...
         'save','s', ...
+        'dcSelect','m', ...
         'longRwd','h','shortRwd','j', ...
         'shortFwd','k','longFwd','l');
     
@@ -44,6 +46,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         keys.longRwd,keys.shortRwd,keys.shortFwd,keys.longFwd);
     fprintf('%s : quit\n',keys.quit);
     fprintf('%s: save current labeling\n',keys.save);
+    fprintf('%s: select segment where data cursor is currently\n',keys.dcSelect);
     fprintf('1-%d: when segment is selected, label as\n',length(primitiveClasses));
     fprintf('0: when segment is selected, de-label\n');
     
@@ -75,6 +78,16 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         visibilityState{i} = 'on';
     end
     
+    
+    ptsAll = [];
+    ptsAllSegmentMap = [];
+    for i = 1:length(ptsCell)
+        thisPts = ptsCell{i};
+        ptsAll = [ptsAll; thisPts];
+        ptsAllSegmentMap = [ptsAllSegmentMap ...
+            ones(1,size(thisPts,1))*i];
+    end
+       
     %% set up figure
     hfig = figure;
     hold on; axis equal;
@@ -91,6 +104,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         else
             thisMarker = unlabeledMarker;
         end
+        % todo: skipping!
         skip = 15;
         scatterHandles(i) = scatter3(segmentPts(1:skip:end,1),segmentPts(1:skip:end,2),segmentPts(1:skip:end,3),...
             'marker',thisMarker,'markerEdgeColor',segmentColors{i});
@@ -129,7 +143,9 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         tagHandles(i) = text(tagLocations(i,1),tagLocations(i,2),tagLocations(i,3),tagText);
     end
     
-%     drawBasePlane();
+    %drawBasePlane();
+
+    dcmObj = datacursormode(hfig);
     
     %% callback
     function myKeyPress(hObj,event)
@@ -204,7 +220,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
                     newSelectionId = stepCircular(nSegments,currentSelectionId,-longStep);
                     updateCurrentSelection(newSelectionId);
                 end
-                
+            
             case 'c'
                 choice = inputdlg('label id:'); choice = choice{1};
                 switch choice
@@ -240,6 +256,13 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
                         % do nothing
                 end
                 
+            case keys.dcSelect
+                dcInfo = getCursorInfo(dcmObj);
+                dcPosn = dcInfo.Position;
+                closestPtId = knnsearch(ptsAll,dcPosn);
+                closestSegmentId = ptsAllSegmentMap(closestPtId);
+                updateCurrentSelection(closestSegmentId);
+                                
             case keys.save
                 fprintf('saving labeling to %s...\n',labelingData.relPathLabelingOut);
                 save(labelingData.relPathLabelingOut,'labeling');
@@ -266,6 +289,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         currentSelectionId = newSelectionId;
         set(scatterHandles(currentSelectionId),'markerEdgeColor',selectionColor);
         set(scatterHandles(currentSelectionId),'visible','on');
+        selected = 1;
     end
     
     function calcSegmentsTagLocations()
@@ -279,11 +303,6 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
     end
     
     function drawBasePlane()
-        ptsAll = [];
-        for i = 1:length(ptsCell)
-            thisPts = ptsCell{i};
-            ptsAll = [ptsAll; thisPts];
-        end
         obbAll = calcObb(ptsAll);
         obbAllVertices = getObbVertices(obbAll);
         xPlane = obbAllVertices(1:4,1);
