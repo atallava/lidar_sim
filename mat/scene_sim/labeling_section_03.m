@@ -35,13 +35,13 @@ setCell = splitVecIntoSets(tape,maxPtsPerSet);
 
 %% label
 % pick a set
-setId = 1;
+setId = 5;
 segmentIdsInSet = setCell{setId};
 nSegmentsInSet = length(segmentIdsInSet);
 
-labelingData.relPathLabelingOut = 'labeling_tmp';
-labelingData.loadPartialLabeling = 1;
-labelingData.relPathPartialLabeling = 'labeling_set_1';
+labelingData.relPathLabelingOut = 'labeling';
+labelingData.loadPartialLabeling = 0;
+labelingData.relPathPartialLabeling = 'labeling_set_2';
 
 ptsCellToPass = ptsCell(segmentIdsInSet);
 labeling = labelingTool(ptsCellToPass,primitiveClasses,labelingData);

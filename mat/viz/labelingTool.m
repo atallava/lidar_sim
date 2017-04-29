@@ -26,7 +26,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
     shortStep = 1;
     longStep = 5;
     
-    legendFontSize = 10;
+    legendFontSize = 8;
     
     %% control keys
     keys = struct(...
@@ -91,7 +91,8 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData)
         else
             thisMarker = unlabeledMarker;
         end
-        scatterHandles(i) = scatter3(segmentPts(:,1),segmentPts(:,2),segmentPts(:,3),...
+        skip = 15;
+        scatterHandles(i) = scatter3(segmentPts(1:skip:end,1),segmentPts(1:skip:end,2),segmentPts(1:skip:end,3),...
             'marker',thisMarker,'markerEdgeColor',segmentColors{i});
     end
     
