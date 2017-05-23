@@ -57,6 +57,8 @@ for i = 1:nLabeledSegments
     label = labeling(i);
     nClassElements(label) = nClassElements(label)+1;
     
+    if 
+        
     clear('saveStruct');
     saveData.relPathPrimitiveWorldFrame = relPathPrimitiveWorldFrame;
     saveData.relPathPrimitive = relPathPrimitive;
