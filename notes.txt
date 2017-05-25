@@ -50,6 +50,10 @@ nearest neighbors
 saving fig with 16000 3d points seems like reasonable capacity, takes about 25s. 
 remember that each ellipsoid is specified with a number of points. scale number of points based on size?
 
+* labeling
+
+the tape is broken
+
 --------------------------------------------------
 
 taylor data:

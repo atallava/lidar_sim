@@ -2,11 +2,15 @@
 genRelPathSetLabeling = @(setId) ...
     sprintf('../data/sections/section_03/labeling/labeling_set_%d',setId);
 
+genRelPathLabelingSetsInfo = @(sectionId) ...
+    sprintf('../data/sections/section_%02d/labeling/labeling_sets_info.mat',sectionId);
+
 someUsefulPaths;
 addpath([pathToM '/distinguishable_colors']);
 
 %% load 
-relPathSetsInfo = '../data/sections/section_03/labeling/labeling_sets_info';
+sectionId = 3;
+relPathSetsInfo = genRelPathLabelingSetsInfo(sectionId);
 load(relPathSetsInfo,'ptsCell','setCell');
 
 % class info
@@ -39,7 +43,7 @@ can.labeling = labelingsGlobal;
 save('labelings_to_viz','-struct','can');
 
 %% viz
-labelingData.relPathLabelingOut = 'labelings';
+% labelingData.relPathLabelingOut = 'labelings';
 labelingData.loadPartialLabeling = 1;
 labelingData.relPathPartialLabeling = 'labelings';
 

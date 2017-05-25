@@ -266,12 +266,20 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
                 updateCurrentSelection(closestSegmentId);
                                 
             case keys.save
-                fprintf('saving labeling to %s...\n',labelingData.relPathLabelingOut);
-                save(labelingData.relPathLabelingOut,'labeling');
+                if isfield(labelingData,'relPathLabelingOut')
+                    fprintf('saving labeling to %s...\n',labelingData.relPathLabelingOut);
+                    save(labelingData.relPathLabelingOut,'labeling');
+                else
+                    msg = sprintf('%s: labelingData does not have field relPathLabelingOut\n', ...
+                        mfilename);
+                    error(msg); %#ok<SPERR>
+                end
                 
             case keys.quit
-                fprintf('saving labeling to %s...\n',labelingData.relPathLabelingOut);
-                save(labelingData.relPathLabelingOut,'labeling');
+                if isfield(labelingData,'relPathLabelingOut')
+                    fprintf('saving labeling to %s...\n',labelingData.relPathLabelingOut);
+                    save(labelingData.relPathLabelingOut,'labeling');
+                end
                 close(hfig);
 
             otherwise
