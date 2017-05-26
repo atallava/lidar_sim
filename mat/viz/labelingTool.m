@@ -35,6 +35,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
         'vis','v', ...
         'quit','q', ...
         'save','s', ...
+        'spotlight','t', ...
         'dcSelect','m', ...
         'label','c', ...
         'longRwd','h','shortRwd','j', ...
@@ -47,6 +48,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
         keys.longRwd,keys.shortRwd,keys.shortFwd,keys.longFwd);
     fprintf('%s : quit\n',keys.quit);
     fprintf('%s: save current labeling\n',keys.save);
+    fprintf('%s: spotlight unlabeled\n',keys.spotlight);
     fprintf('%s: select segment where data cursor is currently\n',keys.dcSelect);
     fprintf('%s: open label box\n',keys.label);
     fprintf('1-%d: when segment is selected, label as\n',length(primitiveClasses));
@@ -151,6 +153,8 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
 
     dcmObj = datacursormode(hfig);
     
+    spotlightState = 0;
+    
     %% callback
     function myKeyPress(hObj,event)
         numericCases = cell(1,nClasses+1);
@@ -179,6 +183,24 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
                     else
                         visibilityState{currentSelectionId} = 'on';
                     end
+                end
+                
+                
+            case keys.spotlight
+                if spotlightState
+                    for i = 1:length(labeling)
+                        if labeling(i)
+                            set(scatterHandles(i),'visible',visibilityState{i});
+                        end
+                    end
+                    spotlightState = 0;
+                else
+                    for i = 1:length(labeling)
+                        if labeling(i)
+                            set(scatterHandles(i),'visible','off');
+                        end
+                    end
+                    spotlightState = 1;
                 end
                 
             case keys.shortFwd

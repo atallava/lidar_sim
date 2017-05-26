@@ -2,8 +2,8 @@
 genRelPathLabelingSetsInfo = @(sectionId) ...
     sprintf('../data/sections/section_%02d/labeling/labeling_sets_info.mat',sectionId);
 
-genRelPathSetLabeling = @(setId) ...
-    sprintf('../data/sections/section_03/labeling/labeling_set_%d',setId);
+genRelPathSetLabeling = @(sectionId,setId) ...
+    sprintf('../data/sections/section_%02d/labeling/labeling_set_%d',sectionId,setId);
 
 someUsefulPaths;
 addpath([pathToM '/distinguishable_colors']);
@@ -39,6 +39,6 @@ ptsCellToPass = ptsCell(segmentIdsInSet);
 labeling = labelingTool(ptsCellToPass,primitiveClasses,labelingData,imuData);
 
 %%
-relPathSetLabeling = genRelPathSetLabeling(setId);
+relPathSetLabeling = genRelPathSetLabeling(sectionId,setId);
 
 
