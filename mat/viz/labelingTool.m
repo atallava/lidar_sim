@@ -36,6 +36,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
         'quit','q', ...
         'save','s', ...
         'dcSelect','m', ...
+        'label','c', ...
         'longRwd','h','shortRwd','j', ...
         'shortFwd','k','longFwd','l');
     
@@ -47,6 +48,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     fprintf('%s : quit\n',keys.quit);
     fprintf('%s: save current labeling\n',keys.save);
     fprintf('%s: select segment where data cursor is currently\n',keys.dcSelect);
+    fprintf('%s: open label box\n',keys.label);
     fprintf('1-%d: when segment is selected, label as\n',length(primitiveClasses));
     fprintf('0: when segment is selected, de-label\n');
     
@@ -223,39 +225,44 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
                     updateCurrentSelection(newSelectionId);
                 end
             
-            case 'c'
-                choice = inputdlg('label id:'); choice = choice{1};
-                switch choice
-                    case numericCases
-                        if selected
-                            classId = str2num(choice); classId = floor(classId);
-                            if ~strcmp(choice,'0')
-                                % assign class
-                                labeling(currentSelectionId) = classId;
-                                % class color
-                                colorForClass = classColors(classId,:);
-                                segmentColors{currentSelectionId} = colorForClass;
-                                % labeled marker
-                                set(scatterHandles(currentSelectionId),'marker',labeledMarker);
-                                
-                                % tag
-                                set(tagHandles(currentSelectionId),'string',choice,'color',colorForClass);
-                            else
-                                % de-assign class
-                                labeling(currentSelectionId) = 0;
-                                % set one of the cycle colors
-                                unlabeledColorId = randperm(nColorsToCycleThrough,1);
-                                unlabeledColor = cycleColors(unlabeledColorId,:);
-                                segmentColors{currentSelectionId} = unlabeledColor;
-                                % unlabeled marker
-                                set(scatterHandles(currentSelectionId),'marker',unlabeledMarker);
-                                
-                                % blank tag
-                                set(tagHandles(currentSelectionId),'string','');
+            case keys.label
+                choice = inputdlg('label id:'); 
+                
+                if ~isempty(choice)
+                    % choice is empty if click 'cancel' e.g.
+                    choice = choice{1};
+                    switch choice
+                        case numericCases
+                            if selected
+                                classId = str2num(choice); classId = floor(classId);
+                                if ~strcmp(choice,'0')
+                                    % assign class
+                                    labeling(currentSelectionId) = classId;
+                                    % class color
+                                    colorForClass = classColors(classId,:);
+                                    segmentColors{currentSelectionId} = colorForClass;
+                                    % labeled marker
+                                    set(scatterHandles(currentSelectionId),'marker',labeledMarker);
+                                    
+                                    % tag
+                                    set(tagHandles(currentSelectionId),'string',choice,'color',colorForClass);
+                                else
+                                    % de-assign class
+                                    labeling(currentSelectionId) = 0;
+                                    % set one of the cycle colors
+                                    unlabeledColorId = randperm(nColorsToCycleThrough,1);
+                                    unlabeledColor = cycleColors(unlabeledColorId,:);
+                                    segmentColors{currentSelectionId} = unlabeledColor;
+                                    % unlabeled marker
+                                    set(scatterHandles(currentSelectionId),'marker',unlabeledMarker);
+                                    
+                                    % blank tag
+                                    set(tagHandles(currentSelectionId),'string','');
+                                end
                             end
-                        end
-                    otherwise
-                        % do nothing
+                        otherwise
+                            % do nothing
+                    end
                 end
                 
             case keys.dcSelect

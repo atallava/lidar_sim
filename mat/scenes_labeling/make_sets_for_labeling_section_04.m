@@ -33,6 +33,17 @@ tape = calcPtsCellTape(ptsCell);
 maxPtsPerSet = 230;
 setCell = splitVecIntoSets(tape,maxPtsPerSet);
 
+%% manual tweaking, sorry
+% removing copies of some segments
+onlySet = setCell{1};
+segmentIdsToThrow = [204 4 105];
+setIdsToThrow = zeros(size(segmentIdsToThrow));
+for i = 1:length(segmentIdsToThrow)
+    setIdsToThrow(i) = find(onlySet == segmentIdsToThrow(i));
+end
+onlySet(setIdsToThrow) = [];
+setCell{1} = onlySet;
+
 %% save
 relPathLabelingSetsInfo = genRelPathLabelingSetsInfo(sectionId);
 fprintf('saving to %s\n',relPathLabelingSetsInfo);

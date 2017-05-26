@@ -43,9 +43,9 @@ can.labeling = labelingsGlobal;
 save('labelings_to_viz','-struct','can');
 
 %% viz
-% labelingData.relPathLabelingOut = 'labelings';
+labelingData.relPathLabelingOut = 'labelings';
 labelingData.loadPartialLabeling = 1;
-labelingData.relPathPartialLabeling = 'labelings';
+labelingData.relPathPartialLabeling = 'labelings_section_03';
 
 relPathPoseLog = '../data/pose_log.mat';
 can = load(relPathPoseLog);
