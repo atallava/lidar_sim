@@ -36,8 +36,9 @@ trainSectionId = 3;
 genRelPathClassPrimitivesDir2 = @(className) ...
     genRelPathClassPrimitivesDir(trainSectionId,className);
 elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir2,primitiveClasses);
-scenePts = [];
 nObjects = length(sceneAnnotation);
+scenePts = [];
+sceneEllipsoidModels = [];
 waitbar(0,'progress');
 
 % loop through annotations
@@ -56,9 +57,10 @@ for i = 1:nObjects
         % transform pts, ellipsoidModels to the new pose
         pts_world = applyTransf(pts,objectAnnotation.T_object_to_world);
         ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,objectAnnotation.T_object_to_world);
-        % add to big scenePts
+        % add to scenePts
         scenePts = [scenePts; pts_world];
-        % todo: do something with ellipsoidModels_world
+        % add to sceneEllipsoidModels
+        sceneEllipsoidModels = [scene
     else
         relPathPrimitivePatch = genRelPathPrimitivePatch(trainSectionId,className,sampledElementId);
         nObjectCells = length(objectAnnotation.T_cells_to_world);
