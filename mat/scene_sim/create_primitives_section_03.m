@@ -22,7 +22,7 @@ genRelPathPrimitivePatchCell = @(sectionId,className,elementId,cellId) ...
     sprintf('../data/sections/section_%02d/primitives/%s/%d/%d.mat',...
     sectionId,className,elementId,cellId);
 
-%% load labeling and segments
+%% load labeling
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 

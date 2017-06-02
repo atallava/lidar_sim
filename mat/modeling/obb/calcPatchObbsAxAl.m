@@ -84,10 +84,10 @@ function [obbCell,obbPtsCell] = calcPatchObbsAxAl(pts)
 
     %% helpers
     function res = checkInFrame(pt)
-        condn1 = frameCenter(1)+frameExtents(1,1) <= pt(1);
-        condn2 = pt(1) <= frameCenter(1)+frameExtents(1,2);
-        condn3 = frameCenter(2)+frameExtents(2,1) <= pt(2);
-        condn4 = pt(2) <= frameCenter(2)+frameExtents(2,2);
+        condn1 = frameCenter(1)+frameExtents(1,1) < pt(1);
+        condn2 = pt(1) < frameCenter(1)+frameExtents(1,2);
+        condn3 = frameCenter(2)+frameExtents(2,1) < pt(2);
+        condn4 = pt(2) < frameCenter(2)+frameExtents(2,2);
         res = condn1 & condn2 & condn3 & condn4;
     end
     
