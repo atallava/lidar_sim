@@ -186,14 +186,17 @@ add_library(lidar_sim SHARED
 
 ## modeling
 
-add_executable(gen_section_imu_posn_nodes hybrid_geometric_sim/gen_section_imu_posn_nodes.cpp)
-  target_link_libraries(gen_section_imu_posn_nodes lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(gen_section_imu_posn_nodes hybrid_geometric_sim/gen_section_imu_posn_nodes.cpp)
+#   target_link_libraries(gen_section_imu_posn_nodes lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(build_blocks_ground hybrid_geometric_sim/build_blocks_ground.cpp)
+  target_link_libraries(build_blocks_ground lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(build_models_ground_blocks hybrid_geometric_sim/build_models_ground_blocks.cpp)
+  target_link_libraries(build_models_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(build_models_non_ground_blocks hybrid_geometric_sim/build_models_non_ground_blocks.cpp)
 #   target_link_libraries(build_models_non_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-# add_executable(build_models_ground_blocks hybrid_geometric_sim/build_models_ground_blocks.cpp)
-#   target_link_libraries(build_models_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(debug_hit_prob hybrid_geometric_sim/debug_hit_prob.cpp)
 #   target_link_libraries(debug_hit_prob lidar_sim ${LIDAR_SIM_LIBRARIES} )
@@ -203,9 +206,6 @@ add_executable(gen_section_imu_posn_nodes hybrid_geometric_sim/gen_section_imu_p
 
 # add_executable(patch_hit_prob_ground_blocks hybrid_geometric_sim/patch_hit_prob_ground_blocks.cpp)
 #   target_link_libraries(patch_hit_prob_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-# add_executable(build_blocks_ground hybrid_geometric_sim/build_blocks_ground.cpp)
-#   target_link_libraries(build_blocks_ground lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(analyze_clustering hybrid_geometric_sim/analyze_clustering.cpp)
 #   target_link_libraries(analyze_clustering lidar_sim ${LIDAR_SIM_LIBRARIES} )

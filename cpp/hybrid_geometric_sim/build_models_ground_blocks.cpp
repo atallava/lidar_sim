@@ -16,6 +16,24 @@
 
 using namespace lidar_sim;
 
+std::string genRelPathSection(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "_world_frame_subsampled.xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathGroundBlocksDir(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id;
+
+    return ss.str();
+}
+
 std::string genRelPathBlock(int section_id, int block_id)
 {
     std::ostringstream ss;
@@ -58,14 +76,13 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    int section_id = 3;
+    int section_id = 4;
     // todo: function to determine what block ids are
-    std::vector<int> block_ids;
-    for(size_t i = 1; i <= 4; ++i)
-	block_ids.push_back(i);
+    std::string rel_path_ground_blocks_dir = genRelPathGroundBlocksDir(section_id);
+    std::vector<int> block_ids = getGroundBlockIds(rel_path_ground_blocks_dir, section_id);
     
     // section
-    std::string rel_path_section = "data/section_03_world_frame_subsampled.xyz";
+    std::string rel_path_section = genRelPathSection(section_id);
     SectionLoader section(rel_path_section);
 
     // pose server

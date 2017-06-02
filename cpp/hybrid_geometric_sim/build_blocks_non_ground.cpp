@@ -28,6 +28,15 @@ std::string genSectionRelPath(int section_id)
     return ss.str();
 }
 
+std::string genRelPathImuPosnNodes(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/imu_posn_nodes.txt";
+
+    return ss.str();
+}
+
 std::string genBlockRelPath(int section_id, int block_id)
 {
     std::ostringstream ss;
@@ -53,24 +62,8 @@ int main(int argc, char **argv)
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // imu posn nodes
-    std::vector<std::vector<double> > imu_posn_nodes;
-    double dt = 1; // in s
-
-    double prev_t = section.m_packet_timestamps[0]-dt;
-    for(size_t i = 0; i < section.m_packet_timestamps.size(); ++i)
-    {
-    	double t = section.m_packet_timestamps[i];
-    	if ( (t-prev_t) >= dt )
-    	{
-    	    std::vector<double> imu_posn = posnFromImuPose(imu_pose_server.getPoseAtTime(t));
-    	    imu_posn_nodes.push_back(imu_posn);
-    	    prev_t = t;
-    	}
-    }
-
-    // viz these nodes
-    RangeDataVizer vizer;
-    // vizer.vizPts(imu_posn_nodes);
+    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
 
     // pts
     std::string rel_path_pts = "data/sections/section_03/manual_segmentation/section_pts_03_non_ground.asc";

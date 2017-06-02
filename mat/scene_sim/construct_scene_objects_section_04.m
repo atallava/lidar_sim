@@ -15,11 +15,16 @@ genRelPathSceneAnnotation = @(sectionId) ...
 genRelPathClassPrimitivesDir = @(sectionId,className) ...
     sprintf('../data/sections/section_%02d/primitives/%s',sectionId,className);
 
+% scene pts
 genRelPathSceneObjectPts = @(sectionId) ...
     sprintf('../data/sections/section_%02d/object_pts.txt',sectionId);
 
 genRelPathSceneObjectPtsMat = @(sectionId) ...
     sprintf('../data/sections/section_%02d/object_pts',sectionId);
+
+% scene ellipsoids
+genRelPathSceneEllipsoidModelsMat = @(sectionId) ...
+    sprintf('../data/sections/section_%02d/object_ellipsoid_models',sectionId);
 
 %% load
 % annotations for section 4
@@ -60,7 +65,7 @@ for i = 1:nObjects
         % add to scenePts
         scenePts = [scenePts; pts_world];
         % add to sceneEllipsoidModels
-        sceneEllipsoidModels = [scene
+        sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
     else
         relPathPrimitivePatch = genRelPathPrimitivePatch(trainSectionId,className,sampledElementId);
         nObjectCells = length(objectAnnotation.T_cells_to_world);
@@ -77,7 +82,8 @@ for i = 1:nObjects
             ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,objectAnnotation.T_cells_to_world{j});
             % add to big scenePts
             scenePts = [scenePts; pts_world];
-            % todo: do something with ellipsoidModels_world
+            % add to sceneEllipsoidModels
+            sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
         end
     end
     
@@ -93,4 +99,9 @@ save(relPathSceneObjectPtsMat,'-struct','can');
 
 relPathSceneObjectPts = genRelPathSceneObjectPts(newSceneSectionId);
 savePts(relPathSceneObjectPts,scenePts);
+
+%% write object ellipsoids
+relPathSceneEllipsoids = genRelPathSceneEllipsoidModelsMat(newSceneSectionId);
+can.ellipsoidModels = sceneEllipsoidModels;
+save(relPathSceneEllipsoids,'-struct','can');
 

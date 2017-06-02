@@ -28,6 +28,25 @@ std::string genSectionRelPath(int section_id)
     return ss.str();
 }
 
+std::string genRelPathImuPosnNodes(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/imu_posn_nodes.txt";
+
+    return ss.str();
+}
+
+std::string genRelPathSectionPtsGround(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/ground_segmentation/section_pts_" << std::setw(2) << std::setfill('0') << section_id
+       << "_ground.asc";
+
+    return ss.str();
+}
+
 std::string genBlockRelPath(int section_id, int block_id)
 {
     std::ostringstream ss;
@@ -38,11 +57,20 @@ std::string genBlockRelPath(int section_id, int block_id)
     return ss.str();
 }
 
+std::string genRelPathBlockNodeIdsGround(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/block_node_ids_ground.txt";
+
+    return ss.str();
+}
+
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    int section_id = 3;
+    int section_id = 4;
 
     // load section
     std::string rel_path_section = genSectionRelPath(section_id);
@@ -53,30 +81,11 @@ int main(int argc, char **argv)
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // imu posn nodes
-    std::vector<std::vector<double> > imu_posn_nodes;
-    double dt = 1; // in s
+    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
 
-    double prev_t = section.m_packet_timestamps[0]-dt;
-    for(size_t i = 0; i < section.m_packet_timestamps.size(); ++i)
-    {
-    	double t = section.m_packet_timestamps[i];
-    	if ( (t-prev_t) >= dt )
-    	{
-    	    std::vector<double> imu_posn = posnFromImuPose(imu_pose_server.getPoseAtTime(t));
-    	    imu_posn_nodes.push_back(imu_posn);
-    	    prev_t = t;
-    	}
-    }
-
-    std::cout << "imu_posn_nodes: " << std::endl;
-    dispMat(imu_posn_nodes);
-
-    // viz these nodes
-    RangeDataVizer vizer;
-    // vizer.vizPts(imu_posn_nodes);
-
-    // pts
-    std::string rel_path_pts = "data/sections/section_03/manual_segmentation/section_pts_03_ground.asc";
+    // section ground pts
+    std::string rel_path_pts = genRelPathSectionPtsGround(section_id);
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
     // nearest neighbor for pts in nodes
@@ -143,8 +152,8 @@ int main(int argc, char **argv)
     block_file.close();
 
     // write block node ids;
-    std::cout << "block node ids: " << std::endl;
-    dispMat(block_node_ids);
+    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_id);
+    writePtsToXYZFile(block_node_ids, rel_path_block_node_ids_ground);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

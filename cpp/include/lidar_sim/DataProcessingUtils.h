@@ -147,6 +147,7 @@ namespace lidar_sim {
     std::tuple<std::vector<std::string>, std::vector<std::vector<std::string> > >
 	getPatternMatchingFiles(std::string rel_path_dir, boost::regex pattern, int num_captures);
 
+    std::vector<int> getGroundBlockIds(const std::string rel_path_ground_models_dir, const int section_id);
     std::vector<int> getEllipsoidModelBlockIds(const std::string rel_path_ellipsoid_models_dir, const int section_id);
     std::vector<int> getTriangleModelBlockIds(const std::string rel_path_triangle_models_dir, const int section_id);
 }

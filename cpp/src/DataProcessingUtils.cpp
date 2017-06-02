@@ -509,6 +509,30 @@ namespace lidar_sim {
 	return std::make_tuple(matching_filenames, captures);
     }
 
+    std::vector<int> getGroundBlockIds(const std::string rel_path_ground_models_dir, const int section_id)
+    {
+	std::ostringstream ss;
+	ss << "section_" << std::setw(2) << std::setfill('0')
+	   << section_id << "_block" << "_([0-9]+)"
+	   << "_ground.xyz";
+	boost::regex pattern(ss.str());
+	int num_captures = 1;
+
+	std::vector<std::string> matching_filenames;
+	std::vector<std::vector<std::string> > captures;
+	std::tie(matching_filenames, captures) = 
+	    getPatternMatchingFiles(rel_path_ground_models_dir, pattern, num_captures);
+
+	std::vector<int> ids;
+	for(size_t i = 0; i < captures.size(); ++i)
+	    ids.push_back(std::stoi(captures[i][0]));
+
+	// sort ids
+	std::sort(ids.begin(), ids.end());
+
+	return ids;
+    }
+
     std::vector<int> getEllipsoidModelBlockIds(const std::string rel_path_ellipsoid_models_dir, const int section_id)
     {
 	std::ostringstream ss;
