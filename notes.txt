@@ -54,6 +54,10 @@ remember that each ellipsoid is specified with a number of points. scale number 
 
 the tape is broken
 
+* in what format do you want labeling results to be in finally?
+
+one file, contains labelings, semgentIds. combine this with the segment pts
+
 --------------------------------------------------
 
 taylor data:

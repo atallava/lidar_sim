@@ -8,6 +8,12 @@ function [ellipsoidModels,blockMembershipMap] = stitchEllipsoidModels(ellipsoidM
     % ellipsoidModels    -
     % blockMembershipMap -
     
+    if isempty(ellipsoidModelCell)
+        ellipsoidModels = [];
+        blockMembershipMap = [];
+        return;
+    end
+    
     ellipsoidModels = ellipsoidModelCell{1};
     blockMembershipMap = ones(1,length(ellipsoidModelCell{1}));
     for i = 2:length(ellipsoidModelCell)
