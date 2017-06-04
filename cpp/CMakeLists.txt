@@ -238,22 +238,30 @@ add_library(lidar_sim SHARED
 # add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
 #   target_link_libraries(section_ray_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
-  target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
+#   target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
-  target_link_libraries(section_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
+#   target_link_libraries(section_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## nbr sim
 
 # add_executable(poses_nbr_sim hybrid_geometric_sim/poses_nbr_sim.cpp)
 #   target_link_libraries(poses_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_slice_nbr_sim hybrid_geometric_sim/section_slice_nbr_sim.cpp)
-  target_link_libraries(section_slice_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(section_slice_nbr_sim hybrid_geometric_sim/section_slice_nbr_sim.cpp)
+#   target_link_libraries(section_slice_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
-  target_link_libraries(section_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
+#   target_link_libraries(section_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+## scene sim
+
+add_executable(test_mesh_model scene_sim/test_mesh_model.cpp)
+  target_link_libraries(test_mesh_model lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(test_transfs scene_sim/test_transfs.cpp)
+  target_link_libraries(test_transfs lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## viz
 

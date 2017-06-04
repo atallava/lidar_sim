@@ -112,6 +112,14 @@ namespace lidar_sim {
     OrientedBox calcObb(const std::vector<std::vector<double> > &pts);
     std::vector<std::vector<double> > centerPts(const std::vector<std::vector<double> > &pts);
 
+    // transfs
+    Eigen::Matrix3d rotz(const double theta);
+    Eigen::Matrix4d transfz(const std::vector<double> xyz, const double theta);
+    std::vector<std::vector<double> > applyTransfToPts(std::vector<std::vector<double> > pts_1, 
+						       const Eigen::Matrix4d &T_1_to_2);
+    /* std::vector<std::vector<double> > applyTransfToPts(std::vector<std::vector<double> > pts_1,  */
+    /* 						       const Eigen::Matrix4d &T_1_to_2); */
+
     // this was for the ellipse transform needed by sanjiban
     void GetEllipseTransform(const Eigen::Matrix3d &input, Eigen::Quaterniond &quat, 
 			     Eigen::Vector3d &scale, double level = 9);

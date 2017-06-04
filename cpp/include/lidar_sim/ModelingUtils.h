@@ -26,6 +26,8 @@ namespace lidar_sim {
 
     void writeTriangleModelsToFile(TriangleModels triangle_models, std::string rel_path_output);
     TriangleModels loadTriangleModelsFromFile(std::string rel_path_input);
+    TriangleModels loadMeshModelFromPly(std::string rel_path_input);
+//    TriangleModels applyTransfToMeshModel(
 
     TriangleModels stitchTriangleModels(std::vector<TriangleModels> &triangle_models_vec);
     EllipsoidModels stitchEllipsoidModels(std::vector<EllipsoidModels> &ellipsoid_models_vec);

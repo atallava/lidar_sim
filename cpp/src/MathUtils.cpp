@@ -339,6 +339,53 @@ namespace lidar_sim {
 	return centered_pts;
     }
 
+    Eigen::Matrix3d rotz(const double theta)
+    {
+	Eigen::Matrix3d R;
+	R << 
+	    std::cos(theta), -std::sin(theta), 0,
+	    std::sin(theta), std::cos(theta), 0, 
+	    0, 0, 1;
+
+	return R;
+    }
+
+    Eigen::Matrix4d transfz(const std::vector<double> xyz, const double theta)
+    {
+	Eigen::Matrix4d T;
+	T << 
+	    std::cos(theta), -std::sin(theta), 0, xyz[0],
+	    std::sin(theta), std::cos(theta), 0, xyz[1],
+	    0, 0, 1, xyz[2],
+	    0, 0, 0, 1;
+
+	return T;
+    }
+
+    std::vector<std::vector<double> > applyTransfToPts(std::vector<std::vector<double> > pts_1, 
+						       const Eigen::Matrix4d &T_1_to_2)
+    {
+	bool homogeneous_input;
+	if (pts_1[0].size() == 3)
+	{
+	    homogeneous_input = false;
+	    for(size_t i = 0; i < pts_1.size(); ++i)
+		pts_1[i].push_back(1);
+	}
+	else
+	    homogeneous_input = true;
+
+	Eigen::MatrixXd pts_1_eigen = stlArrayToEigen(pts_1);
+	Eigen::MatrixXd pts_2_eigen = T_1_to_2*pts_1_eigen.transpose();
+	std::vector<std::vector<double> > pts_2 = EigenToStlArray(pts_2_eigen.transpose());
+	
+	if (!homogeneous_input)
+	    for(size_t i = 0; i < pts_2.size(); ++i)
+		pts_2[i].erase(pts_2[i].end()-1);
+
+	return pts_2;
+    }
+
     void GetEllipseTransform(const Eigen::Matrix3d &input, Eigen::Quaterniond &quat, 
 			     Eigen::Vector3d &scale, double level)
     {

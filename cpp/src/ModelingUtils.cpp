@@ -176,6 +176,73 @@ namespace lidar_sim {
 	return triangle_models;
     }
 
+    TriangleModels loadMeshModelFromPly(std::string rel_path_input)
+    {
+	std::ifstream file(rel_path_input);
+	std::cout << "Loading mesh models from: " << rel_path_input << std::endl;
+
+	TriangleModels triangle_models;
+	std::string current_line;
+	bool reading_header = true;
+	bool reading_vertices = false;
+	int n_vertices;
+	int vertex_read_count = 0;
+	while(std::getline(file, current_line))
+	{
+	    if (reading_header)
+	    {
+		if (current_line.find("element vertex") != std::string::npos)
+		{
+		    std::istringstream iss(current_line);
+		    std::string ignore_str;
+		    iss >> ignore_str; iss >> ignore_str;
+		    iss >> n_vertices;
+		}
+		if (current_line.find("end_header") != std::string::npos)
+		{
+		    reading_header = false;
+		    reading_vertices = true;
+		}
+	    }
+	    else
+	    {
+		if (reading_vertices)
+		{
+		    vertex_read_count++;
+		    std::istringstream iss(current_line);
+		    std::vector<double> pt(3,0);
+		    for(size_t i = 0; i < 3; ++i)
+			iss >> pt[i];
+		    triangle_models.m_fit_pts.push_back(pt);
+
+		    if (vertex_read_count >= n_vertices)
+		    {
+			reading_vertices = false;
+		    }
+		}
+		else
+		{
+		    std::istringstream iss(current_line);
+		    int throw_val;
+		    iss >> throw_val;
+		    std::vector<int> triangle(3,0);
+		    for(size_t i = 0; i < 3; ++i)
+			iss >> triangle[i];
+
+		    triangle_models.m_triangles.push_back(triangle);
+		}
+	    }
+	}
+	file.close();
+
+	// default hit prob
+	double hit_prob_default = 1;
+	std::vector<double> hit_prob_vec(triangle_models.m_triangles.size(), hit_prob_default);
+	triangle_models.m_hit_prob_vec = hit_prob_vec;
+
+	return triangle_models;
+    }
+
     TriangleModels stitchTriangleModels(std::vector<TriangleModels> &triangle_models_vec)
     {
 	TriangleModels triangle_models;
