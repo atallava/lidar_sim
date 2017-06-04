@@ -173,6 +173,8 @@ ellipsoid: sample hit id, draw from ellipsoid mvn
 
 * cpp pretty printing
 
+* need a better name for what real pts corresponding to real pts?
+
 --------------------------------------------------
 
 catkin ws:

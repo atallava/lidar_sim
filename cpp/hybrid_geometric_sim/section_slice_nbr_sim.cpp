@@ -27,6 +27,24 @@ std::string genRelPathSectionPts(int section_id)
     return ss.str();
 }
 
+std::string genRelPathSliceRealPts(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/slice_real_pts.xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathSimPts(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/slice_nbr_sim_pts.xyz";
+
+    return ss.str();
+}
+
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
@@ -92,12 +110,11 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = "data/nbr_real_pts.xyz";
+    std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id);
     writePtsToXYZFile(real_pts, rel_path_real_pts);
 
     // write sim pts
-    // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
-    std::string rel_path_sim_pts = "data/nbr_sim_pts.xyz";
+    std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

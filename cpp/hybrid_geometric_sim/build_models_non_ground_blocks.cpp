@@ -28,6 +28,14 @@ std::string genRelPathBlock(int section_id, int block_id)
     return ss.str();
 }
 
+std::string genRelPathNonGroundBlocksDir(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id;
+
+    return ss.str();
+}
+
 std::string genRelPathEllipsoids(int section_id, int block_id)
 {
     std::ostringstream ss;
@@ -61,10 +69,8 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     int section_id = 3;
-    // todo: automatically determine block ids
-    std::vector<int> block_ids;
-    for(size_t i = 1; i <= 23; ++i)
-	block_ids.push_back(i);
+    std::string rel_path_non_ground_blocks_dir = genRelPathNonGroundBlocksDir(section_id);
+    std::vector<int> block_ids = getNonGroundBlockIds(rel_path_non_ground_blocks_dir, section_id);
     
     // section
     std::string rel_path_section = "data/section_03_world_frame_subsampled.xyz";

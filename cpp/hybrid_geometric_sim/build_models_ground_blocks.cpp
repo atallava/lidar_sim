@@ -77,7 +77,6 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     int section_id = 4;
-    // todo: function to determine what block ids are
     std::string rel_path_ground_blocks_dir = genRelPathGroundBlocksDir(section_id);
     std::vector<int> block_ids = getGroundBlockIds(rel_path_ground_blocks_dir, section_id);
     

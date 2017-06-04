@@ -245,7 +245,6 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
 	    for(size_t j = 0; j < ellipsoid_miss_ids.size(); ++j)
 		ellipsoid_miss_count[ellipsoid_miss_ids[j]] += 1;
 
-	// todo: delete
 	// debug
 	// if (i == 20108)
 	// {

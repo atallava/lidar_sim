@@ -66,21 +66,48 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
     return ss.str();
 }
 
-std::string genRelPathSimPts(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/section_pts_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_sim.xyz";
-
-    return ss.str();
-}
-
 std::string genRelPathSection(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_world_frame_subsampled.xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathSliceRealPts(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/slice_real_pts.xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathSimPts(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/slice_hg_sim_pts.xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathSimDetail(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/slice_hg_sim_detail.txt";
+
+    return ss.str();
+}
+
+std::string genRelPathQueriedBlocks(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/slice_hg_sim_queried_blocks.txt";
 
     return ss.str();
 }
@@ -150,7 +177,7 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     std::vector<std::vector<double> > sim_detail;
-    size_t packet_array_step = 100; // 100
+    size_t packet_array_step = 10; // 100
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
@@ -226,20 +253,19 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = "data/hg_real_pts.xyz";
+    std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id);
     writePtsToXYZFile(real_pts, rel_path_real_pts);
 
     // write sim pts
-    // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
-    std::string rel_path_sim_pts = "data/hg_sim_pts.xyz";
+    std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     // write sim detail
-    std::string rel_path_sim_detail = "data/hg_sim_detail.xyz";
+    std::string rel_path_sim_detail = genRelPathSimDetail(section_sim_id); 
     writePtsToXYZFile(sim_detail, rel_path_sim_detail);
 
     // write queried blocks
-    std::string rel_path_queried_blocks = "data/hg_sim_queried_blocks.txt";
+    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id); "data/hg_sim_queried_blocks.txt";
     writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
