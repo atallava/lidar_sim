@@ -102,6 +102,8 @@ add_library(lidar_sim SHARED
   src/GroundTrianglesGenerator.cpp
   src/OrientedBox.cpp
   src/SceneObjectServer.cpp
+
+  src/MeshModelSim.cpp
   )
  
 ####################################################################################################

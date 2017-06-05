@@ -1,5 +1,5 @@
 %% load model
-relPathMesh = '../../cpp/data/3d_models/Tree2.ply';
+relPathMesh = '../../cpp/data/3d_models/bush01.ply';
 model = loadPly(relPathMesh);
 
 %% viz

@@ -1,4 +1,12 @@
 function hfig = vizMesh(model)
+    %VIZMESH
+    %
+    % hfig = VIZMESH(model)
+    %
+    % model -
+    %
+    % hfig  -
+    
     hfig = figure;
     faceVertexAlpha = 0.8;
     trimesh(model.faces, ...
