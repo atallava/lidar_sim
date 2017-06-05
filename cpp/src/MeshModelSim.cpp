@@ -326,17 +326,12 @@ void MeshModelSim::setDeterministicSim(const bool choice)
     m_deterministic_sim = choice;
 
     // object mesh sims
-    for(size_t i = 0; i < m_object_mesh_sims.size(); ++i)
-	m_object_mesh_sims[i].setDeterministicSim(m_deterministic_sim);
+    if (!m_object_mesh_sims.empty())
+	for(size_t i = 0; i < m_object_mesh_sims.size(); ++i)
+	    m_object_mesh_sims[i].setDeterministicSim(m_deterministic_sim);
 
     // triangle model sims
-    if (m_triangle_model_sims.empty())
-    {
-	std::stringstream ss_err_msg;
-	ss_err_msg << "MeshModelSim: m_triangle_model_sims is empty!";
-	throw std::runtime_error(ss_err_msg.str().c_str());
-    }
-
-    for(size_t i = 0; i < m_triangle_model_sims.size(); ++i)
-	m_triangle_model_sims[i].setDeterministicSim(m_deterministic_sim);
+    if (!m_triangle_model_sims.empty())
+	for(size_t i = 0; i < m_triangle_model_sims.size(); ++i)
+	    m_triangle_model_sims[i].setDeterministicSim(m_deterministic_sim);
 }

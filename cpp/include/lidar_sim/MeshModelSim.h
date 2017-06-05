@@ -33,7 +33,7 @@ namespace lidar_sim {
 	    simPtsGivenPoses(const std::vector<std::vector<double> > &imu_poses);
 	std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 	    simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
-
+	
 	void setDeterministicSim(const bool choice);
 
 	std::vector<TriangleModelSim> m_object_mesh_sims;

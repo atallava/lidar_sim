@@ -1,5 +1,6 @@
 #include <string>
 
+#include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/MeshModelSim.h>
 #include <lidar_sim/RangeDataVizer.h>
@@ -16,11 +17,22 @@ int main(int argc, char**argv)
 
     MeshModelSim sim;
     sim.loadObjectMeshes(rel_path_object_meshes);
+    sim.setDeterministicSim(true);
 
     // RangeDataVizer vizer;
     // vizer.vizObjectMeshes(sim.m_object_mesh_sims);
 
-    std::vector<double> ray_origin {2, -5, 0};
-    std::vector<double> ray_dirn {0, 1, 0};
+    std::vector<double> ray_origin {-2, 0, 1};
+    std::vector<double> ray_dirn {1, 0, 0};
     std::vector<int> object_ids = sim.calcObjectIdsForSim(ray_origin, ray_dirn);
+
+    std::vector<std::vector<double> > ray_dirns = wrapDataInVec(ray_dirn);
+    std::vector<std::vector<double> > sim_pts;
+    std::vector<int> hit_flag;
+    std::tie(sim_pts, hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns);
+    std::cout << "sim pt: " << std::endl;
+    dispVec(sim_pts[0]);
+    std::cout << "hit flag: " << hit_flag[0] << std::endl;
+    
+    return(1);
 }
