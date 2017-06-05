@@ -33,6 +33,7 @@ namespace lidar_sim {
 			  const std::vector<std::vector<double> > &pts);
 	void vizSegmentation(const std::vector<std::vector<double> >& pts, const std::vector<int> &segmentation);
 	void vizSectionModels(const SectionModelSim &sim);
+	void vizObjectMeshes(const std::vector<TriangleModelSim> &m_object_mesh_sims);
 	std::vector<vtkSmartPointer<vtkActor> >
 	    genSectionModelsActors(const SectionModelSim &sim);
 	std::vector<vtkSmartPointer<vtkActor> >

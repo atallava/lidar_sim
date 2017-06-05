@@ -83,26 +83,30 @@ add_library(lidar_sim SHARED
   src/LineVtkActorServer.cpp
   src/TrianglesVtkActorServer.cpp
   src/VizUtils.cpp
-  src/ModelingUtils.cpp
-  src/MathUtils.cpp
   src/RangeDataVizer.cpp 
-  src/ClusteringUtils.cpp
+
+  src/MathUtils.cpp
   src/LaserCalibParams.cpp
-  src/PoseUtils.cpp
-  src/EllipsoidModelSim.cpp
-  src/TriangleModelSim.cpp
-  src/SectionLoader.cpp
   src/LaserUtils.cpp
+  src/PoseUtils.cpp
+  src/ClusteringUtils.cpp
+  src/ModelingUtils.cpp
+
+  src/SectionLoader.cpp
+  src/GeometricSegmenter.cpp
   src/TriangleModeler.cpp
   src/EllipsoidModeler.cpp
-  src/GeometricSegmenter.cpp
+  src/EllipsoidModelSim.cpp
+  src/TriangleModelSim.cpp
   src/SectionModelSim.cpp
+
   src/NearestNeighborSim.cpp
+
   src/PtsError.cpp
+
   src/GroundTrianglesGenerator.cpp
   src/OrientedBox.cpp
   src/SceneObjectServer.cpp
-
   src/MeshModelSim.cpp
   )
  
@@ -259,11 +263,8 @@ add_library(lidar_sim SHARED
 
 ## scene sim
 
-add_executable(test_mesh_model scene_sim/test_mesh_model.cpp)
-  target_link_libraries(test_mesh_model lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-add_executable(test_transfs scene_sim/test_transfs.cpp)
-  target_link_libraries(test_transfs lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(test_mesh_model_sim scene_sim/test_mesh_model_sim.cpp)
+  target_link_libraries(test_mesh_model_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## viz
 

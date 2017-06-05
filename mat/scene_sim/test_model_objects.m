@@ -23,11 +23,12 @@ models{3} = model;
 vizMeshes(models);
 
 %% write out
-relPathOut = '../../cpp/data/sections/section_04/scene_mesh_objects/tree_1.txt';
+relPathObjectMeshesDir = '../../cpp/data/sections/section_04/scene_object_meshes';
+relPathOut = [relPathObjectMeshesDir '/tree_1.txt'];
 saveTriModels(relPathOut,convertMeshToTriModels(models{1}));
 
-relPathOut = '../../cpp/data/sections/section_04/scene_mesh_objects/tree_2.txt';
+relPathOut = [relPathObjectMeshesDir '/tree_2.txt'];
 saveTriModels(relPathOut,convertMeshToTriModels(models{2}));
 
-relPathOut = '../../cpp/data/sections/section_04/scene_mesh_objects/shrub_1.txt';
+relPathOut = [relPathObjectMeshesDir '/shrub_1.txt'];
 saveTriModels(relPathOut,convertMeshToTriModels(models{3}));

@@ -128,6 +128,12 @@ namespace lidar_sim {
     {
 	// open input file
 	std::ifstream file(rel_path_input);
+	if (!file)
+	{
+	    std::stringstream ss_err_msg;
+	    ss_err_msg << "failed to open file " << rel_path_input;
+	    throw std::runtime_error(ss_err_msg.str().c_str());
+	}
 	std::cout << "Reading triangle models from: " << rel_path_input << std::endl;
 
 	TriangleModels triangle_models;

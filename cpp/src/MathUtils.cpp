@@ -150,7 +150,8 @@ namespace lidar_sim {
 	for(size_t i = 0; i < pts2.size(); ++i)
 	{
 	    ids[i] = indices[i][0];
-	    nearest_dists[i] = dists[i][0];
+	    // flann returns squared distances
+	    nearest_dists[i] = std::sqrt(dists[i][0]);
 	}
 
 	return std::make_tuple(ids, nearest_dists);
@@ -170,9 +171,15 @@ namespace lidar_sim {
 	index.buildIndex();                                                                                               
 	int n_checks = 100;
 	index.knnSearch(query, indices, dists, nn, flann::SearchParams(n_checks));
+
+	std::vector<std::vector<double> > nn_dists = flannMatrixToStlArray(dists);
+	// flann returns squared distances
+	for(size_t i = 0; i < nn_dists.size(); ++i)
+	    for(size_t j = 0 ; j < nn_dists[i].size(); ++j)
+		nn_dists[i][j] = std::sqrt(nn_dists[i][j]);
 	
 	return std::make_tuple(
-	    flannMatrixToStlArray(indices), flannMatrixToStlArray(dists));
+	    flannMatrixToStlArray(indices), nn_dists);
     }
 
     std::vector<std::vector<double> > pdist2(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2)
