@@ -17,6 +17,9 @@ int main(int argc, char**argv)
     MeshModelSim sim;
     sim.loadObjectMeshes(rel_path_object_meshes);
 
+    // RangeDataVizer vizer;
+    // vizer.vizObjectMeshes(sim.m_object_mesh_sims);
+
     std::vector<double> ray_origin {2, -5, 0};
     std::vector<double> ray_dirn {0, 1, 0};
     std::vector<int> object_ids = sim.calcObjectIdsForSim(ray_origin, ray_dirn);

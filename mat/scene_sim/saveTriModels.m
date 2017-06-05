@@ -17,7 +17,10 @@ function saveTriModels(relPathFile,triModels)
     line = sprintf('triangles\n');
     fprintf(fid,line);
     for i = 1:size(triModels.tri,1)
-        line = sprintf('%f %f %f\n',triModels.tri(i,1),triModels.tri(i,2),triModels.tri(i,3));
+        tri = triModels.tri(i,:);
+        tri = tri-1; % cpp indexing starts at 0
+        line = sprintf('%d %d %d %f\n',tri(1),tri(2),tri(3), ...
+            triModels.hitProbVec(i));
         fprintf(fid,line);
     end
     fclose(fid);

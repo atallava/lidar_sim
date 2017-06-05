@@ -1,4 +1,4 @@
-function triModels = convertMeshToTriModels(meshModel)
+function triModels = convertMeshToTriModels(meshModel,hitProbVec)
     %CONVERTMESHTOTRIMODELS
     %
     % triModels = CONVERTMESHTOTRIMODELS(meshModel)
@@ -11,6 +11,11 @@ function triModels = convertMeshToTriModels(meshModel)
     msg = sprintf('Expected triangle faces.\n');
     assert(condn,msg);
     
+    if nargin < 2
+        hitProbVec = ones(1,size(meshModel.faces,1));
+    end
+    
     triModels.ptsFit = meshModel.vertices;
     triModels.tri = meshModel.faces;
+    triModels.hitProbVec = hitProbVec;
 end
