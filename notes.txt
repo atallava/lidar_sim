@@ -175,6 +175,17 @@ ellipsoid: sample hit id, draw from ellipsoid mvn
 
 * need a better name for what real pts corresponding to real pts?
 
+* the flann dist fiasco
+
+pts error. no change needed.
+ellipsoid modeler. thankfully was ignoring the dists
+triangle modeler. ''
+pose server. '' 
+modeling utils. ''
+section loader. ''
+mesh model sim. uses the right version.
+geometric segmenter. no wonder dists were off, corrected. in any case, not in use.
+
 --------------------------------------------------
 
 catkin ws:

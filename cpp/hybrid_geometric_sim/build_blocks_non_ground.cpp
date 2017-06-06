@@ -71,8 +71,7 @@ int main(int argc, char **argv)
 
     // nearest neighbor for pts in nodes
     std::vector<std::vector<int> > nn_ids;
-    std::vector<std::vector<double> > nn_dists;
-    std::tie(nn_ids, nn_dists) = nearestNeighbors(imu_posn_nodes, pts, 1);
+    std::tie(nn_ids, std::ignore) = nearestNeighbors(imu_posn_nodes, pts, 1);
     
     // for each node, which pts are in it
     std::vector<std::vector<int> > node_pts_map(imu_posn_nodes.size(), 

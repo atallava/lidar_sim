@@ -177,8 +177,13 @@ add_library(lidar_sim SHARED
  
 ## pattern
 
-# # add_executable(pattern hybrid_geometric_sim/pattern.cpp)
+# # add_executable(pattern dir/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+## tests
+
+add_executable(test_flann tests/test_flann.cpp)
+  target_link_libraries(test_flann lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## data processing
 

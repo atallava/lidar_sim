@@ -150,7 +150,7 @@ namespace lidar_sim {
 	for(size_t i = 0; i < pts2.size(); ++i)
 	{
 	    ids[i] = indices[i][0];
-	    // flann returns squared distances
+	    // flann returns squared distances!!
 	    nearest_dists[i] = std::sqrt(dists[i][0]);
 	}
 
