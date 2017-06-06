@@ -18,4 +18,5 @@ function triModels = convertMeshToTriModels(meshModel,hitProbVec)
     triModels.ptsFit = meshModel.vertices;
     triModels.tri = meshModel.faces;
     triModels.hitProbVec = hitProbVec;
+    triModels.rangeVar = 0;
 end

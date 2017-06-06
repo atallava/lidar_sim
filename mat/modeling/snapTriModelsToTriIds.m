@@ -1,4 +1,13 @@
 function triModelsSnapped = snapTriModelsToTriIds(triModels,triIds)
+    %SNAPTRIMODELSTOTRIIDS
+    %
+    % triModelsSnapped = SNAPTRIMODELSTOTRIIDS(triModels,triIds)
+    %
+    % triModels        -
+    % triIds           -
+    %
+    % triModelsSnapped -
+    
     if nargin < 2
         triIds = 1:size(triModels.tri,1);
     end
