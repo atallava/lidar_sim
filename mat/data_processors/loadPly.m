@@ -1,4 +1,12 @@
 function model = loadPly(relPathPly)
+    %LOADPLY
+    %
+    % model = LOADPLY(relPathPly)
+    %
+    % relPathPly - 
+    %
+    % model      -
+    
     fid = fopen(relPathPly,'r');
     line = fgetl(fid);
     vertices = [];

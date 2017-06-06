@@ -50,30 +50,30 @@ for i = 1:nClasses
         elementId = elementIds(j);
         
         if ~primitiveClassIsPatch(i)
-%             relPathPrimitive = genRelPathPrimitive(sectionId,className,elementId);
-%             load(relPathPrimitive,'T_segment_to_world','pts','obb','ellipsoidModels');
-% 
-%             % transform back to world frame
-%             pts_world = applyTransf(pts,T_segment_to_world);
-%             obb_world = applyTransfToObb(obb,T_segment_to_world);
-%             ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,T_segment_to_world);
-% 
-%             % plot
-%             plotStructVars = {'ellipsoidData','plotStruct'};
-%             clear(plotStructVars{:});
-%             ellipsoidData.ellipsoidModels = ellipsoidModels_world;
-%             plotStruct.ellipsoidData = ellipsoidData;
-%             hfig = plotRangeData(plotStruct);
-%             set(hfig,'visible','off');
-%             drawObb(hfig,obb_world,pts_world);
-%             
-%             % save fig
-%             relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,className,elementId);
-%             savefig(hfig,relPathPrimitiveFig);
-%             % save png
-%             relPathPrimitivePng = genRelPathPrimitivePng(sectionId,className,elementId);
-%             export_fig(relPathPrimitivePng,hfig);
-%             close(hfig);
+            relPathPrimitive = genRelPathPrimitive(sectionId,className,elementId);
+            load(relPathPrimitive,'T_segment_to_world','pts','obb','ellipsoidModels');
+
+            % transform back to world frame
+            pts_world = applyTransf(pts,T_segment_to_world);
+            obb_world = applyTransfToObb(obb,T_segment_to_world);
+            ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,T_segment_to_world);
+
+            % plot
+            plotStructVars = {'ellipsoidData','plotStruct'};
+            clear(plotStructVars{:});
+            ellipsoidData.ellipsoidModels = ellipsoidModels_world;
+            plotStruct.ellipsoidData = ellipsoidData;
+            hfig = plotRangeData(plotStruct);
+            set(hfig,'visible','off');
+            drawObb(hfig,obb_world,pts_world);
+            
+            % save fig
+            relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,className,elementId);
+            savefig(hfig,relPathPrimitiveFig);
+            % save png
+            relPathPrimitivePng = genRelPathPrimitivePng(sectionId,className,elementId);
+            export_fig(relPathPrimitivePng,hfig);
+            close(hfig);
         else
             % patch
             relPathPrimitiveDir = genRelPathPrimitivePatch(sectionId,className,elementId);
