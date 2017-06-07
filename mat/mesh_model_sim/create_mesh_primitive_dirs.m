@@ -16,3 +16,11 @@ for i = 1:length(primitiveClasses)
     relPathDir = [relPathPre '/' primitiveClasses{i}];
     mkdir(relPathDir);
 end
+
+%% for cpp primitives
+relPathPre = '../../cpp/data/3d_models/primitives';
+
+for i = 1:length(primitiveClasses)
+    relPathDir = [relPathPre '/' primitiveClasses{i}];
+    mkdir(relPathDir);
+end

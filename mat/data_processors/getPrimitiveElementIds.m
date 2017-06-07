@@ -1,4 +1,13 @@
 function elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir,primitiveClasses)
+    %GETPRIMITIVEELEMENTIDS
+    %
+    % elementIdsPerClass = GETPRIMITIVEELEMENTIDS(genRelPathClassPrimitivesDir,primitiveClasses)
+    %
+    % genRelPathClassPrimitivesDir -
+    % primitiveClasses             -
+    %
+    % elementIdsPerClass           -
+    
     pattern = '([0-9])+';
     nClasses = length(primitiveClasses);
     elementIdsPerClass = cell(1,nClasses);
