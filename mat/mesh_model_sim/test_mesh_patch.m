@@ -3,7 +3,7 @@ genRelPathModel = @(type,fname) ...
 
 %% load mesh
 srcType = 'grass';
-fname = 'Herbe';
+fname = 'grass-block';
 relPathModel = genRelPathModel(srcType,fname);
 load(relPathModel,'model');
 
@@ -15,7 +15,7 @@ T_world_to_model = inv(T_model_to_world);
 model = applyTransfToMeshModel(model,T_world_to_model);
 
 %% scale
-refHeight = 1;
+refHeight = 0.9;
 scale = refHeight/range(obb.extents(3,:));
 Tscale = scale*eye(4,4);
 modelScaled = applyTransfToMeshModel(model,Tscale);
@@ -26,6 +26,7 @@ triModels = convertMeshToTriModels(modelScaled);
 nCellsInPatch = length(patchObbs);
 cellModels_world = cell(1,nCellsInPatch);
 cellModels_obb = cell(1,nCellsInPatch);
+%%
 for j = 1:nCellsInPatch
     obb_world = patchObbs{j};
     pts_world = ptsInObbs{j};

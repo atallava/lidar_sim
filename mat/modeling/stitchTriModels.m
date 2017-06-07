@@ -1,4 +1,12 @@
 function triModels = stitchTriModels(triModelCell)
+    %STITCHTRIMODELS
+    %
+    % triModels = STITCHTRIMODELS(triModelCell)
+    %
+    % triModelCell -
+    %
+    % triModels    -
+    
     triModels.tri = [];
     triModels.ptsFit = [];
     rangeVars = [];
