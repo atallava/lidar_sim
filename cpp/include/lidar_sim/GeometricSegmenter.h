@@ -17,7 +17,7 @@ namespace lidar_sim {
 				   const std::vector<double> &nbr, const double nbr_feature);
 
     private:
-	double m_max_dist2_to_nbr;
+	double m_max_dist_to_nbr;
 	double m_min_nbrs;
 	double m_default_spherical_variation;
 	double m_spherical_variation_threshold;

@@ -12,7 +12,7 @@
 using namespace lidar_sim;
 
 GeometricSegmenter::GeometricSegmenter() :
-    m_max_dist2_to_nbr(5),
+    m_max_dist_to_nbr(5),
     m_min_nbrs(10),
     m_default_spherical_variation(0.01),
     m_spherical_variation_threshold(0.09),
@@ -73,7 +73,7 @@ std::vector<double> GeometricSegmenter::calcFeaturesForPts(const std::vector<std
     {
 	std::vector<std::vector<double> > this_pt_nbrs;
 	for(size_t j = 0; j < nn_ids[0].size(); ++j)
-	    if (nn_dists[i][j] < m_max_dist2_to_nbr)
+	    if (nn_dists[i][j] < m_max_dist_to_nbr)
 		this_pt_nbrs.push_back(pts[nn_ids[i][j]]);
 
 	if (this_pt_nbrs.size() < m_min_nbrs)
