@@ -13,7 +13,8 @@ NearestNeighborSim::NearestNeighborSim() :
     m_debug_flag(0),
     m_max_perp_dist_for_hit(0.1),
     m_range_var(0.2),
-    m_max_pts(1e5)
+    m_max_pts(1e5),
+    m_subsample_pts(true) // todo: subsample or not
 {    
 }
 
@@ -22,8 +23,17 @@ void NearestNeighborSim::loadTrainPts(const std::string rel_path_pts)
 {
     m_pts = loadPtsFromXYZFile(rel_path_pts);
 
-    // todo: subsample or not
-    subsamplePts();
+    if (m_subsample_pts)
+	subsamplePts();
+}
+
+// set train pts
+void NearestNeighborSim::setTrainPts(std::vector<std::vector<double> > pts)
+{
+    m_pts = pts;
+
+    if (m_subsample_pts)
+	subsamplePts();
 }
 
 void NearestNeighborSim::setDebugFlag(const int value)
@@ -42,6 +52,10 @@ void NearestNeighborSim::subsamplePts()
 	ss_err_msg << "NearestNeighborSim: m_pts is empty!";
 	throw std::runtime_error(ss_err_msg.str().c_str());
     }
+
+    if ((int)m_pts.size() <= m_max_pts)
+	// do nothing
+	return;
 	
     int skip = (int)(m_pts.size()/m_max_pts);
     std::vector<std::vector<double> > pts_sub;

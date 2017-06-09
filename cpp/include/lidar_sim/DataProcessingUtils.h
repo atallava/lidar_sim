@@ -151,4 +151,6 @@ namespace lidar_sim {
     std::vector<int> getNonGroundBlockIds(const std::string rel_path_non_ground_models_dir, const int section_id);
     std::vector<int> getEllipsoidModelBlockIds(const std::string rel_path_ellipsoid_models_dir, const int section_id);
     std::vector<int> getTriangleModelBlockIds(const std::string rel_path_triangle_models_dir, const int section_id);
+    
+    std::vector<int> getObjectMeshIds(const std::string rel_path_object_meshes_dir);
 }

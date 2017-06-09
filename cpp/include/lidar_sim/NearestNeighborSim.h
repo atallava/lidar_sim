@@ -15,6 +15,7 @@ namespace lidar_sim {
     public:
 	NearestNeighborSim();;
 	void loadTrainPts(const std::string rel_path_pts);
+	void setTrainPts(std::vector<std::vector<double> > pts);
 	void setDebugFlag(const int value);
 	void subsamplePts();
 
@@ -33,5 +34,6 @@ namespace lidar_sim {
 	double m_max_perp_dist_for_hit;
 	double m_range_var;
 	int m_max_pts;
+	bool m_subsample_pts;
     };
 }

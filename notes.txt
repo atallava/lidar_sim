@@ -85,6 +85,8 @@ related to vtk and boost.
 
 * cpp pretty printing
 
+* nomenclature for model etc is completely lost and mixed up
+
 ------------------------------
 
 analyze taylor data:

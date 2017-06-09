@@ -604,4 +604,24 @@ namespace lidar_sim {
 
 	return ids;
     }
+
+    std::vector<int> getObjectMeshIds(const std::string rel_path_object_meshes_dir)
+    {
+	boost::regex pattern("([0-9]+)");
+	std::vector<std::string> matching_filenames;
+	std::vector<std::vector<std::string> > captures;
+	int num_captures = 1;
+
+	std::tie(matching_filenames, captures) = 
+	    getPatternMatchingFiles(rel_path_object_meshes_dir, pattern, num_captures);
+
+	std::vector<int> ids;
+	for(size_t i = 0; i < captures.size(); ++i)
+	    ids.push_back(std::stoi(captures[i][0]));
+
+	// note: important that ids are sorted!
+	std::sort(ids.begin(), ids.end());
+
+	return ids;
+    }
 }
