@@ -27,7 +27,8 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     shortStep = 1;
     longStep = 5;
     
-    legendFontSize = 8;
+    % todo. 8 is usual.
+    legendFontSize = 30; 
     
     %% control keys
     keys = struct(...
@@ -95,10 +96,12 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     %% set up figure
     hfig = figure;
     hold on; axis equal;
-    box on; grid on;
+    box on; grid off;
     xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
     
     scatterHandles = gobjects(1,nSegments);
+     % todo. 20 is usual
+     markerSizeData = 300;
     for i = 1:nSegments
         segmentPts = ptsCell{i};
         
@@ -111,7 +114,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
         % todo: skipping!
         skip = 2;
         scatterHandles(i) = scatter3(segmentPts(1:skip:end,1),segmentPts(1:skip:end,2),segmentPts(1:skip:end,3),...
-            'marker',thisMarker,'markerEdgeColor',segmentColors{i});
+            'marker',thisMarker,'markerEdgeColor',segmentColors{i},'sizeData',markerSizeData);
     end
     
     set(hfig,'KeyPressFcn',@myKeyPress);
@@ -125,19 +128,22 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
         classColorMarkerHandles(i) = scatter3(pt(1),pt(2),pt(3),...
             'markerEdgeColor',classColors(i,:),'markerFaceColor',classColors(i,:),'visible','off');
         
-        legendEntries{i} = sprintf('%d: %s',i,primitiveClasses{i});
+        legendEntries{i} = sprintf('%d: %s',i, ...
+            replaceUnderscoreWithSpace(primitiveClasses{i}));
     end
     hlegend = legend(classColorMarkerHandles,legendEntries);
     set(hlegend,'fontsize',legendFontSize);
     legendPosn = get(hlegend,'position');
     legendPosn = legendPosn + [1 1 0 0]*0.1;
     set(hlegend,'position',legendPosn);
-    
+
     % figure tags
     tagLocations = zeros(nSegments,3);
     calcSegmentsTagLocations();
     % create tag handles
     tagHandles = gobjects(1,nSegments);
+    % todo. 8 is usual
+    tagFontSize = 20; 
     for i = 1:nSegments
         if labeling(i)
             tagText = num2str(labeling(i));
@@ -145,6 +151,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
             tagText = '';
         end
         tagHandles(i) = text(tagLocations(i,1),tagLocations(i,2),tagLocations(i,3),tagText);
+        tagHandles(i).FontSize = tagFontSize;
     end
     
     %drawBasePlane();
