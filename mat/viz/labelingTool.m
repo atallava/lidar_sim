@@ -21,14 +21,14 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     cycleColors = someDistinguishableColors(nClasses+1:end,:);
     
     unlabeledMarker = '.';
-    % todo: change this back to s
+    % this used to be s for +
+    % but that slows down viz window
     labeledMarker = '.';
     
     shortStep = 1;
     longStep = 5;
     
-    % todo. 8 is usual.
-    legendFontSize = 30; 
+    legendFontSize = 8; 
     
     %% control keys
     keys = struct(...
@@ -100,8 +100,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
     
     scatterHandles = gobjects(1,nSegments);
-     % todo. 20 is usual
-     markerSizeData = 300;
+    markerSizeData = 20;
     for i = 1:nSegments
         segmentPts = ptsCell{i};
         
@@ -142,8 +141,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     calcSegmentsTagLocations();
     % create tag handles
     tagHandles = gobjects(1,nSegments);
-    % todo. 8 is usual
-    tagFontSize = 20; 
+    tagFontSize = 8; 
     for i = 1:nSegments
         if labeling(i)
             tagText = num2str(labeling(i));

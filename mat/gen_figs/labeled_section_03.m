@@ -54,6 +54,8 @@ imuData.tExtents = [1403045836.830185000 1403045902.775886000]+[-10 10];
 imuData.tResn = 4;
 
 %%
+% changes to labelingTool.
+% legendFontSize = 30. tagFontSize = 20. markerSizeData = 300.
 labelingTool(ptsCellGlobal,primitiveClasses,labelingData,imuData);
 
 
