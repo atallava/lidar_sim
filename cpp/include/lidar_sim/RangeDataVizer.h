@@ -15,6 +15,7 @@
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/TriangleModeler.h>
 #include <lidar_sim/SectionModelSim.h>
+#include <lidar_sim/MeshModelSim.h>
 
 namespace lidar_sim {
     class RangeDataVizer {
@@ -34,6 +35,7 @@ namespace lidar_sim {
 	void vizSegmentation(const std::vector<std::vector<double> >& pts, const std::vector<int> &segmentation);
 	void vizSectionModels(const SectionModelSim &sim);
 	void vizObjectMeshes(const std::vector<TriangleModelSim> &m_object_mesh_sims);
+	void vizMeshModelSim(const MeshModelSim& sim);
 	std::vector<vtkSmartPointer<vtkActor> >
 	    genSectionModelsActors(const SectionModelSim &sim);
 	std::vector<vtkSmartPointer<vtkActor> >

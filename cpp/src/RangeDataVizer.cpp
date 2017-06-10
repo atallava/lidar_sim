@@ -273,6 +273,40 @@ void RangeDataVizer::vizObjectMeshes(const std::vector<TriangleModelSim> &object
     takeItAway(actors);
 }
 
+void RangeDataVizer::vizMeshModelSim(const MeshModelSim& sim)
+{
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+
+    std::vector<double> mud_brown_rgb{210/255.0, 180/255.0, 140/255.0};
+    std::vector<double> yellow_green_rgb{154/255.0, 205/255.0, 50/255.0};
+
+    // ground triangles
+    for(size_t i = 0; i < sim.m_triangle_model_sims.size(); ++i)
+    {
+	TriangleModels this_triangle_models = sim.m_triangle_model_sims[i].m_triangle_models;
+	vtkSmartPointer<vtkActor> actor = m_triangles_actor_server.genTrianglesActor(
+	    this_triangle_models.m_triangles,
+	    this_triangle_models.m_fit_pts);
+										     
+	actor->GetProperty()->SetColor(mud_brown_rgb[0], mud_brown_rgb[1], mud_brown_rgb[2]);
+	actors.push_back(actor);
+    }
+
+    // object triangles
+    for(size_t i = 0; i < sim.m_object_mesh_sims.size(); ++i)
+    {
+	TriangleModels this_triangle_models = sim.m_object_mesh_sims[i].m_triangle_models;
+	vtkSmartPointer<vtkActor> actor = m_triangles_actor_server.genTrianglesActor(
+	    this_triangle_models.m_triangles,
+	    this_triangle_models.m_fit_pts);
+										     
+	actor->GetProperty()->SetColor(yellow_green_rgb[0], yellow_green_rgb[1], yellow_green_rgb[2]);
+	actors.push_back(actor);
+    }
+
+    takeItAway(actors);
+}
+
 std::vector<vtkSmartPointer<vtkActor> >
 RangeDataVizer::genSectionModelsActors(const SectionModelSim &sim)
 {

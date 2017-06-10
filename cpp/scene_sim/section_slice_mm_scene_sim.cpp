@@ -165,6 +165,8 @@ int main(int argc, char **argv)
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // todo: delete me
+    // RangeDataVizer vizer;
+    // vizer.vizMeshModelSim(sim);
     exit(0);
 
     // // slice ids
