@@ -1,5 +1,12 @@
 function hfig = plotRangeData(inputStruct)
-    
+%PLOTRANGEDATA 
+% 
+% hfig = PLOTRANGEDATA(inputStruct)
+% 
+% inputStruct - struct. fields ('rayData','ellipsoidData','triModelData','pts').
+% 
+% hfig        - figure handle.
+
     %% unpack 
     
     %% rayData

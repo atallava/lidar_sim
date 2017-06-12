@@ -39,6 +39,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
         'spotlight','t', ...
         'dcSelect','m', ...
         'label','c', ...
+        'info','i',...
         'longRwd','h','shortRwd','j', ...
         'shortFwd','k','longFwd','l');
     
@@ -52,6 +53,7 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
     fprintf('%s: spotlight unlabeled\n',keys.spotlight);
     fprintf('%s: select segment where data cursor is currently\n',keys.dcSelect);
     fprintf('%s: open label box\n',keys.label);
+    fprintf('%s: display selected segment info\n',keys.info);
     fprintf('1-%d: when segment is selected, label as\n',length(primitiveClasses));
     fprintf('0: when segment is selected, de-label\n');
     
@@ -251,8 +253,15 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
                     newSelectionId = stepCircular(nSegments,currentSelectionId,-longStep);
                     updateCurrentSelection(newSelectionId);
                 end
+                
+            case keys.info
+                if selected
+                    msg = sprintf('pts id: %d, label id: %d',currentSelectionId,labeling(currentSelectionId));
+                    msgbox(msg);
+                end 
             
             case keys.label
+%                 dlgStr = sprintf('pts id: %d. la
                 choice = inputdlg('label id:'); 
                 
                 if ~isempty(choice)

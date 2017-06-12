@@ -82,7 +82,7 @@ for i = 1:nSegments
         nCellsInPatch = length(cellObbs_world);
         T_cells_to_world = cell(1,nCellsInPatch);
         for j = 1:nCellsInPatch
-            T_obb_to_world = getObbTransf(obb_world);
+            T_obb_to_world = getObbTransf(cellObbs_world{j});
             T_cells_to_world{j} = T_obb_to_world;
         end
         

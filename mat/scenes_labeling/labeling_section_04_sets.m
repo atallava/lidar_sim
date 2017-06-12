@@ -31,7 +31,7 @@ setId = 1;
 segmentIdsInSet = setCell{setId};
 nSegmentsInSet = length(segmentIdsInSet);
 
-labelingData.relPathLabelingOut = 'labeling_current';
+% labelingData.relPathLabelingOut = 'labeling_current';
 labelingData.loadPartialLabeling = 1;
 labelingData.relPathPartialLabeling = 'labeling_ongoing';
 
