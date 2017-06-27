@@ -304,7 +304,7 @@ EllipsoidModelSim::simPtsGivenRays(const std::vector<double> &ray_origin, const 
     applyMaxRangeFilter(ray_origin, sim_pts, hit_flag, 
 			m_laser_calib_params.intrinsics.max_range);
 
-    // todo: comment/ delete
+    // debug
     // std::cout << "EllipsoidModelSim: anyNonzeros(intersection_flag): " 
     // 	      << anyNonzeros(intersection_flag[0]) << std::endl;	
 

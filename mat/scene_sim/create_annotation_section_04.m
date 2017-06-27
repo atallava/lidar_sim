@@ -95,6 +95,8 @@ for i = 1:nSegments
     end
     
     waitbar(i/nSegments);
+    waitbarTitle = sprintf('progress: %d/%d',i,nSegments);
+    setWaitbarTitle(hWaitbar,waitbarTitle);
 end
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);

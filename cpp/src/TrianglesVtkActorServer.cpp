@@ -193,7 +193,6 @@ std::vector<vtkSmartPointer<vtkActor> >
 TrianglesVtkActorServer::genTrianglesActors(const std::vector<std::vector<int> > &triangle_vertex_ids, 
 					    const std::vector<std::vector<double> > &pts)
 {
-    // todo: how to make this default?
     std::vector<double> hit_prob_vec(triangle_vertex_ids.size(), 1);
     return genTrianglesActors(triangle_vertex_ids, pts, hit_prob_vec);
 }

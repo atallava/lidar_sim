@@ -75,8 +75,6 @@ for i = 1:nObjects
 
     waitbar(i/nObjects);
 end
-compTime = toc(clockLocal);
-fprintf('comp time: %.2fs\n',compTime);
 close(hWaitbar);
 
 %% write tri models
@@ -91,5 +89,7 @@ end
 
 relPathSceneTriModelsMat = genRelPathSceneTriModelsMat(newSceneSectionId);
 save(relPathSceneTriModelsMat,'sceneTriModels');
+compTime = toc(clockLocal);
+fprintf('comp time: %.2fs\n',compTime);
 
 

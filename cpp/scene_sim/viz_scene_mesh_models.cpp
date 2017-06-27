@@ -75,7 +75,7 @@ std::string genRelPathSection(int section_id)
     return ss.str();
 }
 
-std::string genRelPathModelsDir(int section_id)
+std::string genRelPathHgModelsDir(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
@@ -94,8 +94,8 @@ int main(int argc, char **argv)
     // SectionLoader section(rel_path_section);
 
     // sim object
-    int section_models_id = 4;
-    std::string rel_path_models_dir = genRelPathModelsDir(section_models_id);
+    int section_hg_models_id = 4;
+    std::string rel_path_hg_models_dir = genRelPathHgModelsDir(section_hg_models_id);
 
     // find object meshes
     std::vector<std::string> rel_path_object_meshes;
@@ -106,21 +106,21 @@ int main(int argc, char **argv)
 	rel_path_object_meshes.push_back(genRelPathObjectMesh(section_sim_id, i));
 
     // find triangle models for this section
-    std::vector<std::string> rel_path_triangle_model_blocks;
-    std::vector<int> triangle_model_block_ids = 
-	getTriangleModelBlockIds(rel_path_models_dir, section_models_id);
-    for(auto i : triangle_model_block_ids)
-    	rel_path_triangle_model_blocks.push_back(genRelPathTriangles(section_models_id, i));
+    std::vector<std::string> rel_path_ground_triangle_model_blocks;
+    std::vector<int> ground_triangle_model_block_ids = 
+	getTriangleModelBlockIds(rel_path_hg_models_dir, section_hg_models_id);
+    for(auto i : ground_triangle_model_block_ids)
+    	rel_path_ground_triangle_model_blocks.push_back(genRelPathTriangles(section_hg_models_id, i));
 
     // create sim object
     MeshModelSim sim;
-    sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks); // semantically this is ground
+    sim.loadTriangleModelBlocks(rel_path_ground_triangle_model_blocks); 
     sim.loadObjectMeshes(rel_path_object_meshes);
 
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
+    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_hg_models_id);
+    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_hg_models_id);
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground);
 
@@ -128,7 +128,6 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    // todo: delete me
     RangeDataVizer vizer;
     vizer.vizMeshModelSim(sim);
 

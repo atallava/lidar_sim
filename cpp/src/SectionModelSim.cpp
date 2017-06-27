@@ -244,7 +244,7 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
 	}
     }
 
-    // todo: comment/ delete
+    // debug
     // std::cout << "SectionModelSim: ellipsoid blocks hit: " << std::endl;
     // dispVec(ellipsoid_blocks_hit);
     // std::cout << "SectionModelSim: triangle blocks hit: " << std::endl;

@@ -19,7 +19,8 @@ namespace lidar_sim {
 					     const std::vector<double> &ray_dirn);
 	std::vector<int> calcObjectIdsForSim(const std::vector<double> &ray_origin, 
 					     const std::vector<std::vector<double> > &ray_dirns);
-	void loadTriangleModelBlocks(const std::vector<std::string> &rel_path_model_blocks);
+	// semantically this is ground
+	void loadTriangleModelBlocks(const std::vector<std::string> &rel_path_model_blocks); 
 	void loadBlockInfo(const std::string rel_path_imu_posn_nodes, 
 			   const std::string rel_path_block_node_ids_ground);
 

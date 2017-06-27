@@ -7,10 +7,10 @@ genRelPathSceneEllipsoidModelsMat = @(sectionId) ...
     sprintf('../data/sections/section_%02d/object_ellipsoid_models',sectionId);
 
 genRelPathBlockNodeIdsNonGround = @(sectionId) ...
-    sprintf('../../cpp/data/sections/section_%02d/block_node_ids_non_ground.txt',sectionId);
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/block_node_ids_non_ground.txt',sectionId);
 
 genRelPathEllipsoidsBlock = @(sectionId,blockId) ...
-    sprintf('../../cpp/data/sections/section_%02d/section_%02d_block_%02d_non_ground_ellipsoids.txt',sectionId,sectionId,blockId);
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/section_%02d_block_%02d_non_ground_ellipsoids.txt',sectionId,sectionId,blockId);
 
 %% load
 sectionId = 4;
@@ -22,6 +22,7 @@ load(relPathEllipsoids,'ellipsoidModels');
 
 %% make blocks
 % NNs for ellipsoid centers in nodes
+clockLocal = tic();
 ellipsoidCenters = getEllipsoidCenters(ellipsoidModels);
 nnIds = knnsearch(imuPosnNodes,ellipsoidCenters);
 
@@ -55,7 +56,9 @@ savePts(relPathBlockNodeIds,blockNodeIds);
 
 % write ellipsoid blocks
 nBlocks = size(blockNodeIds,1);
+hWaitbar = waitbar(0,'progress');
 for i = 1:nBlocks
+    fprintf('block %d...\n',i);
     thisBlockEllipsoids = [];
     blockStartNode = blockNodeIds(i,1)+1;
     blockEndNode = blockNodeIds(i,2)+1;
@@ -68,4 +71,7 @@ for i = 1:nBlocks
     relPathBlock = genRelPathEllipsoidsBlock(sectionId,i);
     fprintf('saving to %s...\n',relPathBlock);
     saveEllipsoidModels(relPathBlock,thisBlockEllipsoids);
+    waitbar(i/nBlocks);
 end
+compTime = toc(clockLocal);
+fprintf('comp time: %.2fs\n',compTime);

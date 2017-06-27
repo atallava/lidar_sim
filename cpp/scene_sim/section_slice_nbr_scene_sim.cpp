@@ -50,7 +50,7 @@ std::string genRelPathSliceRealPts(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/slice_real_pts.xyz";
+       << "/nbr_sim/slice_real_pts.xyz";
 
     return ss.str();
 }
@@ -59,7 +59,7 @@ std::string genRelPathSimPts(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/slice_nbr_sim_pts.xyz";
+       << "/nbr_sim/slice_sim_pts.xyz";
 
     return ss.str();
 }
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
     packet_id_sim_start = 50000;
-    packet_id_sim_end = packet_id_sim_start + 10000;
+    packet_id_sim_end = packet_id_sim_start + 20000;
 
     // sim
     // loop over packets
@@ -122,26 +122,29 @@ int main(int argc, char **argv)
 	// here is where you could alternately get directions from laser intrinsics
     	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
 
-    	// simulate 
-    	std::vector<std::vector<double> > this_sim_pts;
-    	std::vector<int> this_hit_flag;
-    	std::tie(this_sim_pts, this_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
+	// todo: uncomment
+    	// // simulate 
+    	// std::vector<std::vector<double> > this_sim_pts;
+    	// std::vector<int> this_hit_flag;
+    	// std::tie(this_sim_pts, this_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
 
-    	// add to big list of sim pts
-    	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts.begin(), this_sim_pts.end());
-    	hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
+    	// // add to big list of sim pts
+    	// sim_pts_all.insert(sim_pts_all.end(), this_sim_pts.begin(), this_sim_pts.end());
+    	// hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
     }
 
-    // weed out non-hits
-    std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
+    // todo: uncomment
+    // // weed out non-hits
+    // std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write real pts
     std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id);
     writePtsToXYZFile(real_pts, rel_path_real_pts);
 
-    // write sim pts
-    std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
-    writePtsToXYZFile(sim_pts, rel_path_sim_pts);
+    // todo: uncomment
+    // // write sim pts
+    // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
+    // writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

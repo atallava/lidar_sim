@@ -95,7 +95,6 @@ std::vector<int> MeshModelSim::calcObjectIdsForSim(const std::vector<double> &ra
     // retain unique ids
     object_ids = getUniqueSortedVec(object_ids);
 
-    // todo: delete
     // debug
     // std::cout << "dists along ray" << std::endl;
     // dispVec(dists_along_ray);
@@ -312,7 +311,7 @@ MeshModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
 	}
     }
 
-    // todo: comment/ delete
+    // debug
     // std::cout << "MeshModelSim: objects hit: " << std::endl;
     // dispVec(objects_hit);
     // std::cout << "MeshModelSim: triangle blocks hit: " << std::endl;

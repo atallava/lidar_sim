@@ -44,7 +44,6 @@ elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir2,primit
 nObjects = length(sceneAnnotation);
 scenePts = [];
 sceneEllipsoidModels = [];
-waitbar(0,'progress');
 
 % loop through annotations
 clockLocal = tic();
@@ -86,8 +85,6 @@ for i = 214%1:nObjects
             sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
         end
     end
-    
-    waitbar(i/nObjects);
 end
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
@@ -97,10 +94,10 @@ plotStructVars = {'ellipsoidData','plotStruct','pts'};
 clear(plotStructVars{:});
 ellipsoidData.ellipsoidModels = sceneEllipsoidModels;
 ellipsoidData.uniformAlpha = false;
-% plotStruct.ellipsoidData = ellipsoidData;
-plotStruct.pts = scenePts;
+plotStruct.ellipsoidData = ellipsoidData;
+% plotStruct.pts = scenePts;
 hfig = plotRangeData(plotStruct);
 
-for i = 1:length(patchObbs)
-    drawObb(hfig,patchObbs{i});
-end
+% for i = 1:length(patchObbs)
+%     drawObb(hfig,patchObbs{i});
+% end
