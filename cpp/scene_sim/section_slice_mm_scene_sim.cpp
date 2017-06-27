@@ -136,8 +136,10 @@ int main(int argc, char **argv)
     // find object meshes
     std::vector<std::string> rel_path_object_meshes;
     std::string rel_path_object_meshes_dir = genRelPathObjectMeshesDir(section_sim_id);
-    std::vector<int> object_mesh_ids = 
-	getObjectMeshIds(rel_path_object_meshes_dir);
+    // todo: fix this hack
+    // std::vector<int> object_mesh_ids = 
+    // 	getObjectMeshIds(rel_path_object_meshes_dir);
+    std::vector<int> object_mesh_ids(1,8);
     for(auto i : object_mesh_ids)
 	rel_path_object_meshes.push_back(genRelPathObjectMesh(section_sim_id, i));
 

@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 
+#include <lidar_sim/SimDetail.h>
+
 namespace lidar_sim {
     class PtsError {
     public:
@@ -14,7 +16,8 @@ namespace lidar_sim {
 	// todo: variance for this error?
 	double calcSymmetricError(const std::vector<std::vector<double> > &pts1, 
 				  const std::vector<std::vector<double> > &pts2);
-	
+	void calcRangeError(const SimDetail &sim_detail);
+
     private:
     };
 }
