@@ -1,0 +1,3 @@
+relPathSimDetail = '';
+
+calcRangeError(relPathSimDetail);

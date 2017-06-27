@@ -178,7 +178,7 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     std::vector<std::vector<double> > sim_detail;
-    size_t packet_array_step = 10; 
+    size_t packet_array_step = 100; 
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
@@ -253,21 +253,22 @@ int main(int argc, char **argv)
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
-    // write real pts
-    std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id);
-    writePtsToXYZFile(real_pts, rel_path_real_pts);
+    // todo: uncomment us
+    // // write real pts
+    // std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id);
+    // writePtsToXYZFile(real_pts, rel_path_real_pts);
 
-    // write sim pts
-    std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
-    writePtsToXYZFile(sim_pts, rel_path_sim_pts);
+    // // write sim pts
+    // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
+    // writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
-    // write sim detail
-    std::string rel_path_sim_detail = genRelPathSimDetail(section_sim_id); 
-    writePtsToXYZFile(sim_detail, rel_path_sim_detail);
+    // // write sim detail
+    // std::string rel_path_sim_detail = genRelPathSimDetail(section_sim_id); 
+    // writePtsToXYZFile(sim_detail, rel_path_sim_detail);
 
-    // write queried blocks
-    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id); 
-    writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
+    // // write queried blocks
+    // std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id); 
+    // writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
