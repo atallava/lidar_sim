@@ -99,6 +99,7 @@ add_library(lidar_sim SHARED
   src/EllipsoidModelSim.cpp
   src/TriangleModelSim.cpp
   src/SectionModelSim.cpp
+  src/SimDetail.cpp
 
   src/NearestNeighborSim.cpp
 

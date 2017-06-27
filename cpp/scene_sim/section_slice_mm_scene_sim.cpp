@@ -164,8 +164,6 @@ int main(int argc, char **argv)
     std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     PoseServer imu_pose_server(rel_path_poses_log);
 
-    exit(0);
-
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
     packet_id_sim_start = 50000;
@@ -180,6 +178,7 @@ int main(int argc, char **argv)
     std::vector<int> ground_triangle_blocks_queried;
     std::vector<std::vector<double> > sim_detail;
     size_t packet_array_step = 10; 
+
     for(size_t i = packet_id_sim_start; 
     	i < packet_id_sim_end; i += packet_array_step)
     {

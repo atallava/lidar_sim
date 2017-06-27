@@ -256,9 +256,25 @@ MeshModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     	std::vector<int> hit_flag_can;
 	int object_id = object_ids_to_sim[i];
 	
-    	std::tie(sim_pts_can, hit_flag_can) = 
+	std::tie(sim_pts_can, hit_flag_can) = 
     	    m_object_mesh_sims[object_id].simPtsGivenRays(ray_origin, ray_dirns);
-    	if (anyNonzeros(hit_flag_can))
+
+	// todo: delete
+    	// // todo: remove trycatch
+	// try
+	// {
+	// std::tie(sim_pts_can, hit_flag_can) = 
+    	//     m_object_mesh_sims[object_id].simPtsGivenRays(ray_origin, ray_dirns);
+	// }
+	// catch (const std::exception& e)
+	// {
+    	//     std::cout << "error" << std::endl;
+	//     std::cout << "object id: " << object_id << std::endl;
+	//     std::cout << e.what() << std::endl;
+    	//     exit(0);
+	// }
+    	
+	if (anyNonzeros(hit_flag_can))
     	    objects_hit.push_back(object_id);
 	
     	sim_pts_over_blocks.push_back(sim_pts_can);

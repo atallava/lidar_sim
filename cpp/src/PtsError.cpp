@@ -36,3 +36,5 @@ double PtsError::calcSymmetricError(const std::vector<std::vector<double> > &pts
 
     return error;
 }
+
+// void PtsError::calcRangeError(

@@ -6,6 +6,8 @@
 #include <lidar_sim/LaserUtils.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/NearestNeighborSim.h>
+#include <lidar_sim/SimDetail.h>
+#include <lidar_sim/VizUtils.h>
 
 using namespace lidar_sim;
 

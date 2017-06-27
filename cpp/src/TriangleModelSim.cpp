@@ -77,7 +77,21 @@ TriangleModelSim::calcTriIntersections(std::vector<double> ray_origin, std::vect
     Point_3_cgal pt_intersection;
     for(size_t i = 0; i < m_triangle_models.m_triangles.size(); ++i)
     {
-	CGAL::Object obj_intersection = intersection(ray_cgal, m_triangles_cgal[i]);
+	// todo: deal with trycatch
+	CGAL::Object obj_intersection;
+	try
+	{
+	    obj_intersection = intersection(ray_cgal, m_triangles_cgal[i]);
+	}
+	catch (const std::exception &e)
+	{
+	    std::cout << e.what() << std::endl;
+	    std::cout << "triangle vertex ids: " << std::endl;
+	    for(size_t j = 0; j < 3; ++j)
+		std::cout << m_triangles_cgal[i][j] << " ";
+	    std::cout << std::endl;
+    	    exit(0);
+	}
 
 	if(assign(pt_intersection, obj_intersection))
 	{
