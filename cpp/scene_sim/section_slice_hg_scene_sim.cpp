@@ -76,38 +76,54 @@ std::string genRelPathSection(int section_id)
     return ss.str();
 }
 
-std::string genRelPathSliceRealPts(int section_id)
+std::string genRelPathSliceRealPts(int section_id, int tag = -1)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/slice_real_pts.xyz";
+       << "/hg_sim/slice_real_pts";
+    if (tag == -1)
+	ss << ".xyz";
+    else
+	ss << "_" << tag << ".xyz";
 
     return ss.str();
 }
 
-std::string genRelPathSimPts(int section_id)
+std::string genRelPathSimPts(int section_id, int tag = -1)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/slice_sim_pts.xyz";
+       << "/hg_sim/slice_sim_pts";
+    if (tag == -1)
+	ss << ".xyz";
+    else
+	ss << "_" << tag << ".xyz";
 
     return ss.str();
 }
 
-std::string genRelPathSimDetail(int section_id)
+std::string genRelPathSimDetail(int section_id, int tag = -1)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/slice_sim_detail.txt";
+       << "/hg_sim/slice_sim_detail";
+    if (tag == -1)
+	ss << ".txt";
+    else
+	ss << "_" << tag << ".txt";
 
     return ss.str();
 }
 
-std::string genRelPathQueriedBlocks(int section_id)
+std::string genRelPathQueriedBlocks(int section_id, int tag = -1)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/slice_sim_queried_blocks.txt";
+       << "/hg_sim/slice_sim_queried_blocks";
+    if (tag == -1)
+	ss << ".txt";
+    else
+	ss << "_" << tag << ".txt";
 
     return ss.str();
 }
@@ -167,8 +183,8 @@ int main(int argc, char **argv)
 
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 50000; 
-    packet_id_sim_end = packet_id_sim_start + 20000; 
+    packet_id_sim_start = 0; 
+    packet_id_sim_end = 200000;
 
     // sim
     // loop over packets
@@ -178,7 +194,7 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     std::vector<std::vector<double> > sim_detail;
-    size_t packet_array_step = 100; 
+    size_t packet_array_step = 1; 
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
@@ -253,22 +269,23 @@ int main(int argc, char **argv)
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
-    // todo: uncomment us
-    // // write real pts
-    // std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id);
-    // writePtsToXYZFile(real_pts, rel_path_real_pts);
+    int tag = 4;
 
-    // // write sim pts
-    // std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
-    // writePtsToXYZFile(sim_pts, rel_path_sim_pts);
+    // write real pts
+    std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id, tag);
+    writePtsToXYZFile(real_pts, rel_path_real_pts);
 
-    // // write sim detail
-    // std::string rel_path_sim_detail = genRelPathSimDetail(section_sim_id); 
-    // writePtsToXYZFile(sim_detail, rel_path_sim_detail);
+    // write sim pts
+    std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id, tag);
+    writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
-    // // write queried blocks
-    // std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id); 
-    // writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
+    // write sim detail
+    std::string rel_path_sim_detail = genRelPathSimDetail(section_sim_id, tag); 
+    writePtsToXYZFile(sim_detail, rel_path_sim_detail);
+
+    // write queried blocks
+    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id, tag); 
+    writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

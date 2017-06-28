@@ -309,5 +309,7 @@ add_executable(section_slice_nbr_scene_sim scene_sim/section_slice_nbr_scene_sim
 # add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
 #   target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(eval_scene_sims scene_sim/eval_scene_sims.cpp)
+  target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 
