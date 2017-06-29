@@ -8,15 +8,17 @@ namespace lidar_sim {
     class PtsError {
     public:
 	PtsError();
-	// find pts in pts1 nearest to pts in pts2, and average the distances
+	// find pts in 1 nearest to pts in 2. pts1 is the 'reference'.
 	std::tuple<double, double>
-	    calcAsymmetricError(const std::vector<std::vector<double> > &pts1, 
-				const std::vector<std::vector<double> > &pts2);
+	    calcAsymmetricPcdError(const std::vector<std::vector<double> > &pts1, 
+				   const std::vector<std::vector<double> > &pts2);
 	// average of asymmetric error, calculated both ways
 	// todo: variance for this error?
-	double calcSymmetricError(const std::vector<std::vector<double> > &pts1, 
-				  const std::vector<std::vector<double> > &pts2);
-	void calcRangeError(const SimDetail &sim_detail);
+	double calcSymmetricPcdError(const std::vector<std::vector<double> > &pts1, 
+				     const std::vector<std::vector<double> > &pts2);
+	void dispPcdError(const std::vector<std::vector<double> > &pts1, 
+				    const std::vector<std::vector<double> > &pts2);
+	void dispRangeError(const SimDetail &sim_detail);
 
     private:
     };

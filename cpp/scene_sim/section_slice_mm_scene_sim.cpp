@@ -184,7 +184,7 @@ int main(int argc, char **argv)
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
     packet_id_sim_start = 0;
-    packet_id_sim_end = 200000;
+    packet_id_sim_end = section.m_packet_timestamps.size();
 
     // sim
     // loop over packets
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
     std::vector<int> objects_queried;
     std::vector<int> ground_triangle_blocks_queried;
     std::vector<std::vector<double> > sim_detail;
-    size_t packet_array_step = 1; 
+    size_t packet_array_step = 5; 
 
     for(size_t i = packet_id_sim_start; 
     	i < packet_id_sim_end; i += packet_array_step)
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
-    int tag = 4;
+    int tag = 42;
 
     // write real pts
     std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id, tag);

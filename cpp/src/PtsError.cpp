@@ -11,8 +11,8 @@ PtsError::PtsError()
 }
 
 std::tuple<double, double>
-PtsError::calcAsymmetricError(const std::vector<std::vector<double> > &pts1, 
-			      const std::vector<std::vector<double> > &pts2)
+PtsError::calcAsymmetricPcdError(const std::vector<std::vector<double> > &pts1, 
+				 const std::vector<std::vector<double> > &pts2)
 {
     std::vector<double> error_vec(pts2.size(), 0);
 
@@ -27,18 +27,32 @@ PtsError::calcAsymmetricError(const std::vector<std::vector<double> > &pts1,
     return calcVecMeanVar(pt_losses);
 }
 
-double PtsError::calcSymmetricError(const std::vector<std::vector<double> > &pts1, 
-				    const std::vector<std::vector<double> > &pts2)
+double PtsError::calcSymmetricPcdError(const std::vector<std::vector<double> > &pts1, 
+				       const std::vector<std::vector<double> > &pts2)
 {
     double error_12, error_21;
-    std::tie(error_12, std::ignore) = calcAsymmetricError(pts1, pts2);
-    std::tie(error_21, std::ignore) = calcAsymmetricError(pts2, pts1);
+    std::tie(error_12, std::ignore) = calcAsymmetricPcdError(pts1, pts2);
+    std::tie(error_21, std::ignore) = calcAsymmetricPcdError(pts2, pts1);
     double error = (error_12 + error_21)/2.0;
 
     return error;
 }
 
-void PtsError::calcRangeError(const SimDetail &sim_detail)
+void PtsError::dispPcdError(const std::vector<std::vector<double> > &pts1, 
+			    const std::vector<std::vector<double> > &pts2)
+{
+    double err_mean_12, err_mean_21;
+    double err_var_12, err_var_21;
+    std::tie(err_mean_12, err_var_12) = calcAsymmetricPcdError(pts1, pts2);
+    std::tie(err_mean_21, err_var_21) = calcAsymmetricPcdError(pts2, pts1);
+    double err_mean_sym = (err_mean_12 + err_mean_21)/2.0;
+
+    std::cout << "error 12. mean: " << err_mean_12 << " var: " << err_var_12 << std::endl;
+    std::cout << "error 21. mean: " << err_mean_21 << " var: " << err_var_21 << std::endl;
+    std::cout << "error mean sym: " << err_mean_sym << std::endl;
+}
+
+void PtsError::dispRangeError(const SimDetail &sim_detail)
 {
     size_t n_origins = sim_detail.m_ray_origins.size();
     std::vector<double> err_vec(n_origins, 0.0);
@@ -84,7 +98,7 @@ void PtsError::calcRangeError(const SimDetail &sim_detail)
 	}
 
 	std::tie(err_vec[i], std::ignore) = calcVecMeanVar(this_err_vec);
-	if (n_misses < n_real_pts)
+	if (n_misses < (int)n_real_pts)
 	    std::tie(err_vec_only_hits[i], std::ignore) = calcVecMeanVar(this_err_vec_only_hits);
 
 	n_misses_vec[i] = n_misses;
