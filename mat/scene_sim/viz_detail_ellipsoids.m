@@ -33,7 +33,7 @@ nonGroundFlag = (dists > thresh);
 nonGroundFlag = flipVecToRow(nonGroundFlag);
 
 %%
-detailIds = 12701:13301;
+detailIds = 21801:1:22701;
 
 [pts1,pts2] = deal([]);
 for i = 1:length(detailIds)
@@ -50,23 +50,37 @@ for i = 1:length(detailIds)
 end
 
 %% 
-modelNbrRadius = 1;
-ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,pts1,modelNbrRadius);
+modelNbrRadius = 3;
+
+box = [-126.5950  -74.5619; 272.7490  313.7880];
+ptsQuery = getPtsInBox(pts2,box);
+
+ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,ptsQuery,modelNbrRadius);
 
 %%
 plotStructVars = {'rayData','ellipsoidData','triModelData','pts','plotStruct'};
 clear(plotStructVars{:});
 
 ellipsoidData.ellipsoidModels = ellipsoidModelsNbr;
-% ellipsoidData.uniformAlpha = true;
+ellipsoidData.uniformAlpha = true;
 plotStruct.ellipsoidData = ellipsoidData;
 
 hfig = plotRangeData(plotStruct);
 
 %%
 figure(hfig); hold on;
-scatter3(pts1(:,1),pts1(:,2),pts1(:,3),'r.');
-scatter3(pts2(:,1),pts2(:,2),pts2(:,3),'b.');
+marker = '.';
+markerSize = 50;
+scatter3(pts1(:,1),pts1(:,2),pts1(:,3),'marker',marker,'sizeData',markerSize,'markerEdgeColor','r');
+scatter3(pts2(:,1),pts2(:,2),pts2(:,3),'marker',marker,'sizeData',markerSize,'markerEdgeColor','b');
 axis equal;
 xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
+
+%% view
+view(2);
+xlim([-126.5950  -74.5619]);
+ylim([272.7490  313.7880]);
+clear('box');
+box on;
+set(gca,'fontsize',15);
 

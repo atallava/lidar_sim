@@ -146,7 +146,7 @@ function hfig = plotRangeData(inputStruct)
             [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
             
             if ellipsoidUniformAlpha
-                thisAlpha = 0.5;
+                thisAlpha = 0.2;
             else
                 thisAlpha = mapHitProbToAlpha(thisHitProb);
             end
@@ -167,13 +167,14 @@ function hfig = plotRangeData(inputStruct)
         end
         
         if triUniformAlpha
-            faceVertexAlpha = ones(size(triModelData.tri,1),1)*0.5;
+            faceVertexAlpha = ones(size(triModelData.tri,1),1)*0.0;
         else
             faceVertexAlpha = flipVecToColumn(mapHitProbToAlpha(triModelData.hitProbVec));
         end
         
         mudBrownColor = [210 180 140]/255.0;
         saddleBrownColor = [139 69 19]/255.0;
+        darkGreenColor = [0 100 0]/255.0;
 %         trimesh(triModelData.tri(triIdsToPlot,:), ...
 %             triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3), ...
 %             'edgecolor',saddleBrownColor,'facecolor',mudBrownColor, ...
@@ -181,8 +182,8 @@ function hfig = plotRangeData(inputStruct)
         % for baseline meshes
         trimesh(triModelData.tri(triIdsToPlot,:), ...
             triModelData.ptsFit(:,1),triModelData.ptsFit(:,2),triModelData.ptsFit(:,3), ...
-            'edgecolor','g','facecolor','g', ...
-            'facealpha','flat','FaceVertexAlphaData',faceVertexAlpha);
+            'edgecolor','none','facecolor','g', ...
+            'facealpha',0.2,'FaceVertexAlphaData',faceVertexAlpha);
         hold on;
     end
     

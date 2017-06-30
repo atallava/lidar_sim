@@ -38,7 +38,7 @@ simDetailMm = simDetail;
 [membershipIdsMm,ptsRealMm,ptsSimMm,hitFlagMm] = unrollSimDetail(simDetailMm);
 
 %%
-detailIds = 40001:40301;
+detailIds = 21801:1:22701;
 
 [pts1,pts2,pts3] = deal([]);
 for i = 1:length(detailIds)
@@ -60,10 +60,13 @@ end
 
 %%
 figure; hold on;
-scatter3(pts1(:,1),pts1(:,2),pts1(:,3),'r');
-scatter3(pts2(:,1),pts2(:,2),pts2(:,3),'b');
-scatter3(pts3(:,1),pts3(:,2),pts3(:,3),'g');
+marker = '.';
+markerSize = 50;
+scatter3(pts1(:,1),pts1(:,2),pts1(:,3),'marker',marker,'sizeData',markerSize,'markerEdgeColor','r');
+scatter3(pts2(:,1),pts2(:,2),pts2(:,3),'marker',marker,'sizeData',markerSize,'markerEdgeColor','b');
+scatter3(pts3(:,1),pts3(:,2),pts3(:,3),'marker',marker,'sizeData',markerSize,'markerEdgeColor','g');
 axis equal;
 xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
 legend('real','hg','mm');
+view(2);
 
