@@ -1,4 +1,4 @@
-function ids = findNbrTriIds(triModels,pt,maxDist)
+function ids = findNbrTriIds(triModels,pts,maxDist)
     %FINDNBRTRIIDS
     %
     % ids = FINDNBRTRIIDS(triModels,pt,maxDist)
@@ -9,7 +9,8 @@ function ids = findNbrTriIds(triModels,pt,maxDist)
     %
     % ids       -
     
-    D = pdist2(triModels.ptsFit,pt);
+    D = pdist2(triModels.ptsFit,pts);
+    D = min(D,[],2);
     ptsFitNbrIds = find(D < maxDist);
     
     vertexFlags = zeros(size(triModels.tri,1),3);

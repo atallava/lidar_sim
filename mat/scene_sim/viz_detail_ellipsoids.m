@@ -1,22 +1,24 @@
+%% rel path helpers
 genRelPathHgSimDetail = @(sectionId,tag) ...
     sprintf('../data/sections/section_%02d/hg_sim/slice_sim_detail_%d', ...
-    sectionId,tag);
-
-genRelPathMmSimDetail = @(sectionId,tag) ...
-    sprintf('../data/sections/section_%02d/mesh_model_sim/slice_sim_detail_%d', ...
     sectionId,tag);
 
 genRelPathGroundPts = @(sectionId) ...
     sprintf('../data/sections/section_%02d/ground_segmentation/section_pts_%02d_ground', ...
     sectionId,sectionId);
 
-%%
+%% load 
 sectionId = 4;
 tag = 1;
 
+% ground pts
 relPathGroundPts = genRelPathGroundPts(sectionId);
 load(relPathGroundPts,'pts');
 ptsGroundRef = pts;
+
+% ellipsoids
+relPathEllipsoids = '../data/sections/section_04/hg_sim/object_ellipsoid_models.mat';
+load(relPathEllipsoids,'ellipsoidModels');
 
 %%
 relPathHgSimDetail = genRelPathHgSimDetail(sectionId,tag);
@@ -31,16 +33,9 @@ nonGroundFlag = (dists > thresh);
 nonGroundFlag = flipVecToRow(nonGroundFlag);
 
 %%
-relPathMmSimDetail = genRelPathMmSimDetail(sectionId,tag);
-load(relPathMmSimDetail,'simDetail');
-simDetailMm = simDetail;
+detailIds = 12701:13301;
 
-[membershipIdsMm,ptsRealMm,ptsSimMm,hitFlagMm] = unrollSimDetail(simDetailMm);
-
-%%
-detailIds = 21801:22701;
-
-[pts1,pts2,pts3] = deal([]);
+[pts1,pts2] = deal([]);
 for i = 1:length(detailIds)
     detailId = detailIds(i);
     ptIds = find(membershipIdsHg == detailId);
@@ -52,18 +47,26 @@ for i = 1:length(detailIds)
     flag = hitFlagHg(ptIds) & nonGroundFlag(ptIds);
     ptIdsHg = ptIds(flag);
     pts2 = [pts2; ptsSimHg(ptIdsHg,:)];
-    
-    flag = hitFlagMm(ptIds) & nonGroundFlag(ptIds);
-    ptIdsMm = ptIds(flag);
-    pts3 = [pts3; ptsSimMm(ptIdsMm,:)];
 end
 
+%% 
+modelNbrRadius = 1;
+ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,pts1,modelNbrRadius);
+
 %%
-figure; hold on;
-scatter3(pts1(:,1),pts1(:,2),pts1(:,3),'r');
-scatter3(pts2(:,1),pts2(:,2),pts2(:,3),'b');
-scatter3(pts3(:,1),pts3(:,2),pts3(:,3),'g');
+plotStructVars = {'rayData','ellipsoidData','triModelData','pts','plotStruct'};
+clear(plotStructVars{:});
+
+ellipsoidData.ellipsoidModels = ellipsoidModelsNbr;
+% ellipsoidData.uniformAlpha = true;
+plotStruct.ellipsoidData = ellipsoidData;
+
+hfig = plotRangeData(plotStruct);
+
+%%
+figure(hfig); hold on;
+scatter3(pts1(:,1),pts1(:,2),pts1(:,3),'r.');
+scatter3(pts2(:,1),pts2(:,2),pts2(:,3),'b.');
 axis equal;
 xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
-legend('real','hg','mm');
 

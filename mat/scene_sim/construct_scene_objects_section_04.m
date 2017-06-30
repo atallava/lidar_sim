@@ -36,6 +36,9 @@ load(relPathSceneAnnotation,'sceneAnnotation');
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
+% elements to sample from
+load('element_ids_to_sample_from','elementIdsToSampleFrom');
+
 %%
 trainSectionId = 3;
 genRelPathClassPrimitivesDir2 = @(className) ...
@@ -54,7 +57,8 @@ for i = 1:nObjects
     className = primitiveClasses{objectClass};
     % select a primitive
     % todo: this can be done better, by comparing obb, e.g.g
-    sampledElementId = randsample(elementIdsPerClass{objectClass},1);
+    sampledElementId = randsample(elementIdsToSampleFrom{objectClass},1);
+
     if ~primitiveClassIsPatch(objectClass)
         % load primitive
         relPathPrimitive = genRelPathPrimitive(trainSectionId,className,sampledElementId);

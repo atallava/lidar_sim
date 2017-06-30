@@ -1,4 +1,4 @@
-function triModelsNbr = createTriModelsNbr(triModels,pt,maxDist)
+function triModelsNbr = createTriModelsNbr(triModels,pts,maxDist)
     %CREATETRIMODELSNBR
     %
     % triModelsNbr = CREATETRIMODELSNBR(triModels,pt,maxDist)
@@ -9,7 +9,7 @@ function triModelsNbr = createTriModelsNbr(triModels,pt,maxDist)
     %
     % triModelsNbr -
     
-    ids = findNbrTriIds(triModels,pt,maxDist);
+    ids = findNbrTriIds(triModels,pts,maxDist);
     triModelsNbr = triModels;
     triModelsNbr.tri = triModels.tri(ids,:);
     triModelsNbr.hitProbVec = triModels.hitProbVec(ids);
