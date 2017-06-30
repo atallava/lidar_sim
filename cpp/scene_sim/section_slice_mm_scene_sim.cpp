@@ -194,7 +194,7 @@ int main(int argc, char **argv)
     std::vector<int> objects_queried;
     std::vector<int> ground_triangle_blocks_queried;
     std::vector<std::vector<double> > sim_detail;
-    size_t packet_array_step = 5; 
+    size_t packet_array_step = 3; 
 
     for(size_t i = packet_id_sim_start; 
     	i < packet_id_sim_end; i += packet_array_step)
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
-    int tag = 42;
+    int tag = 2;
 
     // write real pts
     std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id, tag);
