@@ -1,6 +1,6 @@
 %% rel path helpers
 genRelPathMmSimDetail = @(sectionId,tag) ...
-    sprintf('../data/sections/section_%02d/hg_sim/slice_sim_detail_%d', ...
+    sprintf('../data/sections/section_%02d/mesh_model_sim/slice_sim_detail_%d', ...
     sectionId,tag);
 
 genRelPathGroundPts = @(sectionId) ...
@@ -50,10 +50,10 @@ for i = 1:length(detailIds)
 end
 
 %% 
-modelNbrRadius = 3;
+modelNbrRadius = 5;
 
-box = [-126.5950  -74.5619; 272.7490  313.7880];
-ptsQuery = getPtsInBox(pts2,box);
+boxQuery = [-126.5950  -74.5619; 272.7490  313.7880];
+ptsQuery = getPtsInBox(pts2,boxQuery);
 
 sceneTriModelsNbr = createSceneTriModelsNbr(sceneTriModels,ptsQuery,modelNbrRadius);
 triModelsNbr = stitchTriModels(sceneTriModelsNbr);
@@ -81,6 +81,5 @@ xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
 view(2);
 xlim([-126.5950  -74.5619]);
 ylim([272.7490  313.7880]);
-clear box;
 box on;
 set(gca,'fontsize',15);
