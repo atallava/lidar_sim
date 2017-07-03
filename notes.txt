@@ -1,8 +1,5 @@
 board:
 
-* todos
-
-section slice mm scene sim
 
 --------------------------------------------------
 
@@ -33,6 +30,22 @@ analyze taylor data
 * brigthened image by contrast. how it works is a mystery to me.
 
 * scatter3 can handle about a max of 1e5 points smoothly. 
+
+* section number-name mapping
+1: loop A
+2: loop A
+3: rim stretch
+4: loop B
+5: loop B
+6: loop C
+7: loop C
+8: rim stretch
+9: loop D
+10: loop D
+11: loop C'
+12: rim stretch
+13: loop A
+14: loop A
 
 ------------------------------
 
