@@ -24,7 +24,7 @@ for j = 1:size(pts,1)
     [rayYawVec(j),rayPitchVec(j),~] = cart2sph(rayDirn(1),rayDirn(2),rayDirn(3));
 end
 
-%%
+%% yaw processing
 minYaw = min(rayYawVec);
 flag = (rayYawVec >= minYaw) & (rayYawVec <= minYaw + 1e-3);
 yawStart = mean(rayYawVec(flag));
@@ -50,7 +50,17 @@ for i = 1:nYaws
     yawVec(i) = mean(rayYawVec(flag));
 end
 
-%%
+%% pitch processing
+nRays = length(rayPitchVec);
+nPitch = length(pitchVec);
+rayPitchVec = flipVecToRow(rayPitchVec);
+mat1 = repmat(rayPitchVec,nPitch,1);
+pitchVec = flipVecToColumn(pitchVec);
+mat2 = repmat(pitchVec,1,nRays);
+dmat = abs(mat1-mat2);
+[~,pitchMembershipIds] = min(dmat,[],1);
+
+%% 
 figure; 
 marker = 'x';
 markerSizeData = 30;
@@ -76,4 +86,19 @@ xlabel('yaw (rad)'); ylabel('pitch (rad)');
 titleStr = sprintf('packet idx: %d',packetIdx);
 title(titleStr);
 
+%%
+figure;
+hold on;
+for i = 1:nRays
+    x = rayYawVec(i);
+    y = rayPitchVec(i);
+    textStr = sprintf('(%d,%d)',yawMembershipIds(i),pitchMembershipIds(i));
+    plot(x,y);
+    text(x,y,textStr);
+end
+plot(pitchXMat,pitchYMat,'r');
+plot(yawXMat,yawYMat,'r');
+xlabel('yaw (rad)'); ylabel('pitch (rad)');
+titleStr = sprintf('packet idx: %d',packetIdx);
+title(titleStr);
 
