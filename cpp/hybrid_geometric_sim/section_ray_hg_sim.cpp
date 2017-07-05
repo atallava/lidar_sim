@@ -23,7 +23,7 @@ std::string genRelPathTriangles(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground_triangles.txt";
 
     return ss.str();
@@ -33,7 +33,7 @@ std::string genRelPathEllipsoids(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
 
     return ss.str();
@@ -52,7 +52,7 @@ std::string genRelPathBlockNodeIdsGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/block_node_ids_ground.txt";
+       << "/hg_sim/block_node_ids_ground.txt";
 
     return ss.str();
 }
@@ -61,7 +61,7 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/block_node_ids_non_ground.txt";
+       << "/hg_sim/block_node_ids_non_ground.txt";
 
     return ss.str();
 }
@@ -88,7 +88,8 @@ std::string genRelPathSection(int section_id)
 std::string genRelPathModelsDir(int section_id)
 {
     std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim";
 
     return ss.str();
 }
@@ -143,9 +144,9 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > ray_dirns = wrapDataInVec(ray_dirn);
 
     std::vector<int> triangle_blocks_queried = 
-	sim.getPosnTriangleBlockMembership(ray_origin);
+    	sim.getPosnTriangleBlockMembership(ray_origin);
     std::vector<int> ellipsoid_blocks_queried = 
-	sim.getPosnEllipsoidBlockMembership(ray_origin);
+    	sim.getPosnEllipsoidBlockMembership(ray_origin);
 
     std::vector<std::vector<double> > sim_pts;
     std::vector<int> hit_flag;

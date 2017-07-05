@@ -128,6 +128,7 @@ namespace lidar_sim {
 	return vec_negated;
     }
 
+    // note: rebuilds index each time
     std::tuple<std::vector<int>, std::vector<double> >
     nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2)
     {

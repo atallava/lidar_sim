@@ -9,6 +9,7 @@
 #include <lidar_sim/EllipsoidModelSim.h>
 #include <lidar_sim/TriangleModelSim.h>
 #include <lidar_sim/LaserCalibParams.h>
+#include <lidar_sim/ModelingUtils.h>
 
 namespace lidar_sim {
     class SectionModelSim {
@@ -34,6 +35,7 @@ namespace lidar_sim {
 
 	std::vector<EllipsoidModelSim> m_ellipsoid_model_sims;
 	std::vector<TriangleModelSim> m_triangle_model_sims;
+	std::vector<EllipsoidModel> m_ellipsoid_models_all;
 	std::vector<std::vector<double> > m_imu_posn_nodes;
 	std::vector<std::vector<int> > m_block_node_ids_ground;
 	std::vector<std::vector<int> > m_block_node_ids_non_ground;
@@ -42,5 +44,6 @@ namespace lidar_sim {
     private:
 	double m_max_dist_to_node_for_membership;
 	bool m_deterministic_sim;
+	double m_ellipsoid_nn_radius;
     };
 }

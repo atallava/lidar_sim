@@ -157,8 +157,8 @@ add_library(lidar_sim SHARED
 # add_executable(transform_sections_to_world analyze_taylor_data/transform_sections_to_world.cpp)
 #   target_link_libraries(transform_sections_to_world lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(analyze_scanning_pattern analyze_taylor_data/analyze_scanning_pattern.cpp)
-  target_link_libraries(analyze_scanning_pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(analyze_scanning_pattern analyze_taylor_data/analyze_scanning_pattern.cpp)
+#   target_link_libraries(analyze_scanning_pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
 
@@ -254,8 +254,8 @@ add_executable(analyze_scanning_pattern analyze_taylor_data/analyze_scanning_pat
 # add_executable(poses_section_models_sim hybrid_geometric_sim/poses_section_models_sim.cpp)
 #   target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
  
-# add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
-#   target_link_libraries(section_ray_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
+  target_link_libraries(section_ray_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
 #   target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
