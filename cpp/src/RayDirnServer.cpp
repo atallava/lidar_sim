@@ -27,6 +27,8 @@ RayDirnServer::RayDirnServer()
     m_n_pattern_pitches = m_pattern_pitch_vec.size();
 
     m_n_pattern_yaws = 12;
+
+    m_min_pts_to_fit_detail = 75;
 }
 
 std::tuple<std::vector<double>, std::vector<double> >
@@ -121,6 +123,9 @@ std::tuple<std::vector<double>, std::vector<double>, std::vector<std::vector<dou
 RayDirnServer::fitDetailToPts(const std::vector<double> &origin, 
 			      const std::vector<std::vector<double> > &pts)
 {
+    if (pts.size() < (size_t)m_min_pts_to_fit_detail)
+	return defaultDetail(origin, pts);
+
     std::vector<double> ray_yaw_vec, ray_pitch_vec;
     std::tie(ray_yaw_vec, ray_pitch_vec) = getRayYawPitchVec(origin, pts);
     size_t n_rays = pts.size();
@@ -194,4 +199,15 @@ RayDirnServer::fitDetailToPts(const std::vector<double> &origin,
 	}
 
     return std::make_tuple(unrolled_pitches, unrolled_yaws, unrolled_pts, unrolled_hit_flag);
+}
+
+std::tuple<std::vector<double>, std::vector<double>, std::vector<std::vector<double> >, std::vector<int> >
+RayDirnServer::defaultDetail(const std::vector<double> &origin, 
+			     const std::vector<std::vector<double> > &pts)
+{
+    std::vector<double> ray_yaw_vec, ray_pitch_vec;
+    std::tie(ray_yaw_vec, ray_pitch_vec) = getRayYawPitchVec(origin, pts);
+    size_t n_rays = pts.size();
+    std::vector<int> hit_flag(n_rays, 1); // all are hits
+    return std::make_tuple(ray_pitch_vec, ray_yaw_vec, pts, hit_flag);
 }

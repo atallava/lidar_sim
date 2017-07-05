@@ -13,7 +13,7 @@ load('../data/laser_intrinsics','pitchVec');
 
 %%
 nPackets = length(section.packetIds);
-packetIdx = 12;
+packetIdx = 41;
 t = section.packetTimestamps(packetIdx);
 pts = getSectionPtsAtTime(section,t);
 rayOrigin = [0 0 0]; % since points are in laser frame
