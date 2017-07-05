@@ -31,6 +31,7 @@ pitchVec = [-30.67
     -10.67
     10.67]; % from spec sheet
 
+%%
 pitchVec = sort(pitchVec);
 pitchVec = deg2rad(pitchVec);
 

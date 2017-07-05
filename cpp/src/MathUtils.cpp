@@ -195,6 +195,18 @@ namespace lidar_sim {
 	return D;
     }
 
+    std::tuple<double, double, double> cart2sph(std::vector<double> vec)
+    {
+	double x = vec[0]; double y = vec[1]; double z = vec[2];
+
+	double theta = std::atan2(y, x);
+	double phi = std::atan2(z, 
+				std::sqrt(std::pow(x, 2.0) + std::pow(y, 2.0)));
+	double r = vectorNorm(vec);
+
+	return std::make_tuple(theta, phi, r);
+    }
+
     double euclideanDist(const std::vector<double> &pt1, const std::vector<double> &pt2)
     {
 	double dist = 0;

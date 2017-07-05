@@ -103,8 +103,6 @@ std::vector<double> SimDetail::getVecFromLine(const std::string line)
     return vec;
 }
 
-// std::string SimDetail::getStrFromVec(
-
 std::vector<std::vector<double> > SimDetail::getPtsFromLine(const std::string line)
 {
     std::vector<double> vec = getVecFromLine(line);
