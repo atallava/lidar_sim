@@ -23,7 +23,7 @@ std::string genRelPathTriangles(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground_triangles.txt";
 
     return ss.str();
@@ -33,7 +33,7 @@ std::string genRelPathEllipsoids(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
 
     return ss.str();
@@ -52,7 +52,7 @@ std::string genRelPathBlockNodeIdsGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/block_node_ids_ground.txt";
+       << "/hg_sim/block_node_ids_ground.txt";
 
     return ss.str();
 }
@@ -61,7 +61,7 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/block_node_ids_non_ground.txt";
+       << "/hg_sim/block_node_ids_non_ground.txt";
 
     return ss.str();
 }
@@ -80,7 +80,7 @@ std::string genRelPathSliceRealPts(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/slice_real_pts.xyz";
+       << "/hg_sim/slice_real_pts.xyz";
 
     return ss.str();
 }
@@ -89,7 +89,7 @@ std::string genRelPathSimPts(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/slice_hg_sim_pts.xyz";
+       << "/hg_sim/slice_sim_pts.xyz";
 
     return ss.str();
 }
@@ -98,7 +98,7 @@ std::string genRelPathSimDetail(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/slice_hg_sim_detail.txt";
+       << "/hg_sim/slice_sim_detail.txt";
 
     return ss.str();
 }
@@ -107,7 +107,7 @@ std::string genRelPathQueriedBlocks(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/slice_hg_sim_queried_blocks.txt";
+       << "/hg_sim/slice_sim_queried_blocks.txt";
 
     return ss.str();
 }
@@ -115,7 +115,8 @@ std::string genRelPathQueriedBlocks(int section_id)
 std::string genRelPathModelsDir(int section_id)
 {
     std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+       << "/hg_sim";
 
     return ss.str();
 }
@@ -152,7 +153,8 @@ int main(int argc, char **argv)
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
-    sim.setDeterministicSim(false);
+    // todo: set false
+    sim.setDeterministicSim(true);
 
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
     std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
@@ -177,19 +179,15 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     std::vector<std::vector<double> > sim_detail;
-    size_t packet_array_step = 10; // 100
+    size_t packet_array_step = 100; // 100
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
     	double t = section.m_packet_timestamps[i];
-	std::vector<double> this_sim_detail;
 
     	// pose, ray origin
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
-
-	// add ray origin to sim detail
-	this_sim_detail.insert(this_sim_detail.end(), ray_origin.begin(), ray_origin.end());
 
 	// packet pts
     	std::vector<std::vector<double> > this_pts = section.getPtsAtTime(t);
@@ -197,11 +195,6 @@ int main(int argc, char **argv)
     	// add to big list of real pts
     	real_pts.insert(real_pts.end(), this_pts.begin(), this_pts.end());
 
-	// add all pts to sim detail
-	for(size_t j = 0; j < this_pts.size(); ++j)
-	    this_sim_detail.insert(this_sim_detail.end(), 
-				   this_pts[j].begin(), this_pts[j].end());
-	
     	// ray dirns
 	// here is where you could alternately get directions from laser intrinsics
     	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
@@ -265,7 +258,7 @@ int main(int argc, char **argv)
     writePtsToXYZFile(sim_detail, rel_path_sim_detail);
 
     // write queried blocks
-    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id); "data/hg_sim_queried_blocks.txt";
+    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id); 
     writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

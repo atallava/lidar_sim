@@ -200,14 +200,10 @@ int main(int argc, char **argv)
     	i < packet_id_sim_end; i += packet_array_step)
     {
     	double t = section.m_packet_timestamps[i];
-    	std::vector<double> this_sim_detail;
 
     	// pose, ray origin
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
-
-    	// add ray origin to sim detail
-    	this_sim_detail.insert(this_sim_detail.end(), ray_origin.begin(), ray_origin.end());
 
     	// packet pts
     	std::vector<std::vector<double> > this_pts = section.getPtsAtTime(t);
@@ -215,11 +211,6 @@ int main(int argc, char **argv)
     	// add to big list of real pts
     	real_pts.insert(real_pts.end(), this_pts.begin(), this_pts.end());
 
-    	// add all pts to sim detail
-    	for(size_t j = 0; j < this_pts.size(); ++j)
-    	    this_sim_detail.insert(this_sim_detail.end(), 
-    				   this_pts[j].begin(), this_pts[j].end());
-	
     	// ray dirns
     	// here is where you could alternately get directions from laser intrinsics
     	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
