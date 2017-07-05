@@ -13,11 +13,12 @@ load('../data/laser_intrinsics','pitchVec');
 
 %%
 nPackets = length(section.packetIds);
-packetIdx = randsample(1:nPackets,1);
+packetIdx = 277;
 t = section.packetTimestamps(packetIdx);
 pts = getSectionPtsAtTime(section,t);
 rayOrigin = [0 0 0]; % since points are in laser frame
 
+%%
 [rayYawVec,rayPitchVec] = deal(zeros(1,size(pts,1)));
 for j = 1:size(pts,1)
     rayDirn = calcRayDirn(rayOrigin,pts(j,:));

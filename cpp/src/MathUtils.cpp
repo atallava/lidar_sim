@@ -207,6 +207,16 @@ namespace lidar_sim {
 	return std::make_tuple(theta, phi, r);
     }
 
+    std::vector<double> linspace(const double x, const double y, const int n)
+    {
+	double spacing = (y-x)/(n-1);
+	std::vector<double> vec(n, 0);
+	for (size_t i = 0; i < (size_t)n; ++i)
+	    vec[i] = x + i*spacing;
+
+	return vec;
+    }
+
     double euclideanDist(const std::vector<double> &pt1, const std::vector<double> &pt2)
     {
 	double dist = 0;

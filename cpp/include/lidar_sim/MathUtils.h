@@ -56,6 +56,9 @@ namespace lidar_sim {
     // mimicking matlab cart2sph
     std::tuple<double, double, double> cart2sph(std::vector<double> vec);
 
+    // mimicking matlab linspace
+    std::vector<double> linspace(const double x, const double y, const int n);
+
     // vec[id] = 1, rest 0
     std::vector<int> genLogicalVecFromIds(std::vector<int> ids, int vec_size);
 
