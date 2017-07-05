@@ -7,6 +7,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <lidar_sim/SimDetail.h>
+#include <lidar_sim/DataProcessingUtils.h>
 
 using namespace lidar_sim;
 
@@ -69,6 +70,25 @@ void SimDetail::load(const std::string rel_path_file)
 
 }
 
+void SimDetail::save(const std::string rel_path_sim_detail)
+{
+    std::ofstream file(rel_path_sim_detail);
+    std::cout << "Writing sim detail to: " << rel_path_sim_detail << std::endl;
+    
+    size_t n_poses = m_ray_origins.size();
+    for (size_t i = 0; i < n_poses; ++i)
+    {
+	file << getStrFromVec(m_ray_origins[i]);
+	file << getStrFromVec(
+	    convertArrayToVec(m_real_pts[i]));
+	file << getStrFromVec(
+	    convertArrayToVec(m_sim_pts[i]));
+	file << getStrFromVec(m_hit_flags[i]);
+    }
+
+    file.close();
+}
+
 std::vector<double> SimDetail::getVecFromLine(const std::string line)
 {
     std::istringstream iss(line);
@@ -82,6 +102,8 @@ std::vector<double> SimDetail::getVecFromLine(const std::string line)
 
     return vec;
 }
+
+// std::string SimDetail::getStrFromVec(
 
 std::vector<std::vector<double> > SimDetail::getPtsFromLine(const std::string line)
 {

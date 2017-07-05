@@ -16,6 +16,7 @@
 #include <lidar_sim/TriangleModelSim.h>
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/SectionModelSim.h>
+#include <lidar_sim/SimDetail.h>
 
 using namespace lidar_sim;
 
@@ -193,7 +194,7 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > real_pts;
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
-    std::vector<std::vector<double> > sim_detail;
+    SimDetail sim_detail;
     size_t packet_array_step = 5; 
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
@@ -241,16 +242,13 @@ int main(int argc, char **argv)
 
 	// add to sim detail
 	// ray origin
-	sim_detail.push_back(ray_origin);
+	sim_detail.m_ray_origins.push_back(ray_origin);
 	// real pts
-	sim_detail.push_back(
-	    convertArrayToVec(this_pts));	
+	sim_detail.m_real_pts.push_back(this_pts);
 	// sim pts
-	sim_detail.push_back(
-	    convertArrayToVec(this_sim_pts));
+	sim_detail.m_sim_pts.push_back(this_sim_pts);
 	// hit flag
-	sim_detail.push_back(
-	    convertIntVecToDoubleVec(this_hit_flag));
+	sim_detail.m_hit_flags.push_back(this_hit_flag);
     }
 
     // retain unique block ids
@@ -272,7 +270,7 @@ int main(int argc, char **argv)
 
     // write sim detail
     std::string rel_path_sim_detail = genRelPathSimDetail(section_sim_id, tag); 
-    writePtsToXYZFile(sim_detail, rel_path_sim_detail);
+    sim_detail.save(rel_path_sim_detail);
 
     // write queried blocks
     std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id, tag); 

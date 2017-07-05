@@ -8,6 +8,7 @@ namespace lidar_sim {
 	SimDetail();
 	SimDetail(const std::string rel_path_file);
 	void load(const std::string rel_path_sim_detail);
+	void save(const std::string rel_path_sim_detail);
 
 	typedef std::vector<std::vector<double> > Pts;
 

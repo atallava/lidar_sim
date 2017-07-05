@@ -99,6 +99,17 @@ namespace lidar_sim {
     }
 
     template<typename T>
+	std::string getStrFromVec(const std::vector<T> &vec)
+    {
+	std::ostringstream ss;
+	for (size_t i = 0; i < (vec.size()-1); ++i)
+	    ss << vec[i] << " ";
+	ss << vec.back() << std::endl;
+
+	return ss.str();
+    }
+
+    template<typename T>
 	std::vector<std::vector<T> > subsampleArray(const std::vector<std::vector<T> > &array,
 	    int subsample_factor = 10)
     {
