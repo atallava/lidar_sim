@@ -21,11 +21,12 @@ RayDirnServer::RayDirnServer()
     std::sort(pitch_vec.begin(), pitch_vec.end());
     // convert to rad
     for (size_t i = 0; i < pitch_vec.size(); ++i)
-	pitch_vec[i] *= 180/M_PI;
+	pitch_vec[i] *= M_PI/180;
 
     m_pattern_pitch_vec = pitch_vec;
+    m_n_pattern_pitches = m_pattern_pitch_vec.size();
 
-    m_n_pattern_yaw_vec = 12;
+    m_n_pattern_yaws = 12;
 }
 
 std::tuple<std::vector<double>, std::vector<double> >
@@ -77,13 +78,120 @@ std::vector<double> RayDirnServer::getPatternYawVec(const std::vector<double> &r
 	logicalSubsetArray(ray_yaw_vec, flag_max));
 
     // initial estimate
-    std::vector<double> pattern_yaw_vec = linspace(pattern_yaw_start, pattern_yaw_end, m_n_pattern_yaw_vec);
+    std::vector<double> pattern_yaw_vec = linspace(pattern_yaw_start, pattern_yaw_end, m_n_pattern_yaws);
 
-    // todo: delete me
-    std::cout << "pattern yaw start, end: " << pattern_yaw_start << " " << pattern_yaw_end << std::endl;
-    std::cout << "pattern yaw vec: " << std::endl;
-    dispVec(pattern_yaw_vec);
-    
+    // map each point to closest yaw
+    std::vector<double> yaw_membership_ids(n_rays, 0);
+    for (size_t i = 0; i < n_rays; ++i)
+    {
+	std::vector<double> dists(m_n_pattern_yaws, 0);
+	for (size_t j = 0; j < (size_t)m_n_pattern_yaws; ++j)
+	    dists[j] = std::abs(ray_yaw_vec[i] - pattern_yaw_vec[j]);
+	
+	auto min_it = std::min_element(dists.begin(), dists.end());
+	size_t min_posn = std::distance(dists.begin(), min_it);
+	
+	yaw_membership_ids[i] = min_posn;
+    }
+   
+    // update pattern yaws
+    for (size_t i = 0; i < (size_t)m_n_pattern_yaws; ++i)
+    {
+	std::vector<double> this_bucket_yaws;
+	for (size_t j = 0; j < n_rays; ++j)
+	    if (yaw_membership_ids[j] == i)
+		this_bucket_yaws.push_back(ray_yaw_vec[j]);
+	
+	if (this_bucket_yaws.size() > 0)
+	    std::tie(pattern_yaw_vec[i], std::ignore) = 
+		calcVecMeanVar(this_bucket_yaws);
+    }
+
+    // // todo: delete me
+    // std::cout << "pattern yaw start, end: " << pattern_yaw_start << " " << pattern_yaw_end << std::endl;
+    // std::cout << "init pattern yaw vec: " << std::endl;
+    // dispVec(linspace(pattern_yaw_start, pattern_yaw_end, m_n_pattern_vec));
+    // std::cout << "yaw membership ids: " << std::endl;
+    // dispVec(yaw_membership_ids);
+
     return pattern_yaw_vec;
 }
 
+std::tuple<std::vector<double>, std::vector<double>, std::vector<std::vector<double> >, std::vector<int> >
+RayDirnServer::fitDetailToPts(const std::vector<double> &origin, 
+			      const std::vector<std::vector<double> > &pts)
+{
+    std::vector<double> ray_yaw_vec, ray_pitch_vec;
+    std::tie(ray_yaw_vec, ray_pitch_vec) = getRayYawPitchVec(origin, pts);
+    size_t n_rays = pts.size();
+
+    std::vector<double> pattern_yaw_vec = getPatternYawVec(ray_yaw_vec);
+
+    // yaw membership ids
+    std::vector<double> yaw_membership_ids(n_rays, 0);
+    for (size_t i = 0; i < n_rays; ++i)
+    {
+	std::vector<double> dists(m_n_pattern_yaws, 0);
+	for (size_t j = 0; j < (size_t)m_n_pattern_yaws; ++j)
+	    dists[j] = std::abs(ray_yaw_vec[i] - pattern_yaw_vec[j]);
+	
+	auto min_it = std::min_element(dists.begin(), dists.end());
+	size_t min_posn = std::distance(dists.begin(), min_it);
+	
+	yaw_membership_ids[i] = min_posn;
+    }
+   
+
+    // pitch membership ids
+    std::vector<double> pitch_membership_ids(n_rays, 0);
+    for (size_t i = 0; i < n_rays; ++i)
+    {
+	std::vector<double> dists(m_n_pattern_pitches, 0);
+	for (size_t j = 0; j < (size_t)m_n_pattern_pitches; ++j)
+	    dists[j] = std::abs(ray_pitch_vec[i] - m_pattern_pitch_vec[j]);
+	
+	auto min_it = std::min_element(dists.begin(), dists.end());
+	size_t min_posn = std::distance(dists.begin(), min_it);
+	
+	pitch_membership_ids[i] = min_posn;
+    }
+   
+
+    size_t n_unrolled_pts = m_n_pattern_pitches*m_n_pattern_yaws;
+    std::vector<double> unrolled_yaws(n_unrolled_pts, 0);
+    std::vector<double> unrolled_pitches(n_unrolled_pts, 0);
+    std::vector<std::vector<double> > unrolled_pts(n_unrolled_pts, 
+						   std::vector<double>(3, 0));
+    std::vector<int> unrolled_hit_flag(n_unrolled_pts, 0);
+
+    size_t count = 0;
+    for (size_t i = 0; i < (size_t)m_n_pattern_yaws; ++i)
+	for (size_t j = 0; j < (size_t)m_n_pattern_pitches; ++j)
+	{
+	    unrolled_yaws[count] = pattern_yaw_vec[i];
+	    unrolled_pitches[count] = m_pattern_pitch_vec[j];
+
+	    // does any point belong here
+	    std::vector<int> ids;
+	    for (size_t k = 0; k < pts.size(); ++k)
+	    {
+		bool condn1 = (yaw_membership_ids[k] == i);
+		bool condn2 = (pitch_membership_ids[k] == j);
+		if (condn1 && condn2)
+		    ids.push_back(k);
+	    }
+	    
+	    // if no point belongs here, hit flag = 0
+	    if (ids.empty())
+		unrolled_hit_flag[count] = 0;
+	    else
+	    {
+		size_t id = ids[0];
+		unrolled_hit_flag[count] = 1;
+		unrolled_pts[count] = pts[id];
+	    }
+	    count ++;
+	}
+
+    return std::make_tuple(unrolled_pitches, unrolled_yaws, unrolled_pts, unrolled_hit_flag);
+}

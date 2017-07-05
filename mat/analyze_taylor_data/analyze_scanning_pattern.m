@@ -13,7 +13,7 @@ load('../data/laser_intrinsics','pitchVec');
 
 %%
 nPackets = length(section.packetIds);
-packetIdx = 277;
+packetIdx = 12;
 t = section.packetTimestamps(packetIdx);
 pts = getSectionPtsAtTime(section,t);
 rayOrigin = [0 0 0]; % since points are in laser frame
@@ -60,6 +60,26 @@ pitchVec = flipVecToColumn(pitchVec);
 mat2 = repmat(pitchVec,1,nRays);
 dmat = abs(mat1-mat2);
 [~,pitchMembershipIds] = min(dmat,[],1);
+
+%% unrolled stuff
+count = 1;
+nUnrolled = length(yawVec)*length(pitchVec);
+[unrolledYaw,unrolledPitch,unrolledPts,unrolledHitFlag] = deal([]);
+for i = 1:length(yawVec)
+    for j = 1:length(pitchVec)
+        unrolledYaw(count) = yawVec(i);
+        unrolledPitch(count) = pitchVec(j);
+        id = find((pitchMembershipIds == j) & (yawMembershipIds == i));
+        if isempty(id)
+            unrolledHitFlag(count) = 0;
+            unrolledPts(count,:) = zeros(1,3);
+        else
+            unrolledHitFlag(count) = 1;
+            unrolledPts(count,:) = pts(id,:);
+        end
+        count = count + 1;
+    end
+end
 
 %% 
 figure; 
