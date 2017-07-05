@@ -18,7 +18,7 @@ std::string genRelPathSectionPts(int section_id)
 {
     std::ostringstream ss;
     ss << "../data/taylorJune2014/sections/world_frame/section_pts_"
-       << std::setw(2) << std::setfill('0') << section_id << "_world_frame_subsampled.xyz";
+       << std::setw(2) << std::setfill('0') << section_id << "_world_frame.xyz";
 
     return ss.str();
 }
@@ -26,8 +26,8 @@ std::string genRelPathSectionPts(int section_id)
 std::string genRelPathSubsampledPts(int section_id)
 {
     std::ostringstream ss;
-    ss << "data/section_pts_"
-       << std::setw(2) << std::setfill('0') << section_id << "_world_frame_subsampled_1e5.xyz";
+    ss << "../data/taylorJune2014/sections/world_frame/section_pts_"
+       << std::setw(2) << std::setfill('0') << section_id << "_subsampled.xyz";
 
     return ss.str();
 }
@@ -35,20 +35,21 @@ std::string genRelPathSubsampledPts(int section_id)
 int main() {
     clock_t start_time = clock();
 
-    int section_id = 3;
-    int max_pts = 1e5;
+    std::vector<int> section_ids;
+    for (size_t i = 1; i <= 14; ++i) 
+	section_ids.push_back(i);
 
-    //input file path
-    std::string rel_path_file = genRelPathSectionPts(section_id);
+    int subsample_factor = 30;
 
-    // calculate subsample factor
-    int num_pts = getNumLinesInFile(rel_path_file);
-    int subsample_factor = floor(num_pts/max_pts);
+    for (size_t i = 0; i < section_ids.size(); ++i)
+    {
+	int section_id = section_ids[i];
 
-    std::string rel_path_file_subsampled = genRelPathSubsampledPts(section_id);
+	std::string rel_path_file = genRelPathSectionPts(section_id);
+	std::string rel_path_file_subsampled = genRelPathSubsampledPts(section_id);
 
-    // subsample
-    subsampleFile(rel_path_file, rel_path_file_subsampled, subsample_factor);
+	subsampleFile(rel_path_file, rel_path_file_subsampled, subsample_factor);
+    }
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
