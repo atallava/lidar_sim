@@ -13,7 +13,7 @@ using namespace lidar_sim;
 SectionModelSim::SectionModelSim() :
     m_max_dist_to_node_for_membership(100), 
     m_deterministic_sim(false),
-    m_ellipsoid_nn_radius(5);
+    m_ellipsoid_nn_radius(5)
 {    
 }
 
@@ -314,21 +314,21 @@ std::vector<int> SectionModelSim::createEllipsoidModelSimNbr(const std::vector<d
 	nodes_along_ray.push_back(node);
     }
     
-    // nn for each node
-    std::vector<std::vector<int> > nn_ids;
-    std::vector<std::vector<double> > nn_dists;
-    int n_ellipsoids = m_ellipsoid_models_all.size();
-    int num_nbrs = std::min(1000, n_objects);
-    std::tie(nn_ids, nn_dists) = nearestNeighbors(m_object_centroids, nodes_along_ray, num_nbrs);
+    // // nn for each node
+    // std::vector<std::vector<int> > nn_ids;
+    // std::vector<std::vector<double> > nn_dists;
+    // int n_ellipsoids = m_ellipsoid_models_all.size();
+    // int num_nbrs = std::min(1000, n_objects);
+    // std::tie(nn_ids, nn_dists) = nearestNeighbors(m_object_centroids, nodes_along_ray, num_nbrs);
     
-    // object ids
+    // // object ids
     std::vector<int> object_ids;
-    for(size_t i = 0; i < n_nodes; ++i)
-	for(size_t j = 0; j < (size_t)num_nbrs; ++j)
-	    if (nn_dists[i][j] <= m_object_nn_radius)
-		object_ids.push_back(nn_ids[i][j]);
-    // retain unique ids
-    object_ids = getUniqueSortedVec(object_ids);
+    // for(size_t i = 0; i < n_nodes; ++i)
+    // 	for(size_t j = 0; j < (size_t)num_nbrs; ++j)
+    // 	    if (nn_dists[i][j] <= m_object_nn_radius)
+    // 		object_ids.push_back(nn_ids[i][j]);
+    // // retain unique ids
+    // object_ids = getUniqueSortedVec(object_ids);
 
     // debug
     // std::cout << "dists along ray" << std::endl;

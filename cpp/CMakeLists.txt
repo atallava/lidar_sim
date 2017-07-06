@@ -92,6 +92,7 @@ add_library(lidar_sim SHARED
   src/ClusteringUtils.cpp
   src/ModelingUtils.cpp
   src/RayDirnServer.cpp
+  src/FlannDatasetWrapper.cpp
 
   src/SectionLoader.cpp
   src/GeometricSegmenter.cpp
