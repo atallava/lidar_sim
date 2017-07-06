@@ -178,7 +178,7 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     std::vector<HitFlag> hit_flag_over_blocks;
 
     // todo: clean this up
-    int ellipsoid_choice = 0;
+    int ellipsoid_choice = 1;
 
     if (ellipsoid_choice == 0)
     {

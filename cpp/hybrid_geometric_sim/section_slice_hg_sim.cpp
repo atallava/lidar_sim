@@ -169,8 +169,8 @@ int main(int argc, char **argv)
 
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 50000; // 40000 // 50000
-    packet_id_sim_end = packet_id_sim_start + 10000; // 20000
+    packet_id_sim_start = 50000; // 40000 
+    packet_id_sim_end = packet_id_sim_start + 20000; // 20000
 
     // sim
     // loop over packets
