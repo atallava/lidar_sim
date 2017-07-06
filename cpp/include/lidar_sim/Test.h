@@ -17,5 +17,6 @@ namespace lidar_sim {
 	bool testVizEllipsoid();
 	bool testGetEllipseTransform();
 	bool testFlannDatasetWrapper();
+	bool testEllipsoidSimNbrServer();
     };
 }

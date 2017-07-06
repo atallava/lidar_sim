@@ -17,12 +17,12 @@
 using namespace lidar_sim;
 
 EllipsoidSimNbrServer::EllipsoidSimNbrServer() :
-    m_ellipsoid_nn_radius(5)
+    m_ellipsoid_nn_radius(2)
 {
 }
 
 EllipsoidSimNbrServer::EllipsoidSimNbrServer(const std::vector<EllipsoidModel> &ellipsoid_models) :
-    m_ellipsoid_nn_radius(5)
+    m_ellipsoid_nn_radius(2) 
 {
     setEllipsoidModels(ellipsoid_models);
 }
@@ -57,13 +57,17 @@ EllipsoidModelSim EllipsoidSimNbrServer::createSim(const std::vector<std::vector
 			  ids[i].begin(), ids[i].end());
     unique_ids = getUniqueSortedVec(unique_ids);
 
+    // debug
+    // std::cout << "unique ids: " << std::endl;
+    // dispVec(unique_ids);
+
     std::vector<EllipsoidModel> ellipsoids_nbr;
     for (size_t i = 0; i < unique_ids.size(); ++i)
     {
 	int id = unique_ids[i];
 	ellipsoids_nbr.push_back(m_ellipsoid_models[id]);
     }
-    
+
     return createSimGivenEllipsoids(ellipsoids_nbr);
 }
 
@@ -114,6 +118,10 @@ std::vector<std::vector<double> > EllipsoidSimNbrServer::getNodesAlongRay(const 
 
 	nodes_along_ray.push_back(node);
     }
+
+    // todo: debug
+    // std::cout << "nodes along ray: " << std::endl;
+    // dispMat(nodes_along_ray);
     
     return nodes_along_ray;
 }

@@ -1,5 +1,5 @@
 function saveEllipsoidModels(relPathFile,ellipsoidModels)
-    %SAVEELLIPSOIDMODELS
+    %SAVEELLIPSOIDMODELS Save in form for cpp sim.
     %
     % SAVEELLIPSOIDMODELS(relPathFile,ellipsoidModels)
     %

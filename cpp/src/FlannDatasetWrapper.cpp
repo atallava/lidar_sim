@@ -17,8 +17,8 @@
 using namespace lidar_sim;
 
 FlannDatasetWrapper::FlannDatasetWrapper() :
-    m_n_kd_trees(10),
-    m_n_checks(100)
+    m_n_kd_trees(10), 
+    m_n_checks(500) 
 {
     uint64_t t = std::chrono::duration_cast<std::chrono::nanoseconds>
 	(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -86,7 +86,8 @@ FlannDatasetWrapper::radiusSearch(const std::vector<std::vector<double> > &pts, 
     
     // load index
     flann::Index<flann::L2<double> > index(m_dataset_flann, flann::SavedIndexParams(m_rel_path_index));
-    index.radiusSearch(queries, indices, dists, radius, flann::SearchParams(m_n_checks));
+    // note: since using L2 distance, raising radius to pow 2 
+    index.radiusSearch(queries, indices, dists, std::pow(radius, 2.0), flann::SearchParams(m_n_checks));
 
     // flann returns squared distances
     for(size_t i = 0; i < dists.size(); ++i)

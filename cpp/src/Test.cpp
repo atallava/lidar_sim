@@ -29,6 +29,7 @@
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/FlannDatasetWrapper.h>
+#include <lidar_sim/EllipsoidSimNbrServer.h>
 
 using namespace lidar_sim;
 
@@ -358,6 +359,28 @@ bool Test::testFlannDatasetWrapper()
     dispMat(ids);
     std::cout << "dists: " << std::endl;
     dispMat(dists);
+
+    return true;
+}
+
+bool Test::testEllipsoidSimNbrServer()
+{
+    std::string rel_path_ellipsoids = "data/ellipsoid_models_for_sim_nbr.txt";
+    std::vector<EllipsoidModel> ellipsoid_models = loadEllipsoidModelsFromFile(rel_path_ellipsoids);
+    EllipsoidSimNbrServer ellipsoid_sim_nbr_server(ellipsoid_models);
+
+    std::vector<double> pt{-615.898,463.162,-7.0217};
+    ellipsoid_sim_nbr_server.createSim(pt);
+
+    std::vector<std::vector<double> > pts{
+	{-615.068,451.88,-3.1401},
+	{-612.29,452.183,-5.3175},
+	{-615.393,455.45,-7.5108}};
+    ellipsoid_sim_nbr_server.createSim(pts);
+
+    std::vector<double> ray_origin{-615.898,463.162,-7.0217};
+    std::vector<double> ray_dirn{0.16466,-0.91458,0.36937};
+    ellipsoid_sim_nbr_server.createSim(ray_origin, ray_dirn);
 
     return true;
 }
