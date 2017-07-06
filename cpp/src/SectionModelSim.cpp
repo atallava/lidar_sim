@@ -12,8 +12,7 @@ using namespace lidar_sim;
 
 SectionModelSim::SectionModelSim() :
     m_max_dist_to_node_for_membership(100), 
-    m_deterministic_sim(false),
-    m_ellipsoid_nn_radius(5)
+    m_deterministic_sim(false)
 {    
 }
 
@@ -287,60 +286,3 @@ void SectionModelSim::setDeterministicSim(const bool choice)
 	m_ellipsoid_model_sims[i].setDeterministicSim(m_deterministic_sim);
 }
 
-std::vector<int> SectionModelSim::createEllipsoidModelSimNbr(const std::vector<double> &ray_origin, 
-							     const std::vector<double> &ray_dirn)
-{
-    // dists along ray
-    double max_range = m_laser_calib_params.intrinsics.max_range;
-    std::vector<double> dists_along_ray;
-    double walker = m_laser_calib_params.intrinsics.min_range;
-    while (walker < max_range)
-    {
-	dists_along_ray.push_back(walker);
-	walker += m_ellipsoid_nn_radius;
-    }
-    dists_along_ray.push_back(max_range);
-    
-    // nodes along ray
-    std::vector<std::vector<double> > nodes_along_ray;
-    size_t n_nodes = dists_along_ray.size();
-    for(size_t i = 0; i < n_nodes; ++i)
-    {
-	double dist_along_ray = dists_along_ray[i];
-	std::vector<double> node(3,0);
-	for(size_t j = 0; j < 3; ++j)
-	    node[j] = ray_origin[j] + dist_along_ray*ray_dirn[j];
-
-	nodes_along_ray.push_back(node);
-    }
-    
-    // // nn for each node
-    // std::vector<std::vector<int> > nn_ids;
-    // std::vector<std::vector<double> > nn_dists;
-    // int n_ellipsoids = m_ellipsoid_models_all.size();
-    // int num_nbrs = std::min(1000, n_objects);
-    // std::tie(nn_ids, nn_dists) = nearestNeighbors(m_object_centroids, nodes_along_ray, num_nbrs);
-    
-    // // object ids
-    std::vector<int> object_ids;
-    // for(size_t i = 0; i < n_nodes; ++i)
-    // 	for(size_t j = 0; j < (size_t)num_nbrs; ++j)
-    // 	    if (nn_dists[i][j] <= m_object_nn_radius)
-    // 		object_ids.push_back(nn_ids[i][j]);
-    // // retain unique ids
-    // object_ids = getUniqueSortedVec(object_ids);
-
-    // debug
-    // std::cout << "dists along ray" << std::endl;
-    // dispVec(dists_along_ray);
-    // std::cout << "nodes along ray" << std::endl;
-    // dispMat(nodes_along_ray);
-    // std::cout << "nn ids" << std::endl;
-    // dispMat(nn_ids);
-    // std::cout << "nn dists" << std::endl;
-    // dispMat(nn_dists);
-    // std::cout << "obj ids" << std::endl;
-    // dispVec(object_ids);
-
-    return object_ids;
-}

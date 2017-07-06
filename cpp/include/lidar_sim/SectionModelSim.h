@@ -32,8 +32,6 @@ namespace lidar_sim {
 	    simPtsGivenRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
 
 	void setDeterministicSim(const bool choice);
-	std::vector<int> createEllipsoidModelSimNbr(const std::vector<double> &ray_origin, 
-						    const std::vector<double> &ray_dirn);
 
 	std::vector<EllipsoidModelSim> m_ellipsoid_model_sims;
 	std::vector<TriangleModelSim> m_triangle_model_sims;
@@ -46,6 +44,5 @@ namespace lidar_sim {
     private:
 	double m_max_dist_to_node_for_membership;
 	bool m_deterministic_sim;
-	double m_ellipsoid_nn_radius;
     };
 }

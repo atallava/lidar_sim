@@ -102,6 +102,7 @@ add_library(lidar_sim SHARED
   src/TriangleModelSim.cpp
   src/SectionModelSim.cpp
   src/SimDetail.cpp
+  src/EllipsoidSimNbrServer.cpp
 
   src/NearestNeighborSim.cpp
 
@@ -129,9 +130,8 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${TESTS_SOURCES} )
 
-add_executable(run_tests tests/run_tests.cpp)
-  target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
+# add_executable(run_tests tests/run_tests.cpp)
+#   target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
 

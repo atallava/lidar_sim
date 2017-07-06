@@ -7,6 +7,7 @@
 namespace lidar_sim {
     class FlannDatasetWrapper {
     public:
+	FlannDatasetWrapper();
 	FlannDatasetWrapper(const std::vector<std::vector<double> > &dataset);
 	~FlannDatasetWrapper();
 

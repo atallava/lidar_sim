@@ -16,6 +16,18 @@
 
 using namespace lidar_sim;
 
+FlannDatasetWrapper::FlannDatasetWrapper() :
+    m_n_kd_trees(10),
+    m_n_checks(100)
+{
+    uint64_t t = std::chrono::duration_cast<std::chrono::nanoseconds>
+	(std::chrono::steady_clock::now().time_since_epoch()).count();
+
+    std::ostringstream ss;
+    ss << "flann_index_" << t;
+    m_rel_path_index = ss.str();
+}
+
 FlannDatasetWrapper::FlannDatasetWrapper(const std::vector<std::vector<double> > &dataset) :
     m_n_kd_trees(10),
     m_n_checks(100)
