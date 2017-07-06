@@ -154,7 +154,8 @@ int main(int argc, char **argv)
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
-    sim.setDeterministicSim(false);
+    // todo: set to false
+    sim.setDeterministicSim(true);
 
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
     std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
@@ -168,7 +169,7 @@ int main(int argc, char **argv)
 
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 50000; // 40000
+    packet_id_sim_start = 1000; // 40000 // 50000
     packet_id_sim_end = packet_id_sim_start + 10000; // 20000
 
     // sim
@@ -179,7 +180,7 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     SimDetail sim_detail;
-    size_t packet_array_step = 100; // 100
+    size_t packet_array_step = 1000; // 100
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {

@@ -19,6 +19,7 @@ SectionModelSim::SectionModelSim() :
 // load ellipsoid model blocks
 void SectionModelSim::loadEllipsoidModelBlocks(const std::vector<std::string> &rel_path_model_blocks)
 {
+    std::vector<EllipsoidModel> ellipsoid_models_all;
     for(size_t i = 0; i < rel_path_model_blocks.size(); ++i)
     {    
 	EllipsoidModelSim sim;
@@ -26,11 +27,13 @@ void SectionModelSim::loadEllipsoidModelBlocks(const std::vector<std::string> &r
 	sim.setLaserCalibParams(m_laser_calib_params);
 	sim.setDeterministicSim(m_deterministic_sim);
 
-	m_ellipsoid_models_all.insert(m_ellipsoid_models_all.end(),
-				      sim.m_ellipsoid_models.begin(), sim.m_ellipsoid_models.end());
+	ellipsoid_models_all.insert(ellipsoid_models_all.end(),
+				    sim.m_ellipsoid_models.begin(), sim.m_ellipsoid_models.end());
 
 	m_ellipsoid_model_sims.push_back(sim);
     }
+
+    m_ellipsoid_sim_nbr_server.setEllipsoidModels(ellipsoid_models_all);
 }
 
 // load triangle model blocks
@@ -174,35 +177,49 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     std::vector<SimPts> sim_pts_over_blocks;
     std::vector<HitFlag> hit_flag_over_blocks;
 
-    // sim over ellipsoid blocks
-    std::vector<int> ellipsoid_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_non_ground);
-    std::vector<int> ellipsoid_blocks_hit;
-    for(size_t i = 0; i < ellipsoid_blocks_to_sim.size(); ++i)
-    {
-    	std::vector<std::vector<double> > sim_pts_can;
-    	std::vector<int> hit_flag_can;
-    	int block_id = ellipsoid_blocks_to_sim[i];
-    	try
-    	{	
-    	    // block_id - 1, since blocks are indexed starting 1
-    	    std::tie(sim_pts_can, hit_flag_can) = 
-    		m_ellipsoid_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
-    	}
-    	catch (const std::exception& e)
-    	{
-    	    std::cout << "error" << std::endl;
-    	    std::cout << block_id << std::endl;
-    	    exit(0);
-    	}
-    	if (anyNonzeros(hit_flag_can))
-    	    ellipsoid_blocks_hit.push_back(block_id);
-	
-    	sim_pts_over_blocks.push_back(sim_pts_can);
-    	hit_flag_over_blocks.push_back(hit_flag_can);
-    }
+    // todo: clean this up
+    int ellipsoid_choice = 0;
 
-    // one 'block' will just be the local ellipsoid model sim
-    // EllipsoidModelSim ellipsoid_model_sim_nbr = createEllipsoidModelSimNbr(ray_origin, ray_dirns);
+    if (ellipsoid_choice == 0)
+    {
+	// sim over ellipsoid blocks
+	std::vector<int> ellipsoid_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_non_ground);
+	std::vector<int> ellipsoid_blocks_hit;
+	for(size_t i = 0; i < ellipsoid_blocks_to_sim.size(); ++i)
+	{
+	    std::vector<std::vector<double> > sim_pts_can;
+	    std::vector<int> hit_flag_can;
+	    int block_id = ellipsoid_blocks_to_sim[i];
+	    try
+	    {	
+		// block_id - 1, since blocks are indexed starting 1
+		std::tie(sim_pts_can, hit_flag_can) = 
+		    m_ellipsoid_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
+	    }
+	    catch (const std::exception& e)
+	    {
+		std::cout << "error" << std::endl;
+		std::cout << block_id << std::endl;
+		exit(0);
+	    }
+	    if (anyNonzeros(hit_flag_can))
+		ellipsoid_blocks_hit.push_back(block_id);
+	
+	    sim_pts_over_blocks.push_back(sim_pts_can);
+	    hit_flag_over_blocks.push_back(hit_flag_can);
+	}
+    }
+    else
+    {
+	// one 'block' will just be the local ellipsoid model sim
+	EllipsoidModelSim ellipsoid_sim_nbr = m_ellipsoid_sim_nbr_server.createSim(ray_origin, ray_dirns);
+	ellipsoid_sim_nbr.setDeterministicSim(m_deterministic_sim);
+	std::vector<std::vector<double> > sim_pts_can;
+	std::vector<int> hit_flag_can;
+	std::tie(sim_pts_can, hit_flag_can) = ellipsoid_sim_nbr.simPtsGivenRays(ray_origin, ray_dirns);
+	sim_pts_over_blocks.push_back(sim_pts_can);
+	hit_flag_over_blocks.push_back(hit_flag_can);
+    }
 
     // sim over tri blocks
     std::vector<int> triangle_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_ground);

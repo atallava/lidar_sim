@@ -109,7 +109,7 @@ std::vector<double> RayDirnServer::getPatternYawVec(const std::vector<double> &r
 		calcVecMeanVar(this_bucket_yaws);
     }
 
-    // // todo: delete me
+    // debug
     // std::cout << "pattern yaw start, end: " << pattern_yaw_start << " " << pattern_yaw_end << std::endl;
     // std::cout << "init pattern yaw vec: " << std::endl;
     // dispVec(linspace(pattern_yaw_start, pattern_yaw_end, m_n_pattern_vec));

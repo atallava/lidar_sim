@@ -134,10 +134,6 @@ int main(int argc, char **argv)
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 
-    // pose server
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
-    PoseServer imu_pose_server(rel_path_poses_log);
-
     // sim
     std::vector<double> ray_origin{-527.328,466.156,-5.1058};
     std::vector<double> ray_dirn{-0.2305,0.93184,-0.28024};

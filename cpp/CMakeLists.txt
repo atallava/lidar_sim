@@ -130,8 +130,8 @@ add_library(lidar_sim SHARED
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${TESTS_SOURCES} )
 
-add_executable(run_tests tests/run_tests.cpp)
-  target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(run_tests tests/run_tests.cpp)
+#   target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
 
@@ -255,11 +255,11 @@ add_executable(run_tests tests/run_tests.cpp)
 # add_executable(poses_section_models_sim hybrid_geometric_sim/poses_section_models_sim.cpp)
 #   target_link_libraries(poses_section_models_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
  
-add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
-  target_link_libraries(section_ray_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
+#   target_link_libraries(section_ray_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
-#   target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
+  target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
 #   target_link_libraries(section_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
