@@ -2,8 +2,10 @@
 #include <sstream>
 #include <iomanip>
 #include <fstream>
+#include <cstdio>
 #include <stdexcept>
 #include <math.h>
+#include <chrono>
 
 #include <boost/algorithm/string.hpp>
 
@@ -16,10 +18,21 @@ using namespace lidar_sim;
 
 FlannDatasetWrapper::FlannDatasetWrapper(const std::vector<std::vector<double> > &dataset) :
     m_n_kd_trees(10),
-    m_n_checks(100),
-    m_rel_path_index("flann_index")
+    m_n_checks(100)
 {
+    uint64_t t = std::chrono::duration_cast<std::chrono::nanoseconds>
+	(std::chrono::steady_clock::now().time_since_epoch()).count();
+
+    std::ostringstream ss;
+    ss << "flann_index_" << t;
+    m_rel_path_index = ss.str();
+
     setDataset(dataset);
+}
+
+FlannDatasetWrapper::~FlannDatasetWrapper()
+{
+    std::remove(m_rel_path_index.c_str());
 }
 
 void FlannDatasetWrapper::setDataset(const std::vector<std::vector<double> > &dataset)
@@ -31,14 +44,42 @@ void FlannDatasetWrapper::setDataset(const std::vector<std::vector<double> > &da
     index.save(m_rel_path_index);
 }
 
-// std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
-// FlannDatasetWrapper::knnsearch(const std::vector<std::vector<double> > &pts, const int nn)
-// {
-//     flann::Matrix<double> query = stlArrayToFlannMatrix(pts);
-//     flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
-//     flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
+std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+FlannDatasetWrapper::knnSearch(const std::vector<std::vector<double> > &pts, const int nn)
+{
+    flann::Matrix<double> queries = stlArrayToFlannMatrix(pts);
+    flann::Matrix<int> indices(new int[queries.rows*nn], queries.rows, nn);
+    flann::Matrix<double> dists(new double[queries.rows*nn], queries.rows, nn);
     
-//     // load index
+    // load index
+    flann::Index<flann::L2<double> > index(m_dataset_flann, flann::SavedIndexParams(m_rel_path_index));
+    index.knnSearch(queries, indices, dists, nn, flann::SearchParams(m_n_checks));
 
-// }
+    std::vector<std::vector<double> > nn_dists = flannMatrixToStlArray(dists);
+    // flann returns squared distances
+    for(size_t i = 0; i < nn_dists.size(); ++i)
+	for(size_t j = 0 ; j < nn_dists[i].size(); ++j)
+	    nn_dists[i][j] = std::sqrt(nn_dists[i][j]);
+	
+    return std::make_tuple(
+	flannMatrixToStlArray(indices), nn_dists);
+}
 
+std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+FlannDatasetWrapper::radiusSearch(const std::vector<std::vector<double> > &pts, const double radius)
+{
+    flann::Matrix<double> queries = stlArrayToFlannMatrix(pts);
+    std::vector<std::vector<int> > indices;
+    std::vector<std::vector<double> > dists;
+    
+    // load index
+    flann::Index<flann::L2<double> > index(m_dataset_flann, flann::SavedIndexParams(m_rel_path_index));
+    index.radiusSearch(queries, indices, dists, radius, flann::SearchParams(m_n_checks));
+
+    // flann returns squared distances
+    for(size_t i = 0; i < dists.size(); ++i)
+    	for(size_t j = 0 ; j < dists[i].size(); ++j)
+    	    dists[i][j] = std::sqrt(dists[i][j]);
+	
+    return std::make_tuple(indices, dists);
+}

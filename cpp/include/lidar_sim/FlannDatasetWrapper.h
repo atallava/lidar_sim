@@ -8,8 +8,13 @@ namespace lidar_sim {
     class FlannDatasetWrapper {
     public:
 	FlannDatasetWrapper(const std::vector<std::vector<double> > &dataset);
+	~FlannDatasetWrapper();
+
 	void setDataset(const std::vector<std::vector<double> > &dataset);
-	
+	std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+	    knnSearch(const std::vector<std::vector<double> > &pts, const int nn = 1);
+	std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+	    radiusSearch(const std::vector<std::vector<double> > &pts, const double radius);
 
     private:
 	int m_n_kd_trees;

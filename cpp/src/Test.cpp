@@ -28,6 +28,7 @@
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/RangeDataVizer.h>
+#include <lidar_sim/FlannDatasetWrapper.h>
 
 using namespace lidar_sim;
 
@@ -325,6 +326,38 @@ bool Test::testGetEllipseTransform()
     std::cout << "quat weight: " << quat.w() << std::endl;
     std::cout << "quat vec: " << quat.vec() << std::endl;
     std::cout << "scales: " << scale << std::endl;
+
+    return true;
+}
+
+bool Test::testFlannDatasetWrapper()
+{
+    std::vector<std::vector<double> > dataset;
+    for (size_t i = 1; i <= 100; ++i)
+    {
+	std::vector<double> pt(1,i);
+	dataset.push_back(pt);
+    }
+
+    std::vector<std::vector<double> > query;
+    query.push_back(std::vector<double>(1, 50.3));
+
+    FlannDatasetWrapper flann_helper(dataset);
+    std::vector<std::vector<int> > ids;
+    std::vector<std::vector<double> > dists;
+    std::tie(ids, dists) = flann_helper.knnSearch(query, 10);
+    std::cout << " knn search " << std::endl;
+    std::cout << "ids: " << std::endl;
+    dispMat(ids);
+    std::cout << "dists: " << std::endl;
+    dispMat(dists);
+
+    std::tie(ids, dists) = flann_helper.radiusSearch(query, 10);
+    std::cout << " radius search " << std::endl;
+    std::cout << "ids: " << std::endl;
+    dispMat(ids);
+    std::cout << "dists: " << std::endl;
+    dispMat(dists);
 
     return true;
 }
