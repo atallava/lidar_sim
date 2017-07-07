@@ -58,7 +58,7 @@ include( ${CGAL_USE_FILE} )
 include( CGAL_CreateSingleSourceCGALProgram ) 
 # message( STATUS "CGAL FOUND: " ${CGAL_FOUND} )
 # message( FATAL_ERROR )
-  
+
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
@@ -258,8 +258,11 @@ add_library(lidar_sim SHARED
 # add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
 #   target_link_libraries(section_ray_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
-  target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
+#   target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(test_stitch_triangle_models hybrid_geometric_sim/test_stitch_triangle_models.cpp)
+  target_link_libraries(test_stitch_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
 #   target_link_libraries(section_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
