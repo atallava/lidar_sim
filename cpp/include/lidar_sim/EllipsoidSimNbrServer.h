@@ -20,13 +20,9 @@ namespace lidar_sim {
 	EllipsoidModelSim createSim(const std::vector<double> &ray_origin, 
 				    const std::vector<std::vector<double> > &ray_dirns);
 	EllipsoidModelSim createSimGivenEllipsoids(const std::vector<EllipsoidModel> &ellipsoid_models);
-	std::vector<std::vector<double> > getNodesAlongRay(const std::vector<double> &ray_origin, 
-							   const std::vector<double> &ray_dirn);
-	std::vector<std::vector<double> > getNodesAlongRays(const std::vector<double> &ray_origin, 
-							    const std::vector<std::vector<double> > &ray_dirns);
 
     private:
-	double m_ellipsoid_nn_radius;
+	double m_nn_radius;
 	std::vector<EllipsoidModel> m_ellipsoid_models;
 	int m_n_ellipsoids;
 	std::vector<std::vector<double> > m_ellipsoid_centers;

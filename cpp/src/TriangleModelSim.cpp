@@ -28,9 +28,15 @@ TriangleModelSim::TriangleModelSim() :
     m_gen = gen;
 }
 
-void TriangleModelSim::loadTriangleModels(std::string rel_path_input)
+void TriangleModelSim::loadTriangleModels(const std::string &rel_path_input)
 {
     m_triangle_models = loadTriangleModelsFromFile(rel_path_input);
+    fillCgalData();
+}
+
+void TriangleModelSim::setTriangleModels(const TriangleModels &triangle_models)
+{
+    m_triangle_models = triangle_models;
     fillCgalData();
 }
 

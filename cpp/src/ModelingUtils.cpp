@@ -460,5 +460,56 @@ namespace lidar_sim {
 		    hit_flag[i] = 0;
 	    }
     }
-}
 
+    std::vector<std::vector<double> > getNodesAlongRay(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, 
+						       LaserCalibParams laser_calib_params, double node_resn)
+    {
+	// dists along ray
+	double max_range = laser_calib_params.intrinsics.max_range;
+	std::vector<double> dists_along_ray;
+	double walker = laser_calib_params.intrinsics.min_range;
+	while (walker < max_range)
+	{
+	    dists_along_ray.push_back(walker);
+	    walker += node_resn;
+	}
+	dists_along_ray.push_back(max_range);
+    
+	// nodes along ray
+	std::vector<std::vector<double> > nodes_along_ray;
+	size_t n_nodes = dists_along_ray.size();
+	for(size_t i = 0; i < n_nodes; ++i)
+	{
+	    double dist_along_ray = dists_along_ray[i];
+	    std::vector<double> node(3,0);
+	    for(size_t j = 0; j < 3; ++j)
+		node[j] = ray_origin[j] + dist_along_ray*ray_dirn[j];
+
+	    nodes_along_ray.push_back(node);
+	}
+
+	// debug
+	// std::cout << "nodes along ray: " << std::endl;
+	// dispMat(nodes_along_ray);
+    
+	return nodes_along_ray;
+    }
+
+    std::vector<std::vector<double> > getNodesAlongRays(const std::vector<double> &ray_origin, 
+							const std::vector<std::vector<double> > &ray_dirns, LaserCalibParams laser_calib_params, double node_resn)
+    {
+	std::vector<std::vector<double> > nodes_along_rays;
+	for (size_t i = 0; i < ray_dirns.size(); ++i)
+	{
+	    std::vector<double> ray_dirn = ray_dirns[i];
+
+	    std::vector<std::vector<double> > nodes_along_ray = 
+	        getNodesAlongRay(ray_origin, ray_dirn, laser_calib_params, node_resn);
+	    nodes_along_rays.insert(nodes_along_rays.end(),
+	    			nodes_along_ray.begin(), nodes_along_ray.end());
+	}
+    
+	return nodes_along_rays;
+    }
+
+}

@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     	rel_path_triangle_model_blocks.push_back(genRelPathTriangles(section_id, i));
 
     std::vector<TriangleModels> triangle_models_vec;
-    for(size_t i = 0; i < rel_path_triangle_model_blocks.size()-2; ++i)
+    for(size_t i = 0; i < rel_path_triangle_model_blocks.size(); ++i)
     {
 	TriangleModels triangle_models = loadTriangleModelsFromFile(
 	    rel_path_triangle_model_blocks[i]);

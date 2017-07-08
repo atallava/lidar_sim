@@ -18,7 +18,8 @@ namespace lidar_sim {
     class TriangleModelSim {
     public:
 	TriangleModelSim();
-	void loadTriangleModels(std::string rel_path_models);
+	void loadTriangleModels(const std::string &rel_path_models);
+	void setTriangleModels(const TriangleModels &triangle_models);
 	void setLaserCalibParams(LaserCalibParams laser_calib_params);
 	void fillCgalData();
 	double getMaxResidualForHit();

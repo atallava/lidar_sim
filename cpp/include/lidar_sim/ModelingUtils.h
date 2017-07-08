@@ -7,6 +7,7 @@
 
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/TriangleModels.h>
+#include <lidar_sim/LaserCalibParams.h>
 
 namespace lidar_sim {
     struct EllipsoidModel {
@@ -49,5 +50,9 @@ namespace lidar_sim {
     void applyMaxRangeFilter(const std::vector<double> ray_origin,
 			     std::vector<std::vector<double> > &sim_pts, std::vector<int> &hit_flag,
 			     const double max_range);
+    std::vector<std::vector<double> > getNodesAlongRay(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, 
+						       LaserCalibParams laser_calib_params, double node_resn);
+    std::vector<std::vector<double> > getNodesAlongRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns, 
+							LaserCalibParams laser_calib_params, double node_resn);
 }
 
