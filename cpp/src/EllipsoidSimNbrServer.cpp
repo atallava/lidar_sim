@@ -47,9 +47,6 @@ EllipsoidModelSim EllipsoidSimNbrServer::createSim(const std::vector<double> &pt
 
 EllipsoidModelSim EllipsoidSimNbrServer::createSim(const std::vector<std::vector<double> > &pts)
 {
-    // todo: remove this timing
-    const clock_t begin_time = std::clock();
-
     std::vector<std::vector<int> > ids;
     std::vector<std::vector<double> > dists;
     std::tie(ids,dists) = m_flann_helper.radiusSearch(pts,
@@ -59,10 +56,6 @@ EllipsoidModelSim EllipsoidSimNbrServer::createSim(const std::vector<std::vector
 	unique_ids.insert(unique_ids.end(), 
 			  ids[i].begin(), ids[i].end());
     unique_ids = getUniqueSortedVec(unique_ids);
-
-    // todo: remove this timing
-    std::cout << "radius search time: " << float(std::clock() - begin_time)/ CLOCKS_PER_SEC << std::endl; 
-    std::cout << "dataset size: " << m_ellipsoid_centers.size() << std::endl;
 
     // debug
     // std::cout << "unique ids: " << std::endl;

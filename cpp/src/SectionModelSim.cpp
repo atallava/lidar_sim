@@ -227,61 +227,22 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
 	hit_flag_over_blocks.push_back(hit_flag_can);
     }
 
-    // todo: clean this up
-    int triangle_choice = 1;
-    if (triangle_choice == 0)
+    // sim over tri blocks
+    std::vector<int> triangle_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_ground);
+    std::vector<int> triangle_blocks_hit;
+    for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
     {
-	// todo: remove this timing
-	const clock_t begin_time = std::clock();
-
-	// sim over tri blocks
-	std::vector<int> triangle_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_ground);
-	std::vector<int> triangle_blocks_hit;
-	for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
-	{
-	    std::vector<std::vector<double> > sim_pts_can;
-	    std::vector<int> hit_flag_can;
-	    int block_id = triangle_blocks_to_sim[i];
-	    // block_id - 1, since blocks are indexed starting 1
-	    std::tie(sim_pts_can, hit_flag_can) = 
-		m_triangle_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
-	    if (anyNonzeros(hit_flag_can))
-		triangle_blocks_hit.push_back(block_id);
-
-	    // debug
-	    // std::cout << i << " " << m_triangle_model_sims[i].m_fit_pts_cgal.size() << " "
-	    // 	      << m_triangle_model_sims[i].m_triangles_cgal.size() << std::endl;
-	
-	    sim_pts_over_blocks.push_back(sim_pts_can);
-	    hit_flag_over_blocks.push_back(hit_flag_can);
-	}
-
-	// todo: remove this timing
-	std::cout << "time: " << float(std::clock() - begin_time)/ CLOCKS_PER_SEC << std::endl; 
-    }
-    else
-    {
-	// todo: remove this timing
-	const clock_t begin_time = std::clock();
-
-        // one 'block' will just be the local triangle model sim
-	TriangleModelSim triangle_sim_nbr = m_triangle_sim_nbr_server.createSim(ray_origin, ray_dirns);
-
-	// debug
-	// std::cout << triangle_sim_nbr.m_fit_pts_cgal.size() << " "
-	// 	  << triangle_sim_nbr.m_triangles_cgal.size() << std::endl;
-	
-
-	triangle_sim_nbr.setDeterministicSim(m_deterministic_sim);
-	triangle_sim_nbr.setLaserCalibParams(m_laser_calib_params);
 	std::vector<std::vector<double> > sim_pts_can;
 	std::vector<int> hit_flag_can;
-	std::tie(sim_pts_can, hit_flag_can) = triangle_sim_nbr.simPtsGivenRays(ray_origin, ray_dirns);
+	int block_id = triangle_blocks_to_sim[i];
+	// block_id - 1, since blocks are indexed starting 1
+	std::tie(sim_pts_can, hit_flag_can) = 
+	    m_triangle_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
+	if (anyNonzeros(hit_flag_can))
+	    triangle_blocks_hit.push_back(block_id);
+
 	sim_pts_over_blocks.push_back(sim_pts_can);
 	hit_flag_over_blocks.push_back(hit_flag_can);
-
-	// todo: remove this timing
-	std::cout << "time: " << float(std::clock() - begin_time)/ CLOCKS_PER_SEC << std::endl; 
     }
 
     // marginalize 
