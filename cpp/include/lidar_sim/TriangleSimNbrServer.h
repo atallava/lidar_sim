@@ -5,7 +5,7 @@
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/TriangleModels.h>
 #include <lidar_sim/FlannDatasetWrapper.h>
-#include <lidar_sim/EllipsoidModelSim.h>
+#include <lidar_sim/TriangleModelSim.h>
 #include <lidar_sim/LaserCalibParams.h>
 
 namespace lidar_sim {
@@ -21,15 +21,13 @@ namespace lidar_sim {
 	TriangleModelSim createSim(const std::vector<double> &ray_origin, 
 				    const std::vector<std::vector<double> > &ray_dirns);
 	TriangleModelSim createSimGivenTriangleModels(const TriangleModels &triangle_models);
-	std::vector<std::vector<double> > getNodesAlongRay(const std::vector<double> &ray_origin, 
-							   const std::vector<double> &ray_dirn);
-	std::vector<std::vector<double> > getNodesAlongRays(const std::vector<double> &ray_origin, 
-							    const std::vector<std::vector<double> > &ray_dirns);
 
     private:
 	double m_nn_radius;
 	std::vector<TriangleModels> m_triangle_models_vec;
 	TriangleModels m_triangle_models;
+	int m_n_triangles;
+	std::vector<std::vector<double> > m_triangle_centers;
 	FlannDatasetWrapper m_flann_helper;
 	LaserCalibParams m_laser_calib_params;
     };
