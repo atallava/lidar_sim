@@ -50,6 +50,7 @@ lib/
 *.bmp
 *.fig
 *.pdf
+*.svg
 
 # videos
 *.avi

@@ -5,7 +5,9 @@ function obb = calcObb(pts)
     %
     % pts - [nPts,3] array.
     %
-    % obb - struct. fields ('center1','ax1','ax2','extents').
+    % obb - struct. fields ('center','ax1','ax2','extents').
+    % ax1 and ax2 are length 2 vectors. in xy plane
+    % extents is [3,2] size array.
     
     ptsXy = pts(:,1:2);
     covMat = cov(ptsXy);

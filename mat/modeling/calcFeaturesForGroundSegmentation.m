@@ -1,4 +1,4 @@
-function features = calcPtsFeatures(pts)
+function features = calcFeaturesForGroundSegmentation(pts)
 
     zCentroid = calcMeanHeight(pts);
     sphVarn = calcSphericalVarn(pts);
