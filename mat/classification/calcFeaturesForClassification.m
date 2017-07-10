@@ -23,10 +23,10 @@ function features = calcFeaturesForClassification(pts,optionStruct)
     else
         defaultDirnFeatures = [0 1 1 0]; % horizontal tangent, vertical normal
     end
-    if isfield(optionStruct,'xyBoxSide')
-        xyBoxSide = optionStruct.xyBoxSide;
+    if isfield(optionStruct,'cylinderSide')
+        cylinderSide = optionStruct.cylinderSide;
     else
-        xyBoxSide = 0.15;
+        cylinderSide = 0.15;
     end
     if isfield(optionStruct,'dispFlag')
         dispFlag = optionStruct.dispFlag;
@@ -43,9 +43,11 @@ function features = calcFeaturesForClassification(pts,optionStruct)
     dirnFeatures = zeros(nPts,4);
     heightFeatures = zeros(nPts,1);
     fewNbrsFlag = zeros(1,nPts);
+    emptyCylinderFlag = zeros(1,nPts);
     
     % todo: all pts
-    for i = 1:1e3%nPts
+    for i = 1:nPts
+        pt = pts(i,:);
         nbrIdx = idx{i};
         nbrPts = pts(nbrIdx,:);
         if size(nbrPts,1) < minNbrs
@@ -59,7 +61,10 @@ function features = calcFeaturesForClassification(pts,optionStruct)
             covMatCell{i} = covMat;
         end
         
-        ptsInCylinder = getPtsInCylinder(pts,pts(i,:),xyBoxSide);
+        ptsInCylinder = getPtsInCylinder(pts,pts(i,:),cylinderSide);
+        if isempty(ptsInCylinder)
+            emptyCylinderFlag(i) = 1;
+        end
         heightFeatures(i,:) = calcHeightFeatures(ptsInCylinder,pts(i,:));
     end
     
@@ -71,6 +76,8 @@ function features = calcFeaturesForClassification(pts,optionStruct)
     compTime = toc(clockLocal);
     if dispFlag
         fprintf('comp time: %.2fs\n',compTime);
+        fprintf('fraction few nbrs: %.3f\n',sum(fewNbrsFlag)/nPts);
+        fprintf('fraction empty cylinder: %.3f\n',sum(emptyCylinderFlag)/nPts);
     end
     
 end
@@ -111,4 +118,11 @@ function heightFeatures = calcHeightFeatures(ptsInCylinder,pt)
     else
         heightFeatures = pt(3)-min(ptsInCylinder(:,3));
     end
+end
+
+function vizPts(pt,nbrPts,cylinderPts)
+    scatter3(pt(1),pt(2),pt(3));
+    axis equal; hold on;
+    scatter3(nbrPts(:,1),nbrPts(:,2),nbrPts(:,3),'+r');
+    scatter3(ptsInCylinder(:,1),ptsInCylinder(:,2),ptsInCylinder(:,3),'+r');
 end
