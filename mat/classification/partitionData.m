@@ -1,4 +1,16 @@
 function [trainIds,holdIds,testIds] = partitionData(nData,fracTrain,fracHold)
+%PARTITIONDATA
+%
+% [trainIds,holdIds,testIds] = PARTITIONDATA(nData,fracTrain,fracHold)
+%
+% nData     -
+% fracTrain -
+% fracHold  -
+%
+% trainIds  -
+% holdIds   -
+% testIds   -
+
 fracTest = 1-(fracTrain + fracHold);
 nTrain = ceil(nData*fracTrain);
 nHold = floor(fracHold*nData);

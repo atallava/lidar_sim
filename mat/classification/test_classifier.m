@@ -11,7 +11,7 @@ mdl = fitcecoc(X,Y,'Learners',learners);
 
 %% testing optimize
 learners = 'svm';
-mdl = fitcecoc(X,Y,'OptimizeHyperparameters','auto');
+mdl = fitcecoc(X,Y,'Learners','svm','OptimizeHyperparameters','auto');
 
 %% testing numeric labels
 YNumeric = zeros(size(Y));

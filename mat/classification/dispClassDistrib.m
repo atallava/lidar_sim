@@ -1,4 +1,11 @@
 function dispClassDistrib(labels,classes)
+%DISPCLASSDISTRIB
+%
+% DISPCLASSDISTRIB(labels,classes)
+%
+% labels  -
+% classes -
+
 classDistrib = calcClassDistrib(labels,classes);
 
 for i = 1:length(classes)
