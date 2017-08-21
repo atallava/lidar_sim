@@ -11,9 +11,9 @@ addpath([pathToM '/altmany-export_fig-5be2ca4']);
 
 %%
 sectionId = 3;
-classId = 1;
+classId = 11;
 % elementIdsPerClass = {[1,3],[],[7,8,10],[],[7,10,11,16],[],[1,6],[],[1,2,3,4],[2,9,15,30],[2,6,15]} 
-elementId  = 1;
+elementId  = 6;
 
 className = primitiveClasses{classId};
 relPathPrimitive = genRelPathPrimitive(sectionId,className,elementId);

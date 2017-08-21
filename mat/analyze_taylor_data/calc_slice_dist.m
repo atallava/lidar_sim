@@ -3,10 +3,12 @@ load(relPathPoseLog,'poseLog','tLog');
 
 %%
 nPoses = size(poseLog,1);
-% tStart = 1403045836.830185000; % sec 3
+% tStart = 1403045836.830185000; 
 % tEnd = 1403045902.775886000; % sec 3
-tStart = 1403045911.411350000; % sec 4
+tStart = 1403045911.411350000; 
 tEnd = 1403046027.954617000; % sec 4
+% tStart = 1403046151.135538000; 
+% tEnd = 1403046221.65702000; % sec 6
 idStart = indexOfNearestTime(tStart,tLog);
 idEnd = indexOfNearestTime(tEnd,tLog);
 skip = 10;

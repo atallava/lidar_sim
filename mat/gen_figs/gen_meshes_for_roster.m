@@ -10,9 +10,9 @@ someUsefulPaths;
 addpath([pathToM '/altmany-export_fig-5be2ca4']);
 
 %%
-classId = 5;
+classId = 10;
 % elementIdsPerClass = {[1,3],[],[],[],[7,10,11,16],[],[],[],[1,2,3,4],[],[2,6,15]} 
-elementId  = 5;
+elementId  = 12;
 
 className = primitiveClasses{classId};
 relPathMeshPrimitive = genRelPathMeshPrimitive(className,elementId);
