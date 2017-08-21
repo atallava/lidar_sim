@@ -20,12 +20,15 @@ nData = size(features,1);
 
 datasetTrain.features = features(idsTrain,:);
 datasetTrain.labels = labels(idsTrain);
+datasetTrain.classNames = classNames;
 
 datasetHold.features = features(idsHold,:);
 datasetHold.labels = labels(idsHold);
+datasetHold.classNames = classNames;
 
 datasetTest.features = features(idsTest,:);
 datasetTest.labels = labels(idsTest);
+datasetTest.classNames = classNames;
 
 %% viz class distributions
 classes = [1:length(classNames)]-1;

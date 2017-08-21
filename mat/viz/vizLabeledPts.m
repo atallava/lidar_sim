@@ -1,4 +1,13 @@
 function hfig = vizLabeledPts(pts,labels,classNames)
+%VIZLABELEDPTS
+%
+% hfig = VIZLABELEDPTS(pts,labels,classNames)
+%
+% pts        -
+% labels     -
+% classNames -
+%
+% hfig       -
 
 marker = '.';
 markerSizeData = 20;

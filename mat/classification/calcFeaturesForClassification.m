@@ -24,7 +24,7 @@ end
 if isfield(optionStruct,'defaultSpectralFeatures')
     defaultSpectralFeatures = optionStruct.defaultSpectralFeatures;
 else
-    defaultSpectralFeatures = ones(1,3); % perfect sphere
+    defaultSpectralFeatures = ones(1,3)*0.3; % perfect sphere
 end
 if isfield(optionStruct,'defaultDirnFeatures')
     defaultDirnFeatures = optionStruct.defaultDirnFeatures;
@@ -57,6 +57,7 @@ emptyCylinderFlag = zeros(1,nPts);
 for i = 1:nPts
     pt = pts(i,:);
     nbrIdx = idx{i};
+    % remember nbr includes itself
     nbrPts = pts(nbrIdx,:);
     if size(nbrPts,1) < minNbrs
         fewNbrsFlag(i) = 1;
@@ -70,7 +71,7 @@ for i = 1:nPts
     end
     
     ptsInCylinder = getPtsInCylinder(pts,pts(i,:),cylinderSide);
-    if isempty(ptsInCylinder)
+    if size(ptsInCylinder,1) == 1
         emptyCylinderFlag(i) = 1;
     end
     heightFeatures(i,:) = calcHeightFeatures(ptsInCylinder,pts(i,:));
@@ -95,6 +96,9 @@ function [spectralFeatures,dirnFeatures] = calcFeaturesFromCovMat(covMat)
 [V,D] = eig(covMat);
 
 eigVals = diag(D);
+[eigVals,sortedIds] = sort(eigVals,'descend');
+V = V(:,sortedIds);
+
 spectralFeatures = [eigVals(1) eigVals(1)-eigVals(2) eigVals(2)-eigVals(3)];
 
 zVec = [0; 0; 1];
@@ -128,9 +132,10 @@ else
 end
 end
 
-function vizPts(pt,nbrPts,cylinderPts)
+function vizPts(pt,nbrPts,ptsInCylinder)
 scatter3(pt(1),pt(2),pt(3));
 axis equal; hold on;
 scatter3(nbrPts(:,1),nbrPts(:,2),nbrPts(:,3),'+r');
-scatter3(ptsInCylinder(:,1),ptsInCylinder(:,2),ptsInCylinder(:,3),'+r');
+scatter3(ptsInCylinder(:,1),ptsInCylinder(:,2),ptsInCylinder(:,3),'xg');
+legend('pt','nbr','cylinder');
 end

@@ -19,6 +19,8 @@ relPathSegmentToFeatureLabelMapping = '../data/segment_to_feature_label_mapping'
 load(relPathSegmentToFeatureLabelMapping,'segmentToFeatureLabelMapping','classNames');
 
 %% subsample 
+nData = 1e4;
+% subsampleIds = 1:nData;
 skip = 10;
 subsampleIds = 1:skip:size(pts,1);
 pts = pts(subsampleIds,:);
@@ -31,10 +33,10 @@ for i = 1:length(primitiveClasses)
 end
 
 %%
-optionStruct = struct('dispFlag',1,'searchRadius',1.5,'minNbrs',4,'cylinderSide',0.3);
+optionStruct = struct('dispFlag',1,'searchRadius',1.5,'minNbrs',4,'cylinderSide',0.5);
 features = calcFeaturesForClassification(pts,optionStruct);
 
 %% save
 relPathDataset = genRelPathDataset(sectionId);
-classNames = [{'none'} classNames];
+% classNames = [{'none'} classNames];
 save(relPathDataset,'pts','labels','features','classNames');

@@ -132,11 +132,12 @@ function labeling = labelingTool(ptsCell,primitiveClasses,labelingData,imuData)
         legendEntries{i} = sprintf('%d: %s',i, ...
             replaceUnderscoreWithSpace(primitiveClasses{i}));
     end
-    hlegend = legend(classColorMarkerHandles,legendEntries);
-    set(hlegend,'fontsize',legendFontSize);
-    legendPosn = get(hlegend,'position');
-    legendPosn = legendPosn + [1 1 0 0]*0.1;
-    set(hlegend,'position',legendPosn);
+    % todo: uncomment
+%     hlegend = legend(classColorMarkerHandles,legendEntries);
+%     set(hlegend,'fontsize',legendFontSize);
+%     legendPosn = get(hlegend,'position');
+%     legendPosn = legendPosn + [1 1 0 0]*0.1;
+%     set(hlegend,'position',legendPosn);
 
     % figure tags
     tagLocations = zeros(nSegments,3);

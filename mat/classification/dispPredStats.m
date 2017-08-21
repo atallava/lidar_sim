@@ -7,6 +7,10 @@ function dispPredStats(labels,labelsPred,classes)
 % labelsPred -
 % classes    -
 
+classDistrib = calcClassDistrib(labels,classes);
+fprintf('class distribution: \n');
+disp(classDistrib);
+
 %%
 err = calcMisclassificationError(labels,labelsPred);
 fprintf('misclassification error: %.4f\n',err);

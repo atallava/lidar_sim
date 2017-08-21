@@ -11,3 +11,6 @@ addpath([pwd '/viz']);
 %% 
 addpath(genpath([pwd '/RegularizeData3D']));
 addpath(genpath([pwd '/TriangleRayIntersection']));
+
+addpath([pathToM '/distinguishable_colors']);
+
