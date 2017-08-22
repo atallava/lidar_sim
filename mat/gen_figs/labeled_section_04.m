@@ -1,4 +1,4 @@
-%% rel path helpers
+cd %% rel path helpers
 genRelPathLabelingSetsInfo = @(sectionId) ...
     sprintf('../data/sections/section_%02d/labeling/labeling_sets_info.mat',sectionId);
 
