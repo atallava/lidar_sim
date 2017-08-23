@@ -1,4 +1,4 @@
-function [rayOrigins,ptsRealCell,ptsSimCell,hitFlagCell] = loadSimDetail(relPathFile)
+function simDetail = loadSimDetail(relPathFile)
     %%LOADSIMDETAIL
     %
     % [rayOrigins,ptsRealCell,ptsSimCell,hitFlagCell] = LOADSIMDETAIL(relPathFile)
@@ -13,27 +13,39 @@ function [rayOrigins,ptsRealCell,ptsSimCell,hitFlagCell] = loadSimDetail(relPath
     fid = fopen(relPathFile,'r');
     
     rayOrigins = [];
-    ptsRealCell = {};
-    ptsSimCell = {};
-    hitFlagCell = {};
+    rayPitchesCell = {};
+    rayYawsCell = {};    
+    realPtsAllCell = {};
+    realHitFlagCell = {};
+    simPtsAllCell = {};
+    simHitFlagCell = {};
     
     line = fgetl(fid);
     count = 0;
     while ischar(line)
 
-        switch mod(count,4)
+        switch mod(count,7)
             case 0
                 rayOrigin = getVecFromLine(line);
                 rayOrigins = [rayOrigins; rayOrigin];
             case 1
-                ptsReal = getPtsFromLine(line);
-                ptsRealCell{end+1} = ptsReal;
+                rayPitches = getVecFromLine(line);
+                rayPitchesCell{end+1} = rayPitches;
             case 2
-                ptsSim = getPtsFromLine(line);
-                ptsSimCell{end+1} = ptsSim;
+                rayYaws = getVecFromLine(line);
+                rayYawsCell{end+1} = rayYaws;
             case 3
-                hitFlag = getVecFromLine(line);
-                hitFlagCell{end+1} = hitFlag;
+                realPtsAll = getPtsFromLine(line);
+                realPtsAllCell{end+1} = realPtsAll;
+            case 4
+                realHitFlag = getVecFromLine(line);
+                realHitFlagCell{end+1} = realHitFlag;
+            case 5
+                simPtsAll = getPtsFromLine(line);
+                simPtsAllCell{end+1} = simPtsAll;
+            case 6
+                simHitFlag = getVecFromLine(line);
+                simHitFlagCell{end+1} = simHitFlag;
             otherwise
                 error('error!');
         end
@@ -41,6 +53,14 @@ function [rayOrigins,ptsRealCell,ptsSimCell,hitFlagCell] = loadSimDetail(relPath
         count = count+1;
         line = fgetl(fid);
     end
+    
+    simDetail.rayOrigins = rayOrigins;
+    simDetail.rayPitchesCell = rayPitchesCell;
+    simDetail.rayYawsCell = rayYawsCell;
+    simDetail.realPtsAllCell = realPtsAllCell;
+    simDetail.realHitFlagCell = realHitFlagCell;
+    simDetail.simPtsAllCell = simPtsAllCell;
+    simDetail.simHitFlagCell = simHitFlagCell;
 end
 
 function vec = getVecFromLine(line)

@@ -46,6 +46,7 @@ namespace lidar_sim {
     std::tuple<std::vector<double>, double> calcRayDirn(const std::vector<double> &ray_origin, const std::vector<double> &end_pt);
     std::vector<std::vector<double> >
 	calcRayDirns(const std::vector<double> start_pt, const std::vector<std::vector<double> > end_pts);
+    std::vector<std::vector<double> > calcRayDirnsFromSph(const std::vector<double> &ray_pitch_vec, const std::vector<double> &ray_yaw_vec);
 
     void applyMaxRangeFilter(const std::vector<double> ray_origin,
 			     std::vector<std::vector<double> > &sim_pts, std::vector<int> &hit_flag,

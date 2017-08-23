@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <math.h>
 
 #include <lidar_sim/ModelingUtils.h>
 
@@ -443,6 +444,25 @@ namespace lidar_sim {
 		ray_dirns[i][j] = end_pts[i][j] - start_pt[j];
 
 	    ray_dirns[i] = normalizeVec(ray_dirns[i]);
+	}
+
+	return ray_dirns;
+    }
+
+    std::vector<std::vector<double> > calcRayDirnsFromSph(const std::vector<double> &ray_pitch_vec, const std::vector<double> &ray_yaw_vec)
+    {
+	size_t n_rays = ray_yaw_vec.size();
+	std::vector<std::vector<double> > ray_dirns;
+	for(size_t i = 0; i < n_rays; ++i)
+	{
+	    double yaw = ray_yaw_vec[i];
+	    double pitch = ray_pitch_vec[i];
+	    std::vector<double> ray_dirn(3,0);
+	    ray_dirn[0] = std::cos(pitch)*std::cos(yaw);
+	    ray_dirn[1] = std::cos(pitch)*std::sin(yaw);
+	    ray_dirn[2] = std::sin(pitch);
+	    
+	    ray_dirns.push_back(ray_dirn);
 	}
 
 	return ray_dirns;

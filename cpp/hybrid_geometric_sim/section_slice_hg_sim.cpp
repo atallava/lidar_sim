@@ -17,6 +17,7 @@
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/SectionModelSim.h>
 #include <lidar_sim/SimDetail.h>
+#include <lidar_sim/RayDirnServer.h>
 
 using namespace lidar_sim;
 
@@ -172,6 +173,8 @@ int main(int argc, char **argv)
     packet_id_sim_start = 50000; // 40000 
     packet_id_sim_end = packet_id_sim_start + 10000; // 20000
 
+    RayDirnServer ray_dirn_server;
+
     // sim
     // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
@@ -191,15 +194,22 @@ int main(int argc, char **argv)
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
 
 	// packet pts
-    	std::vector<std::vector<double> > this_pts = section.getPtsAtTime(t);
+    	std::vector<std::vector<double> > this_real_pts = section.getPtsAtTime(t);
 
     	// add to big list of real pts
-    	real_pts.insert(real_pts.end(), this_pts.begin(), this_pts.end());
+    	real_pts.insert(real_pts.end(), this_real_pts.begin(), this_real_pts.end());
+
+	std::vector<double> this_ray_pitches;
+	std::vector<double> this_ray_yaws;
+	std::vector<std::vector<double> > this_real_pts_all;
+	std::vector<int> this_real_hit_flag;
+	std::tie(this_ray_pitches, this_ray_yaws, this_real_pts_all, this_real_hit_flag)
+	    = ray_dirn_server.fitDetailToPts(ray_origin, this_real_pts);
 
     	// ray dirns
-	// here is where you could alternately get directions from laser intrinsics
-    	std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_pts);
-
+    	// std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_real_pts);
+	std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_ray_pitches, this_ray_yaws);
+	
 	// blocks queried for this pose
 	std::vector<int> this_triangle_blocks_queried = 
 	    sim.getPosnTriangleBlockMembership(ray_origin);
@@ -217,23 +227,39 @@ int main(int argc, char **argv)
 	// dispVec(this_ellipsoid_blocks_queried);
 
     	// simulate 
-    	std::vector<std::vector<double> > this_sim_pts;
-    	std::vector<int> this_hit_flag;
-    	std::tie(this_sim_pts, this_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
+    	std::vector<std::vector<double> > this_sim_pts_all;
+    	std::vector<int> this_sim_hit_flag;
+    	std::tie(this_sim_pts_all, this_sim_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
 
     	// add to big list of sim pts
-    	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts.begin(), this_sim_pts.end());
-    	hit_flag.insert(hit_flag.end(), this_hit_flag.begin(), this_hit_flag.end());
+    	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts_all.begin(), this_sim_pts_all.end());
+    	hit_flag.insert(hit_flag.end(), this_sim_hit_flag.begin(), this_sim_hit_flag.end());
 
 	// add to sim detail
+	// todo: cleanup
+	// // ray origin
+	// sim_detail.m_ray_origins.push_back(ray_origin);
+	// // real pts
+	// sim_detail.m_real_pts.push_back(this_real_pts);
+	// // sim pts
+	// sim_detail.m_sim_pts.push_back(this_sim_pts_all);
+	// // hit flag
+	// sim_detail.m_hit_flags.push_back(this_sim_hit_flag);
+
 	// ray origin
 	sim_detail.m_ray_origins.push_back(ray_origin);
-	// real pts
-	sim_detail.m_real_pts.push_back(this_pts);
-	// sim pts
-	sim_detail.m_sim_pts.push_back(this_sim_pts);
-	// hit flag
-	sim_detail.m_hit_flags.push_back(this_hit_flag);
+	// pitches
+	sim_detail.m_ray_pitches.push_back(this_ray_pitches);
+	// yaws
+	sim_detail.m_ray_yaws.push_back(this_ray_yaws);
+	// real pts all
+	sim_detail.m_real_pts_all.push_back(this_real_pts_all);
+	// real hit flag
+	sim_detail.m_real_hit_flags.push_back(this_real_hit_flag);
+	// sim pts all
+	sim_detail.m_sim_pts_all.push_back(this_sim_pts_all);
+	// sim hit flag
+	sim_detail.m_sim_hit_flags.push_back(this_sim_hit_flag);
     }
 
     // retain unique block ids
