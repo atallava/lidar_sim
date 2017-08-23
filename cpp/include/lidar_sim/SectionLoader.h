@@ -24,7 +24,7 @@ namespace lidar_sim {
 	std::vector<int> m_packet_ids;
 
     private:
-	void m_loadSection(std::string rel_path_section);
+	void loadSection(std::string rel_path_section);
 	
 	std::vector<int> m_pt_packet_id;
 	std::string m_rel_path_section;

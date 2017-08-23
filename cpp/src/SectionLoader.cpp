@@ -18,10 +18,10 @@ SectionLoader::SectionLoader(std::string rel_path_section) :
     m_num_logs(0),
     m_bracketing_padding(1000)
 {
-    m_loadSection(rel_path_section);
+    loadSection(rel_path_section);
 }
 
-void SectionLoader::m_loadSection(std::string rel_path_section)
+void SectionLoader::loadSection(std::string rel_path_section)
 {
     m_rel_path_section = rel_path_section;
     std::ifstream section_file(rel_path_section);

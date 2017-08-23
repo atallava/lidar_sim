@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     // write real pts
     std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id);
     writePtsToXYZFile(real_pts, rel_path_real_pts);
-
+    
     // write sim pts
     std::string rel_path_sim_pts = genRelPathSimPts(section_sim_id);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);

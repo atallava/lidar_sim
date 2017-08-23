@@ -37,7 +37,7 @@ void SimDetail::load(const std::string rel_path_file)
     while(std::getline(file, line))
     {
 	boost::trim_right(line);
-	switch (count % 4)
+	switch (count % 7)
 	{
 	case 0:
 	{
@@ -47,19 +47,37 @@ void SimDetail::load(const std::string rel_path_file)
 	}
 	case 1:
 	{
-	    m_real_pts.push_back(
-		getPtsFromLine(line));
+	    m_ray_pitches.push_back(
+		getVecFromLine(line));
 	    break;
 	}
 	case 2:
 	{
-	    m_sim_pts.push_back(
-		getPtsFromLine(line));
+	    m_ray_yaws.push_back(
+		getVecFromLine(line));
 	    break;
 	}
 	case 3:
 	{
-	    m_hit_flags.push_back(
+	    m_real_pts_all.push_back(
+		getPtsFromLine(line));
+	    break;
+	}
+	case 4:
+	{
+	    m_real_hit_flags.push_back(
+		getHitFlagFromLine(line));
+	    break;
+	}
+	case 5:
+	{
+	    m_sim_pts_all.push_back(
+		getPtsFromLine(line));
+	    break;
+	}
+	case 6:
+	{
+	    m_sim_hit_flags.push_back(
 		getHitFlagFromLine(line));
 	    break;
 	}
@@ -94,14 +112,6 @@ void SimDetail::save(const std::string rel_path_sim_detail)
 	    convertArrayToVec(m_sim_pts_all[i]));
 	// sim hit flag
 	file << getStrFromVec(m_sim_hit_flags[i]);
-
-	// todo: cleanup
-	// file << getStrFromVec(m_ray_origins[i]);
-	// file << getStrFromVec(
-	//     convertArrayToVec(m_real_pts[i]));
-	// file << getStrFromVec(
-	//     convertArrayToVec(m_sim_pts[i]));
-	// file << getStrFromVec(m_hit_flags[i]);
     }
 
     file.close();

@@ -1,14 +1,11 @@
 function simDetail = loadSimDetail(relPathFile)
-    %%LOADSIMDETAIL
-    %
-    % [rayOrigins,ptsRealCell,ptsSimCell,hitFlagCell] = LOADSIMDETAIL(relPathFile)
-    %
-    % relPathFile -
-    %
-    % rayOrigins  -
-    % ptsRealCell -
-    % ptsSimCell  -
-    % hitFlagCell -
+    %LOADSIMDETAIL 
+     % 
+     % simDetail = LOADSIMDETAIL(relPathFile)
+     % 
+     % relPathFile - 
+     % 
+     % simDetail   -
     
     fid = fopen(relPathFile,'r');
     

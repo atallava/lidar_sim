@@ -16,6 +16,7 @@ namespace lidar_sim {
 	std::vector<std::vector<double> > getPtsFromLine(const std::string line);
 	std::vector<int> getHitFlagFromLine(const std::string line);
 
+	// todo: cleanup dependencies on obsolete vars
 	std::vector<std::vector<double> > m_ray_origins;
 	std::vector<std::vector<double> > m_ray_pitches;
 	std::vector<std::vector<double> > m_ray_yaws;

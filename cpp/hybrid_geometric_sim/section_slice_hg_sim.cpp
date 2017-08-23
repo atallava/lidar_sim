@@ -70,10 +70,12 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
 
 std::string genRelPathSection(int section_id)
 {
+    // todo: cleanup
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_world_frame_subsampled.xyz";
+       << "_subsampled.xyz";
+       // << "_world_frame_subsampled.xyz";
 
     return ss.str();
 }
@@ -155,8 +157,7 @@ int main(int argc, char **argv)
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
-    // todo: set to false
-    sim.setDeterministicSim(true);
+    sim.setDeterministicSim(false);
 
     std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
     std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
@@ -170,8 +171,8 @@ int main(int argc, char **argv)
 
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 50000; // 40000 
-    packet_id_sim_end = packet_id_sim_start + 10000; // 20000
+    packet_id_sim_start = 1000;
+    packet_id_sim_end = packet_id_sim_start + 1000; 
 
     RayDirnServer ray_dirn_server;
 
@@ -183,7 +184,7 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     SimDetail sim_detail;
-    size_t packet_array_step = 1000; // 100
+    size_t packet_array_step = 500; 
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
@@ -207,7 +208,6 @@ int main(int argc, char **argv)
 	    = ray_dirn_server.fitDetailToPts(ray_origin, this_real_pts);
 
     	// ray dirns
-    	// std::vector<std::vector<double> > ray_dirns  = calcRayDirns(ray_origin, this_real_pts);
 	std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_ray_pitches, this_ray_yaws);
 	
 	// blocks queried for this pose
@@ -236,16 +236,6 @@ int main(int argc, char **argv)
     	hit_flag.insert(hit_flag.end(), this_sim_hit_flag.begin(), this_sim_hit_flag.end());
 
 	// add to sim detail
-	// todo: cleanup
-	// // ray origin
-	// sim_detail.m_ray_origins.push_back(ray_origin);
-	// // real pts
-	// sim_detail.m_real_pts.push_back(this_real_pts);
-	// // sim pts
-	// sim_detail.m_sim_pts.push_back(this_sim_pts_all);
-	// // hit flag
-	// sim_detail.m_hit_flags.push_back(this_sim_hit_flag);
-
 	// ray origin
 	sim_detail.m_ray_origins.push_back(ray_origin);
 	// pitches
