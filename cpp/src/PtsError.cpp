@@ -54,69 +54,70 @@ void PtsError::dispPcdError(const std::vector<std::vector<double> > &pts1,
 
 void PtsError::dispRangeError(const SimDetail &sim_detail)
 {
-    size_t n_origins = sim_detail.m_ray_origins.size();
-    std::vector<double> err_vec(n_origins, 0.0);
-    std::vector<double> err_vec_only_hits(n_origins, 0.0);
-    std::vector<int> n_real_pts_vec(n_origins, 0.0);
-    std::vector<int> n_misses_vec(n_origins, 0.0);
-    std::vector<double> fracn_misses_vec(n_origins, 0.0);
+    size_t n_packets = sim_detail.m_ray_origins.size();
+    std::vector<double> packet_mean_errors(n_packets, 0);
+    std::vector<int> packet_true_hits(n_packets, 0);
+    std::vector<int> packet_false_misses(n_packets, 0);
+    std::vector<int> packet_false_hits(n_packets, 0);
+    std::vector<int> packet_true_misses(n_packets, 0);
 
-    for(size_t i = 0; i < n_origins; ++i)
+    for(size_t i = 0; i < n_packets; ++i)
     {
-	std::vector<double> ray_origin = sim_detail.m_ray_origins[i];
-	std::vector<std::vector<double> > real_pts = 
-	    sim_detail.m_real_pts[i];
-	std::vector<std::vector<double> > sim_pts = 
-	    sim_detail.m_sim_pts[i];
-	std::vector<int> hit_flag = sim_detail.m_hit_flags[i];
+	std::vector<std::vector<double> > this_packet_real_pts_all = sim_detail.m_real_pts_all[i];
+	std::vector<int> this_packet_real_hit_flag = sim_detail.m_real_hit_flags[i];
+	std::vector<std::vector<double> > this_packet_sim_pts_all = sim_detail.m_sim_pts_all[i];
+	std::vector<int> this_packet_sim_hit_flag = sim_detail.m_sim_hit_flags[i];
 
-	size_t n_real_pts = real_pts.size();
-	n_real_pts_vec[i] = n_real_pts;
-
-	std::vector<double> real_ranges(n_real_pts, 0.0);
-	std::vector<double> sim_ranges(n_real_pts, 0.0);
-
-	std::vector<double> this_err_vec;
-	std::vector<double> this_err_vec_only_hits;
-
-	int n_misses = n_real_pts;
-	for(size_t j = 0; j < n_real_pts; ++j)
+	size_t n_rays = this_packet_real_pts_all.size();
+	std::vector<double> this_packet_errors;
+	int this_packet_true_hits = 0;
+	int this_packet_false_misses = 0;
+	int this_packet_false_hits = 0;
+	int this_packet_true_misses = 0;
+	for(size_t j = 0; j < n_rays; ++j)
 	{
-	    double real_range = euclideanDist(ray_origin, real_pts[j]);
-	    double sim_range = euclideanDist(ray_origin, sim_pts[j]);
-
-	    real_ranges[j] = real_range;
-	    sim_ranges[j] = sim_range;
-
-	    double err = std::pow(real_range-sim_range, 2.0);
-	    this_err_vec.push_back(err);
-	    if (hit_flag[j])
+	    bool condn1 = (this_packet_real_hit_flag[j] == 1);
+	    bool condn2 = (this_packet_sim_hit_flag[j] == 1);
+	    
+	    if (condn1 && !condn2)
+		this_packet_false_misses++;
+	    
+	    if (condn1 && condn2)
 	    {
-		this_err_vec_only_hits.push_back(err);
-		n_misses--;
+		this_packet_true_hits++;
+		double err = vectorNorm(
+		    vectorDiff(this_packet_real_pts_all[j], this_packet_sim_pts_all[j]));
+		this_packet_errors.push_back(err);
 	    }
+
+	    if (!condn1 && condn2)
+		this_packet_false_hits++;
+
+	    if (!condn1 && !condn2)
+		this_packet_true_misses++;
 	}
-
-	std::tie(err_vec[i], std::ignore) = calcVecMeanVar(this_err_vec);
-	if (n_misses < (int)n_real_pts)
-	    std::tie(err_vec_only_hits[i], std::ignore) = calcVecMeanVar(this_err_vec_only_hits);
-
-	n_misses_vec[i] = n_misses;
-	fracn_misses_vec[i] = n_misses/n_real_pts;
+	
+	double this_packet_mean_error = 0;
+	if (this_packet_true_hits > 0)
+	    this_packet_mean_error = std::accumulate(this_packet_errors.begin(), 
+						     this_packet_errors.end(), 0.0)/this_packet_true_hits;
+        
+	packet_mean_errors[i] = this_packet_mean_error;
+	packet_true_hits[i] = this_packet_true_hits;
+	packet_false_misses[i] = this_packet_false_misses;
+	packet_false_hits[i] = this_packet_false_hits;
+	packet_true_misses[i] = this_packet_true_misses;
     }
-    
-    double err_mean, err_var; 
-    std::tie(err_mean, err_var) = calcVecMeanVar(err_vec);
-    
-    double err_only_hits_mean, err_only_hits_var; 
-    std::tie(err_only_hits_mean, err_only_hits_var) = calcVecMeanVar(err_vec_only_hits);
 
-    int overall_n_misses = std::accumulate(n_misses_vec.begin(), n_misses_vec.end(), 0.0);
-    int overall_n_real_pts = std::accumulate(n_real_pts_vec.begin(), n_real_pts_vec.end(), 0.0);
-    double overall_fracn_misses = overall_n_misses/overall_n_real_pts;
-    
-    std::cout << "err. mean: " << err_mean << " var: " << err_var << std::endl;
-    std::cout << "err_only_hits. mean: " << err_only_hits_mean << " var: " << err_only_hits_var << std::endl;
-    std::cout << "overall fracn misses: " << overall_fracn_misses << std::endl;;
+    std::cout << "packet mean errors" << std::endl;
+    dispVecMeanVar(packet_mean_errors);
+    std::cout << "packet true hits" << std::endl;
+    dispVecMeanVar(packet_true_hits);
+    std::cout << "packet false misses" << std::endl;
+    dispVecMeanVar(packet_false_misses);
+    std::cout << "packet false hits" << std::endl;
+    dispVecMeanVar(packet_false_hits);
+    std::cout << "packet true misses" << std::endl;
+    dispVecMeanVar(packet_true_misses);
 }
 

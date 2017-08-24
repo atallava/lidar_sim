@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <tuple>
 
 #include <lidar_sim/SimDetail.h>
+#include <lidar_sim/MathUtils.h>
 
 namespace lidar_sim {
     class PtsError {
@@ -19,6 +21,14 @@ namespace lidar_sim {
 	void dispPcdError(const std::vector<std::vector<double> > &pts1, 
 				    const std::vector<std::vector<double> > &pts2);
 	void dispRangeError(const SimDetail &sim_detail);
+
+	template<typename T>
+	    void dispVecMeanVar(std::vector<T> vec)
+	{
+	    double mean, var;
+	    std::tie(mean, var) = calcVecMeanVar(vec);
+	    std::cout << "mean: " << mean << ", var: " << var << std::endl;
+	}
 
     private:
     };
