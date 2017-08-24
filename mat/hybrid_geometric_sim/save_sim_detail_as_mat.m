@@ -4,6 +4,11 @@ genRelPathSimDetailMat = @(sectionId,simType,queryType) ...
     sprintf('../data/sections/section_%02d/%s_sim/%s_sim_detail.mat',sectionId,simType,queryType);
 
 %%
-relPathSimDetail = '~/lidar_sim/cpp/data/sections/section_08/hg_sim/section_sim_detail.txt';
+sectionId = 8;
+simType = 'hg';
+queryType = 'slice';
+relPathSimDetail = genRelPathSimDetail(sectionId,simType,queryType);
 simDetail = loadSimDetail(relPathSimDetail);
+relPathSimDetailMat = genRelPathSimDetailMat(sectionId,simType,queryType);
+save(relPathSimDetailMat,'simDetail');
 

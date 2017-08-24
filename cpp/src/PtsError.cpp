@@ -109,6 +109,13 @@ void PtsError::dispRangeError(const SimDetail &sim_detail)
 	packet_true_misses[i] = this_packet_true_misses;
     }
 
+    double total_true_hits = std::accumulate(packet_true_hits.begin(), packet_true_hits.end(), 0.0);
+    double total_false_hits = std::accumulate(packet_false_hits.begin(), packet_false_hits.end(), 0.0);
+    double total_false_misses = std::accumulate(packet_false_misses.begin(), packet_false_misses.end(), 0.0);
+    double precision = total_true_hits/(total_true_hits + total_false_hits);
+    double recall = total_true_hits/(total_true_hits + total_false_misses);
+    double f1_score = 2*(precision*recall)/(precision + recall);
+
     std::cout << "packet mean errors" << std::endl;
     dispVecMeanVar(packet_mean_errors);
     std::cout << "packet true hits" << std::endl;
@@ -119,5 +126,7 @@ void PtsError::dispRangeError(const SimDetail &sim_detail)
     dispVecMeanVar(packet_false_hits);
     std::cout << "packet true misses" << std::endl;
     dispVecMeanVar(packet_true_misses);
+    std::cout << "precision: " << precision << ", recall: " << recall 
+	      << ", f1: " << f1_score << std::endl;
 }
 

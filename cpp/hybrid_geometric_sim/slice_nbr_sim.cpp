@@ -44,7 +44,7 @@ std::string genRelPathSimPts(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/nbr_sim/slice_nbr_sim_pts.xyz";
+       << "/nbr_sim/slice_sim_pts.xyz";
 
     return ss.str();
 }

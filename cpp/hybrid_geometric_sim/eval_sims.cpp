@@ -103,48 +103,55 @@ int main(int argc, char **argv)
     PtsError metric;
 
     // pcd error
-    std::cout << "pcd error: " << std::endl;
+    std::cout << "pcd error: " << std::endl << std::endl;
 
     // hg sim
+    std::cout << "hg sim: " << std::endl;
     std::string rel_path_hg_real_pts = genRelPathSliceHgRealPts(section_id, tag);
     std::vector<std::vector<double> > hg_real_pts = loadPtsFromXYZFile(rel_path_hg_real_pts);
     std::string rel_path_hg_sim_pts = genRelPathHgSimPts(section_id, tag);
     std::vector<std::vector<double> > hg_sim_pts = loadPtsFromXYZFile(rel_path_hg_sim_pts);
 
-    std::cout << "hg sim: " << std::endl;
     metric.dispPcdError(hg_real_pts, hg_sim_pts);
 
+    dispHorizontalLine(25);
+
     // nbr sim
+    std::cout << "nbr sim: " << std::endl;
     std::string rel_path_nbr_real_pts = genRelPathSliceNbrRealPts(section_id, tag);
     std::vector<std::vector<double> > nbr_real_pts = loadPtsFromXYZFile(rel_path_nbr_real_pts);
     std::string rel_path_nbr_sim_pts = genRelPathNbrSimPts(section_id, tag);
     std::vector<std::vector<double> > nbr_sim_pts = loadPtsFromXYZFile(rel_path_nbr_sim_pts);
 
-    std::cout << "nbr sim: " << std::endl;
     metric.dispPcdError(nbr_real_pts, nbr_sim_pts);
 
+    dispHorizontalLine(25);
     // sanity check
     std::cout << std::endl;
     std::cout << "sanity check. nbr, hg real pts: " << std::endl;
     metric.dispPcdError(hg_real_pts, nbr_real_pts);
 
+    dispHorizontalLine();
+
     // range error
-    std::cout << std::endl;
-    std::cout << "range error: " << std::endl;
+    std::cout << "range error: " << std::endl << std::endl;
 
     // hg sim
+    std::cout << "hg sim:" << std::endl;
     std::string rel_path_sim_detail_hg = genRelPathHgSimDetail(section_id, tag);
     SimDetail sim_detail_hg(rel_path_sim_detail_hg);
 
-    std::cout << "hg sim:" << std::endl;
     metric.dispRangeError(sim_detail_hg);
 
+    dispHorizontalLine(25);
     // nbr sim
+    std::cout << "nbr sim:" << std::endl;
     std::string rel_path_sim_detail_nbr = genRelPathNbrSimDetail(section_id, tag);
     SimDetail sim_detail_nbr(rel_path_sim_detail_nbr);
 
-    std::cout << "nbr sim:" << std::endl;
     metric.dispRangeError(sim_detail_nbr);
+
+    dispHorizontalLine();
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

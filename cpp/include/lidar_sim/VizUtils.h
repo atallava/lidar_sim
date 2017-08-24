@@ -30,4 +30,6 @@ namespace lidar_sim {
 	    std::cout << std::endl;
 	}
     }
+
+    void dispHorizontalLine(int length = 50);
 }
