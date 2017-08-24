@@ -59,6 +59,10 @@ include( CGAL_CreateSingleSourceCGALProgram )
 # message( STATUS "CGAL FOUND: " ${CGAL_FOUND} )
 # message( FATAL_ERROR )
 
+# NLOPT
+set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
+list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
+
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
@@ -172,6 +176,18 @@ add_library(lidar_sim SHARED
 #   add_executable( ${testname} ${testsourcefile} )
 #   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
 # endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
+
+####################################################################################################
+
+# nlopt examples
+
+## pattern
+
+# # add_executable(pattern nlopt_examples/pattern.cpp)
+# #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(trial nlopt_examples/trial.cpp)
+  target_link_libraries(trial lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
  
