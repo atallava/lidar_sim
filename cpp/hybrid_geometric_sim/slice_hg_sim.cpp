@@ -198,6 +198,7 @@ int main(int argc, char **argv)
     	// add to big list of real pts
     	real_pts.insert(real_pts.end(), this_real_pts.begin(), this_real_pts.end());
 
+    	// ray dirns
 	std::vector<double> this_ray_pitches;
 	std::vector<double> this_ray_yaws;
 	std::vector<std::vector<double> > this_real_pts_all;
@@ -205,7 +206,6 @@ int main(int argc, char **argv)
 	std::tie(this_ray_pitches, this_ray_yaws, this_real_pts_all, this_real_hit_flag)
 	    = ray_dirn_server.fitDetailToPts(ray_origin, this_real_pts);
 
-    	// ray dirns
 	std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_ray_pitches, this_ray_yaws);
 	
 	// blocks queried for this pose

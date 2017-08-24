@@ -293,24 +293,24 @@ add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
 
 # hg sim
 
-# add_executable(section_slice_hg_scene_sim scene_sim/section_slice_hg_scene_sim.cpp)
-#   target_link_libraries(section_slice_hg_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
+add_executable(section_slice_hg_scene_sim scene_sim/section_slice_hg_scene_sim.cpp)
+  target_link_libraries(section_slice_hg_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+  
 # mesh model sim
 
 # add_executable(test_mesh_model_sim scene_sim/test_mesh_model_sim.cpp)
 #   target_link_libraries(test_mesh_model_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(section_slice_mm_scene_sim scene_sim/section_slice_mm_scene_sim.cpp)
-#   target_link_libraries(section_slice_mm_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(section_slice_mm_scene_sim scene_sim/section_slice_mm_scene_sim.cpp)
+  target_link_libraries(section_slice_mm_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(viz_scene_mesh_models scene_sim/viz_scene_mesh_models.cpp)
 #   target_link_libraries(viz_scene_mesh_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # nbr sim
 
-# add_executable(section_slice_nbr_scene_sim scene_sim/section_slice_nbr_scene_sim.cpp)
-#   target_link_libraries(section_slice_nbr_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(section_slice_nbr_scene_sim scene_sim/section_slice_nbr_scene_sim.cpp)
+  target_link_libraries(section_slice_nbr_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## viz
 
