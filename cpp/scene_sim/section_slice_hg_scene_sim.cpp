@@ -1,3 +1,5 @@
+// todo: cleanup sim detail
+
 #include <tuple>
 #include <ctime>
 
@@ -184,8 +186,8 @@ int main(int argc, char **argv)
 
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 0; 
-    packet_id_sim_end = section.m_packet_timestamps.size();
+    packet_id_sim_start = 1000; 
+    packet_id_sim_end = 2000;
 
     // sim
     // loop over packets
@@ -195,7 +197,7 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     SimDetail sim_detail;
-    size_t packet_array_step = 5; 
+    size_t packet_array_step = 500; 
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {

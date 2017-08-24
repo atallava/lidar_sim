@@ -259,8 +259,8 @@ add_library(lidar_sim SHARED
 # add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
 #   target_link_libraries(section_ray_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_slice_hg_sim hybrid_geometric_sim/section_slice_hg_sim.cpp)
-  target_link_libraries(section_slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(slice_hg_sim hybrid_geometric_sim/slice_hg_sim.cpp)
+  target_link_libraries(slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(test_stitch_triangle_models hybrid_geometric_sim/test_stitch_triangle_models.cpp)
 #   target_link_libraries(test_stitch_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
@@ -276,11 +276,16 @@ add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
 # add_executable(poses_nbr_sim hybrid_geometric_sim/poses_nbr_sim.cpp)
 #   target_link_libraries(poses_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_slice_nbr_sim hybrid_geometric_sim/section_slice_nbr_sim.cpp)
-  target_link_libraries(section_slice_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(slice_nbr_sim hybrid_geometric_sim/slice_nbr_sim.cpp)
+  target_link_libraries(slice_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
   target_link_libraries(section_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+## eval sim
+
+add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
+  target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
 
@@ -322,9 +327,6 @@ add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
 #   target_link_libraries(viz_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## eval
-
-# add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
-#   target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(eval_scene_sims scene_sim/eval_scene_sims.cpp)
 #   target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )

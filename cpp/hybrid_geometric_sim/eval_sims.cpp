@@ -11,50 +11,140 @@
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/PtsError.h>
+#include <lidar_sim/SimDetail.h>
 
 using namespace lidar_sim;
 
+std::string genRelPathSliceHgRealPts(int section_id, int tag)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/slice_real_pts";
+    if (tag == -1)
+	ss << ".xyz";
+    else
+	ss << "_" << tag << ".xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathHgSimPts(int section_id, int tag = -1)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/slice_sim_pts";
+    if (tag == -1)
+	ss << ".xyz";
+    else
+	ss << "_" << tag << ".xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathHgSimDetail(int section_id, int tag = -1)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/slice_sim_detail";
+    if (tag == -1)
+	ss << ".txt";
+    else
+	ss << "_" << tag << ".txt";
+
+    return ss.str();
+}
+
+std::string genRelPathSliceNbrRealPts(int section_id, int tag = -1)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/nbr_sim/slice_real_pts";
+    if (tag == -1)
+	ss << ".xyz";
+    else
+	ss << "_" << tag << ".xyz";
+    
+    return ss.str();
+}
+
+std::string genRelPathNbrSimPts(int section_id, int tag = -1)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/nbr_sim/slice_sim_pts";
+    if (tag == -1)
+	ss << ".xyz";
+    else
+	ss << "_" << tag << ".xyz";
+
+    return ss.str();
+}
+
+std::string genRelPathNbrSimDetail(int section_id, int tag = -1)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/nbr_sim/slice_sim_detail";
+    if (tag == -1)
+	ss << ".txt";
+    else
+	ss << "_" << tag << ".txt";
+
+    return ss.str();
+}
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
+    int section_id = 8;
+    int tag = -1;
+
     // error metric
     PtsError metric;
 
+    // pcd error
+    std::cout << "pcd error: " << std::endl;
+
     // hg sim
-    std::string rel_path_hg_real_pts = "data/hg_real_pts.xyz";
+    std::string rel_path_hg_real_pts = genRelPathSliceHgRealPts(section_id, tag);
     std::vector<std::vector<double> > hg_real_pts = loadPtsFromXYZFile(rel_path_hg_real_pts);
-    
-    std::string rel_path_hg_sim_pts = "data/hg_sim_pts.xyz";
+    std::string rel_path_hg_sim_pts = genRelPathHgSimPts(section_id, tag);
     std::vector<std::vector<double> > hg_sim_pts = loadPtsFromXYZFile(rel_path_hg_sim_pts);
 
-    double hg_loss_mean, hg_loss_var;
-    // std::tie(hg_loss_mean, hg_loss_var) = metric.calcAsymmetricError(hg_real_pts, hg_sim_pts);
-    std::tie(hg_loss_mean, hg_loss_var) = metric.calcAsymmetricError(hg_sim_pts, hg_real_pts);
-    
     std::cout << "hg sim: " << std::endl;
-    std::cout << "loss mean: " << hg_loss_mean << " loss var: " << hg_loss_var << std::endl;
+    metric.dispPcdError(hg_real_pts, hg_sim_pts);
 
     // nbr sim
-    std::string rel_path_nbr_real_pts = "data/nbr_real_pts.xyz";
+    std::string rel_path_nbr_real_pts = genRelPathSliceNbrRealPts(section_id, tag);
     std::vector<std::vector<double> > nbr_real_pts = loadPtsFromXYZFile(rel_path_nbr_real_pts);
-    
-    std::string rel_path_nbr_sim_pts = "data/nbr_sim_pts.xyz";
+    std::string rel_path_nbr_sim_pts = genRelPathNbrSimPts(section_id, tag);
     std::vector<std::vector<double> > nbr_sim_pts = loadPtsFromXYZFile(rel_path_nbr_sim_pts);
 
-    double nbr_loss_mean, nbr_loss_var;
-    // std::tie(nbr_loss_mean, nbr_loss_var) = metric.calcAsymmetricError(nbr_real_pts, nbr_sim_pts);
-    std::tie(nbr_loss_mean, nbr_loss_var) = metric.calcAsymmetricError(nbr_sim_pts, nbr_real_pts);
- 
     std::cout << "nbr sim: " << std::endl;
-    std::cout << "loss mean: " << nbr_loss_mean << " loss var: " << nbr_loss_var << std::endl;
+    metric.dispPcdError(nbr_real_pts, nbr_sim_pts);
 
     // sanity check
-    // that the real pts from both are the same
-    double sanity_loss_mean, sanity_loss_var;
-    std::tie(sanity_loss_mean, sanity_loss_var) = metric.calcAsymmetricError(hg_real_pts, nbr_real_pts);
-    std::cout << "sanity check" << std::endl;
-    std::cout << "loss mean: " << sanity_loss_mean << " loss var: " << sanity_loss_var << std::endl;
+    std::cout << std::endl;
+    std::cout << "sanity check. nbr, hg real pts: " << std::endl;
+    metric.dispPcdError(hg_real_pts, nbr_real_pts);
+
+    // range error
+    std::cout << std::endl;
+    std::cout << "range error: " << std::endl;
+
+    // hg sim
+    std::string rel_path_sim_detail_hg = genRelPathHgSimDetail(section_id, tag);
+    SimDetail sim_detail_hg(rel_path_sim_detail_hg);
+
+    std::cout << "hg sim:" << std::endl;
+    metric.dispRangeError(sim_detail_hg);
+
+    // nbr sim
+    std::string rel_path_sim_detail_nbr = genRelPathNbrSimDetail(section_id, tag);
+    SimDetail sim_detail_nbr(rel_path_sim_detail_nbr);
+
+    std::cout << "nbr sim:" << std::endl;
+    metric.dispRangeError(sim_detail_nbr);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
