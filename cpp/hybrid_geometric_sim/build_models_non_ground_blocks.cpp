@@ -88,7 +88,9 @@ int main(int argc, char **argv)
 	doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
 
     // loop over blocks
-    for(size_t i = 0; i < block_ids.size(); ++i)
+    // todo: cleanup
+    // for(size_t i = 0; i < block_ids.size(); ++i)
+    for(size_t i = 0; i < 1; ++i)
     {
 	// model each block
 	int block_id = block_ids[i];

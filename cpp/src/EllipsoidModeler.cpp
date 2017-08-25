@@ -224,6 +224,7 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
     	std::vector<double> sorted_dist_along_ray;
     	std::tie(sorted_intersecting_ids, sorted_dist_along_ray) =
     	    sortIntersectionFlag(intersection_flag, dist_along_ray);
+	// note: the maha dists are of the observed pt
     	std::vector<double> maha_dists_to_ellipsoids = 
     	    sim.calcMahaDistPtToEllipsoids(sorted_intersecting_ids, this_pt);
 	
@@ -316,11 +317,6 @@ void EllipsoidModeler::filterPts()
 void EllipsoidModeler::setDebugFlag(int flag)
 {
     m_debug_flag = flag;
-}
-
-void EllipsoidModeler::setNClustersPerPt(double n_clusters_per_pt)
-{
-    m_n_clusters_per_pt = n_clusters_per_pt;
 }
 
 // hack for patching calcHitProb

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <nlopt.hpp>
 
-double myfunc(unsigned n, const double *x, double *grad, void *my_func_data)
+double myfunc(const std::vector<double> &x, std::vector<double> &grad, void *my_func_data)
 {
-    if (grad) {
+    if (!grad.empty()) {
         grad[0] = 0.0;
         grad[1] = 0.5 / sqrt(x[1]);
     }
@@ -14,31 +14,35 @@ typedef struct {
     double a, b;
 } my_constraint_data;
 
-double myconstraint(unsigned n, const double *x, double *grad, void *data)
+double myconstraint(const std::vector<double> &x, std::vector<double> &grad, void *data)
 {
-    my_constraint_data *d = (my_constraint_data *) data;
+    my_constraint_data *d = reinterpret_cast<my_constraint_data*>(data);
     double a = d->a, b = d->b;
-    if (grad) {
+    if (!grad.empty()) {
         grad[0] = 3 * a * (a*x[0] + b) * (a*x[0] + b);
         grad[1] = -1.0;
     }
     return ((a*x[0] + b) * (a*x[0] + b) * (a*x[0] + b) - x[1]);
- }
+}
 
 int main(int argc, char **argv)
 {
-    nlopt::opt opt(nlopt::LD_MMA, 2);
+    // nlopt::opt opt(nlopt::LD_MMA, 2); // algo and dimensionality
+    nlopt::opt opt(nlopt::LN_COBYLA, 2); // algo and dimensionality
     std::vector<double> lb(2);
     lb[0] = -HUGE_VAL; lb[1] = 0;
     opt.set_lower_bounds(lb);
 
-    opt.set_min_objective(myfunc, NULL);
+    opt.set_min_objective(myfunc, NULL); 
+
+    int max_eval = 100;
+    opt.set_maxeval(max_eval);
 
     my_constraint_data data[2] = { {2,0}, {-1,1} };
     opt.add_inequality_constraint(myconstraint, &data[0], 1e-8);
     opt.add_inequality_constraint(myconstraint, &data[1], 1e-8);
 
-    opt.set_xtol_rel(1e-4);
+    opt.set_xtol_rel(1e-4); // relative tolerance on x
 
     std::vector<double> x(2);
     x[0] = 1.234; x[1] = 5.678;

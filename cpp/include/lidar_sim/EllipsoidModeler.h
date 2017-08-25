@@ -33,7 +33,6 @@ namespace lidar_sim {
 	void calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_poses_server);
 	void filterPts();
 	void setDebugFlag(int flag);
-	void setNClustersPerPt(double n_clusters_per_pt);
 
 	// hack for patching calcHitProb
 	void setEllipsoidModels(const EllipsoidModels &ellipsoid_models);
@@ -48,8 +47,8 @@ namespace lidar_sim {
 	double m_n_clusters_per_pt;
 	int m_min_pts_per_cluster;
 	int m_n_clusters;
-	double m_default_hit_prob;
 
+	double m_default_hit_prob;
 	int m_hit_count_prior;
 	int m_miss_count_prior;
 	double m_max_pts_dist_to_nbrs; // used to filter out pts before modeling

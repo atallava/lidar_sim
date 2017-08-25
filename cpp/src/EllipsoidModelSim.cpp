@@ -230,10 +230,13 @@ EllipsoidModelSim::assignEllipsoidHitCredits(const std::vector<double> &maha_dis
 					     const std::vector<double> &sorted_dist_along_ray,
 					     const double measured_range)
 {
+    // the maha dists are of the measured pt
     std::vector<int> flag(maha_dists_to_ellipsoids.size(), 0);
     for(size_t i = 0; i < flag.size(); ++i)
+    {
 	if (maha_dists_to_ellipsoids[i] < m_max_maha_dist_for_hit)
 	    flag[i] = 1;
+    }
 
     int ellipsoid_hit_id = -1;
     std::vector<int> ellipsoid_miss_ids;
