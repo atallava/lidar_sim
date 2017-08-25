@@ -41,7 +41,7 @@ std::string genRelPathNonGroundPts(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
 
     return ss.str();
@@ -50,14 +50,15 @@ std::string genRelPathNonGroundPts(int section_id, int block_id)
 int main(int argc, char **argv)
 {
     int section_id = 3;
-    int block_id = 3;
+    int block_id = 8;
 
     // pts
     std::string rel_path_pts = genRelPathNonGroundPts(section_id, block_id);
     std::vector<std::vector<double> > pts = loadPtsFromXYZFile(rel_path_pts);
 
-    // triangles
-    std::string rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
+    // ellipsoids
+    // std::string rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
+    std::string rel_path_ellipsoids = "data/hg_optim/ellipsoids.txt";
     EllipsoidModels ellipsoid_models = 
 	loadEllipsoidModelsFromFile(rel_path_ellipsoids);
 

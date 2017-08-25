@@ -3,6 +3,8 @@
 #include <vector>
 #include <ctime>
 
+#include <boost/program_options.hpp>
+
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
@@ -22,7 +24,7 @@ std::string genRelPathBlock(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
 
     return ss.str();
@@ -32,7 +34,7 @@ std::string genRelPathEllipsoids(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
 
     return ss.str();
@@ -51,7 +53,7 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/block_node_ids_non_ground.txt";
+       << "/hg_sim/block_node_ids_non_ground.txt";
 
     return ss.str();
 }
@@ -60,13 +62,73 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    int section_id = 3;
-    int block_id = 8;
+    // parse command line inputs
+    namespace po = boost::program_options;
+    po::options_description desc("Options");
+    desc.add_options()
+	("help", "Print help messages")
+	("section_id", po::value<int>(), "Section id")
+	("block_id", po::value<int>(), "Block id")
+	("rel_path_ellipsoids", po::value<std::string>(), "Where ellipsoids are stored")
+	("verbose", po::value<int>(), "Print info");
     
-    std::cout << "processing block " << block_id << "..." << std::endl;
+    po::variables_map vm;
+
+    int section_id, block_id;
+    std::string rel_path_ellipsoids;
+    int verbose;
+    try
+    {
+	po::store(po::parse_command_line(argc, argv, desc), vm);
+	
+	if (vm.count("help"))
+	    std::cout << desc << std::endl;
+
+	if (vm.count("section_id") && vm.count("block_id"))
+	{
+	    section_id = vm["section_id"].as<int>();
+	    block_id = vm["block_id"].as<int>();
+	}
+	else
+	{
+	    bool condn1 = vm.count("section_id") && ~vm.count("block_id");
+	    bool condn2 = ~vm.count("section_id") && vm.count("block_id");
+	    if (condn1 || condn2) {
+		std::stringstream ss_err_msg;
+		ss_err_msg << "cannot input only block or section id";
+		throw std::runtime_error(ss_err_msg.str().c_str());
+	    }
+	    else {
+		section_id = 3;
+		block_id = 8;
+	    }
+	}
+
+	if (vm.count("rel_path_ellipsoids"))
+	    rel_path_ellipsoids = vm["rel_path_ellipsoids"].as<std::string>();
+	else
+	    rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
+
+	if (vm.count("verbose"))
+	    verbose = vm["verbose"].as<int>();
+	else
+	    verbose = 0;
+
+	po::notify(vm);
+    }
+    catch(po::error& e) 
+    { 
+	std::cerr << "ERROR: " << e.what() << std::endl << std::endl; 
+	std::cerr << desc << std::endl; 
+	return 1;
+    } 
+
+    if (verbose)
+	std::cout << "section id: " << section_id << ", block_id: " << block_id << "..." << std::endl;
 
     std::string rel_path_pts = genRelPathBlock(section_id, block_id);
-
+    std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
+	
     EllipsoidModeler modeler;
     modeler.setDebugFlag(1);
     modeler.createEllipsoidModels(rel_path_pts);
@@ -90,47 +152,36 @@ int main(int argc, char **argv)
 	std::vector<std::vector<int> > block_node_ids_non_ground = 
 	    doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
 
-	// slice imu posns
-	std::vector<std::vector<double> > slice_imu_posns;
-	// blocks are indexed from 1. sorry.
-	for(size_t i = 0; i < 2; ++i)
-	    slice_imu_posns.push_back(imu_posn_nodes[block_node_ids_non_ground[block_id-1][i]]);
+	// calc section pts to process
+	int num_nbrs = 1;
+	std::vector<std::vector<int> > section_nbr_pt_ids; 
 
-	// slice section log ids
-	int slice_start_section_log_id;
-	int slice_end_section_log_id;
+	std::tie(section_nbr_pt_ids, std::ignore) = nearestNeighbors(section.m_pts, block_pts, num_nbrs);
 
-	std::tie(slice_start_section_log_id, slice_end_section_log_id) =
-	    section.getLogIdsBracketingImuPosns(slice_imu_posns, imu_pose_server);
-
-	// subsample log ids
-	int max_section_packets_to_process = 1e4;
-	int skip = (slice_end_section_log_id - slice_start_section_log_id)/max_section_packets_to_process;
-	if (skip < 1)
-	    skip = 1;
+	std::vector<std::vector<double> > section_pts_to_process;
 	std::vector<int> section_pt_ids_to_process;
-	for(size_t i = slice_start_section_log_id; i <= (size_t)slice_end_section_log_id; i += skip)
-	{
-	    double t = section.m_packet_timestamps[i];
-	    std::vector<int> pt_ids = section.getPtIdsAtTime(t);
-	    section_pt_ids_to_process.insert(section_pt_ids_to_process.end(), 
-					     pt_ids.begin(), pt_ids.end());
-	}
-
+	for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
+	    for(size_t j = 0; j < section_nbr_pt_ids[i].size(); ++j)
+	    {
+		int id = section_nbr_pt_ids[i][j];
+		section_pt_ids_to_process.push_back(id);
+		section_pts_to_process.push_back(section.m_pts[id]);
+	    }
 	modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
     }
     else
-	std::cout << "skipping hit prob calc..." << std::endl;
+	if (verbose)
+	    std::cout << "skipping hit prob calc..." << std::endl;
 
     // write out
-    std::string rel_path_ellipsoids;
     // rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
-    rel_path_ellipsoids = "data/ellipsoids_trial.txt";
+    // rel_path_ellipsoids = "data/hg_optim/ellipsoids.txt";
 
     modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
-    std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
+    if (verbose)
+	std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
 
     return(1);
 }

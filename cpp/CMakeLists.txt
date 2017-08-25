@@ -17,7 +17,7 @@ list( APPEND LIDAR_SIM_LIBRARIES ${CMAKE_THREAD_LIBS_INIT} )
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 
 # Boost
-find_package( Boost COMPONENTS system thread log regex REQUIRED )
+find_package( Boost COMPONENTS system thread log regex program_options REQUIRED )
 include_directories( ${Boost_INCLUDE_DIRS} )
 list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_thread" ) # Force linking against thread
@@ -238,6 +238,9 @@ add_executable(trial nlopt_examples/trial.cpp)
 add_executable(build_models_non_ground_blocks hybrid_geometric_sim/build_models_non_ground_blocks.cpp)
   target_link_libraries(build_models_non_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_non_ground_block.cpp)
+  target_link_libraries(build_models_non_ground_block lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 # add_executable(debug_hit_prob hybrid_geometric_sim/debug_hit_prob.cpp)
 #   target_link_libraries(debug_hit_prob lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
@@ -303,6 +306,20 @@ add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
 add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
   target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+## viz
+
+# add_executable(write_section_models_fig hybrid_geometric_sim/write_section_models_fig.cpp)
+#   target_link_libraries(write_section_models_fig lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+# add_executable(viz_section_models hybrid_geometric_sim/viz_section_models.cpp)
+#   target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(viz_ellipsoid_models hybrid_geometric_sim/viz_ellipsoid_models.cpp)
+  target_link_libraries(viz_ellipsoid_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+# add_executable(viz_triangle_models hybrid_geometric_sim/viz_triangle_models.cpp)
+#   target_link_libraries(viz_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ####################################################################################################
 
 ## scene sim
@@ -327,20 +344,6 @@ add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
 
 # add_executable(slice_nbr_scene_sim scene_sim/slice_nbr_scene_sim.cpp)
 #   target_link_libraries(slice_nbr_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-## viz
-
-# add_executable(write_section_models_fig hybrid_geometric_sim/write_section_models_fig.cpp)
-#   target_link_libraries(write_section_models_fig lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-# add_executable(viz_section_models hybrid_geometric_sim/viz_section_models.cpp)
-#   target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-# add_executable(viz_ellipsoid_models hybrid_geometric_sim/viz_ellipsoid_models.cpp)
-#   target_link_libraries(viz_ellipsoid_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-# add_executable(viz_triangle_models hybrid_geometric_sim/viz_triangle_models.cpp)
-#   target_link_libraries(viz_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## eval
 
