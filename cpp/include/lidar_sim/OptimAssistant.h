@@ -23,9 +23,16 @@ namespace lidar_sim {
 	std::string genRelPathImuPosnNodes(int section_id);
 	std::string genRelPathBlockNodeIdsGround(int section_id);
 	std::string genRelPathBlockNodeIdsNonGround(int section_id);
+
+	// for slice sim
 	std::string genRelPathSliceRealPts(int section_id);
 	std::string genRelPathSliceSimPts(int section_id);
-	std::string genRelPathSimDetail(int section_id);
+	std::string genRelPathSliceSimDetail(int section_id);
+
+	// for blocks sim
+	std::string genRelPathBlocksRealPts(int section_id);
+	std::string genRelPathBlocksSimPts(int section_id);
+	std::string genRelPathBlocksSimDetail(int section_id);
 
 	bool m_verbose;
 	bool m_initialized;

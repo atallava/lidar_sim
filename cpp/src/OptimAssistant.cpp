@@ -84,7 +84,7 @@ void OptimAssistant::init()
 	    }
     }
 
-    // subsample pt ids for sim
+    // subsample pt ids for blocks sim
     std::vector<int> section_pt_ids_subsampled;
     int step = std::floor(m_section_pt_ids_for_blocks_sim.size()/m_max_pts_for_blocks_sim);
     if (step < 1)
@@ -160,10 +160,6 @@ void OptimAssistant::sliceSim()
     RayDirnServer ray_dirn_server;
     
     // sim
-    // for now, how about get some nearest neighbor points from section, and then use those to sim?
-    // and will that mean screw sim detail? also i don't have a sim in this form :(
-    // perhaps you want to write a section block sim and proceed from there
-
     // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> sim_hit_flag;
@@ -227,20 +223,120 @@ void OptimAssistant::sliceSim()
     writePtsToXYZFile(sim_pts, rel_path_sim_pts, m_verbose);
 
     // write sim detail
-    std::string rel_path_sim_detail = genRelPathSimDetail(m_section_id_for_sim); 
+    std::string rel_path_sim_detail = genRelPathSliceSimDetail(m_section_id_for_sim); 
     sim_detail.save(rel_path_sim_detail);  
 }
 
-void blocksSim()
+void OptimAssistant::blocksSim()
 {
+    // ellipsoid model paths
+    std::vector<std::string> rel_path_ellipsoid_model_blocks;
+    for (auto block_id : m_non_ground_block_ids)
+	rel_path_ellipsoid_model_blocks.push_back(
+	    genRelPathEllipsoids(m_section_id_for_model, block_id));
+
+    // triangle model paths
+    std::vector<std::string> rel_path_triangle_model_blocks;
+    for (auto block_id : m_ground_block_ids)
+	rel_path_triangle_model_blocks.push_back(
+	    genRelPathTriangles(m_section_id_for_model, block_id));
+
+    // create sim object
+    SectionModelSim sim;
+    sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
+    sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
+    sim.setDeterministicSim(false);
+
+    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(m_section_id_for_model);
+    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(m_section_id_for_model);
+    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(m_section_id_for_model);
+
+    sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
     
+    // sim
+    std::vector<std::vector<double> > sim_pts_all;
+    std::vector<int> sim_hit_flag;
+    std::vector<std::vector<double> > real_pts;
+    SimDetail sim_detail;
+    sim_detail.setVerbosity(m_verbose);
+    for(auto idx : m_section_pt_ids_for_blocks_sim)
+    {
+    	double t = m_section_for_sim.m_pt_timestamps[idx];
+
+    	// pose, ray origin, ray dirn
+    	std::vector<double> imu_pose = m_imu_pose_server.getPoseAtTime(t);
+    	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
+	std::vector<double> this_real_pt = m_section_for_sim.m_pts[idx];
+	std::vector<double> ray_dirn;
+	std::tie(ray_dirn, std::ignore) = calcRayDirn(ray_origin, this_real_pt);
+
+	// add to real pts
+	real_pts.push_back(this_real_pt);
+
+	// variables needed by sim detail
+	double this_yaw, this_pitch;
+	std::tie(this_yaw, this_pitch, std::ignore) = cart2sph(ray_dirn);
+	std::vector<double> this_ray_pitches {this_pitch};
+	std::vector<double> this_ray_yaws {this_yaw};
+	std::vector<std::vector<double> > this_real_pts_all = wrapDataInVec(this_real_pt);
+	std::vector<int> this_real_hit_flag {1};
+
+	// wrapping for conformity
+	std::vector<std::vector<double> > ray_dirns = wrapDataInVec(ray_dirn);
+
+    	// simulate 
+    	std::vector<std::vector<double> > this_sim_pts_all;
+    	std::vector<int> this_sim_hit_flag;
+    	std::tie(this_sim_pts_all, this_sim_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
+
+    	// add to big list of sim pts
+    	sim_pts_all.insert(sim_pts_all.end(), this_sim_pts_all.begin(), this_sim_pts_all.end());
+    	sim_hit_flag.insert(sim_hit_flag.end(), this_sim_hit_flag.begin(), this_sim_hit_flag.end());
+
+	// add to sim detail
+	// ray origin
+	sim_detail.m_ray_origins.push_back(ray_origin);
+	// pitches
+	sim_detail.m_ray_pitches.push_back(this_ray_pitches);
+	// yaws
+	sim_detail.m_ray_yaws.push_back(this_ray_yaws);
+	// real pts all
+	sim_detail.m_real_pts_all.push_back(this_real_pts_all);
+	// real hit flag
+	sim_detail.m_real_hit_flags.push_back(this_real_hit_flag);
+	// sim pts all
+	sim_detail.m_sim_pts_all.push_back(this_sim_pts_all);
+	// sim hit flag
+	sim_detail.m_sim_hit_flags.push_back(this_sim_hit_flag);
+    }
+
+    // weed out non-hits
+    std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
+
+    // write real pts
+    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim);
+    writePtsToXYZFile(real_pts, rel_path_real_pts, m_verbose);
+
+    // write sim pts
+    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim);
+    writePtsToXYZFile(sim_pts, rel_path_sim_pts, m_verbose);
+
+    // write sim detail
+    std::string rel_path_sim_detail = genRelPathBlocksSimDetail(m_section_id_for_sim); 
+    sim_detail.save(rel_path_sim_detail);
 }
 
 double OptimAssistant::calcSimError()
 {
-    std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim);
+    // for slice sim
+    // std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim);
+    // std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim);
+
+    // for blocks sim
+    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim);
+    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim);
+
     std::vector<std::vector<double> > real_pts = loadPtsFromXYZFile(rel_path_real_pts, m_verbose);
-    std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim);
     std::vector<std::vector<double> > sim_pts = loadPtsFromXYZFile(rel_path_sim_pts, m_verbose);
     double error = m_error_metric.calcSymmetricPcdError(real_pts, sim_pts);
     return error;
@@ -335,12 +431,42 @@ std::string OptimAssistant::genRelPathSliceSimPts(int section_id)
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathSimDetail(int section_id)
+std::string OptimAssistant::genRelPathSliceSimDetail(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
        << "section_" << std::setw(2) << std::setfill('0') << section_id
        << "_slice_sim_detail.txt";
+
+    return ss.str();
+}
+
+std::string OptimAssistant::genRelPathBlocksRealPts(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sim_optim/sim/"
+       << "section_" << std::setw(2) << std::setfill('0') << section_id
+       << "_blocks_real_pts.txt";
+
+    return ss.str();
+}
+
+std::string OptimAssistant::genRelPathBlocksSimPts(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sim_optim/sim/"
+       << "section_" << std::setw(2) << std::setfill('0') << section_id
+       << "_blocks_sim_pts.txt";
+
+    return ss.str();
+}
+
+std::string OptimAssistant::genRelPathBlocksSimDetail(int section_id)
+{
+    std::ostringstream ss;
+    ss << "data/sim_optim/sim/"
+       << "section_" << std::setw(2) << std::setfill('0') << section_id
+       << "_blocks_sim_detail.txt";
 
     return ss.str();
 }
