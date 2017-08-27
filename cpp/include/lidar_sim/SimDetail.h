@@ -9,6 +9,7 @@ namespace lidar_sim {
 	SimDetail(const std::string rel_path_file);
 	void load(const std::string rel_path_sim_detail);
 	void save(const std::string rel_path_sim_detail);
+	void setVerbosity(int verbose);
 
 	typedef std::vector<std::vector<double> > Pts;
 
@@ -23,5 +24,8 @@ namespace lidar_sim {
 	std::vector<std::vector<int> > m_real_hit_flags;
 	std::vector<Pts> m_sim_pts_all;
 	std::vector<std::vector<int> > m_sim_hit_flags;
+
+    private:
+	int m_verbose;
     };
 }

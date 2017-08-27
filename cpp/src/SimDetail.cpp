@@ -11,11 +11,13 @@
 
 using namespace lidar_sim;
 
-SimDetail::SimDetail()
+SimDetail::SimDetail() :
+    m_verbose(1)
 {
 }
 
-SimDetail::SimDetail(const std::string rel_path_file)
+SimDetail::SimDetail(const std::string rel_path_file) :
+    m_verbose(1)
 {
     load(rel_path_file);
 }
@@ -30,7 +32,8 @@ void SimDetail::load(const std::string rel_path_file)
 	throw std::runtime_error(ss_err_msg.str().c_str());
     }
 
-    std::cout << "Reading sim detail from: " << rel_path_file << std::endl;
+    if (m_verbose)
+	std::cout << "Reading sim detail from: " << rel_path_file << std::endl;
 
     std::string line;
     int count = 0;
@@ -91,7 +94,8 @@ void SimDetail::load(const std::string rel_path_file)
 void SimDetail::save(const std::string rel_path_sim_detail)
 {
     std::ofstream file(rel_path_sim_detail);
-    std::cout << "Writing sim detail to: " << rel_path_sim_detail << std::endl;
+    if (m_verbose)
+	std::cout << "Writing sim detail to: " << rel_path_sim_detail << std::endl;
     
     size_t n_poses = m_ray_origins.size();
     for (size_t i = 0; i < n_poses; ++i)
@@ -115,6 +119,11 @@ void SimDetail::save(const std::string rel_path_sim_detail)
     }
 
     file.close();
+}
+
+void SimDetail::setVerbosity(int verbose)
+{
+    m_verbose = verbose;
 }
 
 std::vector<double> SimDetail::getVecFromLine(const std::string line)

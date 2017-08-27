@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     // section packet ids
     optim_assistant.m_section_packet_start = 1;
     optim_assistant.m_section_packet_end = 10;
-    optim_assistant.m_section_packet_skip = 5;
+    optim_assistant.m_section_packet_step = 5;
     optim_assistant.init();
 
     // set up nlopt
