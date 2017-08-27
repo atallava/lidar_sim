@@ -15,6 +15,13 @@ OptimProgress::OptimProgress() :
 {
 }
 
+void OptimProgress::log(const std::vector<double>& x, const double J, const double elapsed_time)
+{
+    m_x.push_back(x);
+    m_J.push_back(J);
+    m_t.push_back(elapsed_time);
+}
+
 void OptimProgress::save(const std::string rel_path_output)
 {
     std::ofstream file(rel_path_output);

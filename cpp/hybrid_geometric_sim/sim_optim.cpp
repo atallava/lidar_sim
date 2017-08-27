@@ -1,24 +1,37 @@
 #include <ostream>
+#include <ctime>
 
 #include <nlopt.hpp>
 
 #include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/OptimProgress.h>
 
 using namespace lidar_sim;
 
+clock_t start_time = clock();
 int fn_eval_count = 0;
+OptimProgress optim_progress;
 
-void dispProgressMsg(const std::vector<double>& x, const double J)
+void dispProgressMsg(const std::vector<double>& x, const double J, const double elapsed_time = -1)
 {
     std::cout << "fn eval count: " << fn_eval_count 
-	      << ", x: " << getStrFromVec(x) << ", J: " << J << std::endl;
+	      << ", x: " << getStrFromVec(x) << ", J: " << J;
+    if (elapsed_time == -1)
+	std::cout << std::endl;
+    else
+	std::cout << ", elapsed time: " << elapsed_time << std::endl;
 }
 
 double myfunc(const std::vector<double> &x, std::vector<double> &grad, void *my_func_data)
 {
     fn_eval_count++;
     double J = x[0];
-    dispProgressMsg(x, J);
+    double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
+
+    // log progress
+    dispProgressMsg(x, J, elapsed_time);
+    optim_progress.log(x, J, elapsed_time);
+
     return J;
 }
 
@@ -43,8 +56,9 @@ int main(int argc, char **argv)
     double minf;
     nlopt::result result = opt.optimize(x, minf);
 
-    // std::string rel_path_optim_progress = "data/hg_optim/optim_progress.txt";
-
     std::cout << "result: " << std::endl;
     dispProgressMsg(x, minf);
+
+    std::string rel_path_optim_progress = "data/hg_optim/optim_progress.txt";
+    optim_progress.save(rel_path_optim_progress);
 }
