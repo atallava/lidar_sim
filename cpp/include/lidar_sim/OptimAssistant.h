@@ -2,6 +2,7 @@
 
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/SectionLoader.h>
+#include <lidar_sim/PtsError.h>
 
 namespace lidar_sim {
     class OptimAssistant {
@@ -11,6 +12,7 @@ namespace lidar_sim {
 	void init();
 	void buildModelsNonGroundBlock(const int block_id, const std::vector<double> x);
 	void simulate();
+	double calcSimError();
 
 	// todo: so many string helpers! cleanup?
 	std::string genRelPathBlockPts(const int section_id, const int block_id);
@@ -21,7 +23,7 @@ namespace lidar_sim {
 	std::string genRelPathBlockNodeIdsGround(int section_id);
 	std::string genRelPathBlockNodeIdsNonGround(int section_id);
 	std::string genRelPathSliceRealPts(int section_id);
-	std::string genRelPathSimPts(int section_id);
+	std::string genRelPathSliceSimPts(int section_id);
 	std::string genRelPathSimDetail(int section_id);
 
 	bool m_verbose;
@@ -40,6 +42,7 @@ namespace lidar_sim {
 	std::string m_rel_path_poses_log;
 	PoseServer m_imu_pose_server;
 	int m_num_nbrs_for_hit_prob;
+	PtsError m_error_metric;
 
     private:
     };

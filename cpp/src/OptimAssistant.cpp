@@ -44,8 +44,8 @@ double OptimAssistant::calcObj(std::vector<double> x)
     // simulate
     simulate();
 
-    // sim section packet ids
-    // calc and return error
+    double obj = calcSimError();
+
     return x[0];
 }
 
@@ -185,12 +185,22 @@ void OptimAssistant::simulate()
     writePtsToXYZFile(real_pts, rel_path_real_pts, m_verbose);
 
     // write sim pts
-    std::string rel_path_sim_pts = genRelPathSimPts(m_section_id_for_sim);
+    std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts, m_verbose);
 
     // write sim detail
     std::string rel_path_sim_detail = genRelPathSimDetail(m_section_id_for_sim); 
     sim_detail.save(rel_path_sim_detail);  
+}
+
+double OptimAssistant::calcSimError()
+{
+    std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim);
+    std::vector<std::vector<double> > real_pts = loadPtsFromXYZFile(rel_path_real_pts, m_verbose);
+    std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim);
+    std::vector<std::vector<double> > sim_pts = loadPtsFromXYZFile(rel_path_sim_pts, m_verbose);
+    double error = m_error_metric.calcSymmetricPcdError(real_pts, sim_pts);
+    return error;
 }
 
 std::string OptimAssistant::genRelPathBlockPts(const int section_id, const int block_id)
@@ -272,7 +282,7 @@ std::string OptimAssistant::genRelPathSliceRealPts(int section_id)
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathSimPts(int section_id)
+std::string OptimAssistant::genRelPathSliceSimPts(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
