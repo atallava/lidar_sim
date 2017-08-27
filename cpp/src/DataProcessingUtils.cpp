@@ -200,7 +200,7 @@ namespace lidar_sim {
 	return ss.str();
     }
 
-    std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_input)
+    std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_input, int verbose)
     {
 	std::ifstream input_file(rel_path_input);
 	if (!input_file)
@@ -210,7 +210,8 @@ namespace lidar_sim {
 	    throw std::runtime_error(ss_err_msg.str().c_str());
 	}
 
-	std::cout << "Reading pts from: " << rel_path_input << std::endl;
+	if (verbose)
+	    std::cout << "Reading pts from: " << rel_path_input << std::endl;
 
 	std::vector<std::vector<double> > pts;
 	

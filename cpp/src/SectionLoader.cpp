@@ -14,6 +14,13 @@
 
 using namespace lidar_sim;
 
+SectionLoader::SectionLoader() :
+    m_num_logs(0),
+    m_bracketing_padding(1000)
+{
+    // todo: something here says that not ready for use
+}
+
 SectionLoader::SectionLoader(std::string rel_path_section) :
     m_num_logs(0),
     m_bracketing_padding(1000)

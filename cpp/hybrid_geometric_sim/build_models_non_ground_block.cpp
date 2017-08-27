@@ -150,7 +150,7 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
 	
     EllipsoidModeler modeler;
-    modeler.setDebugFlag(verbose);
+    modeler.setVerbosity(verbose);
     // setting options for sim optim
     if (set_n_clusters_per_pt)
 	modeler.m_n_clusters_per_pt = n_clusters_per_pt;
@@ -176,12 +176,12 @@ int main(int argc, char **argv)
 	std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
 	PoseServer imu_pose_server(rel_path_poses_log);
 
-	// blocks info
-	std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-	std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id);
-	std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
-	std::vector<std::vector<int> > block_node_ids_non_ground = 
-	    doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
+	// // blocks info
+	// std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
+	// std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id);
+	// std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+	// std::vector<std::vector<int> > block_node_ids_non_ground = 
+	//     doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
 
 	// calc section pts to process
 	int num_nbrs = 1;

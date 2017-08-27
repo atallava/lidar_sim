@@ -41,18 +41,20 @@ double myfunc(const std::vector<double> &x, std::vector<double> &grad, void *my_
 int main(int argc, char **argv)
 {
     // set up optim assistant
+    optim_assistant.m_verbose = 1;
     // section id
-    optim_assistant.m_section_id_models = 3;
+    optim_assistant.m_section_id_for_model = 3;
     // which non ground blocks to build
-    optim_assistant.m_non_ground_block_ids = std::vector<int> {10,11,12,13,14};
+    optim_assistant.m_non_ground_block_ids = std::vector<int> {16,17,18,19};
     // which ground blocks to use
     optim_assistant.m_ground_block_ids = std::vector<int> {2};
     // path of section to use
-    optim_assistant.m_section_id_sim = 3;
+    optim_assistant.m_section_id_for_sim = 3;
     // section packet ids
     optim_assistant.m_section_packet_start = 1;
     optim_assistant.m_section_packet_end = 10;
     optim_assistant.m_section_packet_skip = 5;
+    optim_assistant.init();
 
     // set up nlopt
     // x = {n_cluster_per_pt, max_maha_dist_for_hit}
@@ -64,7 +66,7 @@ int main(int argc, char **argv)
 
     opt.set_min_objective(myfunc, NULL); 
 
-    int max_eval = 100;
+    int max_eval = 1;
     opt.set_maxeval(max_eval);
 
     opt.set_xtol_rel(1e-4); // relative tolerance on x

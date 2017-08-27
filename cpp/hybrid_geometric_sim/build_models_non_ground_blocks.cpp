@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
 
 	EllipsoidModeler modeler;
-	modeler.setDebugFlag(1);
+	modeler.setVerbosity(1);
 	modeler.createEllipsoidModels(rel_path_pts);
 	
 	// calc hit prob

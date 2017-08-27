@@ -23,7 +23,7 @@
 using namespace lidar_sim;
 
 EllipsoidModeler::EllipsoidModeler() :
-    m_debug_flag(0),
+    m_verbose(0),
     m_min_pts_per_cluster(5),
     m_default_hit_prob(1),
 
@@ -39,7 +39,7 @@ EllipsoidModeler::EllipsoidModeler() :
 
 void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
 {
-    if (m_debug_flag)
+    if (m_verbose)
 	std::cout << "EllipsoidModeler: creating ellipsoid models..." << std::endl;
 
     loadPts(rel_path_pts);
@@ -56,7 +56,7 @@ void EllipsoidModeler::loadPts(const std::string rel_path_pts)
 
 void EllipsoidModeler::clusterPts()
 {
-    if (m_debug_flag)
+    if (m_verbose)
 	std::cout << "EllipsoidModeler: clustering..." << std::endl;
 
     alglib::real_2d_array pts_alglib = convertStlPtsToAlglibPts(m_pts);
@@ -77,7 +77,7 @@ void EllipsoidModeler::clusterPts()
 
 void EllipsoidModeler::filterClusters()
 {
-    if (m_debug_flag)
+    if (m_verbose)
 	std::cout << "EllipsoidModeler: filtering clusters..." << std::endl;
 
     // retain those with min pts
@@ -87,7 +87,7 @@ void EllipsoidModeler::filterClusters()
 	if (n_pts_per_cluster[i] >= m_min_pts_per_cluster)
 	    m_selected_cluster_ids.push_back(i);
 
-    if (m_debug_flag)
+    if (m_verbose)
     {
 	std::cout << "EllipsoidModeler: clusters requested: " << calcNClusters() << std::endl;
 	std::cout << "EllipsoidModeler: clusters selected: " << m_selected_cluster_ids.size() 
@@ -102,7 +102,7 @@ void EllipsoidModeler::filterClusters()
 
 void EllipsoidModeler::fillEllipsoidModels()
 {
-    if (m_debug_flag)
+    if (m_verbose)
 	std::cout << "EllipsoidModeler: filling ellipsoid models..." << std::endl;
 
     for(size_t i = 0; i < m_selected_cluster_ids.size(); ++i)
@@ -137,7 +137,8 @@ EllipsoidModel EllipsoidModeler::createEllipsoidModel(const Pts &pts)
 void EllipsoidModeler::writeEllipsoidsToFile(std::string rel_path_output)
 {
     std::ofstream file(rel_path_output);
-    std::cout << "EllipsoidModeler: writing ellipsoid models to: " << rel_path_output << std::endl;
+    if (m_verbose)
+	std::cout << "EllipsoidModeler: writing ellipsoid models to: " << rel_path_output << std::endl;
 	
     for(size_t i = 0; i < m_ellipsoid_models.size(); ++i)
     {
@@ -177,7 +178,7 @@ void EllipsoidModeler::calcHitProb(std::string rel_path_section, const PoseServe
 void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, 
 				   const PoseServer &imu_pose_server)
 {
-    if (m_debug_flag)
+    if (m_verbose)
 	std::cout << "EllipsoidModeler: calculating hit probs..." << std::endl;
 
     // sim object
@@ -279,7 +280,7 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
     }
 
     // stats
-    if (m_debug_flag)
+    if (m_verbose)
     {
 	std::cout << "fracs pts intersected: " << std::accumulate(pt_intersected_flag.begin(), pt_intersected_flag.end(), 0.0)/(double)section_pt_ids_to_process.size() << std::endl;
 	std::vector<int> ellipsoid_missed_flag = negateLogicalVec(ellipsoid_intersected_count);
@@ -297,7 +298,7 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
 
 void EllipsoidModeler::filterPts()
 {
-    if (m_debug_flag)
+    if (m_verbose)
 	std::cout << "EllipsoidModeler: filtering pts... " << std::endl;
 
     // throw away pts which are isolated
@@ -312,16 +313,16 @@ void EllipsoidModeler::filterPts()
 	    flag[i] = 0;
     }
     auto filtered_pts = logicalSubsetArray(m_pts, flag);
-    if (m_debug_flag)
+    if (m_verbose)
 	std::cout << "TriangleModeler: fracn pts retained after nn filter: " 
 		  << filtered_pts.size()/(double)m_pts.size() << std::endl;
 
     m_pts = filtered_pts;
 }
 
-void EllipsoidModeler::setDebugFlag(int flag)
+void EllipsoidModeler::setVerbosity(int verbose)
 {
-    m_debug_flag = flag;
+    m_verbose = verbose;
 }
 
 // hack for patching calcHitProb

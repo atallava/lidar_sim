@@ -10,6 +10,7 @@
 namespace lidar_sim {
     class SectionLoader {
     public:
+	SectionLoader();
 	SectionLoader(std::string rel_path_section);
 	std::vector<std::vector<double> > getPtsAtTime(double t);
 	std::vector<int> getPtIdsAtTime(double t);

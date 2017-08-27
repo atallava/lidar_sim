@@ -7,6 +7,7 @@
 namespace lidar_sim {
     class PoseServer {
     public:
+	PoseServer();
 	PoseServer(std::string rel_path_pose_log);
 	void printLogAtIndex(int data_id);
 	void printPose(const std::vector<double> pose);

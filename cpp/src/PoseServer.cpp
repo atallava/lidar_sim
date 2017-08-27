@@ -13,6 +13,12 @@
 
 using namespace lidar_sim;
 
+PoseServer::PoseServer() :
+    m_num_logs(0)
+{
+    // todo: something here says that not ready for use
+}
+
 PoseServer::PoseServer(std::string rel_path_pose_log) :
     m_path_pose_log(rel_path_pose_log),
     m_num_logs(0)

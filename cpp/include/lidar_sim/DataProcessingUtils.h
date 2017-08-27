@@ -27,7 +27,7 @@ namespace lidar_sim {
     void prependPCDHeaderToFile(std::string rel_path_input, std::string rel_path_output);
     std::string genDetailLine(double packet_timestamp, std::vector<double> imu_pose, Eigen::Matrix<float,4,1> pt);
     void sectionOfSection(std::string rel_path_input, std::string rel_path_output, double start_time, double end_time);
-    std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_file);
+    std::vector<std::vector<double> > loadPtsFromXYZFile(std::string rel_path_file, int verbose = 1);
     std::tuple<std::vector<std::string>, std::vector<std::vector<double> > >
 	loadAnnotations(const std::string rel_path_annotations);
 
