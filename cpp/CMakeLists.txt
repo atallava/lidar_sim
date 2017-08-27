@@ -267,6 +267,9 @@ add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_n
 add_executable(section_slice_real_pts hybrid_geometric_sim/section_slice_real_pts.cpp)
   target_link_libraries(section_slice_real_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(section_blocks_real_pts hybrid_geometric_sim/section_blocks_real_pts.cpp)
+  target_link_libraries(section_blocks_real_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ## state mapping
 
 # add_executable(gen_ground_triangles hybrid_geometric_sim/gen_ground_triangles.cpp)
@@ -285,6 +288,9 @@ add_executable(section_slice_real_pts hybrid_geometric_sim/section_slice_real_pt
 
 add_executable(slice_hg_sim hybrid_geometric_sim/slice_hg_sim.cpp)
   target_link_libraries(slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(blocks_hg_sim hybrid_geometric_sim/blocks_hg_sim.cpp)
+  target_link_libraries(blocks_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(test_stitch_triangle_models hybrid_geometric_sim/test_stitch_triangle_models.cpp)
 #   target_link_libraries(test_stitch_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )

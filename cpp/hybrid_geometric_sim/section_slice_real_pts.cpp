@@ -55,9 +55,9 @@ int main(int argc, char **argv)
     SectionLoader section(rel_path_section);
 
     size_t packet_id_sim_start, packet_id_sim_end, packet_step;	
-    packet_id_sim_start = 1;
-    packet_id_sim_end = 100;
-    packet_step = 10;
+    packet_id_sim_start = 2300;
+    packet_id_sim_end = 2400;
+    packet_step = 1;
     std::vector<std::vector<double> > real_pts;
     for (size_t i = packet_id_sim_start; i < packet_id_sim_end; i += packet_step)
     {

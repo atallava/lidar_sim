@@ -54,6 +54,7 @@ namespace lidar_sim {
     std::vector<std::vector<double> > pdist2(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2);
 
     // mimicking matlab cart2sph
+    // yaw, pitch, t
     std::tuple<double, double, double> cart2sph(std::vector<double> vec);
 
     // mimicking matlab linspace

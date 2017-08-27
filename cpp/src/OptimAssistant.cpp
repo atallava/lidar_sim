@@ -21,6 +21,8 @@ OptimAssistant::OptimAssistant() :
     m_verbose(false),
     m_initialized(false),
     m_section_packet_step(1),
+    m_num_nbrs_for_blocks_sim(1),
+    m_max_pts_for_blocks_sim(1e4),
     m_num_nbrs_for_hit_prob(1)
 {
     m_rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
@@ -42,7 +44,7 @@ double OptimAssistant::calcObj(std::vector<double> x)
 	buildModelsNonGroundBlock(block_id, x);
 
     // simulate
-    simulate();
+    sliceSim();
 
     // calculate error
     double obj = calcSimError();
@@ -61,12 +63,43 @@ void OptimAssistant::init()
 	genRelPathSection(m_section_id_for_sim);
     m_section_for_sim = SectionLoader (m_rel_path_section_for_sim);
 
+    // for blocks sim
+    // ignoring ground block pts
+    std::vector<int> non_ground_blocks_for_sim = m_non_ground_block_ids;
+    for (auto block_id : non_ground_blocks_for_sim)
+    {
+	std::string rel_path_pts = genRelPathNonGroundBlockPts(m_section_id_for_sim, block_id);
+	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts, m_verbose);
+
+	std::vector<std::vector<int> > section_nbr_pt_ids; 
+
+	std::tie(section_nbr_pt_ids, std::ignore) = 
+	    nearestNeighbors(m_section_for_sim.m_pts, block_pts, m_num_nbrs_for_blocks_sim);
+
+	for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
+	    for(size_t j = 0; j < (size_t)m_num_nbrs_for_blocks_sim; ++j)
+	    {
+		int idx = section_nbr_pt_ids[i][j];
+		m_section_pt_ids_for_blocks_sim.push_back(idx);
+	    }
+    }
+
+    // subsample pt ids for sim
+    std::vector<int> section_pt_ids_subsampled;
+    int step = std::floor(m_section_pt_ids_for_blocks_sim.size()/m_max_pts_for_blocks_sim);
+    if (step < 1)
+	step = 1;
+    for (size_t i = 0; i < m_section_pt_ids_for_blocks_sim.size(); i += step)
+	section_pt_ids_subsampled.push_back(
+	    m_section_pt_ids_for_blocks_sim[i]);
+    m_section_pt_ids_for_blocks_sim = section_pt_ids_subsampled;
+
     m_initialized = true;
 }
 
 void OptimAssistant::buildModelsNonGroundBlock(const int block_id, const std::vector<double> x)
 {
-    std::string rel_path_pts = genRelPathBlockPts(m_section_id_for_model, block_id);
+    std::string rel_path_pts = genRelPathNonGroundBlockPts(m_section_id_for_model, block_id);
     std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts, m_verbose);
     
     EllipsoidModeler modeler;
@@ -99,7 +132,7 @@ void OptimAssistant::buildModelsNonGroundBlock(const int block_id, const std::ve
     modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
 }
 
-void OptimAssistant::simulate()
+void OptimAssistant::sliceSim()
 {
     // ellipsoid model paths
     std::vector<std::string> rel_path_ellipsoid_model_blocks;
@@ -126,7 +159,11 @@ void OptimAssistant::simulate()
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
     RayDirnServer ray_dirn_server;
     
-      // sim
+    // sim
+    // for now, how about get some nearest neighbor points from section, and then use those to sim?
+    // and will that mean screw sim detail? also i don't have a sim in this form :(
+    // perhaps you want to write a section block sim and proceed from there
+
     // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> sim_hit_flag;
@@ -194,6 +231,11 @@ void OptimAssistant::simulate()
     sim_detail.save(rel_path_sim_detail);  
 }
 
+void blocksSim()
+{
+    
+}
+
 double OptimAssistant::calcSimError()
 {
     std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim);
@@ -204,7 +246,7 @@ double OptimAssistant::calcSimError()
     return error;
 }
 
-std::string OptimAssistant::genRelPathBlockPts(const int section_id, const int block_id)
+std::string OptimAssistant::genRelPathNonGroundBlockPts(const int section_id, const int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id

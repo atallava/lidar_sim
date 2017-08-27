@@ -19,7 +19,7 @@ namespace lidar_sim {
 	// 'log' corresponds to the packet timestamps vec
 	std::tuple<int, int> getLogIdsBracketingImuPosns(const std::vector<std::vector<double> > &posns, const PoseServer &imu_pose_server);
 
-	std::vector<std::vector<double>> m_pts;
+	std::vector<std::vector<double> > m_pts;
 	std::vector<double> m_pt_timestamps;
 	std::vector<double> m_packet_timestamps;
 	std::vector<int> m_packet_ids;

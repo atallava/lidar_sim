@@ -11,11 +11,12 @@ namespace lidar_sim {
 	double calcObj(std::vector<double> x);
 	void init();
 	void buildModelsNonGroundBlock(const int block_id, const std::vector<double> x);
-	void simulate();
+	void sliceSim();
+	void blocksSim();
 	double calcSimError();
 
 	// todo: so many string helpers! cleanup?
-	std::string genRelPathBlockPts(const int section_id, const int block_id);
+	std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id);
 	std::string genRelPathSection(const int section_id);
 	std::string genRelPathEllipsoids(const int section_id, const int block_id);
 	std::string genRelPathTriangles(int section_id, int block_id);
@@ -36,9 +37,17 @@ namespace lidar_sim {
 	int m_section_id_for_sim;
 	std::string m_rel_path_section_for_sim;
 	SectionLoader m_section_for_sim;
+
+	// for slice sim
 	int m_section_packet_start;
 	int m_section_packet_end;
 	int m_section_packet_step;
+
+	// for blocks sim
+	std::vector<int> m_section_pt_ids_for_blocks_sim;
+	int m_num_nbrs_for_blocks_sim;
+	int m_max_pts_for_blocks_sim;
+
 	std::string m_rel_path_poses_log;
 	PoseServer m_imu_pose_server;
 	int m_num_nbrs_for_hit_prob;
