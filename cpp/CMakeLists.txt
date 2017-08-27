@@ -307,6 +307,9 @@ add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
 add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
   target_link_libraries(eval_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(sim_optim hybrid_geometric_sim/sim_optim.cpp)
+  target_link_libraries(sim_optim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ## viz
 
 # add_executable(write_section_models_fig hybrid_geometric_sim/write_section_models_fig.cpp)
