@@ -113,6 +113,7 @@ add_library(lidar_sim SHARED
 
   src/PtsError.cpp
   src/OptimProgress.cpp
+  src/OptimAssistant.cpp
 
   src/GroundTrianglesGenerator.cpp
   src/OrientedBox.cpp

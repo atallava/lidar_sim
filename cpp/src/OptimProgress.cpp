@@ -15,10 +15,10 @@ OptimProgress::OptimProgress() :
 {
 }
 
-void OptimProgress::log(const std::vector<double>& x, const double J, const double elapsed_time)
+void OptimProgress::log(const std::vector<double>& x, const double obj, const double elapsed_time)
 {
     m_x.push_back(x);
-    m_J.push_back(J);
+    m_obj.push_back(obj);
     m_t.push_back(elapsed_time);
 }
 
@@ -30,7 +30,7 @@ void OptimProgress::save(const std::string rel_path_output)
 
     for (size_t i = 0; i < m_x.size(); ++i)
 	file << getStrFromVec(m_x[i]) << " "
-	     << m_J[i] << " " << m_t[i] << std::endl;
+	     << m_obj[i] << " " << m_t[i] << std::endl;
 
     file.close();
 }
