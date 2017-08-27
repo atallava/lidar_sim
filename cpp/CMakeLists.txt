@@ -112,6 +112,7 @@ add_library(lidar_sim SHARED
   src/NearestNeighborSim.cpp
 
   src/PtsError.cpp
+  src/OptimProgress.cpp
 
   src/GroundTrianglesGenerator.cpp
   src/OrientedBox.cpp
@@ -186,8 +187,8 @@ add_library(lidar_sim SHARED
 # # add_executable(pattern nlopt_examples/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(trial nlopt_examples/trial.cpp)
-  target_link_libraries(trial lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(trial nlopt_examples/trial.cpp)
+#   target_link_libraries(trial lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
  
@@ -314,8 +315,8 @@ add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
 # add_executable(viz_section_models hybrid_geometric_sim/viz_section_models.cpp)
 #   target_link_libraries(viz_section_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(viz_ellipsoid_models hybrid_geometric_sim/viz_ellipsoid_models.cpp)
-  target_link_libraries(viz_ellipsoid_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(viz_ellipsoid_models hybrid_geometric_sim/viz_ellipsoid_models.cpp)
+#   target_link_libraries(viz_ellipsoid_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(viz_triangle_models hybrid_geometric_sim/viz_triangle_models.cpp)
 #   target_link_libraries(viz_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )

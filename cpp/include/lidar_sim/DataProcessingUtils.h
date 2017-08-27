@@ -104,7 +104,7 @@ namespace lidar_sim {
 	std::ostringstream ss;
 	for (size_t i = 0; i < (vec.size()-1); ++i)
 	    ss << vec[i] << " ";
-	ss << vec.back() << std::endl;
+	ss << vec.back();
 
 	return ss.str();
     }

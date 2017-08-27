@@ -97,21 +97,21 @@ void SimDetail::save(const std::string rel_path_sim_detail)
     for (size_t i = 0; i < n_poses; ++i)
     {
 	// ray origin
-	file << getStrFromVec(m_ray_origins[i]);
+	file << getStrFromVec(m_ray_origins[i]) << std::endl;
 	// pitches
-	file << getStrFromVec(m_ray_pitches[i]);
+	file << getStrFromVec(m_ray_pitches[i]) << std::endl;
 	// yaws
-	file << getStrFromVec(m_ray_yaws[i]);
+	file << getStrFromVec(m_ray_yaws[i]) << std::endl;
 	// real pts all
 	file << getStrFromVec(
-	    convertArrayToVec(m_real_pts_all[i]));
+	    convertArrayToVec(m_real_pts_all[i])) << std::endl;
 	// real hit flag
-	file << getStrFromVec(m_real_hit_flags[i]);
+	file << getStrFromVec(m_real_hit_flags[i]) << std::endl;
 	// sim pts all
 	file << getStrFromVec(
-	    convertArrayToVec(m_sim_pts_all[i]));
+	    convertArrayToVec(m_sim_pts_all[i])) << std::endl;
 	// sim hit flag
-	file << getStrFromVec(m_sim_hit_flags[i]);
+	file << getStrFromVec(m_sim_hit_flags[i]) << std::endl;
     }
 
     file.close();

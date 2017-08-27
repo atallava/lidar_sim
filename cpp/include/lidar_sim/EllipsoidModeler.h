@@ -39,12 +39,14 @@ namespace lidar_sim {
 
 	std::vector<std::vector<double> > m_pts;
 	EllipsoidModels m_ellipsoid_models;
+	double m_n_clusters_per_pt;
+	bool m_set_max_maha_dist_for_hit; // for sim optim
+	double m_max_maha_dist_for_hit; // for sim optim
 
     private:
 	int m_debug_flag;
 	alglib::integer_1d_array m_pt_cluster_ids;
 	std::vector<int> m_selected_cluster_ids;
-	double m_n_clusters_per_pt;
 	int m_min_pts_per_cluster;
 	int m_n_clusters;
 

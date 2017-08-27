@@ -70,6 +70,10 @@ int main(int argc, char **argv)
 	("section_id", po::value<int>(), "Section id")
 	("block_id", po::value<int>(), "Block id")
 	("rel_path_ellipsoids", po::value<std::string>(), "Where ellipsoids are stored")
+	("n_clusters_per_pt", po::value<double>(), 
+	 "Num clusters per point. Parameter in EllipsoidModeler.")
+	("max_maha_dist_for_hit", po::value<double>(), 
+	 "Max mahalanobis distance for hit. Parameter in EllipsoidModelSim.")
 	("verbose", po::value<int>(), "Print info");
     
     po::variables_map vm;
@@ -77,6 +81,10 @@ int main(int argc, char **argv)
     int section_id, block_id;
     std::string rel_path_ellipsoids;
     int verbose;
+    bool set_n_clusters_per_pt = false;
+    double n_clusters_per_pt = 0.001;
+    bool set_max_maha_dist_for_hit = false;
+    double max_maha_dist_for_hit = 3.5;
     try
     {
 	po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -109,6 +117,18 @@ int main(int argc, char **argv)
 	else
 	    rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
 
+	if (vm.count("n_clusters_per_pt"))
+	{
+	    set_n_clusters_per_pt = true;
+	    n_clusters_per_pt = vm["n_clusters_per_pt"].as<double>();
+	}
+
+	if (vm.count("max_maha_dist_for_hit"))
+	{
+	    set_max_maha_dist_for_hit = true;
+	    max_maha_dist_for_hit = vm["max_maha_dist_for_hit"].as<double>();
+	}
+
 	if (vm.count("verbose"))
 	    verbose = vm["verbose"].as<int>();
 	else
@@ -130,7 +150,18 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
 	
     EllipsoidModeler modeler;
-    modeler.setDebugFlag(1);
+    modeler.setDebugFlag(verbose);
+    // setting options for sim optim
+    if (set_n_clusters_per_pt)
+	modeler.m_n_clusters_per_pt = n_clusters_per_pt;
+    if (set_max_maha_dist_for_hit)
+    {
+	modeler.m_set_max_maha_dist_for_hit = true;
+	modeler.m_max_maha_dist_for_hit = max_maha_dist_for_hit;
+    }
+    else
+	modeler.m_set_max_maha_dist_for_hit = false;
+
     modeler.createEllipsoidModels(rel_path_pts);
 
     // prob hit calc

@@ -59,9 +59,9 @@ namespace lidar_sim {
 
 	EllipsoidModels m_ellipsoid_models;
 	LaserCalibParams m_laser_calib_params;
+	double m_max_maha_dist_for_hit;
 
     private:
-	double m_max_maha_dist_for_hit;
 	int m_debug_flag;
 	std::mt19937 m_gen;
 	bool m_deterministic_sim;
