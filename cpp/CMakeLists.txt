@@ -205,7 +205,7 @@ add_library(lidar_sim SHARED
  
 ## pattern
 
-# # add_executable(pattern dir/pattern.cpp)
+# # add_executable(pattern hybrid_geometric_sim/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## tests
@@ -263,6 +263,9 @@ add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_n
 
 # add_executable(build_primitives scene_sim/build_primitives.cpp)
 #   target_link_libraries(build_primitives lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(section_slice_real_pts hybrid_geometric_sim/section_slice_real_pts.cpp)
+  target_link_libraries(section_slice_real_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## state mapping
 

@@ -44,9 +44,10 @@ double OptimAssistant::calcObj(std::vector<double> x)
     // simulate
     simulate();
 
+    // calculate error
     double obj = calcSimError();
 
-    return x[0];
+    return obj;
 }
 
 void OptimAssistant::init()
