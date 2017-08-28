@@ -1,12 +1,6 @@
-% this was because i noticed trees were buried in the ground
-
-%% rel path helpers
-genRelPathMeshPrimitive = @(className,elementId) ...
-    sprintf('../data/3d_models/primitives/%s/%d',className,elementId);
-
-genRelPathMeshPrimitivePatchCell = @(className,elementId,cellId) ...
-    sprintf('../data/3d_models/primitives/%s/%d/%d',...
-    className,elementId,cellId);
+% rel path helpers
+genRelPathPrimitive = @(sectionId,className,elementId) ...
+    sprintf('../data/sections/section_%02d/primitives/%s/%d.mat',sectionId,className,elementId);
 
 genRelPathSceneAnnotation = @(sectionId) ...
     sprintf('../data/sections/section_%02d/scene_annotation',sectionId);
@@ -27,6 +21,7 @@ genRelPathTriangleModelsMat = @(sectionId,blockId) ...
 
 %% load
 % annotations for section 4
+trainSectionId = 3;
 sectionId = 4;
 relPathSceneAnnotation = genRelPathSceneAnnotation(sectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
@@ -55,14 +50,13 @@ idx = 1;
 objectAnnotation = sceneAnnotation{idx};
 objectClass = objectAnnotation.objectClass;
 className = primitiveClasses{objectClass};
-% sampledElementId = randsample(elementIdsPerClass{objectClass},1);
-sampledElementId = 7;
+sampledElementId = randsample(elementIdsPerClass{objectClass},1);
 % load primitive
-relPathPrimitive = genRelPathMeshPrimitive(className,sampledElementId);
-primitiveContainer = load(relPathPrimitive,'triModels','obb');
+relPathPrimitive = genRelPathPrimitive(trainSectionId,className,sampledElementId);
+primitiveContainer = load(relPathPrimitive,'ellipsoidModels','obb');
 % transform triModels to the new pose
 T = correctTransformForGround(objectAnnotation.T_object_to_world,objectAnnotation.objectObb_world,primitiveContainer.obb);
-triModels_world = applyTransfToTriModels(primitiveContainer.triModels,T);
+ellipsoidModels_world = applyTransfToEllipsoids(primitiveContainer.ellipsoidModels,T);
 
 modelNbrRadius = 40;
 triModelsGroundNbr = createTriModelsNbr(triModelsGround,objectAnnotation.objectObb_world.center,modelNbrRadius);
@@ -73,14 +67,10 @@ hfig = figure;
 drawObb(hfig,objectAnnotation.objectObb_world);
 % draw axes
 drawAxes3(hfig,objectAnnotation.T_object_to_world,10);
-% plot the triModels 
-drawTriModels(hfig,triModels_world,'veg');
+% plot the ellipsoids
+drawEllipsoids(hfig,ellipsoidModels_world);
 % plot some of the nearby ground
-drawTriModels(hfig,triModelsGroundNbr,'ground');
+% drawTriModels(hfig,triModelsGroundNbr,'ground');
 
-%%
-hfig = figure;
-drawTriModels(hfig,primitiveContainer.triModels,'veg');
-drawObb(hfig,primitiveContainer.obb);
 
 

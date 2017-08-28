@@ -48,9 +48,13 @@ for i = 1:nObjects
     if ~primitiveClassIsPatch(objectClass)
         % load primitive
         relPathPrimitive = genRelPathMeshPrimitive(className,sampledElementId);
-        load(relPathPrimitive,'triModels');
+        load(relPathPrimitive,'triModels','obb');
+        
+        
         % transform triModels to the new pose
-        triModels_world = applyTransfToTriModels(triModels,objectAnnotation.T_object_to_world);
+        TCorrected = correctTransformForGround(objectAnnotation.T_object_to_world,objectAnnotation.objectObb_world,obb);
+        triModels_world = applyTransfToTriModels(triModels,TCorrected);
+        
         % add to scene
         sceneTriModelsCount = sceneTriModelsCount+1;
         sceneTriModels{sceneTriModelsCount} = triModels_world;
@@ -59,14 +63,18 @@ for i = 1:nObjects
         nObjectCells = length(objectAnnotation.T_cells_to_world);
         pattern = '([0-9]+)';
         [~,primitiveCellIds] = getPatternMatchingFileIds(relPathPrimitivePatch,pattern);
+        
         % select primitive patch cells
         sampledCellIds = randsample(primitiveCellIds,nObjectCells,'true');
         for j = 1:nObjectCells
             sampledCellId = sampledCellIds(j);
             relPathPrimitivePatchCell = genRelPathMeshPrimitivePatchCell(className,sampledElementId,sampledCellId);
-            load(relPathPrimitivePatchCell,'triModels');
+            load(relPathPrimitivePatchCell,'triModels','obb');
+        
             % transform triModels to the new pose
-            triModels_world = applyTransfToTriModels(triModels,objectAnnotation.T_cells_to_world{j});
+            TCorrected = correctTransformForGround(objectAnnotation.T_cells_to_world{j},objectAnnotation.cellObbs_world{j},obb);
+            triModels_world = applyTransfToTriModels(triModels,TCorrected);
+            
             % add to scene
             sceneTriModelsCount = sceneTriModelsCount+1;
             sceneTriModels{sceneTriModelsCount} = triModels_world;
@@ -89,6 +97,7 @@ end
 
 relPathSceneTriModelsMat = genRelPathSceneTriModelsMat(newSceneSectionId);
 save(relPathSceneTriModelsMat,'sceneTriModels');
+close(hWaitbar);
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
 

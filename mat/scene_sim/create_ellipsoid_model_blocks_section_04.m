@@ -73,5 +73,11 @@ for i = 1:nBlocks
     saveEllipsoidModels(relPathBlock,thisBlockEllipsoids);
     waitbar(i/nBlocks);
 end
+close(hWaitbar);
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
+
+
+
+
+

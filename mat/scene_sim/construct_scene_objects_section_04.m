@@ -47,7 +47,7 @@ elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir2,primit
 nObjects = length(sceneAnnotation);
 scenePts = [];
 sceneEllipsoidModels = [];
-waitbar(0,'progress');
+hWaitbar = waitbar(0,'progress');
 
 % loop through annotations
 clockLocal = tic();
@@ -56,16 +56,17 @@ for i = 1:nObjects
     objectClass = objectAnnotation.objectClass;
     className = primitiveClasses{objectClass};
     % select a primitive
-    % todo: this can be done better, by comparing obb, e.g.g
+    % todo: this can be done better, by comparing obb, e.g
     sampledElementId = randsample(elementIdsToSampleFrom{objectClass},1);
 
     if ~primitiveClassIsPatch(objectClass)
         % load primitive
         relPathPrimitive = genRelPathPrimitive(trainSectionId,className,sampledElementId);
-        load(relPathPrimitive,'pts','ellipsoidModels');
+        load(relPathPrimitive,'pts','ellipsoidModels','obb');
         % transform pts, ellipsoidModels to the new pose
-        pts_world = applyTransf(pts,objectAnnotation.T_object_to_world);
-        ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,objectAnnotation.T_object_to_world);
+        TCorrected = correctTransformForGround(objectAnnotation.T_object_to_world,objectAnnotation.objectObb_world,obb);
+        pts_world = applyTransf(pts,TCorrected);
+        ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,TCorrected);
         % add to scenePts
         scenePts = [scenePts; pts_world];
         % add to sceneEllipsoidModels
@@ -80,10 +81,13 @@ for i = 1:nObjects
         for j = 1:nObjectCells
             sampledCellId = sampledCellIds(j);
             relPathPrimitivePatchCell = genRelPathPrimitivePatchCell(trainSectionId,className,sampledElementId,sampledCellId);
-            load(relPathPrimitivePatchCell,'pts','ellipsoidModels');
+            load(relPathPrimitivePatchCell,'pts','ellipsoidModels','obb');
+
             % transform pts, ellipsoidModels to the new pose
-            pts_world = applyTransf(pts,objectAnnotation.T_cells_to_world{j});
-            ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,objectAnnotation.T_cells_to_world{j});
+            TCorrected = correctTransformForGround(objectAnnotation.T_cells_to_world{j},objectAnnotation.cellObbs_world{j},obb);
+            pts_world = applyTransf(pts,TCorrected);
+            ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,TCorrected);
+
             % add to big scenePts
             scenePts = [scenePts; pts_world];
             % add to sceneEllipsoidModels
@@ -93,6 +97,7 @@ for i = 1:nObjects
     
     waitbar(i/nObjects);
 end
+close(hWaitbar);
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
 
@@ -101,11 +106,11 @@ relPathSceneObjectPtsMat = genRelPathSceneObjectPtsMat(newSceneSectionId);
 can.pts = scenePts;
 save(relPathSceneObjectPtsMat,'-struct','can');
 
-relPathSceneObjectPts = genRelPathSceneObjectPts(newSceneSectionId);
-savePts(relPathSceneObjectPts,scenePts);
+% todo: not writing because it takes too long
+% relPathSceneObjectPts = genRelPathSceneObjectPts(newSceneSectionId);
+% savePts(relPathSceneObjectPts,scenePts);
 
 %% write object ellipsoids
 relPathSceneEllipsoids = genRelPathSceneEllipsoidModelsMat(newSceneSectionId);
 can.ellipsoidModels = sceneEllipsoidModels;
 save(relPathSceneEllipsoids,'-struct','can');
-
