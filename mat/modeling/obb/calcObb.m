@@ -19,7 +19,9 @@ function obb = calcObb(pts)
     obb.ax2 = -V(:,1);
     nPts = size(pts,1);
     obb.extents = zeros(3,2);
-    lowLim = 1e-2;
+    % todo: modulate for noisy points
+    %lowLim = 1e-2;
+    lowLim = 0;
     highLim = 1-lowLim;
     for i = 1:2
         vec = zeros(1,nPts);

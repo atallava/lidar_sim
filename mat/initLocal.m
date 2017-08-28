@@ -8,9 +8,10 @@ addpath(genpath([pwd '/modeling']));
 addpath([pwd '/utils']);
 addpath([pwd '/viz']);
 
-%% 
+% external
 addpath(genpath([pwd '/RegularizeData3D']));
 addpath(genpath([pwd '/TriangleRayIntersection']));
 
 addpath([pathToM '/distinguishable_colors']);
+addpath([pathToM '/replaceInSelection']);
 

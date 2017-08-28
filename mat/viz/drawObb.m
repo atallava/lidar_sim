@@ -5,7 +5,7 @@ function drawObb(hfig,obb,pts)
     %
     % hfig -
     % obb  -
-    % pts  -
+    % pts  - [nPts,3] array. Optional.
     
     figure(hfig);
     hold on; axis equal;

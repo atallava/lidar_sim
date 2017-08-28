@@ -41,7 +41,7 @@ double myfunc(const std::vector<double> &x, std::vector<double> &grad, void *my_
 int main(int argc, char **argv)
 {
     // set up optim assistant
-    optim_assistant.m_verbose = 1;
+    optim_assistant.m_verbose = 0;
     // section id
     optim_assistant.m_section_id_for_model = 3;
     // which non ground blocks to build
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 
     opt.set_min_objective(myfunc, NULL); 
 
-    int max_eval = 1;
+    int max_eval = 50;
     opt.set_maxeval(max_eval);
 
     opt.set_xtol_rel(1e-4); // relative tolerance on x

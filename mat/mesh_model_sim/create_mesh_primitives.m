@@ -48,7 +48,7 @@ for i = 1:nClasses
             relPathModel = genRelPathMeshModel(srcType,fname);
             load(relPathModel,'model');
             
-            % transform to origin
+            % transform model to origin
             obb = calcObb(model.vertices);
             T_model_to_world = eye(4,4);
             T_model_to_world(1:3,4) = obb.center;
@@ -66,7 +66,7 @@ for i = 1:nClasses
             relPathMeshPrimitive = genRelPathMeshPrimitive(className,classPrimitiveCount(i));
             if ~primitiveClassIsPatch(i)
                 % save directly 
-%                 save(relPathMeshPrimitive,'className','triModels','obb','T_model_to_world');
+                save(relPathMeshPrimitive,'className','triModels','obb','T_model_to_world');
             else
                 % mkdir
                 mkdir(relPathMeshPrimitive);
