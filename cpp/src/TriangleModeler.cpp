@@ -37,7 +37,7 @@ TriangleModeler::TriangleModeler() :
 void TriangleModeler::createTriangleModels(const std::string rel_path_pts)
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: creating triangle models..." << std::endl;
+	std::cout << "TriangleModeler: creating triangle models." << std::endl;
 
     loadPts(rel_path_pts);
     // filterPts();
@@ -60,7 +60,7 @@ void TriangleModeler::loadPts(const std::string rel_path_pts)
 void TriangleModeler::fitSmoothedSurface()
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: fitting smoothed surface..." << std::endl;
+	std::cout << "TriangleModeler: fitting smoothed surface." << std::endl;
 
     alglib::rbfreport rep;
     alglib::rbfcreate(2, 1, m_surface_model); // 2d input, 1d output
@@ -74,7 +74,7 @@ void TriangleModeler::fitSmoothedSurface()
 void TriangleModeler::fitSmoothedPts()
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: fitting smoothed points..." << std::endl;
+	std::cout << "TriangleModeler: fitting smoothed points." << std::endl;
 
     fitSmoothedSurface();
 
@@ -165,7 +165,7 @@ TriangleModeler::genNodeVecsForSmoothedFit(const std::vector<std::vector<double>
 void TriangleModeler::delaunayTriangulate()
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: delaunay triangulation..." << std::endl;
+	std::cout << "TriangleModeler: delaunay triangulation." << std::endl;
 
     std::vector< std::pair<Point_cgal, unsigned> > points_cgal;
     for(size_t i = 0; i < m_triangle_models.m_fit_pts.size(); ++i)
@@ -178,7 +178,7 @@ void TriangleModeler::delaunayTriangulate()
 void TriangleModeler::calcTrianglesFromTriangulation()
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: triangles from triangulation..." << std::endl;
+	std::cout << "TriangleModeler: triangles from triangulation." << std::endl;
 
     for(Delaunay_cgal::Finite_faces_iterator fit = m_triangulation.finite_faces_begin();
 	fit != m_triangulation.finite_faces_end(); ++fit) 
@@ -229,7 +229,7 @@ void TriangleModeler::calcHitProb(std::string rel_path_section, const PoseServer
 void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_pose_server)
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: calculating hit probs..." << std::endl;
+	std::cout << "TriangleModeler: calculating hit probs." << std::endl;
 
     // sim object
     TriangleModelSim sim;
@@ -323,7 +323,7 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
 void TriangleModeler::subsamplePts()
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: subsampling pts... " << std::endl;
+	std::cout << "TriangleModeler: subsampling pts. " << std::endl;
 
     int skip = (int)(m_pts.size()/m_max_pts_for_surface);
     std::vector<std::vector<double> > pts_sub;
@@ -336,7 +336,7 @@ void TriangleModeler::subsamplePts()
 void TriangleModeler::filterPts()
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: filtering pts... " << std::endl;
+	std::cout << "TriangleModeler: filtering pts. " << std::endl;
 
     // throw away pts with large z value
     std::vector<double> z;
@@ -381,7 +381,7 @@ void TriangleModeler::filterPts()
 void TriangleModeler::filterTriangles()
 {
     if (m_debug_flag)
-	std::cout << "TriangleModeler: filtering triangles..." << std::endl;
+	std::cout << "TriangleModeler: filtering triangles." << std::endl;
 
     std::vector<int> flag(m_triangle_models.m_triangles.size(), 1);
     for(size_t i = 0; i < m_triangle_models.m_triangles.size(); ++i)

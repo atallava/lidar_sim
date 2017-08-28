@@ -7,6 +7,7 @@
 
 #include <lidar_sim/OptimAssistant.h>
 #include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/VizUtils.h>
 #include <lidar_sim/EllipsoidModeler.h>
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/SectionModelSim.h>
@@ -29,31 +30,11 @@ OptimAssistant::OptimAssistant() :
     m_imu_pose_server = PoseServer(m_rel_path_poses_log);
 }
 
-double OptimAssistant::calcObj(std::vector<double> x)
-{
-    if (!m_initialized)
-    {
-	std::stringstream ss_err_msg;
-	ss_err_msg << "OptimAssistant has not been initialized.";
-	// todo: what is the right error to throw here?
-	throw std::runtime_error(ss_err_msg.str().c_str());
-    }
-
-    // create the ellipsoid block models
-    for (auto block_id : m_non_ground_block_ids)
-	buildModelsNonGroundBlock(block_id, x);
-
-    // simulate
-    sliceSim();
-
-    // calculate error
-    double obj = calcSimError();
-
-    return obj;
-}
-
 void OptimAssistant::init()
 {
+    if (m_verbose)
+	std::cout << "OptimAssistant: init." << std::endl;
+
     // todo: how do you know section id for models has been set?
     std::string m_rel_path_section_for_model = 
 	genRelPathSection(m_section_id_for_model);
@@ -95,6 +76,38 @@ void OptimAssistant::init()
     m_section_pt_ids_for_blocks_sim = section_pt_ids_subsampled;
 
     m_initialized = true;
+}
+
+double OptimAssistant::calcObj(std::vector<double> x)
+{
+    if (!m_initialized)
+    {
+    	std::stringstream ss_err_msg;
+    	ss_err_msg << "OptimAssistant has not been initialized.";
+    	// todo: what is the right error to throw here?
+    	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
+    // create the ellipsoid block models
+    if (m_verbose)
+    	std::cout << "OptimAssistant: creating models." << std::endl;
+
+    for (auto block_id : m_non_ground_block_ids)
+    	buildModelsNonGroundBlock(block_id, x);
+
+    // simulate
+    if (m_verbose)
+    	std::cout << "OptimAssistant: simulating." << std::endl;
+
+    blocksSim();
+
+    // calculate error
+    if (m_verbose)
+    	std::cout << "OptimAssistant: calculating error." << std::endl;
+
+    double obj = calcSimError();
+    
+    return obj;
 }
 
 void OptimAssistant::buildModelsNonGroundBlock(const int block_id, const std::vector<double> x)
@@ -247,12 +260,12 @@ void OptimAssistant::blocksSim()
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(m_section_id_for_model);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(m_section_id_for_model);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(m_section_id_for_model);
+    // std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(m_section_id_for_model);
+    // std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(m_section_id_for_model);
+    // std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(m_section_id_for_model);
 
-    sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
-    
+    // sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
+
     // sim
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> sim_hit_flag;
@@ -339,6 +352,7 @@ double OptimAssistant::calcSimError()
     std::vector<std::vector<double> > real_pts = loadPtsFromXYZFile(rel_path_real_pts, m_verbose);
     std::vector<std::vector<double> > sim_pts = loadPtsFromXYZFile(rel_path_sim_pts, m_verbose);
     double error = m_error_metric.calcSymmetricPcdError(real_pts, sim_pts);
+
     return error;
 }
 

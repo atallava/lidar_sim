@@ -44,7 +44,7 @@ void NearestNeighborSim::setDebugFlag(const int value)
 void NearestNeighborSim::subsamplePts()
 {
     if (m_debug_flag)
-	std::cout << "NearestNeighborSim: subsampling pts... " << std::endl;
+	std::cout << "NearestNeighborSim: subsampling pts. " << std::endl;
 
     if (m_pts.empty())
     {

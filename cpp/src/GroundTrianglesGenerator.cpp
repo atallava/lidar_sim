@@ -29,7 +29,7 @@ void GroundTrianglesGenerator::createTriangleModels(const std::string rel_path_i
 void GroundTrianglesGenerator::createTriangleModels(const std::vector<std::vector<double> > &imu_posns)
 {
     if (m_debug_flag)
-	std::cout << "GroundTriangleGenerator: creating triangle models..." << std::endl;
+	std::cout << "GroundTriangleGenerator: creating triangle models." << std::endl;
 
     fitPts(imu_posns);
     delaunayTriangulate();
@@ -41,7 +41,7 @@ void GroundTrianglesGenerator::createTriangleModels(const std::vector<std::vecto
 void GroundTrianglesGenerator::fitPts(const std::vector<std::vector<double> > &imu_posns)
 {
     if (m_debug_flag)
-	std::cout << "GroundTriangleGenerator: fitting pts..." << std::endl;
+	std::cout << "GroundTriangleGenerator: fitting pts." << std::endl;
 
     int steps = 0.5*m_lateral_dist/m_fit_pts_node_resn;
     m_fit_pts.clear();
@@ -78,7 +78,7 @@ void GroundTrianglesGenerator::fitPts(const std::vector<std::vector<double> > &i
 void GroundTrianglesGenerator::delaunayTriangulate()
 {
     if (m_debug_flag)
-	std::cout << "GroundTrianglesGenerator: delaunay triangulation..." << std::endl;
+	std::cout << "GroundTrianglesGenerator: delaunay triangulation." << std::endl;
 
     if (m_fit_pts.empty())
     {
@@ -98,7 +98,7 @@ void GroundTrianglesGenerator::delaunayTriangulate()
 void GroundTrianglesGenerator::calcTrianglesFromTriangulation()
 {
     if (m_debug_flag)
-	std::cout << "GroundTrianglesGenerator: triangles from triangulation..." << std::endl;
+	std::cout << "GroundTrianglesGenerator: triangles from triangulation." << std::endl;
 
     for(Delaunay_cgal::Finite_faces_iterator fit = m_triangulation.finite_faces_begin();
 	fit != m_triangulation.finite_faces_end(); ++fit) 
@@ -167,7 +167,7 @@ void GroundTrianglesGenerator::setDebugFlag(int flag)
 void GroundTrianglesGenerator::filterTriangles()
 {
     if (m_debug_flag)
-	std::cout << "GroundTrianglesGenerator: filtering triangles..." << std::endl;
+	std::cout << "GroundTrianglesGenerator: filtering triangles." << std::endl;
 
     std::vector<int> flag(m_triangles.size(), 1);
     for(size_t i = 0; i < m_triangles.size(); ++i)

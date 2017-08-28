@@ -40,7 +40,7 @@ EllipsoidModeler::EllipsoidModeler() :
 void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
 {
     if (m_verbose)
-	std::cout << "EllipsoidModeler: creating ellipsoid models..." << std::endl;
+	std::cout << "EllipsoidModeler: creating ellipsoid models." << std::endl;
 
     loadPts(rel_path_pts);
     // filterPts();
@@ -57,7 +57,7 @@ void EllipsoidModeler::loadPts(const std::string rel_path_pts)
 void EllipsoidModeler::clusterPts()
 {
     if (m_verbose)
-	std::cout << "EllipsoidModeler: clustering..." << std::endl;
+	std::cout << "EllipsoidModeler: clustering." << std::endl;
 
     alglib::real_2d_array pts_alglib = convertStlPtsToAlglibPts(m_pts);
 
@@ -78,7 +78,7 @@ void EllipsoidModeler::clusterPts()
 void EllipsoidModeler::filterClusters()
 {
     if (m_verbose)
-	std::cout << "EllipsoidModeler: filtering clusters..." << std::endl;
+	std::cout << "EllipsoidModeler: filtering clusters." << std::endl;
 
     // retain those with min pts
     std::vector<int> n_pts_per_cluster = getNumPtsPerCluster(m_pt_cluster_ids, m_n_clusters);
@@ -103,7 +103,7 @@ void EllipsoidModeler::filterClusters()
 void EllipsoidModeler::fillEllipsoidModels()
 {
     if (m_verbose)
-	std::cout << "EllipsoidModeler: filling ellipsoid models..." << std::endl;
+	std::cout << "EllipsoidModeler: filling ellipsoid models." << std::endl;
 
     for(size_t i = 0; i < m_selected_cluster_ids.size(); ++i)
     {
@@ -179,7 +179,7 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
 				   const PoseServer &imu_pose_server)
 {
     if (m_verbose)
-	std::cout << "EllipsoidModeler: calculating hit probs..." << std::endl;
+	std::cout << "EllipsoidModeler: calculating hit probs." << std::endl;
 
     // sim object
     // odd that modeler needs a sim
@@ -299,7 +299,7 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
 void EllipsoidModeler::filterPts()
 {
     if (m_verbose)
-	std::cout << "EllipsoidModeler: filtering pts... " << std::endl;
+	std::cout << "EllipsoidModeler: filtering pts. " << std::endl;
 
     // throw away pts which are isolated
     std::vector<std::vector<int> > nn_ids;

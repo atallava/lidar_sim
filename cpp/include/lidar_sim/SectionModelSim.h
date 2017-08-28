@@ -47,5 +47,6 @@ namespace lidar_sim {
     private:
 	double m_max_dist_to_node_for_membership;
 	bool m_deterministic_sim;
+	bool m_block_node_info_provided;
     };
 }

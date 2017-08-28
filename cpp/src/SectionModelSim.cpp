@@ -13,7 +13,8 @@ using namespace lidar_sim;
 
 SectionModelSim::SectionModelSim() :
     m_max_dist_to_node_for_membership(100), 
-    m_deterministic_sim(false)
+    m_deterministic_sim(false),
+    m_block_node_info_provided(false)
 {    
 }
 
@@ -63,6 +64,8 @@ void SectionModelSim::loadBlockInfo(const std::string rel_path_imu_posn_nodes, c
     m_imu_posn_nodes = loadArray(rel_path_imu_posn_nodes, 3);
     m_block_node_ids_ground = doubleToIntArray(loadArray(rel_path_block_node_ids_ground, 2));
     m_block_node_ids_non_ground = doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
+
+    m_block_node_info_provided = true;
 }
 
 // ellipsoid block membership
@@ -183,53 +186,28 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     std::vector<SimPts> sim_pts_over_blocks;
     std::vector<HitFlag> hit_flag_over_blocks;
 
-    // todo: clean this up
-    int ellipsoid_choice = 1;
-    if (ellipsoid_choice == 0)
-    {
-	// sim over ellipsoid blocks
-	std::vector<int> ellipsoid_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_non_ground);
-	std::vector<int> ellipsoid_blocks_hit;
-	for(size_t i = 0; i < ellipsoid_blocks_to_sim.size(); ++i)
-	{
-	    std::vector<std::vector<double> > sim_pts_can;
-	    std::vector<int> hit_flag_can;
-	    int block_id = ellipsoid_blocks_to_sim[i];
-	    try
-	    {	
-		// block_id - 1, since blocks are indexed starting 1
-		std::tie(sim_pts_can, hit_flag_can) = 
-		    m_ellipsoid_model_sims[block_id - 1].simPtsGivenRays(ray_origin, ray_dirns);
-	    }
-	    catch (const std::exception& e)
-	    {
-		std::cout << "error" << std::endl;
-		std::cout << block_id << std::endl;
-		exit(0);
-	    }
-	    if (anyNonzeros(hit_flag_can))
-		ellipsoid_blocks_hit.push_back(block_id);
-	
-	    sim_pts_over_blocks.push_back(sim_pts_can);
-	    hit_flag_over_blocks.push_back(hit_flag_can);
-	}
-    }
-    else
-    {
-	// one 'block' will just be the local ellipsoid model sim
-	EllipsoidModelSim ellipsoid_sim_nbr = m_ellipsoid_sim_nbr_server.createSim(ray_origin, ray_dirns);
-	ellipsoid_sim_nbr.setDeterministicSim(m_deterministic_sim);
-	ellipsoid_sim_nbr.setLaserCalibParams(m_laser_calib_params);
-	std::vector<std::vector<double> > sim_pts_can;
-	std::vector<int> hit_flag_can;
-	std::tie(sim_pts_can, hit_flag_can) = ellipsoid_sim_nbr.simPtsGivenRays(ray_origin, ray_dirns);
-	sim_pts_over_blocks.push_back(sim_pts_can);
-	hit_flag_over_blocks.push_back(hit_flag_can);
-    }
+    // one 'block' will just be the local ellipsoid model sim
+    EllipsoidModelSim ellipsoid_sim_nbr = m_ellipsoid_sim_nbr_server.createSim(ray_origin, ray_dirns);
+    ellipsoid_sim_nbr.setDeterministicSim(m_deterministic_sim);
+    ellipsoid_sim_nbr.setLaserCalibParams(m_laser_calib_params);
+    std::vector<std::vector<double> > sim_pts_can;
+    std::vector<int> hit_flag_can;
+    std::tie(sim_pts_can, hit_flag_can) = ellipsoid_sim_nbr.simPtsGivenRays(ray_origin, ray_dirns);
+    sim_pts_over_blocks.push_back(sim_pts_can);
+    hit_flag_over_blocks.push_back(hit_flag_can);
+
 
     // sim over tri blocks
-    std::vector<int> triangle_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_ground);
+    std::vector<int> triangle_blocks_to_sim;
     std::vector<int> triangle_blocks_hit;
+    if (m_block_node_info_provided)
+	triangle_blocks_to_sim = getPosnBlockMembership(ray_origin, m_block_node_ids_ground);
+    else
+    {
+	for (size_t i = 0; i < m_triangle_model_sims.size(); ++i)
+	    triangle_blocks_to_sim.push_back(i+1);
+    }
+
     for(size_t i = 0; i < triangle_blocks_to_sim.size(); ++i)
     {
 	std::vector<std::vector<double> > sim_pts_can;
