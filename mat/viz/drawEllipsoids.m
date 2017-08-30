@@ -1,4 +1,10 @@
 function drawEllipsoids(hfig,ellipsoidModels)
+%DRAWELLIPSOIDS
+%
+% DRAWELLIPSOIDS(hfig,ellipsoidModels)
+%
+% hfig            -
+% ellipsoidModels -
 
 figure(hfig); hold on;
 ellipsoidUniformAlpha = false;

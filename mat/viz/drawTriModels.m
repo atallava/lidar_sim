@@ -1,10 +1,10 @@
 function drawTriModels(hfig,triModels,objectType)
 %DRAWTRIMODELS
 %
-% DRAWTRIMODELS(hfig,triModels)
+% DRAWTRIMODELS(hfig,triModels,objectType)
 %
-% hfig      -
-% triModels -
+% hfig       -
+% triModels  -
 % objectType -
 
 if nargin < 3
