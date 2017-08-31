@@ -17,7 +17,6 @@ namespace lidar_sim {
 
 	// todo: so many string helpers! cleanup?
 	std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id);
-	std::string genRelPathSection(const int section_id);
 	std::string genRelPathEllipsoids(const int section_id, const int block_id);
 	std::string genRelPathTriangles(int section_id, int block_id);
 	std::string genRelPathImuPosnNodes(int section_id);

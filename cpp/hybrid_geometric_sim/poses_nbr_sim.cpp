@@ -14,15 +14,6 @@
 
 using namespace lidar_sim;
 
-std::string genRelPathSection(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_world_frame_subsampled.xyz";
-
-    return ss.str();
-}
-
 std::string genRelPathSectionPts(int section_id)
 {
     std::ostringstream ss;
