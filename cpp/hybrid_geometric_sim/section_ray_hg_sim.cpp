@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     // sim object
     int section_models_id = 3;
     std::string sim_version = "250417";
-    std::string rel_path_models_dir = genRelPathHgModelsDir(section_models_id, sim_version);
+    std::string rel_path_models_dir = genPathHgModelsDir(section_models_id, sim_version);
 
     // find ellipsoid models for this section
     std::vector<std::string> rel_path_ellipsoid_model_blocks;
@@ -71,9 +71,9 @@ int main(int argc, char **argv)
 
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_models_id);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_models_id);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_models_id);
+    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_models_id);
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 

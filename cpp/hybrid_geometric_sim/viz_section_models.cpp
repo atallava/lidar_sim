@@ -56,9 +56,9 @@ int main(int argc, char **argv)
     
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_id);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_id);
+    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_id);
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 

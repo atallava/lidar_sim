@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
     // load section
     int section_sim_id = 4;
-    std::string rel_path_section = genRelPathSection(section_sim_id);
+    std::string rel_path_section = genPathSection(section_sim_id);
     SectionLoader section(rel_path_section);
 
     // get sim scene pts

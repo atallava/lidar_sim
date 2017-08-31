@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     int block_id = 1;
 
     // get imu posn nodes for sec 4
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
 
     // create triangles
     GroundTrianglesGenerator gen;
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     block_node_ids_ground[0][1] = imu_posn_nodes.size();
 
     // write out
-    writePtsToXYZFile(block_node_ids_ground, genRelPathBlockNodeIdsGround(section_id));
+    writePtsToXYZFile(block_node_ids_ground, genPathBlockNodeIdsGround(section_id));
     gen.writeTrianglesToFile(genRelPathTriangles(section_id, block_id));
     gen.writeTrianglesFitPtsToFile(genRelPathTrianglesFitPts(section_id, block_id));
     

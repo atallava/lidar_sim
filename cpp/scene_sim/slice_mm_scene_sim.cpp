@@ -101,7 +101,7 @@ std::string genRelPathQueriedBlocks(int section_id, int tag = -1)
     return ss.str();
 }
 
-std::string genRelPathHgModelsDir(int section_id)
+std::string genPathHgModelsDir(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
@@ -116,12 +116,12 @@ int main(int argc, char **argv)
 
     // load section
     int section_sim_id = 4;
-    std::string rel_path_section = genRelPathSection(section_sim_id);
+    std::string rel_path_section = genPathSection(section_sim_id);
     SectionLoader section(rel_path_section);
 
     // sim object
     int section_hg_models_id = 4;
-    std::string rel_path_hg_models_dir = genRelPathHgModelsDir(section_hg_models_id);
+    std::string rel_path_hg_models_dir = genPathHgModelsDir(section_hg_models_id);
 
     // find object meshes
     std::vector<std::string> rel_path_object_meshes;
@@ -146,8 +146,8 @@ int main(int argc, char **argv)
 
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_hg_models_id);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_hg_models_id);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_hg_models_id);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_hg_models_id);
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground);
 

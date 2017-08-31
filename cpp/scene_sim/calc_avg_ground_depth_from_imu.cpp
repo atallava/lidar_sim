@@ -47,9 +47,9 @@ int main(int argc, char **argv)
     std::cout << "avg z fit pts: " << avg_z_fit_pts << std::endl;
 
     // imu nodes, block ids
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
     std::vector<std::vector<int> > block_node_ids_ground = 
 	doubleToIntArray(loadArray(rel_path_block_node_ids_ground, 2));
 

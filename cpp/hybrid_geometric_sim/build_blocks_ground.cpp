@@ -63,8 +63,8 @@ int main(int argc, char **argv)
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // imu posn nodes
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
 
     // section ground pts
     std::string rel_path_pts = genRelPathSectionPtsGround(section_id);
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
     block_file.close();
 
     // write block node ids;
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_id);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_id);
     writePtsToXYZFile(block_node_ids, rel_path_block_node_ids_ground);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

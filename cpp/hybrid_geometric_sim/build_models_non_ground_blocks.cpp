@@ -70,17 +70,17 @@ int main(int argc, char **argv)
     std::vector<int> block_ids = getNonGroundBlockIds(rel_path_non_ground_blocks_dir, section_id);
     
     // section
-    std::string rel_path_section = genRelPathSection(section_id);
+    std::string rel_path_section = genPathSection(section_id);
     SectionLoader section(rel_path_section);
 
     // pose server
-    std::string rel_path_poses_log = genRelPathPosesLog();
+    std::string rel_path_poses_log = genPathPosesLog();
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // blocks info
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
     std::vector<std::vector<int> > block_node_ids_non_ground = 
 	doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
 

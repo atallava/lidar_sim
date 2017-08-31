@@ -27,7 +27,7 @@ OptimAssistant::OptimAssistant() :
     m_num_nbrs_for_hit_prob(1),
     m_obj_calc_count(1)
 {
-    m_rel_path_poses_log = genRelPathPosesLog();
+    m_rel_path_poses_log = genPathPosesLog();
     m_imu_pose_server = PoseServer(m_rel_path_poses_log);
 }
 
@@ -38,11 +38,11 @@ void OptimAssistant::init()
 
     // todo: how do you know section id for models has been set?
     std::string m_rel_path_section_for_model = 
-	genRelPathSection(m_section_id_for_model);
+	genPathSection(m_section_id_for_model);
     m_section_for_model = SectionLoader (m_rel_path_section_for_model);
 
     std::string m_rel_path_section_for_sim = 
-	genRelPathSection(m_section_id_for_sim);
+	genPathSection(m_section_id_for_sim);
     m_section_for_sim = SectionLoader (m_rel_path_section_for_sim);
 
     // for blocks sim
@@ -50,7 +50,7 @@ void OptimAssistant::init()
     std::vector<int> non_ground_blocks_for_sim = m_non_ground_block_ids;
     for (auto block_id : non_ground_blocks_for_sim)
     {
-	std::string rel_path_pts = genRelPathNonGroundBlockPts(m_section_id_for_sim, block_id);
+	std::string rel_path_pts = genPathNonGroundBlockPts(m_section_id_for_sim, block_id);
 	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts, m_verbose);
 
 	std::vector<std::vector<int> > section_nbr_pt_ids; 
@@ -115,7 +115,7 @@ double OptimAssistant::calcObj(std::vector<double> x)
 
 void OptimAssistant::buildModelsNonGroundBlock(const int block_id, const std::vector<double> x)
 {
-    std::string rel_path_pts = genRelPathNonGroundBlockPts(m_section_id_for_model, block_id);
+    std::string rel_path_pts = genPathNonGroundBlockPts(m_section_id_for_model, block_id);
     std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts, m_verbose);
     
     EllipsoidModeler modeler;
@@ -167,9 +167,9 @@ void OptimAssistant::sliceSim()
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(m_section_id_for_model);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(m_section_id_for_model);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(m_section_id_for_model);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(m_section_id_for_model);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(m_section_id_for_model);
+    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(m_section_id_for_model);
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
     RayDirnServer ray_dirn_server;
@@ -262,9 +262,9 @@ void OptimAssistant::blocksSim()
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
     sim.setDeterministicSim(false);
 
-    // std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(m_section_id_for_model);
-    // std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(m_section_id_for_model);
-    // std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(m_section_id_for_model);
+    // std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(m_section_id_for_model);
+    // std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(m_section_id_for_model);
+    // std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(m_section_id_for_model);
 
     // sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 

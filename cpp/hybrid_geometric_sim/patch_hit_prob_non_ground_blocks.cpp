@@ -38,7 +38,7 @@ std::string genRelPathEllipsoids(int section_id, int block_id)
     return ss.str();
 }
 
-std::string genRelPathBlockNodeIdsNonGround(int section_id)
+std::string genPathBlockNodeIdsNonGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 

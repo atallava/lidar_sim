@@ -10,7 +10,7 @@
 
 using namespace lidar_sim;
 
-std::string genRelPathImuPosnNodes(int section_id)
+std::string genPathImuPosnNodes(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
@@ -19,7 +19,7 @@ std::string genRelPathImuPosnNodes(int section_id)
     return ss.str();
 }
 
-std::string genRelPathBlockNodeIdsNonGround(int section_id)
+std::string genPathBlockNodeIdsNonGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
     // imu posn nodes
     int section_id = 4;
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
 
     // add proxy z to object posns
     std::vector<double> imu_posn_nodes_mu = calcPtsMean(imu_posn_nodes);
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 	buildBlocks(imu_posn_nodes, object_posns, num_objects_per_block);
 
     // write out non ground block ids
-    writePtsToXYZFile(block_node_ids, genRelPathBlockNodeIdsNonGround(section_id));
+    writePtsToXYZFile(block_node_ids, genPathBlockNodeIdsNonGround(section_id));
 
     // build block ellipsoid models
     SceneObjectServer object_server;

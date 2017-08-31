@@ -169,14 +169,14 @@ namespace lidar_sim {
     std::vector<int> getObjectMeshIds(const std::string rel_path_object_meshes_dir);
 
     // the rel path helpers
-    std::string genRelPathSection(const int section_id);
-    std::string genRelPathPosesLog();
-    std::string genRelPathImuPosnNodes(const int section_id);
-    std::string genRelPathBlockNodeIdsGround(const int section_id);
-    std::string genRelPathBlockNodeIdsNonGround(const int section_id);
-    std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id);
-    std::string genRelPathGroundBlockPts(const int section_id, const int block_id);
-    std::string genRelPathHgModelsDir(const int section_id, const std::string sim_version);
+    std::string genPathSection(const int section_id);
+    std::string genPathPosesLog();
+    std::string genPathImuPosnNodes(const int section_id);
+    std::string genPathBlockNodeIdsGround(const int section_id);
+    std::string genPathBlockNodeIdsNonGround(const int section_id);
+    std::string genPathNonGroundBlockPts(const int section_id, const int block_id);
+    std::string genPathGroundBlockPts(const int section_id, const int block_id);
+    std::string genPathHgModelsDir(const int section_id, const std::string sim_version);
     std::string genPathRealPtsRef(const int section_id, const std::string sim_type, 
 				  const std::string sim_version, const std::string query_type, const int tag);
     std::string genPathSimPts(const int section_id, const std::string sim_type, 

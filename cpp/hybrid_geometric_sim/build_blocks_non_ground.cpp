@@ -53,8 +53,8 @@ int main(int argc, char **argv)
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // imu posn nodes
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genRelPathImuPosnNodes(section_id), 3);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
 
     // pts
     std::string rel_path_pts = "data/sections/section_03/manual_segmentation/section_pts_03_non_ground.asc";

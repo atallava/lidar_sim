@@ -58,7 +58,7 @@ std::string genRelPathEllipsoids(int section_id, int block_id)
     return ss.str();
 }
 
-std::string genRelPathImuPosnNodes(int section_id)
+std::string genPathImuPosnNodes(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
@@ -67,7 +67,7 @@ std::string genRelPathImuPosnNodes(int section_id)
     return ss.str();
 }
 
-std::string genRelPathBlockNodeIdsNonGround(int section_id)
+std::string genPathBlockNodeIdsNonGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
@@ -142,8 +142,8 @@ int main(int argc, char **argv)
 
     // load ellipsoids models
     // block info 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_id);
     std::vector<std::vector<double> > imu_posn_nodes = loadArray(rel_path_imu_posn_nodes, 3);
     std::vector<std::vector<int> > block_node_ids_non_ground = 
 	doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));

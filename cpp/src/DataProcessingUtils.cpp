@@ -635,7 +635,7 @@ namespace lidar_sim {
 	return ids;
     }
 
-    std::string genRelPathSection(const int section_id)
+    std::string genPathSection(const int section_id)
     {
     	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
@@ -646,13 +646,13 @@ namespace lidar_sim {
     	return ss.str();
     }
 
-    std::string genRelPathPosesLog()
+    std::string genPathPosesLog()
     {
 	std::string rel_path_poses_log = "/usr0/home/atallav1/lidar_sim/data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
 	return rel_path_poses_log;
     }
 
-    std::string genRelPathImuPosnNodes(const int section_id)
+    std::string genPathImuPosnNodes(const int section_id)
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
@@ -662,7 +662,7 @@ namespace lidar_sim {
 	return ss.str();
     }
 
-    std::string genRelPathBlockNodeIdsGround(const int section_id)
+    std::string genPathBlockNodeIdsGround(const int section_id)
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
@@ -672,7 +672,7 @@ namespace lidar_sim {
 	return ss.str();
     }
 
-    std::string genRelPathBlockNodeIdsNonGround(const int section_id)
+    std::string genPathBlockNodeIdsNonGround(const int section_id)
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
@@ -682,7 +682,7 @@ namespace lidar_sim {
 	return ss.str();
     }
 
-    std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id)
+    std::string genPathNonGroundBlockPts(const int section_id, const int block_id)
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
@@ -693,7 +693,7 @@ namespace lidar_sim {
 	return ss.str();
     }
 
-    std::string genRelPathGroundBlockPts(const int section_id, const int block_id)
+    std::string genPathGroundBlockPts(const int section_id, const int block_id)
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
@@ -704,7 +704,7 @@ namespace lidar_sim {
 	return ss.str();
     }
 
-    std::string genRelPathHgModelsDir(const int section_id, const std::string sim_version)
+    std::string genPathHgModelsDir(const int section_id, const std::string sim_version)
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"

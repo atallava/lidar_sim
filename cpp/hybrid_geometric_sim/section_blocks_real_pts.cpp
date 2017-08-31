@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 
     // load section
     int section_id = 3;
-    std::string rel_path_section = genRelPathSection(section_id);
+    std::string rel_path_section = genPathSection(section_id);
     SectionLoader section(rel_path_section);
 
     std::vector<std::vector<double> > real_pts;
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     // ground block pts
     for (auto block_id : ground_blocks)
     {
-	std::string rel_path_pts = genRelPathGroundBlockPts(section_id, block_id);
+	std::string rel_path_pts = genPathGroundBlockPts(section_id, block_id);
 	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
 
 	std::vector<std::vector<int> > section_nbr_pt_ids; 
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
     // non ground block pts
     for (auto block_id : non_ground_blocks)
     {
-	std::string rel_path_pts = genRelPathNonGroundBlockPts(section_id, block_id);
+	std::string rel_path_pts = genPathNonGroundBlockPts(section_id, block_id);
 	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
 
 	std::vector<std::vector<int> > section_nbr_pt_ids; 

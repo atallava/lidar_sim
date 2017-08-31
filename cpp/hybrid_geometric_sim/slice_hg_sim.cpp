@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 
     // load section
     int section_sim_id = 8;
-    std::string rel_path_section = genRelPathSection(section_sim_id);
+    std::string rel_path_section = genPathSection(section_sim_id);
     SectionLoader section(rel_path_section);
 
     // sim object
@@ -120,9 +120,9 @@ int main(int argc, char **argv)
 
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_models_id);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_models_id);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_models_id);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_models_id);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_models_id);
+    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_models_id);
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 

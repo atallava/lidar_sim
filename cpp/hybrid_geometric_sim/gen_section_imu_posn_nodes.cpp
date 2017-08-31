@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     vizer.vizPts(imu_posn_nodes);
 
     // write out
-    writePtsToXYZFile(imu_posn_nodes, genRelPathImuPosnNodes(section_id));
+    writePtsToXYZFile(imu_posn_nodes, genPathImuPosnNodes(section_id));
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

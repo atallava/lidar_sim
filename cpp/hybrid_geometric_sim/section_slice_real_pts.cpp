@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     // load section
     int section_id = 3;
-    std::string rel_path_section = genRelPathSection(section_id);
+    std::string rel_path_section = genPathSection(section_id);
     SectionLoader section(rel_path_section);
 
     size_t packet_id_sim_start, packet_id_sim_end, packet_step;	

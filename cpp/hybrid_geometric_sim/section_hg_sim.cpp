@@ -88,13 +88,13 @@ int main(int argc, char **argv)
 
     // load section to sim
     int section_id_for_sim = 8;
-    std::string rel_path_section = genRelPathSection(section_id_for_sim);
+    std::string rel_path_section = genPathSection(section_id_for_sim);
     SectionLoader section(rel_path_section);
 
     // sim object
     int section_id_of_models = 3;
     std::string sim_version = "310817";
-    std::string rel_path_models_dir = genRelPathHgModelsDir(section_id_of_models, sim_version);
+    std::string rel_path_models_dir = genPathHgModelsDir(section_id_of_models, sim_version);
 
     // find ellipsoid models for this section
     std::vector<std::string> rel_path_ellipsoid_model_blocks;
@@ -117,14 +117,14 @@ int main(int argc, char **argv)
 
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genRelPathImuPosnNodes(section_id_of_models);
-    std::string rel_path_block_node_ids_ground = genRelPathBlockNodeIdsGround(section_id_of_models);
-    std::string rel_path_block_node_ids_non_ground = genRelPathBlockNodeIdsNonGround(section_id_of_models);
+    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id_of_models);
+    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_id_of_models);
+    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_id_of_models);
 
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 
     // pose server
-    std::string rel_path_poses_log = genRelPathPosesLog();
+    std::string rel_path_poses_log = genPathPosesLog();
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // slice ids

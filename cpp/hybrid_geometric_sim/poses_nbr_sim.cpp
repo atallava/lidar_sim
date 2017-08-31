@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 
     // load section
     int section_id_val = 8;
-    std::string rel_path_section = genRelPathSection(section_id_val);
+    std::string rel_path_section = genPathSection(section_id_val);
     SectionLoader section(rel_path_section);
 
     // pose server
