@@ -1,0 +1,6 @@
+- 250417
+  - initial hand-selected parameters
+- 310817
+  - pts per cluster, max maha dist selected by sim optim
+
+

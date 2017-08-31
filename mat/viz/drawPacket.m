@@ -14,7 +14,10 @@ if nargin < 6
     color = [0 1 0];
 end
 
-rayMissLength = calcRayMissLength(rayOrigin,ptsAll(hitFlag,:));
+% rayMissLength = calcRayMissLength(rayOrigin,ptsAll(hitFlag,:));
+rayMissLength = 5;
+markerSizeData = 150;
+lineWidth = 3;
 
 figure(hfig); hold on;
 nRays = size(rayDirns,1);
@@ -33,10 +36,11 @@ for i = 1:nRays
     plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'--','color',color);
     scatter3(thisPt(:,1),thisPt(:,2),thisPt(:,3), ...
         'markerfacecolor',color,'markerEdgeColor',color, ...
-        'marker',thisMarker);
+        'marker',thisMarker,'sizeData',markerSizeData,'lineWidth',lineWidth);
 end
 end
 
+%% helper
 function l = calcRayMissLength(rayOrigin,ptsHit)
 dr = bsxfun(@minus,ptsHit,rayOrigin);
 ds2 = sum(dr.^2,2); 

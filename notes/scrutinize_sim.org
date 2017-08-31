@@ -1,0 +1,48 @@
+* hg sim. version 250417. section 8 sim.
+- packet idx 1349
+  - ray idx 318, 382, 383, 320
+    - sim rays didn't penetrate vegetation
+  - ray idx 30, 62, 64
+    - sim hits but real doesn't. maybe not enough true miss information.
+  - ray idx 247
+    - ellipsoids too large, not transparent enough
+- packet idx 2024
+  - ray idx 128 256 368 305
+    - false hit
+  - ray idx 313 252
+    - sim pt blocked early. i think stochastic.
+  - ray idx 107 38
+    - in dense vegetation, ray intersects a number of ellipsoids. max maha dist
+      probably too large.
+  - ray idx 272 267
+    - good job penetrating through vegetation.
+- packet idx 2699   
+  overall looks like much larger variance than real data
+  - ray idx 365 72
+    - false hit. also ellipsoids very large.
+  - ray idx 169 273 106
+    - ellipsoids too large. gaussian samples have a high variance.
+  - ray idx 172
+    - good job in thicket. but got lucky in the high variance
+- packet idx 3374
+  - ray idx 369 225 289 323 76
+    - false hit, from ground triangles. probably need better hit prob calc.
+  - ray idx 195
+    - good job. hitting ground :P
+  - ray idx 343
+    - hits too early. ellipsoids not transparent enough.
+  - ray idx 211
+    - false miss. no ground tri where there should of been
+  - ray idx 313
+    - the good job analogue of ray idx 343.
+  - ray idx 378 188
+    - false ellipsoid hit. embarassingly large variance.
+  - ray idx 344
+    - medium job. smaller variance could be better
+
+
+
+
+
+
+

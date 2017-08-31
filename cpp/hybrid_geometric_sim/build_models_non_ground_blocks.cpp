@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 
     // make modeler spit out param values
     std::string rel_path_modeler_params = genRelPathEllipsoidModelerParams(section_id, sim_version);
-    writeStringToFile(rel_path_modeler_params, modeler_params);
+    writeStringToFile(modeler_params, rel_path_modeler_params);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

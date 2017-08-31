@@ -1,39 +1,43 @@
 %% load helpers
-genRelPathTriangleModels = @(sectionId,blockId) ...
-    sprintf('../data/sections/section_%02d/hg_sim/section_%02d_block_%02d_ground_triangles', ...
-    sectionId,sectionId,blockId);
+genRelPathTriangleModels = @(sectionId,simVersion,blockId) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s,section_%02d_block_%02d_ground_triangles', ...
+    sectionId,simVersion,sectionId,blockId);
 
-genRelPathEllipsoidModels = @(sectionId,blockId) ...
-    sprintf('../data/sections/section_%02d/hg_sim/section_%02d_block_%02d_non_ground_ellipsoids', ...
-    sectionId,sectionId,blockId);
+genRelPathEllipsoidModels = @(sectionId,simVersion,blockId) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/section_%02d_block_%02d_non_ground_ellipsoids', ...
+    sectionId,simVersion,sectionId,blockId);
 
-genRelPathTriModels = @(sectionId,blockId) ...
-    sprintf('../data/sections/section_%02d/hg_sim/section_%02d_block_%02d_ground_triangles', ...
-    sectionId,sectionId,blockId);
+genRelPathTriModels = @(sectionId,simVersion,blockId) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/section_%02d_block_%02d_ground_triangles', ...
+    sectionId,simVersion,sectionId,blockId);
 
-genRelPathModelsDir = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/hg_sim',sectionId);
+genRelPathHgModelsDir = @(sectionId,simVersion) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s',sectionId,simVersion);
 
-genRelPathSliceRealPts = @(sectionId,queryType) ...
-    sprintf('../../cpp/data/sections/section_%02d/hg_sim/%s_real_pts',sectionId,queryType);
+genRelPathSliceRealPts = @(sectionId,simVersion,queryType) ...
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/version_%s/%s_real_pts', ...
+    sectionId,simVersion,queryType);
 
-genRelPathSliceSimPts = @(sectionId,queryType) ...
-    sprintf('../../cpp/data/sections/section_%02d/hg_sim/%s_sim_pts',sectionId,queryType);
+genRelPathSliceSimPts = @(sectionId,simVersion,queryType) ...
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/version_%s/%s_sim_pts', ...
+    sectionId,simVersion,queryType);
 
-genRelPathSliceSimDetail = @(sectionId,queryType) ...
-    sprintf('../data/sections/section_%02d/hg_sim/%s_sim_detail',sectionId,queryType);
+genRelPathSliceSimDetail = @(sectionId,simVersion,queryType) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/%s_sim_detail', ...
+    sectionId,simVersion,queryType);
 
 %% load
 % ellipsoid models
 sectionIdOfModels = 3;
-relPathModelsDir = genRelPathModelsDir(sectionIdOfModels);
+simVersion = '250417';
+relPathModelsDir = genRelPathHgModelsDir(sectionIdOfModels,simVersion);
 ellipsoidBlockIds = getEllipsoidModelBlockIds(relPathModelsDir,sectionIdOfModels);
 nTriBlocks = length(ellipsoidBlockIds);
 ellipsoidModelCell = cell(1,nTriBlocks);
 for i = 1:nTriBlocks
     blockId = ellipsoidBlockIds(i);
     
-    relPathEllipsoidModels = genRelPathEllipsoidModels(sectionIdOfModels,blockId);
+    relPathEllipsoidModels = genRelPathEllipsoidModels(sectionIdOfModels,simVersion,blockId);
     container = load(relPathEllipsoidModels,'ellipsoidModels');
     ellipsoidModelCell{i} = container.ellipsoidModels;
 end
@@ -45,7 +49,7 @@ triModelCell = cell(1,nTriBlocks);
 for i = 1:nTriBlocks
     blockId = triBlockIds(i);
     
-    relPathTriModels = genRelPathTriModels(sectionIdOfModels,blockId);
+    relPathTriModels = genRelPathTriModels(sectionIdOfModels,simVersion,blockId);
     container = load(relPathTriModels,'triModels');
     triModelCell{i} = container.triModels;
 end
@@ -63,7 +67,7 @@ relPathSimPts = genRelPathSliceSimPts(sectionIdForSim,queryType);
 simPts = loadPts(relPathSimPts);
 
 %% sim detail
-relPathSimDetail = genRelPathSliceSimDetail(sectionIdForSim,queryType);
+relPathSimDetail = genRelPathSliceSimDetail(sectionIdForSim,simVersion,queryType);
 load(relPathSimDetail,'simDetail');
 
 %% viz pts marginalized
@@ -82,7 +86,7 @@ drawTriModels(hfig,triModelsNbr,'ground');
 
 %% pick packet
 nPackets = length(simDetail.rayPitchesCell);
-packetIdx = floor(3374/5*2);
+packetIdx = floor(3374/5*5);
 % packetIdx = randsample(nPackets,1);
 
 % extract packet info
@@ -137,13 +141,14 @@ drawTriModels(hfig,triModelsNbr,'ground');
 title(sprintf('packet id: %d',packetIdx));
 
 %% pick ray
-% rayId = randsample(size(rayDirns,1),1);
-rayId = floor(384/3*3);
-thisRayDirn = rayDirns(rayId,:);
-thisRealPt = realPtsAll(rayId,:);
-thisRealHitFlag = realHitFlag(rayId);
-thisSimPt = simPtsAll(rayId,:);
-thisSimHitFlag = simHitFlag(rayId);
+% rayIdx = randsample(size(rayDirns,1),1);
+rayIdx = 188;
+thisRayDirn = rayDirns(rayIdx,:);
+thisRealPt = realPtsAll(rayIdx,:);
+thisRealHitFlag = realHitFlag(rayIdx);
+thisSimPt = simPtsAll(rayIdx,:);
+% thisSimPt = [-405.667 344.584 2.00723];
+thisSimHitFlag = simHitFlag(rayIdx);
 
 % draw models
 if ~thisSimHitFlag && ~thisRealHitFlag
@@ -155,7 +160,7 @@ else
 end
 thisRayPts = genPtsRay(rayOrigin,thisRayDirn,thisRayLength);
 
-modelNbrRadius = 0.5;
+modelNbrRadius = 3.5;
 triModelsNbr = createTriModelsNbr(triModels,thisRayPts,modelNbrRadius);
 ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,thisRayPts,modelNbrRadius);
 
@@ -169,7 +174,7 @@ drawPacket(hfig,rayOrigin,thisRayDirn,thisSimPt,thisSimHitFlag,'r');
 drawEllipsoids(hfig,ellipsoidModelsNbr);
 drawTriModels(hfig,triModelsNbr,'ground');
 
-title(sprintf('packet id: %d, ray id: %d',packetIdx,rayId));
+title(sprintf('packet id: %d, ray id: %d',packetIdx,rayIdx));
 
 
 

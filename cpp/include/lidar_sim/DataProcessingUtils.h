@@ -176,4 +176,5 @@ namespace lidar_sim {
     std::string genRelPathBlockNodeIdsNonGround(const int section_id);
     std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id);
     std::string genRelPathGroundBlockPts(const int section_id, const int block_id);
+    std::string genRelPathHgModelsDir(const int section_id, const std::string sim_version);
 }

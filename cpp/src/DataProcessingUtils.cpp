@@ -272,6 +272,8 @@ namespace lidar_sim {
     void writeStringToFile(const std::string str, const std::string rel_path_output)
     {
 	std::ofstream file(rel_path_output);
+	std::cout << "Writing string to: " << rel_path_output << std::endl;
+
 	file << str;
 	file.close();
     }
@@ -654,7 +656,7 @@ namespace lidar_sim {
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
-	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
 	   << "/imu_posn_nodes.txt";
 
 	return ss.str();
@@ -664,8 +666,8 @@ namespace lidar_sim {
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
-	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-	   << "/hg_sim/block_node_ids_ground.txt";
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/hg_sim/blocks_info/block_node_ids_ground.txt";
 
 	return ss.str();
     }
@@ -674,8 +676,8 @@ namespace lidar_sim {
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
-	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-	   << "/hg_sim/block_node_ids_non_ground.txt";
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/hg_sim/blocks_info/block_node_ids_non_ground.txt";
 
 	return ss.str();
     }
@@ -684,7 +686,7 @@ namespace lidar_sim {
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
-	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
 	   << "/hg_sim/blocks_info/section_" << std::setw(2) << std::setfill('0') << section_id
 	   << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
 
@@ -695,9 +697,19 @@ namespace lidar_sim {
     {
 	std::ostringstream ss;
     	ss << "/usr0/home/atallav1/lidar_sim/cpp"
-	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-	   << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "/hg_sim/blocks_info/section_" << std::setw(2) << std::setfill('0') << section_id
 	   << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground.xyz";
+
+	return ss.str();
+    }
+
+    std::string genRelPathHgModelsDir(const int section_id, const std::string sim_version)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "/hg_sim/version_" << sim_version;
 
 	return ss.str();
     }
