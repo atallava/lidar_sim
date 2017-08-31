@@ -49,24 +49,6 @@ std::string genRelPathEllipsoids(int section_id, std::string sim_version, int bl
     return ss.str();
 }
 
-std::string genRelPathImuPosnNodes(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/imu_posn_nodes.txt";
-
-    return ss.str();
-}
-
-std::string genRelPathBlockNodeIdsNonGround(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/blocks_info/block_node_ids_non_ground.txt";
-
-    return ss.str();
-}
-
 std::string genRelPathEllipsoidModelerParams(int section_id, std::string sim_version)
 {
     std::ostringstream ss;

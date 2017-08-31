@@ -16,12 +16,8 @@ namespace lidar_sim {
 	double calcSimError();
 
 	// todo: so many string helpers! cleanup?
-	std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id);
 	std::string genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count);
 	std::string genRelPathTriangles(int section_id, int block_id);
-	std::string genRelPathImuPosnNodes(int section_id);
-	std::string genRelPathBlockNodeIdsGround(int section_id);
-	std::string genRelPathBlockNodeIdsNonGround(int section_id);
 
 	// for slice sim
 	std::string genRelPathSliceRealPts(const int section_id, const int obj_calc_count);

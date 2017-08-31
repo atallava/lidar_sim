@@ -49,24 +49,6 @@ std::string genRelPathObjectMesh(int section_id, int object_id)
     return ss.str();
 }
 
-std::string genRelPathImuPosnNodes(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/imu_posn_nodes.txt";
-
-    return ss.str();
-}
-
-std::string genRelPathBlockNodeIdsGround(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/block_node_ids_ground.txt";
-
-    return ss.str();
-}
-
 std::string genRelPathSliceRealPts(int section_id, int tag = -1)
 {
     std::ostringstream ss;

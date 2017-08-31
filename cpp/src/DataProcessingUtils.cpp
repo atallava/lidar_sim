@@ -646,7 +646,59 @@ namespace lidar_sim {
 
     std::string genRelPathPosesLog()
     {
-	std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
+	std::string rel_path_poses_log = "/usr0/home/atallav1/lidar_sim/data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
 	return rel_path_poses_log;
+    }
+
+    std::string genRelPathImuPosnNodes(const int section_id)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/imu_posn_nodes.txt";
+
+	return ss.str();
+    }
+
+    std::string genRelPathBlockNodeIdsGround(const int section_id)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/hg_sim/block_node_ids_ground.txt";
+
+	return ss.str();
+    }
+
+    std::string genRelPathBlockNodeIdsNonGround(const int section_id)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/hg_sim/block_node_ids_non_ground.txt";
+
+	return ss.str();
+    }
+
+    std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "/hg_sim/blocks_info/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
+
+	return ss.str();
+    }
+
+    std::string genRelPathGroundBlockPts(const int section_id, const int block_id)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id
+	   << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground.xyz";
+
+	return ss.str();
     }
 }

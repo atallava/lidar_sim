@@ -25,9 +25,9 @@ OptimAssistant::OptimAssistant() :
     m_num_nbrs_for_blocks_sim(1),
     m_max_pts_for_blocks_sim(1e4),
     m_num_nbrs_for_hit_prob(1),
-    m_obj_calc_count(0)
+    m_obj_calc_count(1)
 {
-    m_rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
+    m_rel_path_poses_log = genRelPathPosesLog();
     m_imu_pose_server = PoseServer(m_rel_path_poses_log);
 }
 
@@ -358,16 +358,6 @@ double OptimAssistant::calcSimError()
     return error;
 }
 
-std::string OptimAssistant::genRelPathNonGroundBlockPts(const int section_id, const int block_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
-
-    return ss.str();
-}
-
 std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count)
 {
     std::ostringstream ss;
@@ -391,33 +381,6 @@ std::string OptimAssistant::genRelPathTriangles(int section_id, int block_id)
 
 // todo: i'd like these to be somewhere else?  notice how some of the rel paths
 // go into data/sections, but other go into data/sim_optim
-std::string OptimAssistant::genRelPathImuPosnNodes(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/imu_posn_nodes.txt";
-
-    return ss.str();
-}
-
-std::string OptimAssistant::genRelPathBlockNodeIdsGround(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/block_node_ids_ground.txt";
-
-    return ss.str();
-}
-
-std::string OptimAssistant::genRelPathBlockNodeIdsNonGround(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/block_node_ids_non_ground.txt";
-
-    return ss.str();
-}
-
 std::string OptimAssistant::genRelPathSliceRealPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;

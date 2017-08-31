@@ -5,15 +5,6 @@
 
 using namespace lidar_sim;
 
-std::string genRelPathImuPosnNodes(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/imu_posn_nodes.txt";
-
-    return ss.str();
-}
-
 std::string genRelPathTriangles(int section_id, int block_id)
 {
     std::ostringstream ss;
@@ -30,15 +21,6 @@ std::string genRelPathTrianglesFitPts(int section_id, int block_id)
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground_triangles_fit_pts.txt";
-
-    return ss.str();
-}
-
-std::string genRelPathBlockNodeIdsGround(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/block_node_ids_ground.txt";
 
     return ss.str();
 }

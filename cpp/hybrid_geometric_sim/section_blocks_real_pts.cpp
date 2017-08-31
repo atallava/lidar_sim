@@ -19,26 +19,6 @@
 
 using namespace lidar_sim;
 
-std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
-
-    return ss.str();
-}
-
-std::string genRelPathGroundBlockPts(const int section_id, const int block_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground.xyz";
-
-    return ss.str();
-}
-
 std::string genRelPathBlocksRealPts(int section_id)
 {
     std::ostringstream ss;

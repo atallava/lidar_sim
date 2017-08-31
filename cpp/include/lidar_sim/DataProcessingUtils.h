@@ -171,4 +171,9 @@ namespace lidar_sim {
     // the rel path helpers
     std::string genRelPathSection(const int section_id);
     std::string genRelPathPosesLog();
+    std::string genRelPathImuPosnNodes(const int section_id);
+    std::string genRelPathBlockNodeIdsGround(const int section_id);
+    std::string genRelPathBlockNodeIdsNonGround(const int section_id);
+    std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id);
+    std::string genRelPathGroundBlockPts(const int section_id, const int block_id);
 }

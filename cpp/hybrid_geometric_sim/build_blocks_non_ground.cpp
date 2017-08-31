@@ -28,15 +28,6 @@ std::string genSectionRelPath(int section_id)
     return ss.str();
 }
 
-std::string genRelPathImuPosnNodes(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/imu_posn_nodes.txt";
-
-    return ss.str();
-}
-
 std::string genBlockRelPath(int section_id, int block_id)
 {
     std::ostringstream ss;
