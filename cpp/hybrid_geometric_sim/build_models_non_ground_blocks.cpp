@@ -18,10 +18,22 @@
 
 using namespace lidar_sim;
 
+std::string genRelPathSection(const int section_id)
+{
+    std::ostringstream ss;
+    ss << "/usr0/home/atallav1/lidar_sim/cpp"
+       << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "_subsampled.xyz";
+
+    return ss.str();
+}
+
 std::string genRelPathBlock(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/blocks_info" 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
 
@@ -31,15 +43,17 @@ std::string genRelPathBlock(int section_id, int block_id)
 std::string genRelPathNonGroundBlocksDir(int section_id)
 {
     std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+       << "/hg_sim/blocks_info";
 
     return ss.str();
 }
 
-std::string genRelPathEllipsoids(int section_id, int block_id)
+std::string genRelPathEllipsoids(int section_id, std::string sim_version, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/version_" << sim_version
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
 
@@ -59,7 +73,7 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/block_node_ids_non_ground.txt";
+       << "/hg_sim/blocks_info/block_node_ids_non_ground.txt";
 
     return ss.str();
 }
@@ -68,12 +82,14 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
+    std::string sim_version = "310817";
+
     int section_id = 3;
     std::string rel_path_non_ground_blocks_dir = genRelPathNonGroundBlocksDir(section_id);
     std::vector<int> block_ids = getNonGroundBlockIds(rel_path_non_ground_blocks_dir, section_id);
     
     // section
-    std::string rel_path_section = "data/section_03_world_frame_subsampled.xyz";
+    std::string rel_path_section = genRelPathSection(section_id);
     SectionLoader section(rel_path_section);
 
     // pose server
@@ -123,7 +139,7 @@ int main(int argc, char **argv)
 	modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
 
 	// write out
-	std::string rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
+	std::string rel_path_ellipsoids = genRelPathEllipsoids(section_id, sim_version, block_id);
 	modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
     }
 

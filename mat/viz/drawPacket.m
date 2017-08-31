@@ -29,7 +29,7 @@ for i = 1:nRays
         thisPt = rayOrigin + rayLength*rayDirn;
         thisMarker = 'x';
     end
-    rayPts = genPtsRay(rayOrigin,rayDirn,rayLength);
+    rayPts = [rayOrigin; rayOrigin + rayLength*rayDirn];
     plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'--','color',color);
     scatter3(thisPt(:,1),thisPt(:,2),thisPt(:,3), ...
         'markerfacecolor',color,'markerEdgeColor',color, ...

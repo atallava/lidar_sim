@@ -15,13 +15,13 @@ genRelPathModelsDir = @(sectionId) ...
     sprintf('../data/sections/section_%02d/hg_sim',sectionId);
 
 genRelPathSliceRealPts = @(sectionId,queryType) ...
-    sprintf('../../cpp/data/sections/section_%02d/hg_sim/%s_real_pts.xyz',sectionId,queryType);
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/%s_real_pts',sectionId,queryType);
 
 genRelPathSliceSimPts = @(sectionId,queryType) ...
-    sprintf('../../cpp/data/sections/section_%02d/hg_sim/%s_sim_pts.xyz',sectionId,queryType);
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/%s_sim_pts',sectionId,queryType);
 
 genRelPathSliceSimDetail = @(sectionId,queryType) ...
-    sprintf('../../cpp/data/sections/section_%02d/hg_sim/%s_sim_detail.txt',sectionId,queryType);
+    sprintf('../data/sections/section_%02d/hg_sim/%s_sim_detail',sectionId,queryType);
 
 %% load
 % ellipsoid models
@@ -51,6 +51,7 @@ for i = 1:nTriBlocks
 end
 triModels = stitchTriModels(triModelCell);
 
+%% pts
 % real pts
 sectionIdForSim = 8;
 queryType = 'section';
@@ -61,9 +62,9 @@ realPts = loadPts(relPathRealPts);
 relPathSimPts = genRelPathSliceSimPts(sectionIdForSim,queryType);
 simPts = loadPts(relPathSimPts);
 
-% sim detail
+%% sim detail
 relPathSimDetail = genRelPathSliceSimDetail(sectionIdForSim,queryType);
-simDetail = loadSimDetail(relPathSimDetail);
+load(relPathSimDetail,'simDetail');
 
 %% viz pts marginalized
 hfig = figure(); axis equal;
@@ -80,7 +81,9 @@ drawEllipsoids(hfig,ellipsoidModelsNbr);
 drawTriModels(hfig,triModelsNbr,'ground');
 
 %% pick packet
-packetIdx = 1;
+nPackets = length(simDetail.rayPitchesCell);
+packetIdx = floor(3374/5*2);
+% packetIdx = randsample(nPackets,1);
 
 % extract packet info
 rayOrigin = simDetail.rayOrigins(packetIdx,:);
@@ -99,21 +102,43 @@ rayDirns = calcRayDirnsFromSph(rayPitches,rayYaws);
 hfig = figure(); axis equal;
 grid on; box on;
 
-% drawPacket(hfig,rayOrigin,rayDirns,realPtsAll,realHitFlag,'b');
+drawPacket(hfig,rayOrigin,rayDirns,realPtsAll,realHitFlag,'b');
 drawPacket(hfig,rayOrigin,rayDirns,simPtsAll,simHitFlag,'r');
 
 % draw models
 modelNbrRadius = 0.5;
 simPtsHit = simPtsAll(simHitFlag,:);
-triModelsNbr = createTriModelsNbr(triModels,simPtsHit,modelNbrRadius);
-ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,simPtsHit,modelNbrRadius);
+realPtsHit = realPtsAll(realHitFlag,:);
+triModelsNbr = createTriModelsNbr(triModels,[simPtsHit; realPtsHit],modelNbrRadius);
+ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,[simPtsHit; realPtsHit],modelNbrRadius);
 
 drawEllipsoids(hfig,ellipsoidModelsNbr);
 drawTriModels(hfig,triModelsNbr,'ground');
 
+title(sprintf('packet id: %d',packetIdx));
+
+%% viz packet pts only
+hfig = figure(); axis equal;
+grid on; box on;
+
+drawPts(hfig,realPtsAll(realHitFlag,:),'b');
+drawPts(hfig,simPtsAll(simHitFlag,:),'r');
+
+% draw models
+modelNbrRadius = 0.7;
+simPtsHit = simPtsAll(simHitFlag,:);
+realPtsHit = realPtsAll(realHitFlag,:);
+triModelsNbr = createTriModelsNbr(triModels,[simPtsHit; realPtsHit],modelNbrRadius);
+ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,[simPtsHit; realPtsHit],modelNbrRadius);
+
+drawEllipsoids(hfig,ellipsoidModelsNbr);
+drawTriModels(hfig,triModelsNbr,'ground');
+
+title(sprintf('packet id: %d',packetIdx));
+
 %% pick ray
-rayId = randsample(size(rayDirns,1),1);
-% rayId = 146;
+% rayId = randsample(size(rayDirns,1),1);
+rayId = floor(384/3*3);
 thisRayDirn = rayDirns(rayId,:);
 thisRealPt = realPtsAll(rayId,:);
 thisRealHitFlag = realHitFlag(rayId);
@@ -121,10 +146,12 @@ thisSimPt = simPtsAll(rayId,:);
 thisSimHitFlag = simHitFlag(rayId);
 
 % draw models
-if thisSimHitFlag
-    thisRayLength = norm(rayOrigin-thisSimPt);
-else
+if ~thisSimHitFlag && ~thisRealHitFlag
     thisRayLength = 1;
+else
+    thisSimLength = thisSimHitFlag*norm(rayOrigin-thisSimPt);
+    thisRealLength = thisRealHitFlag*norm(rayOrigin-thisRealPt);
+    thisRayLength = max(thisSimLength,thisRealLength);
 end
 thisRayPts = genPtsRay(rayOrigin,thisRayDirn,thisRayLength);
 
@@ -142,7 +169,7 @@ drawPacket(hfig,rayOrigin,thisRayDirn,thisSimPt,thisSimHitFlag,'r');
 drawEllipsoids(hfig,ellipsoidModelsNbr);
 drawTriModels(hfig,triModelsNbr,'ground');
 
-title(sprintf('ray id: %d',rayId));
+title(sprintf('packet id: %d, ray id: %d',packetIdx,rayId));
 
 
 

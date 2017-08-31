@@ -72,7 +72,7 @@ std::string genRelPathSection(int section_id)
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_world_frame_subsampled.xyz";
+       << "_subsampled.xyz";
 
     return ss.str();
 }
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
     std::vector<int> objects_queried;
     std::vector<int> ground_triangle_blocks_queried;
     SimDetail sim_detail;
-    size_t packet_array_step = 3; 
+    size_t packet_array_step = 4; 
 
     for(size_t i = packet_id_sim_start; 
     	i < packet_id_sim_end; i += packet_array_step)
@@ -235,12 +235,6 @@ int main(int argc, char **argv)
     	objects_queried.insert(objects_queried.begin(),
     					this_objects_queried.begin(), this_objects_queried.end());
 
-    	// debug
-    	// std::cout << "packet id: " << i << ". ray origin: " << std::endl;
-    	// dispVec(ray_origin);
-    	// dispVec(this_ground_triangle_blocks_queried);
-    	// dispVec(this_ellipsoid_blocks_queried);
-
     	// simulate 
     	std::vector<std::vector<double> > this_sim_pts_all;
     	std::vector<int> this_sim_hit_flag;
@@ -274,7 +268,7 @@ int main(int argc, char **argv)
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
-    int tag = 2;
+    int tag = -1;
 
     // write real pts
     std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id, tag);

@@ -107,6 +107,12 @@ related to vtk and boost.
 
 * nomenclature for model etc is completely lost and mixed up
 
+* sim versions
+
+ideally for each version file, write the parameters. maybe have each class
+return its parameters values as a string. and then some top level thing gathers
+them and writes them out? so that you don't have to keep track of them.
+
 ------------------------------
 
 analyze taylor data:

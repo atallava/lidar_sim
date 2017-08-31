@@ -66,25 +66,6 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
     return ss.str();
 }
 
-std::string genRelPathSimPts(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/section_pts_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_sim.xyz";
-
-    return ss.str();
-}
-
-std::string genRelPathSection(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_world_frame_subsampled.xyz";
-
-    return ss.str();
-}
-
 std::string genRelPathModelsDir(int section_id)
 {
     std::ostringstream ss;
@@ -97,11 +78,6 @@ std::string genRelPathModelsDir(int section_id)
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
-
-    // load section
-    int section_sim_id = 8;
-    std::string rel_path_section = genRelPathSection(section_sim_id);
-    SectionLoader section(rel_path_section);
 
     // sim object
     int section_models_id = 3;
@@ -135,8 +111,8 @@ int main(int argc, char **argv)
     sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
 
     // sim
-    std::vector<double> ray_origin{-527.328,466.156,-5.1058};
-    std::vector<double> ray_dirn{-0.2305,0.93184,-0.28024};
+    std::vector<double> ray_origin{-616.23,474.066,-4.6306};
+    std::vector<double> ray_dirn{-0.15053,-0.98833,0.023211};
     std::vector<std::vector<double> > ray_dirns = wrapDataInVec(ray_dirn);
 
     std::vector<int> triangle_blocks_queried = 

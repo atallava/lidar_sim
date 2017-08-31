@@ -73,7 +73,7 @@ std::string genRelPathSection(int section_id)
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_world_frame_subsampled.xyz";
+       << "_subsampled.xyz";
 
     return ss.str();
 }
@@ -185,8 +185,8 @@ int main(int argc, char **argv)
 
     // slice ids
     size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 1000; 
-    packet_id_sim_end = 2000;
+    packet_id_sim_start = 0; 
+    packet_id_sim_end = section.m_packet_ids.size();
 
     RayDirnServer ray_dirn_server;
 
@@ -198,7 +198,8 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     SimDetail sim_detail;
-    size_t packet_array_step = 500; 
+    size_t packet_array_step = 4; 
+
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
     {
@@ -234,12 +235,6 @@ int main(int argc, char **argv)
 	ellipsoid_blocks_queried.insert(ellipsoid_blocks_queried.begin(),
 					this_ellipsoid_blocks_queried.begin(), this_ellipsoid_blocks_queried.end());
 
-	// debug
-	// std::cout << "packet id: " << i << ". ray origin: " << std::endl;
-	// dispVec(ray_origin);
-	// dispVec(this_triangle_blocks_queried);
-	// dispVec(this_ellipsoid_blocks_queried);
-
     	// simulate 
     	std::vector<std::vector<double> > this_sim_pts_all;
     	std::vector<int> this_sim_hit_flag;
@@ -273,7 +268,7 @@ int main(int argc, char **argv)
     // weed out non-hits
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
-    int tag = 1;
+    int tag = -1;
 
     // write real pts
     std::string rel_path_real_pts = genRelPathSliceRealPts(section_sim_id, tag);
