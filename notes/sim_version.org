@@ -1,6 +1,16 @@
-- 250417
-  - initial hand-selected parameters
-- 310817
-  - pts per cluster, max maha dist selected by sim optim
+* hg sim
 
+- section 3, 8
+  - 250417
+    - initial hand-selected parameters
+  - 310817
+    - pts per cluster, max maha dist selected by sim optim
+
+---------------------------------------------------------------------------
+
+* nbr sim
+
+- section 3, 8
+  - 250417
+    - with pts from section 3
 

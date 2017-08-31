@@ -713,4 +713,55 @@ namespace lidar_sim {
 
 	return ss.str();
     }
+
+    std::string genPathRealPtsRef(const int section_id, const std::string sim_type, 
+				  const std::string sim_version, const std::string query_type, const int tag)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/" << sim_type << "_sim" << "/version_" << sim_version
+	   << "/" << query_type << "_real_pts";
+
+	if (tag == -1)
+	    ss << ".xyz";
+	else
+	    ss << "_" << tag << ".xyz";
+
+	return ss.str();
+    }
+
+    std::string genPathSimPts(const int section_id, const std::string sim_type, 
+			      const std::string sim_version, const std::string query_type, const int tag)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/" << sim_type << "_sim" << "/version_" << sim_version
+	   << "/" << query_type << "_sim_pts";
+
+	if (tag == -1)
+	    ss << ".xyz";
+	else
+	    ss << "_" << tag << ".xyz";
+
+	return ss.str();
+    }
+
+    std::string genPathSimDetail(const int section_id, const std::string sim_type, 
+				 const std::string sim_version, const std::string query_type, const int tag)
+    {
+	std::ostringstream ss;
+    	ss << "/usr0/home/atallav1/lidar_sim/cpp"
+	   << "/data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+	   << "/" << sim_type << "_sim" << "/version_" << sim_version
+	   << "/" << query_type << "_sim_detail";
+
+	if (tag == -1)
+	    ss << ".txt";
+	else
+	    ss << "_" << tag << ".txt";
+
+	return ss.str();
+    }
 }
