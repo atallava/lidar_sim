@@ -66,6 +66,8 @@ namespace lidar_sim {
 	file.close();
     }
 
+    void writeStringToFile(const std::string str, const std::string rel_path_output);
+
     void writeQueriedBlocks(const std::string rel_path_file, const std::vector<int> &triangle_block_ids, 
 			    const std::vector<int> &ellipsoid_block_ids);
     std::tuple<std::vector<int>, std::vector<int> >
@@ -168,4 +170,5 @@ namespace lidar_sim {
 
     // the rel path helpers
     std::string genRelPathSection(const int section_id);
+    std::string genRelPathPosesLog();
 }

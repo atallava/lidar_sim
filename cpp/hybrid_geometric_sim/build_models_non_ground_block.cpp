@@ -155,12 +155,7 @@ int main(int argc, char **argv)
     if (set_n_clusters_per_pt)
 	modeler.m_n_clusters_per_pt = n_clusters_per_pt;
     if (set_max_maha_dist_for_hit)
-    {
-	modeler.m_set_max_maha_dist_for_hit = true;
 	modeler.m_max_maha_dist_for_hit = max_maha_dist_for_hit;
-    }
-    else
-	modeler.m_set_max_maha_dist_for_hit = false;
 
     modeler.createEllipsoidModels(rel_path_pts);
 

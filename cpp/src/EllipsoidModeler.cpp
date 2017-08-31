@@ -32,9 +32,8 @@ EllipsoidModeler::EllipsoidModeler() :
     m_max_pts_dist_to_nbrs(5)
 {    
     // m_n_clusters_per_pt = 1000/(double)12016; // hack based on rim stretch test
-    m_n_clusters_per_pt = 0.0146; // from param search on one block
-    m_set_max_maha_dist_for_hit = false;
-    m_max_maha_dist_for_hit = 3.5;
+    m_n_clusters_per_pt = 0.0276; // from param search on one block
+    m_max_maha_dist_for_hit = 2.428;
 }
 
 void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
@@ -187,9 +186,7 @@ void EllipsoidModeler::calcHitProb(const SectionLoader &section, const std::vect
     EllipsoidModelSim sim;
     sim.setEllipsoidModels(m_ellipsoid_models);
     sim.setLaserCalibParams(laser_calib_params);
-    // for sim optim
-    if (m_set_max_maha_dist_for_hit)
-	sim.m_max_maha_dist_for_hit = m_max_maha_dist_for_hit;
+    sim.m_max_maha_dist_for_hit = m_max_maha_dist_for_hit;
 
     size_t n_ellipsoids = m_ellipsoid_models.size();
     std::vector<int> ellipsoid_hit_count_prior(n_ellipsoids, m_hit_count_prior);
@@ -329,4 +326,19 @@ void EllipsoidModeler::setVerbosity(int verbose)
 void EllipsoidModeler::setEllipsoidModels(const EllipsoidModels &ellipsoid_models)
 {
     m_ellipsoid_models = ellipsoid_models;
+}
+
+std::string EllipsoidModeler::getParamsAsString()
+{
+    std::ostringstream ss;
+    ss << "EllipsoidModeler: " << std::endl
+       << "m_n_clusters_per_pt: " << m_n_clusters_per_pt << std::endl
+       << "m_max_maha_dist_for_hit: " << m_max_maha_dist_for_hit << std::endl
+       << "m_min_pts_per_cluster: " << m_min_pts_per_cluster << std::endl
+       << "m_default_hit_prob: " << m_default_hit_prob << std::endl
+       << "m_hit_count_prior: " << m_hit_count_prior << std::endl
+       << "m_miss_count_prior: " << m_miss_count_prior << std::endl
+       << "m_max_pts_dist_to_nbrs: " << m_max_pts_dist_to_nbrs << std::endl;
+
+    return ss.str();
 }

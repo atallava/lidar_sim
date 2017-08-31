@@ -67,6 +67,16 @@ std::string genRelPathBlockNodeIdsNonGround(int section_id)
     return ss.str();
 }
 
+std::string genRelPathEllipsoidModelerParams(int section_id, std::string sim_version)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/version_" << sim_version
+       << "/ellipsoid_modeler_params.txt";
+
+    return ss.str();
+}
+
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
@@ -82,7 +92,7 @@ int main(int argc, char **argv)
     SectionLoader section(rel_path_section);
 
     // pose server
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
+    std::string rel_path_poses_log = genRelPathPosesLog();
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // blocks info
@@ -93,9 +103,8 @@ int main(int argc, char **argv)
 	doubleToIntArray(loadArray(rel_path_block_node_ids_non_ground, 2));
 
     // loop over blocks
-    // todo: cleanup
-    // for(size_t i = 0; i < block_ids.size(); ++i)
-    for(size_t i = 0; i < 1; ++i)
+    std::string modeler_params;
+    for(size_t i = 0; i < block_ids.size(); ++i)
     {
 	// model each block
 	int block_id = block_ids[i];
@@ -130,7 +139,12 @@ int main(int argc, char **argv)
 	// write out
 	std::string rel_path_ellipsoids = genRelPathEllipsoids(section_id, sim_version, block_id);
 	modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
+	modeler_params = modeler.getParamsAsString();    
     }
+
+    // make modeler spit out param values
+    std::string rel_path_modeler_params = genRelPathEllipsoidModelerParams(section_id, sim_version);
+    writeStringToFile(rel_path_modeler_params, modeler_params);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

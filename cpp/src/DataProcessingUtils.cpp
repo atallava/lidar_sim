@@ -269,6 +269,13 @@ namespace lidar_sim {
 	return std::make_tuple(object_classes, object_xy_posns);
     }
 
+    void writeStringToFile(const std::string str, const std::string rel_path_output)
+    {
+	std::ofstream file(rel_path_output);
+	file << str;
+	file.close();
+    }
+
     void writeQueriedBlocks(const std::string rel_path_output, const std::vector<int> &triangle_block_ids, 
 			    const std::vector<int> &ellipsoid_block_ids)
     {
@@ -635,5 +642,11 @@ namespace lidar_sim {
     	   << "_subsampled.xyz";
 
     	return ss.str();
+    }
+
+    std::string genRelPathPosesLog()
+    {
+	std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
+	return rel_path_poses_log;
     }
 }

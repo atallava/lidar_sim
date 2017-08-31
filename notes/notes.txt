@@ -113,6 +113,10 @@ ideally for each version file, write the parameters. maybe have each class
 return its parameters values as a string. and then some top level thing gathers
 them and writes them out? so that you don't have to keep track of them.
 
+* times
+
+hg sim 1750 packets takes 3 hrs
+
 ------------------------------
 
 analyze taylor data:

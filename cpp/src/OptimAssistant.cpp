@@ -24,7 +24,8 @@ OptimAssistant::OptimAssistant() :
     m_section_packet_step(1),
     m_num_nbrs_for_blocks_sim(1),
     m_max_pts_for_blocks_sim(1e4),
-    m_num_nbrs_for_hit_prob(1)
+    m_num_nbrs_for_hit_prob(1),
+    m_obj_calc_count(0)
 {
     m_rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
     m_imu_pose_server = PoseServer(m_rel_path_poses_log);
@@ -106,6 +107,8 @@ double OptimAssistant::calcObj(std::vector<double> x)
     	std::cout << "OptimAssistant: calculating error." << std::endl;
 
     double obj = calcSimError();
+
+    m_obj_calc_count++;
     
     return obj;
 }
@@ -120,7 +123,6 @@ void OptimAssistant::buildModelsNonGroundBlock(const int block_id, const std::ve
 
     // parameters fed here
     modeler.m_n_clusters_per_pt = x[0];
-    modeler.m_set_max_maha_dist_for_hit = true;
     modeler.m_max_maha_dist_for_hit = x[1];
 
     modeler.createEllipsoidModels(rel_path_pts);
@@ -141,7 +143,7 @@ void OptimAssistant::buildModelsNonGroundBlock(const int block_id, const std::ve
     modeler.calcHitProb(m_section_for_model, section_pt_ids_to_process, m_imu_pose_server);
 
     // write ellipsoids
-    std::string rel_path_ellipsoids = genRelPathEllipsoids(m_section_id_for_model, block_id);
+    std::string rel_path_ellipsoids = genRelPathEllipsoids(m_section_id_for_model, block_id, m_obj_calc_count);
     modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
 }
 
@@ -151,7 +153,7 @@ void OptimAssistant::sliceSim()
     std::vector<std::string> rel_path_ellipsoid_model_blocks;
     for (auto block_id : m_non_ground_block_ids)
 	rel_path_ellipsoid_model_blocks.push_back(
-	    genRelPathEllipsoids(m_section_id_for_model, block_id));
+	    genRelPathEllipsoids(m_section_id_for_model, block_id, m_obj_calc_count));
 
     // triangle model paths
     std::vector<std::string> rel_path_triangle_model_blocks;
@@ -228,15 +230,15 @@ void OptimAssistant::sliceSim()
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim);
+    std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(real_pts, rel_path_real_pts, m_verbose);
 
     // write sim pts
-    std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim);
+    std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts, m_verbose);
 
     // write sim detail
-    std::string rel_path_sim_detail = genRelPathSliceSimDetail(m_section_id_for_sim); 
+    std::string rel_path_sim_detail = genRelPathSliceSimDetail(m_section_id_for_sim, m_obj_calc_count); 
     sim_detail.save(rel_path_sim_detail);  
 }
 
@@ -246,7 +248,7 @@ void OptimAssistant::blocksSim()
     std::vector<std::string> rel_path_ellipsoid_model_blocks;
     for (auto block_id : m_non_ground_block_ids)
 	rel_path_ellipsoid_model_blocks.push_back(
-	    genRelPathEllipsoids(m_section_id_for_model, block_id));
+	    genRelPathEllipsoids(m_section_id_for_model, block_id, m_obj_calc_count));
 
     // triangle model paths
     std::vector<std::string> rel_path_triangle_model_blocks;
@@ -327,27 +329,27 @@ void OptimAssistant::blocksSim()
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim);
+    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(real_pts, rel_path_real_pts, m_verbose);
 
     // write sim pts
-    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim);
+    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts, m_verbose);
 
     // write sim detail
-    std::string rel_path_sim_detail = genRelPathBlocksSimDetail(m_section_id_for_sim); 
+    std::string rel_path_sim_detail = genRelPathBlocksSimDetail(m_section_id_for_sim, m_obj_calc_count); 
     sim_detail.save(rel_path_sim_detail);
 }
 
 double OptimAssistant::calcSimError()
 {
     // for slice sim
-    // std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim);
-    // std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim);
+    // std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim, m_obj_calc_count);
+    // std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim, m_obj_calc_count);
 
     // for blocks sim
-    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim);
-    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim);
+    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim, m_obj_calc_count);
+    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim, m_obj_calc_count);
 
     std::vector<std::vector<double> > real_pts = loadPtsFromXYZFile(rel_path_real_pts, m_verbose);
     std::vector<std::vector<double> > sim_pts = loadPtsFromXYZFile(rel_path_sim_pts, m_verbose);
@@ -366,12 +368,13 @@ std::string OptimAssistant::genRelPathNonGroundBlockPts(const int section_id, co
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int block_id)
+std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/models" 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
+       << "_block_" << std::setw(2) << std::setfill('0') << block_id 
+       << "_non_ground_ellipsoids_" << obj_calc_count << ".txt";
 
     return ss.str();
 }
@@ -415,62 +418,62 @@ std::string OptimAssistant::genRelPathBlockNodeIdsNonGround(int section_id)
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathSliceRealPts(int section_id)
+std::string OptimAssistant::genRelPathSliceRealPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
        << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_slice_real_pts.xyz";
+       << "_slice_real_pts_" << obj_calc_count << ".xyz";
 
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathSliceSimPts(int section_id)
+std::string OptimAssistant::genRelPathSliceSimPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
        << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_slice_sim_pts.xyz";
+       << "_slice_sim_pts_" << obj_calc_count << ".xyz";
 
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathSliceSimDetail(int section_id)
+std::string OptimAssistant::genRelPathSliceSimDetail(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
        << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_slice_sim_detail.txt";
+       << "_slice_sim_detail_" << obj_calc_count << ".txt";
 
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathBlocksRealPts(int section_id)
+std::string OptimAssistant::genRelPathBlocksRealPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
        << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_blocks_real_pts.txt";
+       << "_blocks_real_pts_" << obj_calc_count << ".txt";
 
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathBlocksSimPts(int section_id)
+std::string OptimAssistant::genRelPathBlocksSimPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
        << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_blocks_sim_pts.txt";
+       << "_blocks_sim_pts_" << obj_calc_count << ".txt";
 
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathBlocksSimDetail(int section_id)
+std::string OptimAssistant::genRelPathBlocksSimDetail(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
        << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_blocks_sim_detail.txt";
+       << "_blocks_sim_detail_" << obj_calc_count << ".txt";
 
     return ss.str();
 }

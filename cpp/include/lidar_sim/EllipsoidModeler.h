@@ -33,6 +33,7 @@ namespace lidar_sim {
 	void calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_poses_server);
 	void filterPts();
 	void setVerbosity(int verbose);
+	std::string getParamsAsString();
 
 	// hack for patching calcHitProb
 	void setEllipsoidModels(const EllipsoidModels &ellipsoid_models);
@@ -40,7 +41,6 @@ namespace lidar_sim {
 	std::vector<std::vector<double> > m_pts;
 	EllipsoidModels m_ellipsoid_models;
 	double m_n_clusters_per_pt;
-	bool m_set_max_maha_dist_for_hit; // for sim optim
 	double m_max_maha_dist_for_hit; // for sim optim
 
     private:

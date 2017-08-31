@@ -17,21 +17,21 @@ namespace lidar_sim {
 
 	// todo: so many string helpers! cleanup?
 	std::string genRelPathNonGroundBlockPts(const int section_id, const int block_id);
-	std::string genRelPathEllipsoids(const int section_id, const int block_id);
+	std::string genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count);
 	std::string genRelPathTriangles(int section_id, int block_id);
 	std::string genRelPathImuPosnNodes(int section_id);
 	std::string genRelPathBlockNodeIdsGround(int section_id);
 	std::string genRelPathBlockNodeIdsNonGround(int section_id);
 
 	// for slice sim
-	std::string genRelPathSliceRealPts(int section_id);
-	std::string genRelPathSliceSimPts(int section_id);
-	std::string genRelPathSliceSimDetail(int section_id);
+	std::string genRelPathSliceRealPts(const int section_id, const int obj_calc_count);
+	std::string genRelPathSliceSimPts(const int section_id, const int obj_calc_count);
+	std::string genRelPathSliceSimDetail(const int section_id, const int obj_calc_count);
 
 	// for blocks sim
-	std::string genRelPathBlocksRealPts(int section_id);
-	std::string genRelPathBlocksSimPts(int section_id);
-	std::string genRelPathBlocksSimDetail(int section_id);
+	std::string genRelPathBlocksRealPts(const int section_id, const int obj_calc_count);
+	std::string genRelPathBlocksSimPts(const int section_id, const int obj_calc_count);
+	std::string genRelPathBlocksSimDetail(const int section_id, const int obj_calc_count);
 
 	bool m_verbose;
 	bool m_initialized;
@@ -60,5 +60,6 @@ namespace lidar_sim {
 	PtsError m_error_metric;
 
     private:
+	int m_obj_calc_count;
     };
 }
