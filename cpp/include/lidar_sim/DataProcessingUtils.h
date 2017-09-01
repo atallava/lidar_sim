@@ -168,7 +168,7 @@ namespace lidar_sim {
     
     std::vector<int> getObjectMeshIds(const std::string rel_path_object_meshes_dir);
 
-    // the rel path helpers
+    // the path helpers
     std::string genPathSection(const int section_id);
     std::string genPathPosesLog();
     std::string genPathImuPosnNodes(const int section_id);

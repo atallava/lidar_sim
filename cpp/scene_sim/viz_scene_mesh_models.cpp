@@ -33,7 +33,7 @@ std::string genRelPathObjectMeshesDir(int section_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/mesh_model_sim";
+       << "/mm_sim";
 
     return ss.str();
 }
@@ -42,7 +42,7 @@ std::string genRelPathObjectMesh(int section_id, int object_id)
 {
    std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/mesh_model_sim/" << object_id << ".txt";
+       << "/mm_sim/" << object_id << ".txt";
 
     return ss.str();
 }

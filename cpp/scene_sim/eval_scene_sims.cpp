@@ -58,7 +58,7 @@ std::string genRelPathSliceMmRealPts(int section_id, int tag = -1)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/mesh_model_sim/slice_real_pts";
+       << "/mm_sim/slice_real_pts";
     if (tag == -1)
 	ss << ".xyz";
     else
@@ -71,7 +71,7 @@ std::string genRelPathMmSimPts(int section_id, int tag = -1)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/mesh_model_sim/slice_sim_pts";
+       << "/mm_sim/slice_sim_pts";
     if (tag == -1)
 	ss << ".xyz";
     else
@@ -84,7 +84,7 @@ std::string genRelPathMmSimDetail(int section_id, int tag = -1)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/mesh_model_sim/slice_sim_detail";
+       << "/mm_sim/slice_sim_detail";
     if (tag == -1)
 	ss << ".txt";
     else

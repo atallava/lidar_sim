@@ -86,7 +86,7 @@ drawTriModels(hfig,triModelsNbr,'ground');
 
 %% pick packet
 nPackets = length(simDetail.rayPitchesCell);
-packetIdx = floor(3374/5*5);
+packetIdx = 2699;
 % packetIdx = randsample(nPackets,1);
 
 % extract packet info
@@ -142,7 +142,7 @@ title(sprintf('packet id: %d',packetIdx));
 
 %% pick ray
 % rayIdx = randsample(size(rayDirns,1),1);
-rayIdx = 188;
+rayIdx = 169;
 thisRayDirn = rayDirns(rayIdx,:);
 thisRealPt = realPtsAll(rayIdx,:);
 thisRealHitFlag = realHitFlag(rayIdx);

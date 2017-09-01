@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     int section_id = 8;
     int tag = -1;
     std::string query_type = "section";
-    std::string hg_sim_version = "250417";
+    std::string hg_sim_version = "310817";
     std::string nbr_sim_version = "250417";
 
     // error metric

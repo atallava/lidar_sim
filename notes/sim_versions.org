@@ -1,0 +1,32 @@
+* hg sim
+
+- section 3, 8
+  - 250417
+    - initial hand-selected parameters
+  - 310817
+    - pts per cluster, max maha dist selected by sim optim
+- section 4
+  - 290717
+    - this was the isrr submission version
+    - i think the models are lost
+  - 280817
+    - with models from 250417 sec3, and ground-corrected transforms
+
+---------------------------------------------------------------------------
+
+* nbr sim
+
+- section 3, 8
+  - 250417
+    - with pts from section 3
+
+
+---------------------------------------------------------------------------
+
+- section 4
+  - 290717
+    - this was the isrr submission version
+    - i think the models are lost
+  - 280817
+    - with ground corrected transforms
+
