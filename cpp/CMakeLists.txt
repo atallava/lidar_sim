@@ -213,6 +213,9 @@ add_library(lidar_sim SHARED
 # add_executable(test_flann tests/test_flann.cpp)
 #   target_link_libraries(test_flann lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(test_flann_clustering tests/test_flann_clustering.cpp)
+  target_link_libraries(test_flann_clustering lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ## data processing
 
 # add_executable(sieve_section hybrid_geometric_sim/sieve_section.cpp)
@@ -289,8 +292,8 @@ add_executable(section_ray_hg_sim hybrid_geometric_sim/section_ray_hg_sim.cpp)
 add_executable(slice_hg_sim hybrid_geometric_sim/slice_hg_sim.cpp)
   target_link_libraries(slice_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(blocks_hg_sim hybrid_geometric_sim/blocks_hg_sim.cpp)
-  target_link_libraries(blocks_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(blocks_hg_sim hybrid_geometric_sim/blocks_hg_sim.cpp)
+#   target_link_libraries(blocks_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(test_stitch_triangle_models hybrid_geometric_sim/test_stitch_triangle_models.cpp)
 #   target_link_libraries(test_stitch_triangle_models lidar_sim ${LIDAR_SIM_LIBRARIES} )

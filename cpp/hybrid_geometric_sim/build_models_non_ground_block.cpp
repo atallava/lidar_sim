@@ -20,16 +20,6 @@
 
 using namespace lidar_sim;
 
-std::string genRelPathBlock(int section_id, int block_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground.xyz";
-
-    return ss.str();
-}
-
 std::string genRelPathEllipsoids(int section_id, int block_id)
 {
     std::ostringstream ss;
@@ -128,8 +118,8 @@ int main(int argc, char **argv)
     if (verbose)
 	std::cout << "section id: " << section_id << ", block_id: " << block_id << "..." << std::endl;
 
-    std::string rel_path_pts = genRelPathBlock(section_id, block_id);
-    std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
+    std::string path_pts = genPathNonGroundBlockPts(section_id, block_id);
+    std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(path_pts);
 	
     EllipsoidModeler modeler;
     modeler.setVerbosity(verbose);
@@ -139,7 +129,7 @@ int main(int argc, char **argv)
     if (set_max_maha_dist_for_hit)
 	modeler.m_max_maha_dist_for_hit = max_maha_dist_for_hit;
 
-    modeler.createEllipsoidModels(rel_path_pts);
+    modeler.createEllipsoidModels(path_pts);
 
     // prob hit calc
     int calc_hit_prob = 1;
@@ -182,9 +172,6 @@ int main(int argc, char **argv)
 	    std::cout << "skipping hit prob calc..." << std::endl;
 
     // write out
-    // rel_path_ellipsoids = genRelPathEllipsoids(section_id, block_id);
-    // rel_path_ellipsoids = "data/hg_optim/ellipsoids.txt";
-
     modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

@@ -216,7 +216,7 @@ int main(int argc, char **argv)
     sim_detail.save(path_sim_detail);
 
     // write queried blocks
-    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id, tag); 
+    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id, mm_sim_version, tag); 
     writeQueriedBlocks(rel_path_queried_blocks, ground_triangle_blocks_queried, objects_queried);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;

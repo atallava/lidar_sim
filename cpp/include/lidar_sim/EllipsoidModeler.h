@@ -21,9 +21,11 @@ namespace lidar_sim {
     public:
 	EllipsoidModeler();
 	void createEllipsoidModels(const std::string rel_path_pts);
+
 	// this is probably bad practice. who knows which variables are needed for which function?
 	void loadPts(const std::string rel_path_pts);
-	void clusterPts();
+	void clusterPtsAlglib();
+	void clusterPtsFlann();
 	void filterClusters();
 	void fillEllipsoidModels();
 	int calcNClusters();
@@ -45,7 +47,7 @@ namespace lidar_sim {
 
     private:
 	int m_verbose;
-	alglib::integer_1d_array m_pt_cluster_ids;
+	std::vector<int> m_pt_cluster_ids;
 	std::vector<int> m_selected_cluster_ids;
 	int m_min_pts_per_cluster;
 	int m_n_clusters;

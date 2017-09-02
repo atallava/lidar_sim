@@ -43,7 +43,7 @@ void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
 
     loadPts(rel_path_pts);
     // filterPts();
-    clusterPts();
+    clusterPtsFlann();
     filterClusters();
     fillEllipsoidModels();
 }
@@ -53,7 +53,7 @@ void EllipsoidModeler::loadPts(const std::string rel_path_pts)
     m_pts = loadPtsFromXYZFile(rel_path_pts);
 }
 
-void EllipsoidModeler::clusterPts()
+void EllipsoidModeler::clusterPtsAlglib()
 {
     if (m_verbose)
 	std::cout << "EllipsoidModeler: clustering." << std::endl;
@@ -71,7 +71,35 @@ void EllipsoidModeler::clusterPts()
 
     // get clusters
     m_n_clusters = calcNClusters();
-    alglib::clusterizergetkclusters(ahc_report, m_n_clusters, m_pt_cluster_ids, cz);
+    alglib::integer_1d_array pt_cluster_ids;
+    alglib::clusterizergetkclusters(ahc_report, m_n_clusters, pt_cluster_ids, cz);
+    m_pt_cluster_ids = convertAlglib1DIntArrayToStlVector(pt_cluster_ids);
+}
+
+// todo: cleanup?
+void EllipsoidModeler::clusterPtsFlann()
+{
+    if (m_verbose)
+	std::cout << "EllipsoidModeler: clustering." << std::endl;
+
+    flann::Matrix<double> pts_flann = stlArrayToFlannMatrix(m_pts);
+    int n_clusters_queried = calcNClusters();
+    size_t dim_pts = m_pts[0].size(); // expect this to be 3
+
+    flann::Matrix<double> centers_flann(new double[n_clusters_queried*dim_pts], n_clusters_queried, dim_pts);
+
+    // todo: make the params a private member? optimize over these params?
+    flann::KMeansIndexParams kmeans_index_params;
+    int n_clusters_returned = flann::hierarchicalClustering<flann::L2<double> >(pts_flann, centers_flann, kmeans_index_params);
+
+    std::vector<std::vector<double> > centers = flannMatrixToStlArray(centers_flann);
+    centers.erase(centers.begin() + n_clusters_returned, centers.end());
+
+    // update m_n_clusters
+    m_n_clusters = n_clusters_returned;
+
+    // cluster ids from centers
+    std::tie(m_pt_cluster_ids, std::ignore) = nearestNeighbors(centers, m_pts);    
 }
 
 void EllipsoidModeler::filterClusters()
