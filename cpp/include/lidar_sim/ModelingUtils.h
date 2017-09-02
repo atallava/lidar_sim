@@ -55,5 +55,9 @@ namespace lidar_sim {
 						       LaserCalibParams laser_calib_params, double node_resn);
     std::vector<std::vector<double> > getNodesAlongRays(const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns, 
 							LaserCalibParams laser_calib_params, double node_resn);
+
+    // todo: how can this be faster?
+    std::tuple<std::vector<int>, std::vector<double> > nearestPtsToRays(const std::vector<std::vector<double> > &pts,
+									const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
 }
 

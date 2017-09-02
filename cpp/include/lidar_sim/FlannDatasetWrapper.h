@@ -15,6 +15,8 @@ namespace lidar_sim {
 	std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 	    knnSearch(const std::vector<std::vector<double> > &pts, const int nn = 1);
 	std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+	    knnSearch(const std::vector<double> &pt, const int nn = 1);
+	std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 	    radiusSearch(const std::vector<std::vector<double> > &pts, const double radius);
 
     private:

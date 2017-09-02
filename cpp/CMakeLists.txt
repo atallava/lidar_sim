@@ -270,6 +270,9 @@ add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_n
 # add_executable(section_slice_real_pts hybrid_geometric_sim/section_slice_real_pts.cpp)
 #   target_link_libraries(section_slice_real_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(slice_pts_in_blocks hybrid_geometric_sim/slice_pts_in_blocks.cpp)
+  target_link_libraries(slice_pts_in_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 # add_executable(section_blocks_real_pts hybrid_geometric_sim/section_blocks_real_pts.cpp)
 #   target_link_libraries(section_blocks_real_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
@@ -364,7 +367,7 @@ add_executable(slice_mm_scene_sim scene_sim/slice_mm_scene_sim.cpp)
 
 ## eval
 
-# add_executable(eval_scene_sims scene_sim/eval_scene_sims.cpp)
-#   target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(eval_scene_sims scene_sim/eval_scene_sims.cpp)
+  target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 

@@ -120,7 +120,7 @@ int main(int argc, char **argv)
 
 	// write out
 	std::string rel_path_ellipsoids = genRelPathEllipsoids(section_id, sim_version, block_id);
-	modeler.writeEllipsoidsToFile(rel_path_ellipsoids);
+	modeler.writeEllipsoidsToFile(rel_path_ellipsoids); 
 	modeler_params = modeler.getParamsAsString();    
     }
 

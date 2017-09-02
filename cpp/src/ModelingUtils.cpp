@@ -532,4 +532,34 @@ namespace lidar_sim {
 	return nodes_along_rays;
     }
 
+    std::tuple<std::vector<int>, std::vector<double> > nearestPtsToRays(const std::vector<std::vector<double> > &pts, 
+									const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns)
+    {
+	size_t n_rays = ray_dirns.size();
+	size_t n_pts = pts.size();
+	std::vector<int> nearest_pt_ids(n_rays, 0);
+	std::vector<double> nearest_perp_dists(n_rays, 0.0);
+	for (size_t i = 0; i < n_rays; ++i) {
+	    std::vector<double> dist_along_ray(n_pts,0);
+	    std::vector<double> perp_dist(n_pts,0);
+
+	    for(size_t j = 0; j < n_pts; ++j)
+	    {
+		dist_along_ray[j] = dotProduct(ray_dirns[i], vectorDiff(pts[j], ray_origin));
+	    
+		std::vector<double> pt_projn(3,0);
+		for(size_t k = 0; k < 3; ++k)
+		    pt_projn[k] = ray_origin[k] + dist_along_ray[j]*ray_dirns[i][k];
+		perp_dist[j] = vectorNorm(vectorDiff(pt_projn, pts[j]));
+	    }
+
+	    auto min_it = std::min_element(perp_dist.begin(), perp_dist.end());
+	    size_t min_posn = std::distance(perp_dist.begin(), min_it);
+	    double min_perp_dist = perp_dist[min_posn];
+	    nearest_pt_ids[i] = min_posn;
+	    nearest_perp_dists[i] = min_perp_dist;
+	}
+
+	return std::tie(nearest_pt_ids, nearest_perp_dists);
+    }
 }

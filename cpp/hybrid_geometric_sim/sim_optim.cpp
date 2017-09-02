@@ -66,7 +66,8 @@ int main(int argc, char **argv)
 
     opt.set_min_objective(myfunc, NULL); 
 
-    int max_eval = 50;
+    // todo: increase max eval
+    int max_eval = 3;
     opt.set_maxeval(max_eval);
 
     opt.set_xtol_rel(1e-4); // relative tolerance on x

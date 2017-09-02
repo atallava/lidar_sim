@@ -33,8 +33,8 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     // pose server
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
-    PoseServer imu_pose_server(rel_path_poses_log);
+    std::string path_poses_log = genPathPosesLog();
+    PoseServer imu_pose_server(path_poses_log);
 
     // laser calib params
     LaserCalibParams laser_calib_params;

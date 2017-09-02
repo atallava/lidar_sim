@@ -78,6 +78,13 @@ FlannDatasetWrapper::knnSearch(const std::vector<std::vector<double> > &pts, con
 }
 
 std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
+FlannDatasetWrapper::knnSearch(const std::vector<double> &pt, const int nn)
+{
+    std::vector<std::vector<double> > pts = wrapDataInVec(pt);
+    return knnSearch(pts, nn);
+}
+
+std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 FlannDatasetWrapper::radiusSearch(const std::vector<std::vector<double> > &pts, const double radius)
 {
     flann::Matrix<double> queries = stlArrayToFlannMatrix(pts);
