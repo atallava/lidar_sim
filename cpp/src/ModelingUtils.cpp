@@ -562,4 +562,23 @@ namespace lidar_sim {
 
 	return std::tie(nearest_pt_ids, nearest_perp_dists);
     }
+
+    std::vector<std::vector<double> > getPtsAlongRay(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, 
+						       const double ray_length, const double step_length)
+    {
+	std::vector<std::vector<double> > pts_along_ray;
+	double current_length = 0;
+	size_t dim_ray = ray_origin.size();
+	std::vector<double> current_pt(dim_ray, 0.0);
+	while (current_length < ray_length)
+	{
+	    for (size_t i = 0; i < dim_ray; ++i)
+		current_pt[i] = ray_origin[i] + current_length*ray_dirn[i];
+
+	    pts_along_ray.push_back(current_pt);
+	    current_length += step_length;
+	}
+
+	return pts_along_ray;
+    }
 }

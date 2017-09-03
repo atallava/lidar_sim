@@ -59,5 +59,8 @@ namespace lidar_sim {
     // todo: how can this be faster?
     std::tuple<std::vector<int>, std::vector<double> > nearestPtsToRays(const std::vector<std::vector<double> > &pts,
 									const std::vector<double> &ray_origin, const std::vector<std::vector<double> > &ray_dirns);
+
+    std::vector<std::vector<double> > getPtsAlongRay(const std::vector<double> &ray_origin, const std::vector<double> &ray_dirn, 
+						    const double ray_length, const double step_length);
 }
 

@@ -20,7 +20,7 @@ namespace lidar_sim {
 				     const std::vector<std::vector<double> > &pts2);
 	void dispPcdError(const std::vector<std::vector<double> > &pts1, 
 				    const std::vector<std::vector<double> > &pts2);
-	void dispRangeError(const SimDetail &sim_detail);
+	std::tuple<double, double, double> calcRangeError(const SimDetail &sim_detail, int disp = 0);
 
 	template<typename T>
 	    void dispVecMeanVar(std::vector<T> vec)

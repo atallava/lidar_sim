@@ -65,13 +65,14 @@ int main(int argc, char **argv)
 
     // range error
     std::cout << "range error: " << std::endl << std::endl;
+    int disp_range_error = 1;
 
     // hg sim
     std::cout << "hg sim:" << std::endl;
     std::string rel_path_sim_detail_hg = genPathSimDetail(section_id, "hg", hg_sim_version, query_type, tag);
     SimDetail sim_detail_hg(rel_path_sim_detail_hg);
 
-    metric.dispRangeError(sim_detail_hg);
+    metric.calcRangeError(sim_detail_hg, disp_range_error);
 
     dispHorizontalLine(25);
     // nbr sim
@@ -79,7 +80,7 @@ int main(int argc, char **argv)
     std::string rel_path_sim_detail_nbr = genPathSimDetail(section_id, "nbr", nbr_sim_version, query_type, tag);
     SimDetail sim_detail_nbr(rel_path_sim_detail_nbr);
 
-    metric.dispRangeError(sim_detail_nbr);
+    metric.calcRangeError(sim_detail_nbr, disp_range_error);
 
     dispHorizontalLine();
 

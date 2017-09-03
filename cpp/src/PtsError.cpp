@@ -52,7 +52,7 @@ void PtsError::dispPcdError(const std::vector<std::vector<double> > &pts1,
     std::cout << "error mean sym: " << err_mean_sym << std::endl;
 }
 
-void PtsError::dispRangeError(const SimDetail &sim_detail)
+std::tuple<double, double, double> PtsError::calcRangeError(const SimDetail &sim_detail, int disp)
 {
     size_t n_packets = sim_detail.m_ray_origins.size();
     std::vector<int> packet_true_hits(n_packets, 0);
@@ -116,12 +116,17 @@ void PtsError::dispRangeError(const SimDetail &sim_detail)
 	for (size_t j = 0; j < packet_hit_errors[i].size(); ++j)
 	    hit_errors_across_packets.push_back(packet_hit_errors[i][j]);
 
-    std::cout << "hit error across packets" << std::endl;
-    dispVecMeanVar(hit_errors_across_packets);
-    std::cout << "total true hits: " << total_true_hits
-	      << ", total false hits: " << total_false_hits << std::endl;
-    std::cout << "total false misses: " << total_false_misses << std::endl;
-    std::cout << "precision: " << precision << ", recall: " << recall 
-	      << ", f1: " << f1_score << std::endl;
-}
+    if (disp) {
+	std::cout << "hit error across packets" << std::endl;
+	dispVecMeanVar(hit_errors_across_packets);
+	std::cout << "total true hits: " << total_true_hits
+		  << ", total false hits: " << total_false_hits << std::endl;
+	std::cout << "total false misses: " << total_false_misses << std::endl;
+	std::cout << "precision: " << precision << ", recall: " << recall 
+		  << ", f1: " << f1_score << std::endl;
+    } 
 
+    double hit_errors_mean;
+    std::tie(hit_errors_mean, std::ignore) = calcVecMeanVar(hit_errors_across_packets);
+    return std::tie(hit_errors_mean, precision, recall);
+}

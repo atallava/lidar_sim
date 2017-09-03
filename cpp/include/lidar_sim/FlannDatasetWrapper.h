@@ -18,6 +18,10 @@ namespace lidar_sim {
 	    knnSearch(const std::vector<double> &pt, const int nn = 1);
 	std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 	    radiusSearch(const std::vector<std::vector<double> > &pts, const double radius);
+	std::tuple<int, double> approxNearestToRay(const std::vector<double> &ray_origin, 
+						   const std::vector<double> &ray_dirn, const double max_ray_length, const double resn_along_ray);
+	std::tuple<std::vector<int>, std::vector<double> > approxNearestToRays(const std::vector<double> &ray_origin, 
+									       const std::vector<std::vector<double> > &ray_dirns, const double max_ray_length, const double resn_along_ray);
 
     private:
 	int m_n_kd_trees;

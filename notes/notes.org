@@ -119,6 +119,7 @@ them and writes them out? so that you don't have to keep track of them.
   - build_models_non_ground_blocks version_310817 took 1hr
   - hg_sim section 8 takes 1.5hr
   - clustering s3 b10, 30k points. both flann and alglib take 2min.
+  - with secn3 subsampled, packet step 10, creating sim detail template takes 8min. 
 
 ------------------------------
 
