@@ -109,7 +109,7 @@ std::tuple<double, double, double> PtsError::calcRangeError(const SimDetail &sim
     double total_false_misses = std::accumulate(packet_false_misses.begin(), packet_false_misses.end(), 0.0);
     double precision = total_true_hits/(total_true_hits + total_false_hits);
     double recall = total_true_hits/(total_true_hits + total_false_misses);
-    double f1_score = 2*(precision*recall)/(precision + recall);
+    double f1_score = calcF1Score(precision, recall);
 
     std::vector<double> hit_errors_across_packets;
     for (size_t i = 0; i < packet_hit_errors.size(); ++i)

@@ -130,5 +130,7 @@ namespace lidar_sim {
     // this was for the ellipse transform needed by sanjiban
     void GetEllipseTransform(const Eigen::Matrix3d &input, Eigen::Quaterniond &quat, 
 			     Eigen::Vector3d &scale, double level = 9);
+
+    double calcF1Score(double precision, double recall);
 }
 

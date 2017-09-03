@@ -77,8 +77,9 @@ int main(int argc, char **argv)
     packet_step = 10; // todo: make this better
 
     double hit_to_blocks_dist_threshold = 0.5;
+    double resn_along_ray = 5;
     double miss_to_blocks_perp_threshold = 2;
-    double resn_along_ray = 1;
+
     std::vector<std::vector<double> > slice_hits_in_block;
     FlannDatasetWrapper flann_dataset_wrapper(block_pts_all);
     std::vector<int> miss_rays_in_blocks;

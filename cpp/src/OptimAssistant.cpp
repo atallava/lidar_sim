@@ -21,9 +21,15 @@ using namespace lidar_sim;
 OptimAssistant::OptimAssistant() :
     m_verbose(false),
     m_initialized(false),
-    m_section_packet_step(1),
+    m_sim_type(-1),
+    
+    m_slice_hit_to_blocks_threshold(0.5),
+    m_slice_resn_along_ray(5),
+    m_slice_miss_to_blocks_threshold(2),
+
     m_num_nbrs_for_blocks_sim(1),
     m_max_pts_for_blocks_sim(1e4),
+    m_section_packet_step(1),
     m_num_nbrs_for_hit_prob(1),
     m_obj_calc_count(1)
 {
@@ -46,35 +52,17 @@ void OptimAssistant::init()
     m_section_for_sim = SectionLoader (m_rel_path_section_for_sim);
 
     // for blocks sim
-    // ignoring ground block pts
-    std::vector<int> non_ground_blocks_for_sim = m_non_ground_block_ids;
-    for (auto block_id : non_ground_blocks_for_sim)
-    {
-	std::string rel_path_pts = genPathNonGroundBlockPts(m_section_id_for_sim, block_id);
-	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts, m_verbose);
-
-	std::vector<std::vector<int> > section_nbr_pt_ids; 
-
-	std::tie(section_nbr_pt_ids, std::ignore) = 
-	    nearestNeighbors(m_section_for_sim.m_pts, block_pts, m_num_nbrs_for_blocks_sim);
-
-	for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
-	    for(size_t j = 0; j < (size_t)m_num_nbrs_for_blocks_sim; ++j)
-	    {
-		int idx = section_nbr_pt_ids[i][j];
-		m_section_pt_ids_for_blocks_sim.push_back(idx);
-	    }
+    if (m_sim_type == 0) {
+	fillSectionPtIdsForBlocksSim();
     }
-
-    // subsample pt ids for blocks sim
-    std::vector<int> section_pt_ids_subsampled;
-    int step = std::floor(m_section_pt_ids_for_blocks_sim.size()/m_max_pts_for_blocks_sim);
-    if (step < 1)
-	step = 1;
-    for (size_t i = 0; i < m_section_pt_ids_for_blocks_sim.size(); i += step)
-	section_pt_ids_subsampled.push_back(
-	    m_section_pt_ids_for_blocks_sim[i]);
-    m_section_pt_ids_for_blocks_sim = section_pt_ids_subsampled;
+    else if (m_sim_type == 1) {
+	createSimDetailTemplate();
+    }
+    else {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
 
     m_initialized = true;
 }
@@ -99,8 +87,16 @@ double OptimAssistant::calcObj(std::vector<double> x)
     // simulate
     if (m_verbose)
     	std::cout << "OptimAssistant: simulating." << std::endl;
-
-    blocksSim();
+    
+    if (m_sim_type == 0)
+	blocksSim();
+    else if (m_sim_type == 1)
+	sliceSim();
+    else {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
 
     // calculate error
     if (m_verbose)
@@ -167,43 +163,30 @@ void OptimAssistant::sliceSim()
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
     sim.setDeterministicSim(false);
 
-    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(m_section_id_for_model);
-    std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(m_section_id_for_model);
-    std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(m_section_id_for_model);
+    // todo: this is quite ugly. i only have blocks info for all blocks. not giving blocks info makes 
+    // sim use all blocks
+    // std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(m_section_id_for_model);
+    // std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(m_section_id_for_model);
+    // std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(m_section_id_for_model);
 
-    sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
-    RayDirnServer ray_dirn_server;
+    // sim.loadBlockInfo(rel_path_imu_posn_nodes, rel_path_block_node_ids_ground, rel_path_block_node_ids_non_ground);
     
-    // sim
-    // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> sim_hit_flag;
     std::vector<std::vector<double> > real_pts;
     SimDetail sim_detail;
     sim_detail.setVerbosity(m_verbose);
-    for(size_t i = m_section_packet_start; 
-	i < (size_t)m_section_packet_end; i += m_section_packet_step)
-    {
-    	double t = m_section_for_sim.m_packet_timestamps[i];
+    
+    size_t n_origins = m_sim_detail_template.m_ray_origins.size();
+    for (size_t i = 0; i < n_origins; ++i) {
+	// get relevant information from sim detail template
+	std::vector<double> ray_origin = m_sim_detail_template.m_ray_origins[i];
+	std::vector<double> this_ray_pitches = m_sim_detail_template.m_ray_pitches[i];
+	std::vector<double> this_ray_yaws = m_sim_detail_template.m_ray_yaws[i];
+	std::vector<std::vector<double> > this_real_pts_all = m_sim_detail_template.m_real_pts_all[i];
+	std::vector<int> this_real_hit_flag = m_sim_detail_template.m_real_hit_flags[i];
 
-    	// pose, ray origin
-    	std::vector<double> imu_pose = m_imu_pose_server.getPoseAtTime(t);
-    	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
-
-	// packet pts
-    	std::vector<std::vector<double> > this_real_pts = m_section_for_sim.getPtsAtTime(t);
-
-    	// add to big list of real pts
-    	real_pts.insert(real_pts.end(), this_real_pts.begin(), this_real_pts.end());
-
-    	// ray dirns
-	std::vector<double> this_ray_pitches;
-	std::vector<double> this_ray_yaws;
-	std::vector<std::vector<double> > this_real_pts_all;
-	std::vector<int> this_real_hit_flag;
-	std::tie(this_ray_pitches, this_ray_yaws, this_real_pts_all, this_real_hit_flag)
-	    = ray_dirn_server.fitDetailToPts(ray_origin, this_real_pts);
-
+	std::vector<std::vector<double> > this_real_pts = logicalSubsetArray(this_real_pts_all, this_real_hit_flag);
 	std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_ray_pitches, this_ray_yaws);
 	
     	// simulate 
@@ -230,15 +213,15 @@ void OptimAssistant::sliceSim()
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim, m_obj_calc_count);
+    std::string rel_path_real_pts = genRelPathRealPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(real_pts, rel_path_real_pts, m_verbose);
 
     // write sim pts
-    std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim, m_obj_calc_count);
+    std::string rel_path_sim_pts = genRelPathSimPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts, m_verbose);
 
     // write sim detail
-    std::string rel_path_sim_detail = genRelPathSliceSimDetail(m_section_id_for_sim, m_obj_calc_count); 
+    std::string rel_path_sim_detail = genRelPathSimDetail(m_section_id_for_sim, m_obj_calc_count); 
     sim_detail.save(rel_path_sim_detail);  
 }
 
@@ -262,6 +245,8 @@ void OptimAssistant::blocksSim()
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
     sim.setDeterministicSim(false);
 
+    // todo: this is quite ugly. i only have blocks info for all blocks. not giving blocks info makes 
+    // sim use all blocks
     // std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(m_section_id_for_model);
     // std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(m_section_id_for_model);
     // std::string rel_path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(m_section_id_for_model);
@@ -329,33 +314,183 @@ void OptimAssistant::blocksSim()
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
 
     // write real pts
-    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim, m_obj_calc_count);
+    std::string rel_path_real_pts = genRelPathRealPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(real_pts, rel_path_real_pts, m_verbose);
 
     // write sim pts
-    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim, m_obj_calc_count);
+    std::string rel_path_sim_pts = genRelPathSimPts(m_section_id_for_sim, m_obj_calc_count);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts, m_verbose);
 
     // write sim detail
-    std::string rel_path_sim_detail = genRelPathBlocksSimDetail(m_section_id_for_sim, m_obj_calc_count); 
+    std::string rel_path_sim_detail = genRelPathSimDetail(m_section_id_for_sim, m_obj_calc_count); 
     sim_detail.save(rel_path_sim_detail);
 }
 
 double OptimAssistant::calcSimError()
 {
-    // for slice sim
-    // std::string rel_path_real_pts = genRelPathSliceRealPts(m_section_id_for_sim, m_obj_calc_count);
-    // std::string rel_path_sim_pts = genRelPathSliceSimPts(m_section_id_for_sim, m_obj_calc_count);
+    std::string rel_path_real_pts, rel_path_sim_pts, rel_path_sim_detail;
+    double error;
+    if (m_sim_type == 0) {
+	// for blocks sim
+	rel_path_real_pts = genRelPathRealPts(m_section_id_for_sim, m_obj_calc_count);
+	rel_path_sim_pts = genRelPathSimPts(m_section_id_for_sim, m_obj_calc_count);
+	std::vector<std::vector<double> > real_pts = loadPtsFromXYZFile(rel_path_real_pts, m_verbose);
+	std::vector<std::vector<double> > sim_pts = loadPtsFromXYZFile(rel_path_sim_pts, m_verbose);
+	error = m_error_metric.calcSymmetricPcdError(real_pts, sim_pts);
+    }
+    else if (m_sim_type == 1) {
+	// for slice sim
+	rel_path_sim_detail = genRelPathSimDetail(m_section_id_for_sim, m_obj_calc_count);
+	SimDetail sim_detail(rel_path_sim_detail);
+	double mean_packets_error, precision, recall;
+	std::tie(mean_packets_error, precision, recall) = m_error_metric.calcRangeError(sim_detail);
+	double f1_score = calcF1Score(precision, recall);
 
-    // for blocks sim
-    std::string rel_path_real_pts = genRelPathBlocksRealPts(m_section_id_for_sim, m_obj_calc_count);
-    std::string rel_path_sim_pts = genRelPathBlocksSimPts(m_section_id_for_sim, m_obj_calc_count);
-
-    std::vector<std::vector<double> > real_pts = loadPtsFromXYZFile(rel_path_real_pts, m_verbose);
-    std::vector<std::vector<double> > sim_pts = loadPtsFromXYZFile(rel_path_sim_pts, m_verbose);
-    double error = m_error_metric.calcSymmetricPcdError(real_pts, sim_pts);
+	// todo: include f1 score
+	error = mean_packets_error;
+	// error = mean_packets_error + (1 - f1_score);
+    }
+    else {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
 
     return error;
+}
+
+void OptimAssistant::fillSectionPtIdsForBlocksSim()
+{
+    // todo: assumes that some variables have been assigned. who checks that?
+
+    bool condn = (m_sim_type == 0);
+    if (!condn) {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
+    // ignoring ground block pts
+    std::vector<int> non_ground_blocks_for_sim = m_non_ground_block_ids;
+    for (auto block_id : non_ground_blocks_for_sim)
+    {
+	std::string rel_path_pts = genPathNonGroundBlockPts(m_section_id_for_sim, block_id);
+	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts, m_verbose);
+
+	std::vector<std::vector<int> > section_nbr_pt_ids; 
+
+	std::tie(section_nbr_pt_ids, std::ignore) = 
+	    nearestNeighbors(m_section_for_sim.m_pts, block_pts, m_num_nbrs_for_blocks_sim);
+
+	for(size_t i = 0; i < section_nbr_pt_ids.size(); ++i)
+	    for(size_t j = 0; j < (size_t)m_num_nbrs_for_blocks_sim; ++j)
+	    {
+		int idx = section_nbr_pt_ids[i][j];
+		m_section_pt_ids_for_blocks_sim.push_back(idx);
+	    }
+    }
+
+    // subsample pt ids for blocks sim
+    std::vector<int> section_pt_ids_subsampled;
+    int step = std::floor(m_section_pt_ids_for_blocks_sim.size()/m_max_pts_for_blocks_sim);
+    if (step < 1)
+	step = 1;
+    for (size_t i = 0; i < m_section_pt_ids_for_blocks_sim.size(); i += step)
+	section_pt_ids_subsampled.push_back(
+	    m_section_pt_ids_for_blocks_sim[i]);
+    m_section_pt_ids_for_blocks_sim = section_pt_ids_subsampled;
+}
+
+void OptimAssistant::createSimDetailTemplate()
+{
+    // todo: assumes that some variables have been assigned. who checks that?
+
+    bool condn = (m_sim_type == 1);
+    if (!condn) {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
+    std::vector<std::vector<double> > block_pts_all;
+    // ground block pts
+    for (auto block_id : m_ground_block_ids)
+    {
+	std::string path_pts = genPathGroundBlockPts(m_section_id_for_model, block_id);
+	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(path_pts);
+	block_pts_all.insert(block_pts_all.begin(), 
+			     block_pts.begin(), block_pts.end());
+    }
+
+    // non ground block pts
+    for (auto block_id : m_non_ground_block_ids)
+    {
+	std::string rel_path_pts = genPathNonGroundBlockPts(m_section_id_for_model, block_id);
+	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
+	block_pts_all.insert(block_pts_all.begin(), 
+			     block_pts.begin(), block_pts.end());
+    }
+    FlannDatasetWrapper flann_dataset_wrapper(block_pts_all);
+
+    RayDirnServer ray_dirn_server;
+    for (size_t i = m_section_packet_start; i < (size_t)m_section_packet_end; 
+	 i += m_section_packet_step) {
+	double t = m_section_for_sim.m_packet_timestamps[i];
+	
+	// pose, ray origin
+    	std::vector<double> imu_pose = m_imu_pose_server.getPoseAtTime(t);
+    	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, m_laser_calib_params);
+
+	// packet pts
+    	std::vector<std::vector<double> > this_real_pts = m_section_for_sim.getPtsAtTime(t);
+
+	// ray dirns
+	std::vector<double> this_ray_pitches;
+	std::vector<double> this_ray_yaws;
+	std::vector<std::vector<double> > this_real_pts_all;
+	std::vector<int> this_real_hit_flag;
+	std::tie(this_ray_pitches, this_ray_yaws, this_real_pts_all, this_real_hit_flag)
+	    = ray_dirn_server.fitDetailToPts(ray_origin, this_real_pts);
+	std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_ray_pitches, this_ray_yaws);
+
+	size_t n_rays = ray_dirns.size();
+	std::vector<int> flag_for_template(n_rays, 0);
+	
+	// store hits if close to blocks
+	std::vector<std::vector<double> > nn_dists_to_blocks_pts;
+	std::tie(std::ignore, nn_dists_to_blocks_pts) = flann_dataset_wrapper.knnSearch(this_real_pts_all, 1);
+	for (size_t j = 0; j < n_rays; ++j)
+	{
+	    bool condn1 = this_real_hit_flag[j];
+	    bool condn2 = (nn_dists_to_blocks_pts[j][0] < m_slice_hit_to_blocks_threshold);
+	    if (condn1 && condn2) 
+		flag_for_template[j] = 1;
+	}
+
+	// store misses if close to blocks
+	std::vector<double> ray_dists_to_blocks_pts;
+	std::tie(std::ignore, ray_dists_to_blocks_pts) = 
+	    flann_dataset_wrapper.approxNearestToRays(ray_origin, ray_dirns, 
+						      m_laser_calib_params.intrinsics.max_range, m_slice_resn_along_ray);
+	for (size_t j = 0; j < n_rays; ++j)
+	{
+	    bool condn1 = (!this_real_hit_flag[j]);
+	    bool condn2 = (ray_dists_to_blocks_pts[j] < m_slice_miss_to_blocks_threshold);
+	    if (condn1 && condn2) 
+		flag_for_template[j] = 1;
+	}
+
+	// add to sim detail template
+	std::vector<double> pitches_for_template = logicalSubsetArray(this_ray_pitches, flag_for_template);
+	std::vector<double> yaws_for_template = logicalSubsetArray(this_ray_yaws, flag_for_template);
+	std::vector<std::vector<double> > real_pts_all_for_template = logicalSubsetArray(this_real_pts_all, flag_for_template);
+	std::vector<int> real_hit_flag_for_template = logicalSubsetArray(this_real_hit_flag, flag_for_template);
+	m_sim_detail_template.m_ray_origins.push_back(ray_origin);
+	m_sim_detail_template.m_ray_pitches.push_back(pitches_for_template);
+	m_sim_detail_template.m_ray_yaws.push_back(yaws_for_template);
+	m_sim_detail_template.m_real_pts_all.push_back(real_pts_all_for_template);
+	m_sim_detail_template.m_real_hit_flags.push_back(real_hit_flag_for_template);
+    }
 }
 
 std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count)
@@ -379,64 +514,71 @@ std::string OptimAssistant::genRelPathTriangles(int section_id, int block_id)
     return ss.str();
 }
 
-// todo: i'd like these to be somewhere else?  notice how some of the rel paths
-// go into data/sections, but other go into data/sim_optim
-std::string OptimAssistant::genRelPathSliceRealPts(const int section_id, const int obj_calc_count)
+std::string OptimAssistant::genRelPathRealPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_slice_real_pts_" << obj_calc_count << ".xyz";
+       << "section_" << std::setw(2) << std::setfill('0') << section_id;
+    
+    if (m_sim_type == 0) {
+	ss << "_blocks";
+    }
+    else if (m_sim_type == 1) {
+	ss << "_slice";
+    }
+    else {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
+    ss << "_real_pts_" << obj_calc_count << ".xyz";
 
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathSliceSimPts(const int section_id, const int obj_calc_count)
+std::string OptimAssistant::genRelPathSimPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_slice_sim_pts_" << obj_calc_count << ".xyz";
+       << "section_" << std::setw(2) << std::setfill('0') << section_id;
+
+    if (m_sim_type == 0) {
+	ss << "_blocks";
+    }
+    else if (m_sim_type == 1) {
+	ss << "_slice";
+    }
+    else {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+
+    ss << "_sim_pts_" << obj_calc_count << ".xyz";
 
     return ss.str();
 }
 
-std::string OptimAssistant::genRelPathSliceSimDetail(const int section_id, const int obj_calc_count)
+std::string OptimAssistant::genRelPathSimDetail(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
     ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_slice_sim_detail_" << obj_calc_count << ".txt";
+       << "section_" << std::setw(2) << std::setfill('0') << section_id;
 
-    return ss.str();
-}
+    if (m_sim_type == 0) {
+	ss << "_blocks";
+    }
+    else if (m_sim_type == 1) {
+	ss << "_slice";
+    }
+    else {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
 
-std::string OptimAssistant::genRelPathBlocksRealPts(const int section_id, const int obj_calc_count)
-{
-    std::ostringstream ss;
-    ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_blocks_real_pts_" << obj_calc_count << ".txt";
-
-    return ss.str();
-}
-
-std::string OptimAssistant::genRelPathBlocksSimPts(const int section_id, const int obj_calc_count)
-{
-    std::ostringstream ss;
-    ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_blocks_sim_pts_" << obj_calc_count << ".txt";
-
-    return ss.str();
-}
-
-std::string OptimAssistant::genRelPathBlocksSimDetail(const int section_id, const int obj_calc_count)
-{
-    std::ostringstream ss;
-    ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id
-       << "_blocks_sim_detail_" << obj_calc_count << ".txt";
+    ss << "_sim_detail_" << obj_calc_count << ".txt";
 
     return ss.str();
 }

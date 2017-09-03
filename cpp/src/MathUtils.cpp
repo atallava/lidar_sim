@@ -437,5 +437,11 @@ namespace lidar_sim {
 	// std::cout << "quat vec: " << quat.vec() << std::endl;
 	// std::cout << "scales: " << scale << std::endl;
     }
+
+    double calcF1Score(double precision, double recall)
+    {
+	double f1_score = 2*(precision*recall)/(precision + recall);
+	return f1_score;
+    }
 }
 
