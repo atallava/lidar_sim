@@ -186,14 +186,6 @@ ellipsoid: sample hit id, draw from ellipsoid mvn
 
 --------------------------------------------------
 
-* catkin ws:
-
-- how to cleanly include liblidar_sim? with all its dependent libraries?
-
-- for boost regex, had to manually link a library
-
---------------------------------------------------
-
 * cloudcompare installation
 
 - installed qt5.7 via instructions from 

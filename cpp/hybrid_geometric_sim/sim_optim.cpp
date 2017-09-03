@@ -45,29 +45,20 @@ int main(int argc, char **argv)
     // section idx for modeling
     optim_assistant.m_section_id_for_model = 3;
 
-    // todo: use correct version
-    // // non ground block idx
-    // optim_assistant.m_non_ground_block_ids = std::vector<int> {16,17,18,19};
-    // // ground block idx. currently not remodeled
-    // optim_assistant.m_ground_block_ids = std::vector<int> {2};
-
     // non ground block idx
-    optim_assistant.m_non_ground_block_ids = std::vector<int> {16};
+    optim_assistant.m_non_ground_block_ids = std::vector<int> {16,17,18,19};
     // ground block idx. currently not remodeled
     optim_assistant.m_ground_block_ids = std::vector<int> {2};
 
+    // non ground block idx
     // section idx for sim
     optim_assistant.m_section_id_for_sim = 3;
     // section packet ids
     optim_assistant.m_section_packet_start = 0;
     // todo: get automatically
     optim_assistant.m_section_packet_end = 3975; 
+    optim_assistant.m_section_packet_step = 10;
 
-    // todo: use correct version
-    // optim_assistant.m_section_packet_step = 10;
-
-    optim_assistant.m_section_packet_step = 1000;
-    
     // sim type
     optim_assistant.m_sim_type = 1; // slice sim
     optim_assistant.init();

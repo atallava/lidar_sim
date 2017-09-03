@@ -186,7 +186,7 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     {
 	std::stringstream ss_err_msg;
 	ss_err_msg << "SectionModelSim::simPtsGivenRays: ray_origin is empty!";
-	throw std::exception(ss_err_msg.str().c_str());
+	throw std::invalid_argument(ss_err_msg.str().c_str());
     }
     if (~condn1 && condn2){
 	// return empty vectors

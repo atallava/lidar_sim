@@ -74,8 +74,7 @@ double OptimAssistant::calcObj(std::vector<double> x)
     {
     	std::stringstream ss_err_msg;
     	ss_err_msg << "OptimAssistant has not been initialized.";
-    	// todo: what is the right error to throw here?
-    	throw std::runtime_error(ss_err_msg.str().c_str());
+    	throw std::logic_error(ss_err_msg.str().c_str());
     }
 
     // create the ellipsoid block models
@@ -179,24 +178,6 @@ void OptimAssistant::sliceSim()
     sim_detail.setVerbosity(m_verbose);
     
     size_t n_origins = m_sim_detail_template.m_ray_origins.size();
-
-    // todo: del
-    std::cout << n_origins << std::endl; 
-    dispVec(m_sim_detail_template.m_ray_origins[0]);
-    dispVec(m_sim_detail_template.m_ray_pitches[0]);
-    dispVec(m_sim_detail_template.m_ray_yaws[0]);
-    dispMat(m_sim_detail_template.m_real_pts_all[0]);
-    dispVec(m_sim_detail_template.m_real_hit_flags[0]);
-    std::vector<double> ro = m_sim_detail_template.m_ray_origins[0];
-    std::vector<std::vector<double> > v1 = m_sim_detail_template.m_real_pts_all[0];
-    std::vector<int> v2 = m_sim_detail_template.m_real_hit_flags[0];
-    logicalSubsetArray(v1, v2);
-    std::vector<double> rp = m_sim_detail_template.m_ray_pitches[0];
-    std::vector<double> ry = m_sim_detail_template.m_ray_yaws[0];
-    std::vector<std::vector<double> > rd = calcRayDirnsFromSph(rp, ry);
-    sim.simPtsGivenRays(ro, rd);
-    std::exit(0);
-
 
     for (size_t i = 0; i < n_origins; ++i) {
 	// get relevant information from sim detail template
@@ -499,6 +480,11 @@ void OptimAssistant::createSimDetailTemplate()
 	    if (condn1 && condn2) 
 		flag_for_template[j] = 1;
 	}
+
+	// if all zeros, skip packet
+	bool condn = anyNonzeros(flag_for_template);
+	if (!condn)
+	    continue;
 
 	// add to sim detail template
 	std::vector<double> pitches_for_template = logicalSubsetArray(this_ray_pitches, flag_for_template);
