@@ -41,33 +41,49 @@ double myfunc(const std::vector<double> &x, std::vector<double> &grad, void *my_
 int main(int argc, char **argv)
 {
     // set up optim assistant
-    optim_assistant.m_verbose = 0;
-    // section id
+    optim_assistant.m_verbose = 1;
+    // section idx for modeling
     optim_assistant.m_section_id_for_model = 3;
-    // which non ground blocks to build
-    optim_assistant.m_non_ground_block_ids = std::vector<int> {16,17,18,19};
-    // which ground blocks to use
+
+    // todo: use correct version
+    // // non ground block idx
+    // optim_assistant.m_non_ground_block_ids = std::vector<int> {16,17,18,19};
+    // // ground block idx. currently not remodeled
+    // optim_assistant.m_ground_block_ids = std::vector<int> {2};
+
+    // non ground block idx
+    optim_assistant.m_non_ground_block_ids = std::vector<int> {16};
+    // ground block idx. currently not remodeled
     optim_assistant.m_ground_block_ids = std::vector<int> {2};
-    // path of section to use
+
+    // section idx for sim
     optim_assistant.m_section_id_for_sim = 3;
     // section packet ids
-    optim_assistant.m_section_packet_start = 1;
-    optim_assistant.m_section_packet_end = 10;
-    optim_assistant.m_section_packet_step = 5;
+    optim_assistant.m_section_packet_start = 0;
+    // todo: get automatically
+    optim_assistant.m_section_packet_end = 3975; 
+
+    // todo: use correct version
+    // optim_assistant.m_section_packet_step = 10;
+
+    optim_assistant.m_section_packet_step = 1000;
+    
+    // sim type
+    optim_assistant.m_sim_type = 1; // slice sim
     optim_assistant.init();
 
     // set up nlopt
     // x = {n_cluster_per_pt, max_maha_dist_for_hit}
     nlopt::opt opt(nlopt::LN_COBYLA, 2); // algo and dimensionality
     std::vector<double> lb(2), ub(2);
-    lb[0] = 0.001; lb[1] = 0.1;
+    lb[0] = 0.001; lb[1] = 0.01;
     opt.set_lower_bounds(lb);
-    ub[0] = 0.05; ub[2] = 6;
+    ub[0] = 0.05; ub[2] = 5;
 
     opt.set_min_objective(myfunc, NULL); 
 
     // todo: increase max eval
-    int max_eval = 3;
+    int max_eval = 180;
     opt.set_maxeval(max_eval);
 
     opt.set_xtol_rel(1e-4); // relative tolerance on x

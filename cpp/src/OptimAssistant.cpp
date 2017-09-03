@@ -42,7 +42,8 @@ void OptimAssistant::init()
     if (m_verbose)
 	std::cout << "OptimAssistant: init." << std::endl;
 
-    // todo: how do you know section id for models has been set?
+    // todo: assumes that some variables have been assigned. who checks that?
+
     std::string m_rel_path_section_for_model = 
 	genPathSection(m_section_id_for_model);
     m_section_for_model = SectionLoader (m_rel_path_section_for_model);
@@ -178,6 +179,25 @@ void OptimAssistant::sliceSim()
     sim_detail.setVerbosity(m_verbose);
     
     size_t n_origins = m_sim_detail_template.m_ray_origins.size();
+
+    // todo: del
+    std::cout << n_origins << std::endl; 
+    dispVec(m_sim_detail_template.m_ray_origins[0]);
+    dispVec(m_sim_detail_template.m_ray_pitches[0]);
+    dispVec(m_sim_detail_template.m_ray_yaws[0]);
+    dispMat(m_sim_detail_template.m_real_pts_all[0]);
+    dispVec(m_sim_detail_template.m_real_hit_flags[0]);
+    std::vector<double> ro = m_sim_detail_template.m_ray_origins[0];
+    std::vector<std::vector<double> > v1 = m_sim_detail_template.m_real_pts_all[0];
+    std::vector<int> v2 = m_sim_detail_template.m_real_hit_flags[0];
+    logicalSubsetArray(v1, v2);
+    std::vector<double> rp = m_sim_detail_template.m_ray_pitches[0];
+    std::vector<double> ry = m_sim_detail_template.m_ray_yaws[0];
+    std::vector<std::vector<double> > rd = calcRayDirnsFromSph(rp, ry);
+    sim.simPtsGivenRays(ro, rd);
+    std::exit(0);
+
+
     for (size_t i = 0; i < n_origins; ++i) {
 	// get relevant information from sim detail template
 	std::vector<double> ray_origin = m_sim_detail_template.m_ray_origins[i];
@@ -344,7 +364,7 @@ double OptimAssistant::calcSimError()
 	SimDetail sim_detail(rel_path_sim_detail);
 	double mean_packets_error, precision, recall;
 	std::tie(mean_packets_error, precision, recall) = m_error_metric.calcRangeError(sim_detail);
-	double f1_score = calcF1Score(precision, recall);
+	// double f1_score = calcF1Score(precision, recall);
 
 	// todo: include f1 score
 	error = mean_packets_error;

@@ -180,6 +180,21 @@ std::tuple<std::vector<std::vector<double> >, std::vector<int> >
 SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin, 
 				 const std::vector<std::vector<double> > &ray_dirns)
 {
+    bool condn1 = ray_origin.empty();
+    bool condn2 = ray_dirns.empty();
+    if (condn1)
+    {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "SectionModelSim::simPtsGivenRays: ray_origin is empty!";
+	throw std::exception(ss_err_msg.str().c_str());
+    }
+    if (~condn1 && condn2){
+	// return empty vectors
+	std::vector<std::vector<double> > empty_sim_pts_all;
+	std::vector<int> empty_sim_hit_flag;
+	return std::tie(empty_sim_pts_all, empty_sim_hit_flag);
+    } 
+
     typedef std::vector<std::vector<double> > SimPts; 
     typedef std::vector<int> HitFlag;
     

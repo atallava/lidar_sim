@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     size_t packet_idx_sim_start, packet_idx_sim_end, packet_step;	
     packet_idx_sim_start = 0;
     packet_idx_sim_end = section.m_packet_timestamps.size()-1;
-    packet_step = 10; // todo: make this better
+    packet_step = 10; 
 
     double hit_to_blocks_dist_threshold = 0.5;
     double resn_along_ray = 5;
