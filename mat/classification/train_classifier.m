@@ -36,5 +36,9 @@ labelsPred = predict(mdl,features);
 %% stats
 dispPredStats(labels,labelsPred,classes);
 
+% todo: display a nice table of precision and recall for each class
+% todo: put numbers in that matrix table
+
+
 
 

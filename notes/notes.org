@@ -123,7 +123,14 @@ them and writes them out? so that you don't have to keep track of them.
   - build_models_non_ground_blocks version_310817 took 1hr
   - hg_sim section 8 takes 1.5hr
   - clustering s3 b10, 30k points. both flann and alglib take 2min.
-  - with secn3 subsampled, packet step 10, creating sim detail template takes 8min. 
+  - with secn3 subsampled, packet step 10, creating sim detail template takes 8min.
+
+- a config helper
+  - i guess ideally, a class like OptimAssistant, doesn't deal so extensively
+    with parameters. they are instead read from a config file. and there are
+    scripting tools to manage the config file. for example, go into python and
+    tweak values there. since the python script has the semantic knowledge also
+    of what is what, it will have no trouble outputing it as xml, txt, etc etc.
 
 ------------------------------
 

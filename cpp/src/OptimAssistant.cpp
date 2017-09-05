@@ -24,16 +24,20 @@ OptimAssistant::OptimAssistant() :
     m_verbose(false),
     m_initialized(false),
     m_datestr_format("%H%d%m%y"),
+
+    m_sim_version_triangle_src("250417"),
+    m_num_nbrs_for_hit_prob(1),
+
     m_sim_type(-1),
-    
+
+    m_num_nbrs_for_blocks_sim(1),
+    m_max_pts_for_blocks_sim(1e4),
+
+    m_section_packet_step(1),
     m_slice_hit_to_blocks_threshold(0.5),
     m_slice_resn_along_ray(5),
     m_slice_miss_to_blocks_threshold(2),
 
-    m_num_nbrs_for_blocks_sim(1),
-    m_max_pts_for_blocks_sim(1e4),
-    m_section_packet_step(1),
-    m_num_nbrs_for_hit_prob(1),
     m_obj_calc_count(1)
 {
     m_rel_path_poses_log = genPathPosesLog();
@@ -51,8 +55,6 @@ void OptimAssistant::init()
     // note: currently not optimizing triangle models
     // copy triangle models into relevant folders
     copyTriangleModels();
-    // change the paths for sim, models etc
-    std::exit(0); // todo :delete
 
     // todo: assumes that some variables have been assigned. who checks that?
 
@@ -64,7 +66,6 @@ void OptimAssistant::init()
 	genPathSection(m_section_id_for_sim);
     m_section_for_sim = SectionLoader (m_rel_path_section_for_sim);
 
-    // for blocks sim
     if (m_sim_type == 0) {
 	fillSectionPtIdsForBlocksSim();
     }
@@ -357,10 +358,11 @@ double OptimAssistant::calcSimError()
 	SimDetail sim_detail(rel_path_sim_detail);
 	double mean_packets_error, precision, recall;
 	std::tie(mean_packets_error, precision, recall) = m_error_metric.calcRangeError(sim_detail);
-	// double f1_score = calcF1Score(precision, recall);
+	double f1_score = calcF1Score(precision, recall);
 
-	// todo: include f1 score
-	error = mean_packets_error;
+	// todo: check error
+	// error = mean_packets_error;
+	error = f1_score;
 	// error = mean_packets_error + (1 - f1_score);
     }
     else {
@@ -557,6 +559,80 @@ void OptimAssistant::mkdirsForOptimInstance(const std::string instance_idx)
 }
 
 
+void OptimAssistant::copyTriangleModels()
+{
+    if (m_verbose)
+	std::cout << "OptimAssistant: copyTriangleModels." << std::endl;
+
+    for (size_t i = 0; i < m_ground_block_ids.size(); ++i)
+    {
+	int block_id = m_ground_block_ids[i];
+	std::string rel_path_triangles_source = genRelPathTrianglesSrc(m_section_id_for_model, block_id);
+	std::string rel_path_triangles_dest = genRelPathTriangles(m_section_id_for_model, block_id);
+	if (boost::filesystem::exists(rel_path_triangles_dest)) {
+	    if (m_verbose)
+		std::cout << rel_path_triangles_dest << " exists." << std::endl;
+	}
+	else {
+	    if (m_verbose)
+		std::cout << "copying from " << rel_path_triangles_source << " to " 
+			  << rel_path_triangles_dest << std::endl;
+	    boost::filesystem::copy(rel_path_triangles_source, rel_path_triangles_dest);
+	}
+    }
+}
+
+void OptimAssistant::saveOptimConfig()
+{
+    std::string rel_path_config = genRelPathOptimConfig();
+    std::string config_str = getConfigAsStr();
+    writeStringToFile(config_str, rel_path_config, m_verbose);
+}
+
+std::string OptimAssistant::getConfigAsStr()
+{
+    std::ostringstream ss;
+    ss << "OptimAssistant:" << std::endl;
+    ss << "m_verbose: " << m_verbose << std::endl;
+    ss << "m_instance_idx: " << m_instance_idx << std::endl;
+
+    ss << "m_section_id_for_model: " << m_section_id_for_model << std::endl;
+    ss << "m_rel_path_section_for_model: " << m_rel_path_section_for_model << std::endl;
+    ss << "m_sim_version_triangle_src: " << m_sim_version_triangle_src << std::endl;
+    ss << "m_non_ground_block_ids: " << std::endl;
+    ss << getVecAsStr(m_non_ground_block_ids) << std::endl;
+    ss << "m_ground_block_ids: " << std::endl;
+    ss << getVecAsStr(m_ground_block_ids) << std::endl;
+    ss << "m_num_nbrs_for_hit_prob: " << m_num_nbrs_for_hit_prob << std::endl;
+
+    ss << "m_sim_type: " << m_sim_type << std::endl;
+    ss << "m_section_id_for_sim: " << m_section_id_for_sim << std::endl;
+    ss << "m_rel_path_section_for_sim: " << m_rel_path_section_for_sim << std::endl;
+
+    if (m_sim_type == 0) {
+	// ss << "m_section_pt_ids_for_blocks_sim: " << std::endl;
+	// ss << getVecAsStr(m_section_pt_ids_for_blocks_sim) << std::endl;
+	ss << "m_num_nbrs_for_blocks_sim: " << m_num_nbrs_for_blocks_sim << std::endl;
+	ss << "m_max_pts_for_blocks_sim: " << m_max_pts_for_blocks_sim << std::endl;
+    }
+    else if (m_sim_type == 1) {
+	ss << "m_section_packet_start: " << m_section_packet_start << std::endl;
+	ss << "m_section_packet_end: " << m_section_packet_end << std::endl;
+	ss << "m_section_packet_step: " << m_section_packet_step << std::endl;
+	ss << "m_slice_hit_to_blocks_threshold: " << m_slice_hit_to_blocks_threshold << std::endl;
+	ss << "m_slice_resn_along_ray: " << m_slice_resn_along_ray << std::endl;
+	ss << "m_slice_miss_to_blocks_threshold: " << m_slice_miss_to_blocks_threshold << std::endl;
+    }
+    else {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "m_sim_type has invalid value " << m_sim_type;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
+    ss << "m_obj_calc_count: " << m_obj_calc_count;
+
+    return ss.str();
+}
+
 std::string OptimAssistant::genPathOptimInstanceDir(const std::string instance_idx)
 {
     std::ostringstream ss;
@@ -568,8 +644,14 @@ std::string OptimAssistant::genPathOptimInstanceDir(const std::string instance_i
 
 std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count)
 {
+    // todo: should the instance idx be passed as argument? or should the member
+    // be used?  each object should ideally only access its own instance, so
+    // member? but then that logic should be applied to all the variables passed
+    // in? such as should use m_section_id_for_model only    
+
     std::ostringstream ss;
-    ss << "data/sim_optim/models" 
+    ss << "data/sim_optim/instance_" << m_instance_idx
+       <<" /models" 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id 
        << "_non_ground_ellipsoids_" << obj_calc_count << ".txt";
@@ -580,7 +662,19 @@ std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int
 std::string OptimAssistant::genRelPathTriangles(int section_id, int block_id)
 {
     std::ostringstream ss;
-    ss << "data/sim_optim/models"
+    ss << "data/sim_optim/instance_" << m_instance_idx
+       << "/models"
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground_triangles.txt";
+
+    return ss.str();
+}
+
+std::string OptimAssistant::genRelPathTrianglesSrc(int section_id, int block_id)
+{
+    std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/version_" << m_sim_version_triangle_src
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground_triangles.txt";
 
@@ -590,8 +684,9 @@ std::string OptimAssistant::genRelPathTriangles(int section_id, int block_id)
 std::string OptimAssistant::genRelPathRealPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
-    ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id;
+    ss << "data/sim_optim/instance_" << m_instance_idx
+       << "/sim"
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id;
     
     if (m_sim_type == 0) {
 	ss << "_blocks";
@@ -613,8 +708,9 @@ std::string OptimAssistant::genRelPathRealPts(const int section_id, const int ob
 std::string OptimAssistant::genRelPathSimPts(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
-    ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id;
+    ss << "data/sim_optim/instance_" << m_instance_idx
+       << "/sim"
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id;
 
     if (m_sim_type == 0) {
 	ss << "_blocks";
@@ -636,8 +732,9 @@ std::string OptimAssistant::genRelPathSimPts(const int section_id, const int obj
 std::string OptimAssistant::genRelPathSimDetail(const int section_id, const int obj_calc_count)
 {
     std::ostringstream ss;
-    ss << "data/sim_optim/sim/"
-       << "section_" << std::setw(2) << std::setfill('0') << section_id;
+    ss << "data/sim_optim/instance_" << m_instance_idx
+       << "/sim"
+       << "/section_" << std::setw(2) << std::setfill('0') << section_id;
 
     if (m_sim_type == 0) {
 	ss << "_blocks";
@@ -655,4 +752,23 @@ std::string OptimAssistant::genRelPathSimDetail(const int section_id, const int 
 
     return ss.str();
 }
+
+std::string OptimAssistant::genRelPathOptimConfig()
+{
+    std::ostringstream ss;
+    ss << "data/sim_optim/instance_" << m_instance_idx
+       << "/optim_config.txt";
+
+    return ss.str();
+}
+
+std::string OptimAssistant::genRelPathOptimProgress()
+{
+    std::ostringstream ss;
+    ss << "data/sim_optim/instance_" << m_instance_idx
+       << "/optim_progress.txt";
+
+    return ss.str();
+}
+
 

@@ -66,7 +66,17 @@ namespace lidar_sim {
 	file.close();
     }
 
-    void writeStringToFile(const std::string str, const std::string rel_path_output);
+    template<typename T>
+	std::string getVecAsStr(const std::vector<T> &vec)
+    {
+	std::ostringstream ss;
+	for(size_t i = 0; i < vec.size(); ++i)
+	    ss << vec[i] << " ";
+	
+	return ss.str();
+    }
+
+    void writeStringToFile(const std::string str, const std::string rel_path_output, int verbose = 1);
 
     void writeQueriedBlocks(const std::string rel_path_file, const std::vector<int> &triangle_block_ids, 
 			    const std::vector<int> &ellipsoid_block_ids);

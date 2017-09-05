@@ -270,10 +270,11 @@ namespace lidar_sim {
 	return std::make_tuple(object_classes, object_xy_posns);
     }
 
-    void writeStringToFile(const std::string str, const std::string rel_path_output)
+    void writeStringToFile(const std::string str, const std::string rel_path_output, int verbose)
     {
 	std::ofstream file(rel_path_output);
-	std::cout << "Writing string to: " << rel_path_output << std::endl;
+	if (verbose)
+	    std::cout << "Writing string to: " << rel_path_output << std::endl;
 
 	file << str;
 	file.close();

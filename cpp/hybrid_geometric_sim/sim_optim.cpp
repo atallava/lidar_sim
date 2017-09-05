@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     optim_assistant.m_section_packet_step = 10;
 
     // sim type
-    optim_assistant.m_sim_type = 1; // slice sim
+    optim_assistant.m_sim_type = 1; // slice sim 
     optim_assistant.init();
 
     // set up nlopt
@@ -85,12 +85,14 @@ int main(int argc, char **argv)
     double minf;
 
     // fire away
-    nlopt::result result = opt.optimize(x, minf);
+    nlopt::result result = opt.optimize(x, minf); 
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "result: " << std::endl;
     dispProgressMsg(x, minf, elapsed_time);
 
-    std::string rel_path_optim_progress = "data/sim_optim/optim_progress.txt";
+    std::string rel_path_optim_progress = optim_assistant.genRelPathOptimProgress();
     optim_progress.save(rel_path_optim_progress);
+
+    optim_assistant.saveOptimConfig();
 }
