@@ -8,16 +8,33 @@ function dispPredStats(labels,labelsPred,classes)
 % classes    -
 
 classDistrib = calcClassDistrib(labels,classes);
-fprintf('class distribution: \n');
-disp(classDistrib);
 
-%% 
 classificationAccuracies = calcClassificationAccuracies(labels,labelsPred,classes);
-fprintf('classification accuracies: \n');
-disp(classificationAccuracies);
-fprintf('mean: %.2f\n',mean(classificationAccuracies));
+meanAccuracy = mean(classificationAccuracies);
 
-%% 
+[classPrecisions,classRecalls] = calcPrecisionRecall(labels,labelsPred,classes);
+classF1Scores = calcF1Scores(labels,labelsPred,classes);
+meanPrecision = mean(classPrecisions);
+meanRecall = mean(classRecalls);
+meanF1Score = mean(classF1Scores);
+
+%% viz table
+rowNames = cell(length(classes),1);
+for i = 1:length(classes)
+    rowNames{i} = num2str(classes(i));
+end
+varNames = {'distrib','accuracy','precision','recall','f1'};
+T = table(flipVecToColumn(classDistrib),flipVecToColumn(classificationAccuracies), ...
+    flipVecToColumn(classPrecisions),flipVecToColumn(classRecalls),flipVecToColumn(classF1Scores), ...
+    'RowNames',rowNames,'VariableNames',varNames);
+disp(T);
+
+fprintf('mean classification accuracy: %.4f\n',meanAccuracy);
+fprintf('mean precision: %.4f\n',meanPrecision);
+fprintf('mean recall: %.4f\n',meanRecall);
+fprintf('mean f1: %.4f\n',meanF1Score);
+
+%% viz confmat
 confMat = confusionmat(labels,labelsPred);
 imagesc(confMat);
 xticks(classes+1);
@@ -25,18 +42,15 @@ tickLabels = genTickLabels(classes);
 set(gca,'xticklabels',tickLabels);
 yticks(classes+1);
 set(gca,'yticklabels',tickLabels);
-colorbar;
 title('confusion matrix');
 ylabel('labels'); xlabel('labels pred');
 
-%%
-[classPrecisions,classRecalls] = calcPrecisionRecall(labels,labelsPred,classes);
-classF1Scores = calcF1Scores(labels,labelsPred,classes);
-for i = 1:length(classes)
-    fprintf('class %d. precision: %.4f. recall: %.4f. f1 score: %.4f\n', ...
-        classes(i),classPrecisions(i),classRecalls(i),classF1Scores(i));
+textFontSize = 15;
+for i = 1:size(confMat,1)
+    for j = 1:size(confMat,2)
+        text(j,i,num2str(confMat(i,j)), ...
+            'FontSize',textFontSize);
+    end
 end
-fprintf('mean precision: %.4f\n',mean(classPrecisions));
-fprintf('mean recall: %.4f\n',mean(classRecalls));
-fprintf('mean f1: %.4f\n',mean(classF1Scores));
+
 end

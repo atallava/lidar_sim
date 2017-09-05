@@ -7,7 +7,8 @@ genRelPathDatasetType = @(sectionId,datasetType) ...
 sectionId = 3;
 % relPathDataset = genRelPathDatasetType(sectionId,'train'); % todo:
 % cleanup
-relPathDataset = '../data/misc/working_features';
+relPathDataset = '../data/misc/classification/dataset_collapsed';
+% relPathDataset = '../data/misc/classification/working_features';
 load(relPathDataset,'features','labels','classNames');
 classes = 0:(length(classNames)-1);
 
@@ -45,10 +46,9 @@ fprintf('elapsed time: %.2fs\n',elapsedTime);
 %% viz
 figure;
 hold on; axis equal;
-legendCell = cell(1,length(classes));
 for i = 1:length(classes)
     flag = (labels == classes(i));
     scatter3(featuresIn3(flag,1),featuresIn3(flag,2),featuresIn3(flag,3),15,labels(flag),'filled');
-    legendCell{i} = num2str(classes(i));
 end
-legend(legendCell);
+box on; grid on;
+legend(replaceUnderscoreWithSpace(classNames));

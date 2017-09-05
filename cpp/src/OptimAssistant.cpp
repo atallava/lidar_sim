@@ -651,7 +651,7 @@ std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int
 
     std::ostringstream ss;
     ss << "data/sim_optim/instance_" << m_instance_idx
-       <<" /models" 
+       << "/models" 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id 
        << "_non_ground_ellipsoids_" << obj_calc_count << ".txt";
