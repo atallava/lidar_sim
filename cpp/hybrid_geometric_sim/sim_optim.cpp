@@ -41,10 +41,6 @@ double myfunc(const std::vector<double> &x, std::vector<double> &grad, void *my_
 
 int main(int argc, char **argv)
 {
-    // todo: delete
-    std::cout << getDateString("%M%d%m%y") << std::endl;;
-    std::exit(0);
-
     // set up optim assistant
     optim_assistant.m_verbose = 1;
     // section idx for modeling

@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include <boost/filesystem.hpp>
+
 #include <lidar_sim/OptimAssistant.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/VizUtils.h>
@@ -21,6 +23,7 @@ using namespace lidar_sim;
 OptimAssistant::OptimAssistant() :
     m_verbose(false),
     m_initialized(false),
+    m_datestr_format("%H%d%m%y"),
     m_sim_type(-1),
     
     m_slice_hit_to_blocks_threshold(0.5),
@@ -43,8 +46,13 @@ void OptimAssistant::init()
 	std::cout << "OptimAssistant: init." << std::endl;
 
     // create directories for this instance
-    m_instance_idx = getDateString();
-    
+    m_instance_idx = getDateString(m_datestr_format);
+    mkdirsForOptimInstance(m_instance_idx);
+    // note: currently not optimizing triangle models
+    // copy triangle models into relevant folders
+    copyTriangleModels();
+    // change the paths for sim, models etc
+    std::exit(0); // todo :delete
 
     // todo: assumes that some variables have been assigned. who checks that?
 
@@ -501,6 +509,61 @@ void OptimAssistant::createSimDetailTemplate()
 	m_sim_detail_template.m_real_pts_all.push_back(real_pts_all_for_template);
 	m_sim_detail_template.m_real_hit_flags.push_back(real_hit_flag_for_template);
     }
+}
+
+
+void OptimAssistant::mkdirsForOptimInstance(const std::string instance_idx)
+{
+    // instance dir
+    std::string path_optim_instance_dir = genPathOptimInstanceDir(instance_idx);
+    if (boost::filesystem::exists(path_optim_instance_dir)) {
+	if (m_verbose)
+	    std::cout << path_optim_instance_dir << " exists" << std::endl;
+    }
+    else {
+	if (m_verbose)
+	    std::cout << "creating " << path_optim_instance_dir << std::endl;
+	boost::filesystem::create_directory(path_optim_instance_dir);
+    }
+
+    // models subdir
+    std::ostringstream ss;
+    ss << path_optim_instance_dir << "/models";
+    std::string path_optim_models_dir = ss.str();
+    if (boost::filesystem::exists(path_optim_models_dir)) {
+	if (m_verbose)
+	    std::cout << path_optim_models_dir << " exists" << std::endl;
+    }
+    else {
+	if (m_verbose)
+	    std::cout << "creating " << path_optim_models_dir << std::endl;
+	boost::filesystem::create_directory(path_optim_models_dir);
+    }
+
+    // sim subdir
+    ss.clear();
+    ss.str("");
+    ss << path_optim_instance_dir << "/sim";
+    std::string path_optim_sim_dir = ss.str();
+    if (boost::filesystem::exists(path_optim_sim_dir)) {
+	if (m_verbose)
+	    std::cout << path_optim_sim_dir << " exists" << std::endl;
+    }
+    else {
+	if (m_verbose)
+	    std::cout << "creating " << path_optim_sim_dir << std::endl;
+	boost::filesystem::create_directory(path_optim_sim_dir);
+    }
+}
+
+
+std::string OptimAssistant::genPathOptimInstanceDir(const std::string instance_idx)
+{
+    std::ostringstream ss;
+    ss << "/usr0/home/atallav1/lidar_sim/cpp"
+       << "/data/sim_optim/instance_" << instance_idx;
+
+    return ss.str();
 }
 
 std::string OptimAssistant::genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count)

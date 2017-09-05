@@ -59,6 +59,7 @@ for i = 1:nPts
     nbrIdx = idx{i};
     % remember nbr includes itself
     nbrPts = pts(nbrIdx,:);
+    
     if size(nbrPts,1) < minNbrs
         fewNbrsFlag(i) = 1;
         spectralFeatures(i,:) = defaultSpectralFeatures;
@@ -79,7 +80,7 @@ end
 
 bias = ones(nPts,1);
 
-features = [spectralFeatures dirnFeatures heightFeatures bias];
+features = [spectralFeatures dirnFeatures heightFeatures bias]; % list of features
 
 % todo: scale features?
 compTime = toc(clockLocal);

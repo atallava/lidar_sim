@@ -17,8 +17,10 @@ namespace lidar_sim {
 	double calcSimError();
 	void fillSectionPtIdsForBlocksSim();
 	void createSimDetailTemplate();
+	void mkdirsForOptimInstance(const std::string instance_idx);
 
 	// relpath helpers
+	std::string genPathOptimInstanceDir(const std::string instance_idx);
 	std::string genRelPathEllipsoids(const int section_id, const int block_id, const int obj_calc_count);
 	std::string genRelPathTriangles(int section_id, int block_id);
 	std::string genRelPathRealPts(const int section_id, const int obj_calc_count);
@@ -27,6 +29,7 @@ namespace lidar_sim {
 
 	bool m_verbose;
 	bool m_initialized;
+	std::string m_datestr_format;
 	std::string m_instance_idx;
 
 	int m_section_id_for_model;
