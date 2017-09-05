@@ -167,6 +167,8 @@ namespace lidar_sim {
     std::vector<int> getTriangleModelBlockIds(const std::string rel_path_triangle_models_dir, const int section_id);
     
     std::vector<int> getObjectMeshIds(const std::string rel_path_object_meshes_dir);
+    
+    std::string getDateString(const std::string format = "%d%m%y");
 
     // the path helpers
     std::string genPathSection(const int section_id);

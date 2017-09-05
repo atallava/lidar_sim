@@ -42,6 +42,10 @@ void OptimAssistant::init()
     if (m_verbose)
 	std::cout << "OptimAssistant: init." << std::endl;
 
+    // create directories for this instance
+    m_instance_idx = getDateString();
+    
+
     // todo: assumes that some variables have been assigned. who checks that?
 
     std::string m_rel_path_section_for_model = 

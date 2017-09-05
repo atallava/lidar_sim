@@ -27,6 +27,7 @@ namespace lidar_sim {
 
 	bool m_verbose;
 	bool m_initialized;
+	std::string m_instance_idx;
 
 	int m_section_id_for_model;
 	std::string m_rel_path_section_for_model;

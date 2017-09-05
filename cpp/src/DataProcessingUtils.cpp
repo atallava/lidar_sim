@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <regex>
+#include <ctime>
 
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
@@ -634,6 +635,23 @@ namespace lidar_sim {
 
 	return ids;
     }
+
+    std::string getDateString(const std::string format)
+    {
+	// copied from SO
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer[80];
+
+	time (&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	strftime(buffer,sizeof(buffer),format.c_str(),timeinfo);
+	std::string str(buffer);
+
+	return str;
+    }
+
 
     std::string genPathSection(const int section_id)
     {
