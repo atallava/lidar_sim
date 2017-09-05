@@ -22,13 +22,13 @@ for i = 1:nPositions
     % construct rotation matrix
     R = zeros(3,3);
     R(:,1) = xAxis; R(:,2) = yAxis; R(:,3) = zAxis;
-    % quaternion
-    quat = rotm2quat(R);
+    % rpy
+    rpy = tr2rpy(R,'zyx'); 
     
-    line = sprintf('%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f\n', ...
+    line = sprintf('%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f\n', ...
         t, ...
         posn(1),posn(2),posn(3), ...
-        quat(2),quat(3),quat(4),quat(1)); 
+        rpy(1),rpy(2),rpy(3));
     fprintf(fid,line);
 end
 end

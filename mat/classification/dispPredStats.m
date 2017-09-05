@@ -11,9 +11,11 @@ classDistrib = calcClassDistrib(labels,classes);
 fprintf('class distribution: \n');
 disp(classDistrib);
 
-%%
-err = calcMisclassificationError(labels,labelsPred);
-fprintf('misclassification error: %.4f\n',err);
+%% 
+classificationAccuracies = calcClassificationAccuracies(labels,labelsPred,classes);
+fprintf('classification accuracies: \n');
+disp(classificationAccuracies);
+fprintf('mean: %.2f\n',mean(classificationAccuracies));
 
 %% 
 confMat = confusionmat(labels,labelsPred);

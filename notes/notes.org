@@ -47,6 +47,10 @@ board:
 13: loop A
 14: loop A
 
+- time extents
+  - section 3: [1403045836 1403045903]
+  - section 4: [1403045920 1403046033]
+
 ------------------------------
 
 * hybrid geometric sim
