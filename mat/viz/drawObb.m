@@ -25,11 +25,11 @@ function drawObb(hfig,obb,pts)
     end
     
     if nargin > 2
-        scatter3(pts(:,1),pts(:,2),pts(:,3),'r.');
+        drawPts(hfig,pts);
     end
     
     function plotLine(pt1,pt2)
-        lineWidth = 1.5;
+        lineWidth = 3; % todo: return 1.5 
         figure(hfig);
         x = [pt1(1) pt2(1)];
         y = [pt1(2) pt2(2)];
