@@ -62,6 +62,14 @@ for i = 1:nObjects
     % select a primitive
     % maybe a primitive should be a struct
     % todo: this can be done better, by comparing obb, e.g
+    
+    if ~primitiveClassIsPatch(objectClass)
+        % pick a primitive
+        nearestObbId = pickNearestObb(objectAnnotation.objectObb_world,primitiveObbsPerClass{objectClass});
+        primitiveForObject = primitivesPerClass{objectClass}{nearestObbId};
+        % do the transforming things
+    else
+    end
 
     sampledElementId = randsample(elementIdsToSampleFrom{objectClass},1);
 
