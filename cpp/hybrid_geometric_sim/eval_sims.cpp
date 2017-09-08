@@ -25,6 +25,7 @@ int main(int argc, char **argv)
 
     std::vector<std::pair<std::string, std::string> > sims_to_eval; // sim type, sim version
     sims_to_eval.push_back(std::make_pair("hg", "310817"));
+    sims_to_eval.push_back(std::make_pair("hg", "070917"));
     sims_to_eval.push_back(std::make_pair("nbr", "250417")); 
 
     PtsError metric;
