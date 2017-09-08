@@ -29,43 +29,23 @@ genRelPathSceneEllipsoidModelsMat = @(sectionId) ...
 %% load
 % annotations for section 4
 newSceneSectionId = 4;
-relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
-load(relPathSceneAnnotation,'sceneAnnotation');
+% relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
+% load(relPathSceneAnnotation,'sceneAnnotation');
 
 % class info
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 % elements to sample from
-load('element_ids_to_sample_from','elementIdsToSampleFrom');
+load('../data/sections/section_03/primitives/element_ids_to_sample_from','elementIdsToSampleFrom');
 classElementIds = elementIdsToSampleFrom;
 
 % primitives
-nPrimitiveClasses = length(primitiveClasses);
-classPrimitivesCell = cell(1,nPrimitiveClasses);
-classPrimitiveObbsCell = cell(1,nPrimitiveClasses);
-for i = 1:nPrimitiveClasses
-    className = primitiveClasses{i};
-    thisPrimitiveElementIds = elementIdsToSampleFrom{i};
-    nElementsThisPrimitive = length(thisPrimitiveElementIds);
-    thisPrimitiveCans = cell(1,nElementsThisPrimitive);
-    thisPrimitiveObbs = cell(1,nElementsThisPrimitive);
-    if ~primitiveClassIsPatch(i)
-        for j = 1:nElementsThisPrimitive
-            elementId = thisPrimitiveElementIds(j);
-            relPathPrimitive = genRelPathPrimitive(trainSectionId,className,elementId);
-            can = load(relPathPrimitive,'pts','ellipsoidModels','obb');
-            thisPrimitiveCans{j} = can;
-            thisPrimitiveObbs{j} = can.obb;
-        end
-    else
-    end
-    classPrimitivesCell{i} = thisPrimitiveCans;
-    classPrimitiveObbsCell{i} = thisPrimitiveObbs;
-end
+primitivesSectionId = 3;
+[primitivesPerClass,primitiveObbsPerClass] = loadAllPrimitives(primitivesSectionId,primitiveClasses, ...
+    primitiveClassIsPatch,classElementIds);
 
 %% construct objects
-trainSectionId = 3;
 nObjects = length(sceneAnnotation);
 scenePts = [];
 sceneEllipsoidModels = [];
@@ -87,7 +67,7 @@ for i = 1:nObjects
 
     if ~primitiveClassIsPatch(objectClass)
         % load primitive
-        relPathPrimitive = genRelPathPrimitive(trainSectionId,className,sampledElementId);
+        relPathPrimitive = genRelPathPrimitive(primitivesSectionId,className,sampledElementId);
         load(relPathPrimitive,'pts','ellipsoidModels','obb');
         % transform pts, ellipsoidModels to the new pose
         TCorrected = correctTransformForGround(objectAnnotation.T_object_to_world,objectAnnotation.objectObb_world,obb);
@@ -98,7 +78,7 @@ for i = 1:nObjects
         % add to sceneEllipsoidModels
         sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
     else
-        relPathPrimitivePatch = genRelPathPrimitivePatch(trainSectionId,className,sampledElementId);
+        relPathPrimitivePatch = genRelPathPrimitivePatch(primitivesSectionId,className,sampledElementId);
         nObjectCells = length(objectAnnotation.T_cells_to_world);
         pattern = '([0-9]+)';
         [~,primitiveCellIds] = getPatternMatchingFileIds(relPathPrimitivePatch,pattern);
@@ -106,7 +86,7 @@ for i = 1:nObjects
         sampledCellIds = randsample(primitiveCellIds,nObjectCells,'true');
         for j = 1:nObjectCells
             sampledCellId = sampledCellIds(j);
-            relPathPrimitivePatchCell = genRelPathPrimitivePatchCell(trainSectionId,className,sampledElementId,sampledCellId);
+            relPathPrimitivePatchCell = genRelPathPrimitivePatchCell(primitivesSectionId,className,sampledElementId,sampledCellId);
             load(relPathPrimitivePatchCell,'pts','ellipsoidModels','obb');
 
             % transform pts, ellipsoidModels to the new pose
