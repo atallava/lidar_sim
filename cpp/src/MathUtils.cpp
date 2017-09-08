@@ -175,9 +175,18 @@ namespace lidar_sim {
 	flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
 	flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
 
-	int n_kd_trees = 10;
-	flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
-	index.buildIndex();                                                                                               
+	// randomized kd trees
+	// int n_kd_trees = 10; 
+	// flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
+
+	// hierarchical k-means
+	// the parameters values are mostly default
+	// using pp centers for repeatability
+	flann::Index<flann::L2<double> > index(dataset, 
+					       flann::KMeansIndexParams(32, 11, 
+									flann::FLANN_CENTERS_KMEANSPP));
+	index.buildIndex();
+	
 	int n_checks = 100;
 	index.knnSearch(query, indices, dists, nn, flann::SearchParams(n_checks));
 

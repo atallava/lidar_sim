@@ -29,8 +29,8 @@ genRelPathSceneEllipsoidModelsMat = @(sectionId) ...
 %% load
 % annotations for section 4
 newSceneSectionId = 4;
-% relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
-% load(relPathSceneAnnotation,'sceneAnnotation');
+relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
+load(relPathSceneAnnotation,'sceneAnnotation');
 
 % class info
 relPathPrimitiveClasses = '../data/primitive_classes';
@@ -42,7 +42,7 @@ classElementIds = elementIdsToSampleFrom;
 
 % primitives
 primitivesSectionId = 3;
-[primitivesPerClass,primitiveObbsPerClass] = loadAllPrimitives(primitivesSectionId,primitiveClasses, ...
+primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitiveClasses, ...
     primitiveClassIsPatch,classElementIds);
 
 %% construct objects
@@ -54,60 +54,73 @@ hWaitbar = waitbar(0,'progress');
 % loop through annotations
 clockLocal = tic();
 for i = 1:nObjects
-    % this object details
+    % this object data
     objectAnnotation = sceneAnnotation{i};
     objectClass = objectAnnotation.objectClass;
     className = primitiveClasses{objectClass};
     
-    % select a primitive
-    % maybe a primitive should be a struct
-    % todo: this can be done better, by comparing obb, e.g
-    
     if ~primitiveClassIsPatch(objectClass)
-        % pick a primitive
-        nearestObbId = pickNearestObb(objectAnnotation.objectObb_world,primitiveObbsPerClass{objectClass});
-        primitiveForObject = primitivesPerClass{objectClass}{nearestObbId};
-        % do the transforming things
+        % construct object
+        thisClassPrimitives = primitivesPerClass{objectClass};
+        [objectPts,objectEllipsoidModels] = constructSceneObject(objectAnnotation,thisClassPrimitives);
+        
+        % add to scene
+        scenePts = [scenePts; objectPts];
+        sceneEllipsoidModels = [sceneEllipsoidModels objectEllipsoidModels];
     else
-    end
-
-    sampledElementId = randsample(elementIdsToSampleFrom{objectClass},1);
-
-    if ~primitiveClassIsPatch(objectClass)
-        % load primitive
-        relPathPrimitive = genRelPathPrimitive(primitivesSectionId,className,sampledElementId);
-        load(relPathPrimitive,'pts','ellipsoidModels','obb');
-        % transform pts, ellipsoidModels to the new pose
-        TCorrected = correctTransformForGround(objectAnnotation.T_object_to_world,objectAnnotation.objectObb_world,obb);
-        pts_world = applyTransf(pts,TCorrected);
-        ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,TCorrected);
-        % add to scenePts
-        scenePts = [scenePts; pts_world];
-        % add to sceneEllipsoidModels
-        sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
-    else
-        relPathPrimitivePatch = genRelPathPrimitivePatch(primitivesSectionId,className,sampledElementId);
-        nObjectCells = length(objectAnnotation.T_cells_to_world);
-        pattern = '([0-9]+)';
-        [~,primitiveCellIds] = getPatternMatchingFileIds(relPathPrimitivePatch,pattern);
-        % select primitive patch cells
-        sampledCellIds = randsample(primitiveCellIds,nObjectCells,'true');
-        for j = 1:nObjectCells
-            sampledCellId = sampledCellIds(j);
-            relPathPrimitivePatchCell = genRelPathPrimitivePatchCell(primitivesSectionId,className,sampledElementId,sampledCellId);
-            load(relPathPrimitivePatchCell,'pts','ellipsoidModels','obb');
-
-            % transform pts, ellipsoidModels to the new pose
-            TCorrected = correctTransformForGround(objectAnnotation.T_cells_to_world{j},objectAnnotation.cellObbs_world{j},obb);
-            pts_world = applyTransf(pts,TCorrected);
-            ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,TCorrected);
-
-            % add to big scenePts
-            scenePts = [scenePts; pts_world];
-            % add to sceneEllipsoidModels
-            sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
+        % construct cell objects
+        thisClassPrimitives = primitivesPerClass{objectClass};
+        [patchPtsCell,patchEllipsoidModelsCell] = constructScenePatch(objectAnnotation,thisClassPrimitives);
+        
+        % add cells to scene
+        nCells = length(patchPtsCell);
+        for j = 1:nCells
+            % this cell data
+            objectPts = patchPtsCell{j};
+            objectEllipsoidModels = patchEllipsoidModelsCell{j};
+            
+            scenePts = [scenePts; objectPts];
+            sceneEllipsoidModels = [sceneEllipsoidModels objectEllipsoidModels];
         end
     end
+% 
+%     sampledElementId = randsample(elementIdsToSampleFrom{objectClass},1);
+% 
+%     if ~primitiveClassIsPatch(objectClass)
+%         % load primitive
+%         relPathPrimitive = genRelPathPrimitive(primitivesSectionId,className,sampledElementId);
+%         load(relPathPrimitive,'pts','ellipsoidModels','obb');
+%         % transform pts, ellipsoidModels to the new pose
+%         TCorrected = correctTransformForGround(objectAnnotation.T_object_to_world,objectAnnotation.objectObb_world,obb);
+%         pts_world = applyTransf(pts,TCorrected);
+%         ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,TCorrected);
+%         % add to scenePts
+%         scenePts = [scenePts; pts_world];
+%         % add to sceneEllipsoidModels
+%         sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
+%     else
+%         relPathPrimitivePatch = genRelPathPrimitivePatch(primitivesSectionId,className,sampledElementId);
+%         nObjectCells = length(objectAnnotation.T_cells_to_world);
+%         pattern = '([0-9]+)';
+%         [~,primitiveCellIds] = getPatternMatchingFileIds(relPathPrimitivePatch,pattern);
+%         % select primitive patch cells
+%         sampledCellIds = randsample(primitiveCellIds,nObjectCells,'true');
+%         for j = 1:nObjectCells
+%             sampledCellId = sampledCellIds(j);
+%             relPathPrimitivePatchCell = genRelPathPrimitivePatchCell(primitivesSectionId,className,sampledElementId,sampledCellId);
+%             load(relPathPrimitivePatchCell,'pts','ellipsoidModels','obb');
+% 
+%             % transform pts, ellipsoidModels to the new pose
+%             TCorrected = correctTransformForGround(objectAnnotation.T_cells_to_world{j},objectAnnotation.cellObbs_world{j},obb);
+%             pts_world = applyTransf(pts,TCorrected);
+%             ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,TCorrected);
+% 
+%             % add to big scenePts
+%             scenePts = [scenePts; pts_world];
+%             % add to sceneEllipsoidModels
+%             sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
+%         end
+%     end
     
     waitbar(i/nObjects);
 end

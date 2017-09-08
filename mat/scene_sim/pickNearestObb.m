@@ -3,10 +3,10 @@ function elementId = pickNearestObb(objectObb,primitiveObbs)
 %
 % elementId = PICKNEARESTOBB(objectObb,primitiveObbs)
 %
-% objectObb     -
-% primitiveObbs -
+% objectObb     - struct.
+% primitiveObbs - cell vector.
 %
-% elementId     -
+% elementId     - scalar.
 
 nPrimitiveObbs = length(primitiveObbs);
 metricVec = zeros(1,nPrimitiveObbs);
