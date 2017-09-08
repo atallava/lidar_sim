@@ -1,3 +1,12 @@
-- instance_030917
-  - slice sim, obj = mean hit error
+- instance 030917
+  - slice sim, obj = packate mean error
+  - maha dist becomes really low. the fact that only mutual hits are considered
+    means that a number of pts can be ignored
+
+- instance 15050917
+  - with obj = f1 score
+
+- instance 13070917
+  - with obj = package mean error + 2*f1 score
+
 

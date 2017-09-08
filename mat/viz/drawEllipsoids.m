@@ -17,7 +17,7 @@ for i = 1:nEllipses
     [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
     
     if ellipsoidUniformAlpha
-        thisAlpha = 0.2;
+        thisAlpha = 0.6;
     else
         thisAlpha = mapHitProbToAlpha(thisHitProb);
     end

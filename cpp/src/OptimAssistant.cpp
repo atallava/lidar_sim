@@ -37,6 +37,7 @@ OptimAssistant::OptimAssistant() :
     m_slice_hit_to_blocks_threshold(0.5),
     m_slice_resn_along_ray(5),
     m_slice_miss_to_blocks_threshold(2),
+    m_slice_obj_weight(2),
 
     m_obj_calc_count(1)
 {
@@ -362,8 +363,8 @@ double OptimAssistant::calcSimError()
 
 	// todo: check error
 	// error = mean_packets_error;
-	error = f1_score;
-	// error = mean_packets_error + (1 - f1_score);
+	// error = f1_score;
+	error = mean_packets_error + m_slice_obj_weight*(1 - f1_score);
     }
     else {
 	std::stringstream ss_err_msg;

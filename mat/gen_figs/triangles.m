@@ -1,18 +1,35 @@
 % load
-relPathPts = 'section_03_block_02_ground';
+relPathPts = '../data/sections/section_03/section_03_block_02_ground';
 load(relPathPts,'pts');
 
-relPathEllipsoidModels = 'section_03_block_02_ground_triangles';
-load(relPathEllipsoidModels,'triModel');
+relPathTriModels = '../data/sections/section_03/section_03_block_02_ground_triangles';
+load(relPathTriModels,'triModel');
+triModels = triModel;
 
 %% viz
-plotStructVars = {'rayData','triModelData','plotStruct'};
-clear(plotStructVars{:});
+hfig = figure;
+hold on; axis equal;
+box off; grid on;
 
-triModelData = triModel;
-plotStruct.triModelData = triModelData;
+view([67 45]);
 
-ptsSkip = 10;
-plotStruct.pts = pts(1:ptsSkip:end,:);
+drawTriModels(hfig,triModels,'ground');
+ptsSkip = 50;
+drawPts(hfig,pts(1:ptsSkip:end,:));
 
-hfig = plotRangeData(plotStruct);
+fontSize = 30;
+
+% center the axes ticks
+xt = get(gca,'xtick');
+xt = flipVecToColumn(xt);
+xtc = centerData(xt);
+set(gca,'xticklabel',xtc);
+
+yt = get(gca,'ytick');
+yt = flipVecToColumn(yt);
+ytc = centerData(yt);
+set(gca,'yticklabel',ytc);
+
+set(gca,'FontSize',fontSize);
+
+xlabel('x (m)','FontSize',fontSize); ylabel('y (m)','FontSize',fontSize); zlabel('z (m)','FontSize',fontSize);

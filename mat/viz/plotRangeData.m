@@ -119,9 +119,10 @@ function hfig = plotRangeData(inputStruct)
                     continue
                 end
             end
+            lineWidth = 7; % todo: change to 2
             rayPts = genPtsRay(rayOrigin,rayDirns(i,:),rayLengthToPlot);
 %             plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r--');
-            plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r','linewidth',2);
+            plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'r','linewidth',lineWidth); 
             hold on;
         end
         plot3(rayOrigin(1),rayOrigin(2),rayOrigin(3),'rx','linewidth',0.5);
@@ -146,7 +147,7 @@ function hfig = plotRangeData(inputStruct)
             [xEll,yEll,zEll] = genSurfXyzEllipse(thisCovMat,thisMean);
             
             if ellipsoidUniformAlpha
-                thisAlpha = 0.2;
+                thisAlpha = 0.3;
             else
                 thisAlpha = mapHitProbToAlpha(thisHitProb);
             end

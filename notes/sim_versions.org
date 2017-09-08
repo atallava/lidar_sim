@@ -1,16 +1,26 @@
 * hg sim
 
-- section 3, 8
+- section 3
   - 250417
     - initial hand-selected parameters
   - 310817
     - pts per cluster, max maha dist selected by sim optim
+  - 070917
+    - pts per cluster selected by slice sim optim, only on packet mean
+      error. maha dist selected arbitrarily as 3. clustering is now with flann
+
 - section 4
   - 290717
     - this was the isrr submission version
     - i think the models are lost
   - 280817
     - with models from 250417 sec3, and ground-corrected transforms
+
+- section 8
+  - 250417
+    - initial hand-selected parameters
+  - 310817
+    - pts per cluster, max maha dist selected by sim optim
 
 ---------------------------------------------------------------------------
 

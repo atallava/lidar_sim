@@ -1,5 +1,10 @@
-relPathSimOptimProgress = "~/lidar_sim/cpp/data/sim_optim/optim_progress.txt";
-optimProgress = loadSimOptimProgress(relPathSimOptimProgress);
+genRelPathOptimProgress = @(instanceIdx) ...
+    sprintf('~/lidar_sim/cpp/data/sim_optim/instance_%s/optim_progress.txt',instanceIdx);
+
+%%
+instanceIdx = '13070917';
+relPathOptimProgress = genRelPathOptimProgress(instanceIdx);
+optimProgress = loadSimOptimProgress(relPathOptimProgress);
 
 %%
 % figure;

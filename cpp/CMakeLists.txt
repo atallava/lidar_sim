@@ -213,8 +213,8 @@ add_library(lidar_sim SHARED
 # add_executable(test_flann tests/test_flann.cpp)
 #   target_link_libraries(test_flann lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(test_flann_clustering tests/test_flann_clustering.cpp)
-  target_link_libraries(test_flann_clustering lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(test_flann_clustering tests/test_flann_clustering.cpp)
+#   target_link_libraries(test_flann_clustering lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## data processing
 
@@ -243,8 +243,8 @@ add_executable(test_flann_clustering tests/test_flann_clustering.cpp)
 add_executable(build_models_non_ground_blocks hybrid_geometric_sim/build_models_non_ground_blocks.cpp)
   target_link_libraries(build_models_non_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_non_ground_block.cpp)
-  target_link_libraries(build_models_non_ground_block lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_non_ground_block.cpp)
+#   target_link_libraries(build_models_non_ground_block lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(debug_hit_prob hybrid_geometric_sim/debug_hit_prob.cpp)
 #   target_link_libraries(debug_hit_prob lidar_sim ${LIDAR_SIM_LIBRARIES} )
@@ -270,8 +270,8 @@ add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_n
 # add_executable(section_slice_real_pts hybrid_geometric_sim/section_slice_real_pts.cpp)
 #   target_link_libraries(section_slice_real_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(slice_pts_in_blocks hybrid_geometric_sim/slice_pts_in_blocks.cpp)
-  target_link_libraries(slice_pts_in_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(slice_pts_in_blocks hybrid_geometric_sim/slice_pts_in_blocks.cpp)
+#   target_link_libraries(slice_pts_in_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(section_blocks_real_pts hybrid_geometric_sim/section_blocks_real_pts.cpp)
 #   target_link_libraries(section_blocks_real_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
@@ -312,11 +312,11 @@ add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
 # add_executable(poses_nbr_sim hybrid_geometric_sim/poses_nbr_sim.cpp)
 #   target_link_libraries(poses_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(slice_nbr_sim hybrid_geometric_sim/slice_nbr_sim.cpp)
-  target_link_libraries(slice_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(slice_nbr_sim hybrid_geometric_sim/slice_nbr_sim.cpp)
+#   target_link_libraries(slice_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
-  target_link_libraries(section_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(section_nbr_sim hybrid_geometric_sim/section_nbr_sim.cpp)
+#   target_link_libraries(section_nbr_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## eval sim
 
@@ -354,8 +354,8 @@ add_executable(slice_hg_scene_sim scene_sim/slice_hg_scene_sim.cpp)
 # add_executable(test_mesh_model_sim scene_sim/test_mesh_model_sim.cpp)
 #   target_link_libraries(test_mesh_model_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(slice_mm_scene_sim scene_sim/slice_mm_scene_sim.cpp)
-  target_link_libraries(slice_mm_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(slice_mm_scene_sim scene_sim/slice_mm_scene_sim.cpp)
+#   target_link_libraries(slice_mm_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(viz_scene_mesh_models scene_sim/viz_scene_mesh_models.cpp)
 #   target_link_libraries(viz_scene_mesh_models lidar_sim ${LIDAR_SIM_LIBRARIES} )

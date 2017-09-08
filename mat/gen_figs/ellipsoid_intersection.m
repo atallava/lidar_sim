@@ -8,7 +8,7 @@ relPathPts = 'rim_stretch_veg_train';
 load(relPathPts,'pts');
 trainPts = pts;
 
-relPathDriveby = 'section_03_driveby';
+relPathDriveby = '../data/sections/section_03/section_03_driveby';
 load(relPathDriveby,'pts','ptsTLog');
 scanPts = pts;
 scanPtsTLog = ptsTLog;
@@ -75,13 +75,14 @@ for scanId = 161664%scanIdsToProcess
     
     
 %     rayData.rayLengthToPlot = 37.7611;
-    rayData.rayLengthToPlot = 4.1639;
-%     rayData.rayLengthToPlot = 6.2185;
+%     rayData.rayLengthToPlot = 4.1639;
+    rayData.rayLengthToPlot = 6.2185;
     rayData.rayDirns = rayDirn;
     
     plotStruct.rayData = rayData;
     
     ellipsoidData.ellipsoidModels = ellipsoidModels;
+    ellipsoidData.uniformAlpha = true;
     ellipsoidData.intersectionFlag = intersectionFlag;
     plotStruct.ellipsoidData = ellipsoidData;
     
@@ -111,4 +112,19 @@ for scanId = 161664%scanIdsToProcess
 end
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
+
+%% adjust fig
+% center the axes ticks
+xt = get(gca,'xtick');
+xt = flipVecToColumn(xt);
+xtc = centerData(xt);
+set(gca,'xticklabel',xtc);
+
+yt = get(gca,'ytick');
+yt = flipVecToColumn(yt);
+ytc = centerData(yt);
+set(gca,'yticklabel',ytc);
+
+fontSize = 50;
+set(gca,'FontSize',fontSize);
 

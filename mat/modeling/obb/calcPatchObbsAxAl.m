@@ -24,7 +24,8 @@ function [obbCell,obbPtsCell] = calcPatchObbsAxAl(pts)
     globalZExtents = calcGlobalZExtents(pts);
    
     % grid
-    nodeResn = 2.2;
+    % todo: nodeResn will affect primitives. used to be 2.2
+    nodeResn = 2;
     numXNodes = ceil((frameExtents(1,2)-frameExtents(1,1))/nodeResn);
     numYNodes = ceil((frameExtents(2,2)-frameExtents(2,1))/nodeResn);
     xNodes = [0:(numXNodes-1)]*nodeResn + 0.5*nodeResn + frameCenter(1)+frameExtents(1,1);
@@ -47,7 +48,9 @@ function [obbCell,obbPtsCell] = calcPatchObbsAxAl(pts)
                 [gridOccupancyPtIds{idY,idX} i];
         end
     end
-    minOccupancy = 10;
+    % todo: minOccupancy is a parameter. used to be 10
+    minOccupancy = 5;
+    
     occupancyFlagMat = gridOccupancyCount >= minOccupancy;
     occupancyFlag = occupancyFlagMat(:);
     

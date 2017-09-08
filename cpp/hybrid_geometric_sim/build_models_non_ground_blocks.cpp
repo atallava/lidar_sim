@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    std::string sim_version = "310817";
+    std::string sim_version = "070917";
 
     int section_id = 3;
     std::string rel_path_non_ground_blocks_dir = genRelPathNonGroundBlocksDir(section_id);

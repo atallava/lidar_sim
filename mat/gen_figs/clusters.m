@@ -6,16 +6,29 @@ relPathPts = 'rim_stretch_veg_train';
 load(relPathPts,'pts');
 
 %% viz
-plotStructVars = {'rayData','triModelData','plotStruct'};
-clear(plotStructVars{:});
+hfig = figure;
+hold on; axis equal;
+box off; grid on;
 
-% subsample ellipsoids
-ellipsoidModelIdsToPlot = 1:length(ellipsoidModels);
-ellipsoidData.ellipsoidModels = ellipsoidModels(ellipsoidModelIdsToPlot);
-plotStruct.ellipsoidData = ellipsoidData;
+view([-26 49]);
 
-% subsample pts
+drawEllipsoids(hfig,ellipsoidModels);
 ptsSkip = 10;
-plotStruct.pts = pts(1:ptsSkip:end,:);
+drawPts(hfig,pts(1:ptsSkip:end,:));
 
-hfig = plotRangeData(plotStruct);
+fontSize = 30;
+
+% center the axes ticks
+xt = get(gca,'xtick');
+xt = flipVecToColumn(xt);
+xtc = centerData(xt);
+set(gca,'xticklabel',xtc);
+
+yt = get(gca,'ytick');
+yt = flipVecToColumn(yt);
+ytc = centerData(yt);
+set(gca,'yticklabel',ytc);
+
+set(gca,'FontSize',fontSize);
+
+xlabel('x (m)','FontSize',fontSize); ylabel('y (m)','FontSize',fontSize); zlabel('z (m)','FontSize',fontSize);

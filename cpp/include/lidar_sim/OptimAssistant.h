@@ -64,6 +64,7 @@ namespace lidar_sim {
 	double m_slice_hit_to_blocks_threshold; // todo: this really needs a better name
 	double m_slice_resn_along_ray;
 	double m_slice_miss_to_blocks_threshold;
+	double m_slice_obj_weight;
 
 	std::string m_rel_path_poses_log;
 	PoseServer m_imu_pose_server;
