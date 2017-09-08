@@ -3,6 +3,7 @@
 
 #include <lidar_sim/PtsError.h>
 #include <lidar_sim/MathUtils.h>
+#include <lidar_sim/VizUtils.h>
 
 using namespace lidar_sim;
 

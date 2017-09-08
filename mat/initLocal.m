@@ -5,7 +5,7 @@ addpath(genpath([pathToM '/at_utils_m']));
 addpath([pwd '/data']);
 addpath([pwd '/data_processors']);
 addpath(genpath([pwd '/modeling']));
-addpath([pwd '/utils']);
+addpath(genpath([pwd '/utils']));
 addpath([pwd '/viz']);
 
 % external

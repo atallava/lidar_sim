@@ -1,4 +1,4 @@
-% rel path helpers
+%% rel path helpers
 genRelPathPrimitive = @(sectionId,className,elementId) ...
     sprintf('../data/sections/section_%02d/primitives/%s/%d.mat',sectionId,className,elementId);
 
@@ -38,12 +38,34 @@ load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 % elements to sample from
 load('element_ids_to_sample_from','elementIdsToSampleFrom');
+classElementIds = elementIdsToSampleFrom;
 
-%%
+% primitives
+nPrimitiveClasses = length(primitiveClasses);
+classPrimitivesCell = cell(1,nPrimitiveClasses);
+classPrimitiveObbsCell = cell(1,nPrimitiveClasses);
+for i = 1:nPrimitiveClasses
+    className = primitiveClasses{i};
+    thisPrimitiveElementIds = elementIdsToSampleFrom{i};
+    nElementsThisPrimitive = length(thisPrimitiveElementIds);
+    thisPrimitiveCans = cell(1,nElementsThisPrimitive);
+    thisPrimitiveObbs = cell(1,nElementsThisPrimitive);
+    if ~primitiveClassIsPatch(i)
+        for j = 1:nElementsThisPrimitive
+            elementId = thisPrimitiveElementIds(j);
+            relPathPrimitive = genRelPathPrimitive(trainSectionId,className,elementId);
+            can = load(relPathPrimitive,'pts','ellipsoidModels','obb');
+            thisPrimitiveCans{j} = can;
+            thisPrimitiveObbs{j} = can.obb;
+        end
+    else
+    end
+    classPrimitivesCell{i} = thisPrimitiveCans;
+    classPrimitiveObbsCell{i} = thisPrimitiveObbs;
+end
+
+%% construct objects
 trainSectionId = 3;
-genRelPathClassPrimitivesDir2 = @(className) ...
-    genRelPathClassPrimitivesDir(trainSectionId,className);
-elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir2,primitiveClasses);
 nObjects = length(sceneAnnotation);
 scenePts = [];
 sceneEllipsoidModels = [];
@@ -52,11 +74,15 @@ hWaitbar = waitbar(0,'progress');
 % loop through annotations
 clockLocal = tic();
 for i = 1:nObjects
+    % this object details
     objectAnnotation = sceneAnnotation{i};
     objectClass = objectAnnotation.objectClass;
     className = primitiveClasses{objectClass};
+    
     % select a primitive
+    % maybe a primitive should be a struct
     % todo: this can be done better, by comparing obb, e.g
+
     sampledElementId = randsample(elementIdsToSampleFrom{objectClass},1);
 
     if ~primitiveClassIsPatch(objectClass)
