@@ -9,6 +9,12 @@ board:
 
 - maybe instead of making cell blocks inside a long function, write subfunctions.
 
+- primitives pipeline
+
+  - create a version folder in the appropriate section dir
+  - make primitive directories
+  - construct primitives
+
 ------------------------------
 
 * analyze taylor data

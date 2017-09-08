@@ -51,4 +51,6 @@
 - section 3
   - 250417
     - named because it is derived from the hg 250417 ellipsoids
+  - 080917
+    - derived from hg 070917 ellipsoids
 

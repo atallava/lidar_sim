@@ -1,4 +1,4 @@
-function pathPrimitive = genRelPathPrimitive(sectionId,className,primitivesVersion,elementId)
+function pathPrimitive = genRelPathPrimitive(sectionId,primitivesVersion,className,elementId)
 %GENPATHPRIMITIVE
 %
 % pathPrimitive = GENPATHPRIMITIVE(sectionId,className,elementId)

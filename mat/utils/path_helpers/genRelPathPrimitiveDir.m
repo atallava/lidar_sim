@@ -1,12 +1,13 @@
 function pathPrimitiveDir = genRelPathPrimitiveDir(sectionId,primitivesVersion,className)
-%GENPATHPRIMITIVEDIR
+%GENRELPATHPRIMITIVEDIR
 %
-% pathPrimitiveDir = GENPATHPRIMITIVEDIR(sectionId,className)
+% pathPrimitiveDir = GENRELPATHPRIMITIVEDIR(sectionId,primitivesVersion,className)
 %
-% sectionId        -
-% className        -
+% sectionId         -
+% primitivesVersion -
+% className         -
 %
-% pathPrimitiveDir -
+% pathPrimitiveDir  -
 
 pathPrimitiveDir = sprintf('../data/sections/section_%02d/primitives/version_%s/%s', ...
     sectionId,primitivesVersion,className);

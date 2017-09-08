@@ -13,12 +13,15 @@ relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 % elements to sample from
-load('../data/sections/section_03/primitives/element_ids_to_sample_from','elementIdsToSampleFrom');
+primitivesSectionId = 3;
+primitivesVersion = '250417';
+relPathElementIdsToSampleFrom = sprintf('../data/sections/section_%02d/primitives/version_%s/element_ids_to_sample_from', ...
+    primitivesSectionId,primitivesVersion);
+load(relPathElementIdsToSampleFrom,'elementIdsToSampleFrom');
 classElementIds = elementIdsToSampleFrom;
 
 % primitives
-primitivesSectionId = 3;
-primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitiveClasses, ...
+primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitivesVersion,primitiveClasses, ...
     primitiveClassIsPatch,classElementIds);
 
 %% some precomp
