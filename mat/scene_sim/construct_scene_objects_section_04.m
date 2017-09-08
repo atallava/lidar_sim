@@ -28,8 +28,9 @@ load('../data/sections/section_03/primitives/element_ids_to_sample_from','elemen
 classElementIds = elementIdsToSampleFrom;
 
 % primitives
+primitivesVersion = '250417';
 primitivesSectionId = 3;
-primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitiveClasses, ...
+primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitivesVersion,primitiveClasses, ...
     primitiveClassIsPatch,classElementIds);
 
 %% construct objects

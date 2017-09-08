@@ -1,4 +1,4 @@
-function [primitivesCell,obbsCell] = loadClassPrimitives(sectionId,className,elementIds)
+function [primitivesCell,obbsCell] = loadClassPrimitives(sectionId,primitivesVersion,className,elementIds)
 %LOADCLASSPRIMITIVES
 %
 % [primitivesCell,obbsCell] = LOADCLASSPRIMITIVES(sectionId,className,elementIds)
@@ -12,7 +12,7 @@ function [primitivesCell,obbsCell] = loadClassPrimitives(sectionId,className,ele
 
 if nargin < 3
     pattern = '([0-9])+';
-    relPathDir = genRelPathPrimitiveDir(sectionId,className);
+    relPathDir = genRelPathPrimitiveDir(sectionId,primitivesVersion,className);
     [~,elementIds] = getPatternMatchingFileIds(relPathDir,pattern);
 end
 
@@ -21,7 +21,7 @@ primitivesCell = cell(1,nElements);
 obbsCell = cell(1,nElements);
 for i = 1:nElements
     elementId = elementIds(i);
-    relPathPrimitive = genRelPathPrimitive(sectionId,className,elementId);
+    relPathPrimitive = genRelPathPrimitive(sectionId,primitivesVersion,className,elementId);
     can = load(relPathPrimitive,'pts','ellipsoidModels','obb');
     primitivesCell{i} = can;
     obbsCell{i} = can.obb;

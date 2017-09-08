@@ -1,4 +1,4 @@
-function elementIdsPerClass = getPrimitiveElementIds(sectionId,primitiveClasses)
+function elementIdsPerClass = getPrimitiveElementIds(sectionId,primitivesVersion,primitiveClasses)
 %GETPRIMITIVEELEMENTIDS
 %
 % elementIdsPerClass = GETPRIMITIVEELEMENTIDS(sectionId,primitiveClasses)
@@ -13,7 +13,7 @@ nClasses = length(primitiveClasses);
 elementIdsPerClass = cell(1,nClasses);
 for i = 1:nClasses
     className = primitiveClasses{i};
-    relPathDir = genRelPathPrimitiveDir(sectionId,className);
+    relPathDir = genRelPathPrimitiveDir(sectionId,primitivesVersion,className);
     [~,elementIdsThisClass] = getPatternMatchingFileIds(relPathDir,pattern);
     elementIdsPerClass{i} = elementIdsThisClass;
 end

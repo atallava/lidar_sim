@@ -1,4 +1,4 @@
-function [primitivesCell,primitiveObbsCell] = loadAllPrimitives(sectionId,primitiveClasses,primitiveClassIsPatch,classElementIds)
+function [primitivesCell,primitiveObbsCell] = loadAllPrimitives(sectionId,primitivesVersion,primitiveClasses,primitiveClassIsPatch,classElementIds)
 %LOADALLPRIMITIVES
 %
 % [primitivesCell,primitiveObbsCell] = LOADALLPRIMITIVES(sectionId,primitiveClasses,primitiveClassIsPatch)
@@ -11,7 +11,7 @@ function [primitivesCell,primitiveObbsCell] = loadAllPrimitives(sectionId,primit
 % primitiveObbsCell     - cell of cells.
 
 if nargin < 4
-    classElementIds = getPrimitiveElementIds(sectionId,primitiveClasses);
+    classElementIds = getPrimitiveElementIds(sectionId,primitivesVersion,primitiveClasses);
 end
 
 % primitives
@@ -23,9 +23,9 @@ for i = 1:nPrimitiveClasses
     thisClass = primitiveClasses{i};
     thisClassElementIds = classElementIds{i};
     if ~primitiveClassIsPatch(i)
-        [thisClassPrimitivesCell,thisClassPrimitiveObbsCell] = loadClassPrimitives(sectionId,thisClass,thisClassElementIds);
+        [thisClassPrimitivesCell,thisClassPrimitiveObbsCell] = loadClassPrimitives(sectionId,primitivesVersion,thisClass,thisClassElementIds);
     else
-        [thisClassPrimitivesCell,thisClassPrimitiveObbsCell] = loadPatchClassPrimitives(sectionId,thisClass,thisClassElementIds);
+        [thisClassPrimitivesCell,thisClassPrimitiveObbsCell] = loadPatchClassPrimitives(sectionId,primitivesVersion,thisClass,thisClassElementIds);
     end
     primitivesCell{i} = thisClassPrimitivesCell;
     primitiveObbsCell{i} = thisClassPrimitiveObbsCell;

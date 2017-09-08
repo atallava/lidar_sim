@@ -1,4 +1,4 @@
-function pathPrimitive = genRelPathPatchPrimitiveCell(sectionId,className,elementId,cellId)
+function pathPrimitive = genRelPathPatchPrimitiveCell(sectionId,primitivesVersion,className,elementId,cellId)
 %GENPATHPATCHPRIMITIVECELL The 'cell' refers to primitive unit, not matlab
 % data structure.
 %
@@ -10,6 +10,6 @@ function pathPrimitive = genRelPathPatchPrimitiveCell(sectionId,className,elemen
 %
 % pathPrimitive -
 
-pathPrimitive = sprintf('../data/sections/section_%02d/primitives/%s/%d/%d.mat', ...
-    sectionId,className,elementId,cellId);
+pathPrimitive = sprintf('../data/sections/section_%02d/primitives/version_%s/%s/%d/%d.mat', ...
+    sectionId,primitivesVersion,className,elementId,cellId);
 end

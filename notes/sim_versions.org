@@ -10,7 +10,6 @@
       error. maha dist selected arbitrarily as 3. clustering is now with flann
     - sim section 8 takes 2hrs
 
-
 - section 4
   - 290717
     - this was the isrr submission version
@@ -43,4 +42,13 @@
     - i think the models are lost
   - 280817
     - with ground corrected transforms
+
+
+----------------------------------------------------------------------------------------------------
+
+* primitives
+
+- section 3
+  - 250417
+    - named because it is derived from the hg 250417 ellipsoids
 

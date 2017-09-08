@@ -1,4 +1,4 @@
-function [primitivesCell,obbsCell,elementMembership] = loadPatchClassPrimitives(sectionId,className,elementIds)
+function [primitivesCell,obbsCell,elementMembership] = loadPatchClassPrimitives(sectionId,primitivesVersion,className,elementIds)
 %LOADPATCHCLASSPRIMITIVES
 %
 % [primitivesCell,obbsCell] = LOADPATCHCLASSPRIMITIVES(sectionId,className,elementIds)
@@ -12,7 +12,7 @@ function [primitivesCell,obbsCell,elementMembership] = loadPatchClassPrimitives(
 
 if nargin < 3
     pattern = '([0-9])+';
-    relPathDir = genRelPathPrimitiveDir(sectionId,className);
+    relPathDir = genRelPathPrimitiveDir(sectionId,primitivesVersion,className);
     [~,elementIds] = getPatternMatchingFileIds(relPathDir,pattern);
 end
 
@@ -25,7 +25,7 @@ for i = 1:nElements
     elementId = elementIds(i);
     
     % cell ids for this element
-    pathPatchPrimitive = genRelPathPatchPrimitive(sectionId,className,elementId);
+    pathPatchPrimitive = genRelPathPatchPrimitive(sectionId,primitivesVersion,className,elementId);
     pattern = '([0-9])+';
     [~,cellIds] = getPatternMatchingFileIds(pathPatchPrimitive,pattern);
     nCells = length(cellIds);
@@ -33,7 +33,7 @@ for i = 1:nElements
     for j = 1:nCells
         cellId = cellIds(j);
         % load cell
-        pathPatchPrimitiveCell = genRelPathPatchPrimitiveCell(sectionId,className,elementId,cellId);
+        pathPatchPrimitiveCell = genRelPathPatchPrimitiveCell(sectionId,primitivesVersion,className,elementId,cellId);
         can = load(pathPatchPrimitiveCell,'pts','ellipsoidModels','obb');
         
         % add to big list

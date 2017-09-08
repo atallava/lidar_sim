@@ -1,4 +1,4 @@
-function pathPrimitive = genRelPathPrimitive(sectionId,className,elementId)
+function pathPrimitive = genRelPathPrimitive(sectionId,className,primitivesVersion,elementId)
 %GENPATHPRIMITIVE
 %
 % pathPrimitive = GENPATHPRIMITIVE(sectionId,className,elementId)
@@ -9,6 +9,6 @@ function pathPrimitive = genRelPathPrimitive(sectionId,className,elementId)
 %
 % pathPrimitive -
 
-pathPrimitive = sprintf('../data/sections/section_%02d/primitives/%s/%d.mat', ...
-    sectionId,className,elementId);
+pathPrimitive = sprintf('../data/sections/section_%02d/primitives/version_%s/%s/%d.mat', ...
+    sectionId,primitivesVersion,className,elementId);
 end
