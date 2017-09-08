@@ -7,6 +7,10 @@ function drawPts(hfig,pts,ptsColor)
 % pts      -
 % ptsColor -
 
+if isempty(pts)
+    return;
+end
+
 if nargin < 3
     ptsColor = [1 0 0];
 end

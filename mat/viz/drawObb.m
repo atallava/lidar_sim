@@ -1,4 +1,4 @@
-function drawObb(hfig,obb,pts)
+function drawObb(hfig,obb,pts,lineColor)
     %DRAWOBB
     %
     % DRAWOBB(hfig,obb,pts)
@@ -6,6 +6,10 @@ function drawObb(hfig,obb,pts)
     % hfig -
     % obb  -
     % pts  - [nPts,3] array. Optional.
+    
+    if nargin < 4
+        lineColor = [0 0 1];
+    end
     
     figure(hfig);
     hold on; axis equal;
@@ -36,6 +40,6 @@ function drawObb(hfig,obb,pts)
         x = [pt1(1) pt2(1)];
         y = [pt1(2) pt2(2)];
         z = [pt1(3) pt2(3)];
-        plot3(x,y,z,'b','linewidth',lineWidth);
+        plot3(x,y,z,'linewidth',lineWidth,'color',lineColor);
     end
 end
