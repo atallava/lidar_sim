@@ -1,19 +1,8 @@
+% this script can use a facelift
+
 %% rel path helpers
-genRelPathPrimitive = @(sectionId,className,elementId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d.mat',sectionId,className,elementId);
-
-genRelPathPrimitivePatch = @(sectionId,className,elementId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d',sectionId,className,elementId);
-
-genRelPathPrimitivePatchCell = @(sectionId,className,elementId,cellId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d/%d.mat',...
-    sectionId,className,elementId,cellId);
-
-genRelPathClassPrimitivesDir = @(sectionId,className) ...
-    sprintf('../data/sections/section_%02d/primitives/%s',sectionId,className);
-
-genRelPathPrimitiveStats = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/primitives/primitive_stats',sectionId);
+genRelPathPrimitiveStats = @(sectionId,primitivesVersion) ...
+    sprintf('../data/sections/section_%02d/primitives/version_%s/primitive_stats',sectionId,primitivesVersion);
 
 %% load labeling
 relPathPrimitiveClasses = '../data/primitive_classes';
@@ -21,9 +10,8 @@ load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 %% calc stats
 sectionId = 3;
-genRelPathClassPrimitivesDir2 = @(className) ...
-    genRelPathClassPrimitivesDir(sectionId,className);
-elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir2,primitiveClasses);
+primitivesVersion = '080917';
+elementIdsPerClass = getPrimitiveElementIds(sectionId,primitivesVersion,primitiveClasses);
 
 nClasses = length(primitiveClasses);
 [nElementsPerClass,nCellsPerClass] = deal(zeros(1,nClasses));
@@ -40,20 +28,20 @@ for i = 1:nClasses
         elementId = elementIds(j);
         if ~primitiveClassIsPatch(i)
             % load primitive
-            relPathPrimitive = genRelPathPrimitive(sectionId,className,elementId);
+            relPathPrimitive = genRelPathPrimitive(sectionId,primitivesVersion,className,elementId);
             load(relPathPrimitive,'pts','obb','ellipsoidModels');
             hts = [hts range(obb.extents(3,:))];
             nPts = [nPts size(pts,1)];
             nEllipsoids = [nEllipsoids length(ellipsoidModels)];
         else
-            relPathPrimitivePatch = genRelPathPrimitivePatch(sectionId,className,elementId);
+            relPathPrimitivePatch = genRelPathPatchPrimitive(sectionId,primitivesVersion,className,elementId);
             pattern = '([0-9]+)';
             [~,primitiveCellIds] = getPatternMatchingFileIds(relPathPrimitivePatch,pattern);
             nCells = length(primitiveCellIds);
             nCellsPerClass(i) = nCellsPerClass(i) + nCells;
             for k = 1:nCells
                 cellId = primitiveCellIds(k);
-                relPathPrimitivePatchCell = genRelPathPrimitivePatchCell(sectionId,className,elementId,cellId);
+                relPathPrimitivePatchCell = genRelPathPatchPrimitiveCell(sectionId,primitivesVersion,className,elementId,cellId);
                 load(relPathPrimitive,'pts','obb','ellipsoidModels');
                 hts = [hts range(obb.extents(3,:))];
                 nPts = [nPts size(pts,1)];
@@ -81,7 +69,7 @@ for i = 1:nClasses
 end
 
 %% save
-relPathOut = genRelPathPrimitiveStats(sectionId);
+relPathOut = genRelPathPrimitiveStats(sectionId,primitivesVersion);
 save(relPathOut,'nElementsPerClass','nCellsPerClass', ...
     'nElementPtsPerClass','nElementEllipsoidsPerClass','htsPerClass');
 

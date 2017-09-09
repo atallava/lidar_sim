@@ -15,6 +15,7 @@ board:
     - also for figures
   - construct primitives
   - generate figures of primitives
+    - also not a bad idea to calculate primitive stats
   - specify element ids to sample from
     - opportunity to weed out bad primitives
   - create ellipsoid blocks
