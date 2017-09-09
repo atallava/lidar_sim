@@ -1,9 +1,10 @@
 function pathPrimitiveDir = genPathPrimitiveDir(sectionId,primitivesVersion,className)
 %GENPATHPRIMITIVEDIR
 %
-% pathPrimitiveDir = GENPATHPRIMITIVEDIR(sectionId,className)
+% pathPrimitiveDir = GENPATHPRIMITIVEDIR(sectionId,primitivesVersion,className)
 %
 % sectionId        -
+% primitivesVersion -
 % className        -
 %
 % pathPrimitiveDir -

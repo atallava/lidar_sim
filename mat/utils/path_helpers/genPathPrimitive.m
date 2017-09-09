@@ -1,9 +1,10 @@
 function pathPrimitive = genPathPrimitive(sectionId,primitivesVersion,className,elementId)
 %GENPATHPRIMITIVE
 %
-% pathPrimitive = GENPATHPRIMITIVE(sectionId,className,elementId)
+% pathPrimitive = GENPATHPRIMITIVE(sectionId,primitivesVersion,className,elementId)
 %
 % sectionId     -
+% primitivesVersion -
 % className     -
 % elementId     -
 %

@@ -1,7 +1,7 @@
 function pathPrimitiveDir = genRelPathPrimitiveDir(sectionId,primitivesVersion,className)
 %GENRELPATHPRIMITIVEDIR
 %
-% pathPrimitiveDir = GENRELPATHPRIMITIVEDIR(sectionId,primitivesVersion,className)
+% pathPrimitiveDir = GENRELPATHPRIMITIVEDIR(sectionId,primitivesVersion,primitivesVersion,className)
 %
 % sectionId         -
 % primitivesVersion -

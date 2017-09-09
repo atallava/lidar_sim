@@ -3,21 +3,23 @@ genRelPathImuPosnNodes = @(sectionId) ...
     sprintf('../../cpp/data/sections/section_%02d/imu_posn_nodes.txt',sectionId);
 
 % scene ellipsoids
-genRelPathSceneEllipsoidModelsMat = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/object_ellipsoid_models',sectionId);
+genRelPathSceneEllipsoidModelsMat = @(sectionId,simVersion) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/object_ellipsoid_models',sectionId,simVersion);
 
 genRelPathBlockNodeIdsNonGround = @(sectionId) ...
-    sprintf('../../cpp/data/sections/section_%02d/hg_sim/block_node_ids_non_ground.txt',sectionId);
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/blocks_info/block_node_ids_non_ground.txt',sectionId);
 
-genRelPathEllipsoidsBlock = @(sectionId,blockId) ...
-    sprintf('../../cpp/data/sections/section_%02d/hg_sim/section_%02d_block_%02d_non_ground_ellipsoids.txt',sectionId,sectionId,blockId);
+genRelPathEllipsoidsBlock = @(sectionId,simVersion,blockId) ...
+    sprintf('../../cpp/data/sections/section_%02d/hg_sim/version_%s/section_%02d_block_%02d_non_ground_ellipsoids.txt', ...
+    sectionId,simVersion,sectionId,blockId);
 
 %% load
 sectionId = 4;
+simVersion = '080917';
 relPathImuPosnNodes = genRelPathImuPosnNodes(sectionId);
 imuPosnNodes = loadPts(relPathImuPosnNodes);
 
-relPathEllipsoids = genRelPathSceneEllipsoidModelsMat(sectionId);
+relPathEllipsoids = genRelPathSceneEllipsoidModelsMat(sectionId,simVersion);
 load(relPathEllipsoids,'ellipsoidModels');
 
 %% make blocks
@@ -68,10 +70,12 @@ for i = 1:nBlocks
         thisBlockEllipsoids = [thisBlockEllipsoids thisNodeEllipsoids];
     end
     
-    relPathBlock = genRelPathEllipsoidsBlock(sectionId,i);
+    relPathBlock = genRelPathEllipsoidsBlock(sectionId,simVersion,i);
     fprintf('saving to %s...\n',relPathBlock);
     saveEllipsoidModels(relPathBlock,thisBlockEllipsoids);
     waitbar(i/nBlocks);
+    waitbarTitle = sprintf('progress: %d/%d',i,nBlocks);
+    setWaitbarTitle(hWaitbar,waitbarTitle);
 end
 close(hWaitbar);
 compTime = toc(clockLocal);

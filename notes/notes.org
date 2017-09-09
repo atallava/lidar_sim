@@ -10,10 +10,18 @@ board:
 - maybe instead of making cell blocks inside a long function, write subfunctions.
 
 - primitives pipeline
-
   - create a version folder in the appropriate section dir
   - make primitive directories
+    - also for figures
   - construct primitives
+  - generate figures of primitives
+  - specify element ids to sample from
+    - opportunity to weed out bad primitives
+  - create ellipsoid blocks
+  - todo
+    - create corresponding hg version dir in cpp
+    - move block info non ground to hg version, not blocks info
+    - script to copy ground triangles, which are retained 
 
 ------------------------------
 

@@ -3,15 +3,15 @@ genRelPathSceneAnnotation = @(sectionId) ...
     sprintf('../data/sections/section_%02d/scene_annotation',sectionId);
 
 % scene pts
-genRelPathSceneObjectPts = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/object_pts.txt',sectionId);
+genRelPathSceneObjectPts = @(sectionId,simVersion) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/object_pts.txt',sectionId,simVersion);
 
-genRelPathSceneObjectPtsMat = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/object_pts',sectionId);
+genRelPathSceneObjectPtsMat = @(sectionId,simVersion) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/object_pts',sectionId,simVersion);
 
 % scene ellipsoids
-genRelPathSceneEllipsoidModelsMat = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/object_ellipsoid_models',sectionId);
+genRelPathSceneEllipsoidModelsMat = @(sectionId,simVersion) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/object_ellipsoid_models',sectionId,simVersion);
 
 %% load
 % annotations for section 4
@@ -24,12 +24,14 @@ relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 % elements to sample from
-load('../data/sections/section_03/primitives/element_ids_to_sample_from','elementIdsToSampleFrom');
+primitivesVersion = '080917';
+primitivesSectionId = 3;
+relPathElementsToSampleFrom = sprintf('../data/sections/section_%02d/primitives/version_%s/element_ids_to_sample_from', ...
+    primitivesSectionId,primitivesVersion);
+load(relPathElementsToSampleFrom,'elementIdsToSampleFrom');
 classElementIds = elementIdsToSampleFrom;
 
 % primitives
-primitivesVersion = '250417';
-primitivesSectionId = 3;
 primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitivesVersion,primitiveClasses, ...
     primitiveClassIsPatch,classElementIds);
 
@@ -79,7 +81,8 @@ compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
 
 %% write object pts
-relPathSceneObjectPtsMat = genRelPathSceneObjectPtsMat(newSceneSectionId);
+simVersion = '080917';
+relPathSceneObjectPtsMat = genRelPathSceneObjectPtsMat(newSceneSectionId,simVersion);
 can.pts = scenePts;
 save(relPathSceneObjectPtsMat,'-struct','can');
 
@@ -88,6 +91,6 @@ save(relPathSceneObjectPtsMat,'-struct','can');
 % savePts(relPathSceneObjectPts,scenePts);
 
 %% write object ellipsoids
-relPathSceneEllipsoids = genRelPathSceneEllipsoidModelsMat(newSceneSectionId);
+relPathSceneEllipsoids = genRelPathSceneEllipsoidModelsMat(newSceneSectionId,simVersion);
 can.ellipsoidModels = sceneEllipsoidModels;
 save(relPathSceneEllipsoids,'-struct','can');

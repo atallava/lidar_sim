@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
     // sim object
     int section_models_id = 4;
-    std::string sim_version = "280817";
+    std::string sim_version = "080917";
     std::string path_models_dir = genPathHgModelsDir(section_models_id, sim_version);
 
     // find ellipsoid models for this section

@@ -16,6 +16,8 @@
     - i think the models are lost
   - 280817
     - with models from 250417 sec3, and ground-corrected transforms
+  - 080917
+    - with models from section 3 070917. and obb-matched primitive selection.
 
 - section 8
   - 250417

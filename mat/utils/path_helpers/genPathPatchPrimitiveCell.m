@@ -2,9 +2,10 @@ function pathPrimitive = genPathPatchPrimitiveCell(sectionId,primitivesVersion,c
 %GENPATHPATCHPRIMITIVECELL The 'cell' refers to primitive unit, not matlab
 % data structure.
 %
-% pathPrimitive = GENPATHPATCHPRIMITIVECELL(sectionId,className,elementId)
+% pathPrimitive = GENPATHPATCHPRIMITIVECELL(sectionId,primitivesVersion,className,elementId)
 %
 % sectionId     -
+% primitivesVersion -
 % className     -
 % elementId     -
 %

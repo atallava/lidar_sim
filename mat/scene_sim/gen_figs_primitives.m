@@ -1,24 +1,19 @@
+% todo: this script needs cleanup
+
 %% rel path helpers
 % primitives
-genRelPathClassDir = @(sectionId,className) ...
-    sprintf('../data/sections/section_%02d/primitives/%s',sectionId,className);
-
-genRelPathPrimitive = @(sectionId,className,elementId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d.mat',sectionId,className,elementId);
-
-genRelPathPrimitivePatch = @(sectionId,className,elementId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d',sectionId,className,elementId);
-
-genRelPathPrimitivePatchCell = @(sectionId,className,elementId,cellId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d/%d.mat',...
-    sectionId,className,elementId,cellId);
+genRelPathClassDir = @(sectionId,primitivesVersion,className) ...
+    sprintf('../data/sections/section_%02d/primitives/version_%s/%s', ...
+    sectionId,primitivesVersion,className);
 
 % figs
-genRelPathPrimitiveFig = @(sectionId,className,elementId) ...
-    sprintf('../figs/sections/section_%02d/primitives/%s/%d',sectionId,className,elementId);
+genRelPathPrimitiveFig = @(sectionId,primitivesVersion,className,elementId) ...
+    sprintf('../figs/sections/section_%02d/primitives/version_%s/%s/%d', ...
+    sectionId,primitivesVersion,className,elementId);
 
-genRelPathPrimitivePng = @(sectionId,className,elementId) ...
-    sprintf('../figs/sections/section_%02d/primitives/%s/%d.png',sectionId,className,elementId);
+genRelPathPrimitivePng = @(sectionId,primitivesVersion,className,elementId) ...
+    sprintf('../figs/sections/section_%02d/primitives/version_%s/%s/%d.png', ...
+    sectionId,primitivesVersion,className,elementId);
 
 %% load labeling and segments
 relPathPrimitiveClasses = '../data/primitive_classes';
@@ -30,6 +25,7 @@ addpath([pathToM '/altmany-export_fig-5be2ca4']);
 
 %% workhorse
 sectionId = 3;
+primitivesVersion = '080917';
 nClasses = length(primitiveClasses);
 hWaitbar = waitbar(0,'progress');
 clockLocal = tic();
@@ -39,7 +35,7 @@ for i = 1:nClasses
     fprintf('class: %s...\n',className);
     
     % get the element ids
-    relPathClassDir = genRelPathClassDir(sectionId,className);
+    relPathClassDir = genRelPathClassDir(sectionId,primitivesVersion,className);
     pattern = '([0-9]+)';
     [matchingFiles,elementIds] = getPatternMatchingFileIds(relPathClassDir,pattern);
 
@@ -50,7 +46,7 @@ for i = 1:nClasses
         elementId = elementIds(j);
         
         if ~primitiveClassIsPatch(i)
-            relPathPrimitive = genRelPathPrimitive(sectionId,className,elementId);
+            relPathPrimitive = genRelPathPrimitive(sectionId,primitivesVersion,className,elementId);
             load(relPathPrimitive,'T_segment_to_world','pts','obb','ellipsoidModels');
 
             % transform back to world frame
@@ -68,15 +64,15 @@ for i = 1:nClasses
             drawObb(hfig,obb_world,pts_world);
             
             % save fig
-            relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,className,elementId);
+            relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,primitivesVersion,className,elementId);
             savefig(hfig,relPathPrimitiveFig);
             % save png
-            relPathPrimitivePng = genRelPathPrimitivePng(sectionId,className,elementId);
+            relPathPrimitivePng = genRelPathPrimitivePng(sectionId,primitivesVersion,className,elementId);
             export_fig(relPathPrimitivePng,hfig);
             close(hfig);
         else
             % patch
-            relPathPrimitiveDir = genRelPathPrimitivePatch(sectionId,className,elementId);
+            relPathPrimitiveDir = genRelPathPatchPrimitive(sectionId,primitivesVersion,className,elementId);
             patternCell = '([0-9]+)';
             [~,cellIds] = getPatternMatchingFileIds(relPathPrimitiveDir,patternCell);
             
@@ -87,7 +83,7 @@ for i = 1:nClasses
             for k = 1:nCells
                 cellId = cellIds(k);
                 relPathPrimitivePatchCell = ...
-                    genRelPathPrimitivePatchCell(sectionId,className,elementId,cellId);
+                    genRelPathPatchPrimitiveCell(sectionId,primitivesVersion,className,elementId,cellId);
             load(relPathPrimitivePatchCell,'T_segment_to_world','pts','obb','ellipsoidModels');
 
             % transform back to world frame
@@ -110,10 +106,10 @@ for i = 1:nClasses
             end
             
             % save fig
-            relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,className,elementId);
+            relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,primitivesVersion,className,elementId);
             savefig(hfig,relPathPrimitiveFig);
             % save png
-            relPathPrimitivePng = genRelPathPrimitivePng(sectionId,className,elementId);
+            relPathPrimitivePng = genRelPathPrimitivePng(sectionId,primitivesVersion,className,elementId);
             export_fig(relPathPrimitivePng,hfig);
             close(hfig);
         end
