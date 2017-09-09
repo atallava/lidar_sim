@@ -3,9 +3,9 @@ function drawObbs(hfig,obbCell,ptsCell)
 %
 % DRAWOBBS(hfig,obbCell,ptsCell)
 %
-% hfig    -
-% obbCell -
-% ptsCell -
+% hfig    - figure handle.
+% obbCell - cell of obbs.
+% ptsCell - cell of pts. optional.
 
 if nargin < 3
     ptsInput = false;

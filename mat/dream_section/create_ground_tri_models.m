@@ -1,7 +1,7 @@
 %% ground nodes
-nodeResn = 1;
-xLims = [-5 5];
-yLims = [-10 20];
+nodeResn = 10;
+xLims = [-70 70];
+yLims = [-30 150];
 xNodes = xLims(1):nodeResn:xLims(2);
 yNodes = yLims(1):nodeResn:yLims(2);
 

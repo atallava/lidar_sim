@@ -15,7 +15,7 @@ genRelPathSceneEllipsoidModelsMat = @(sectionId,simVersion) ...
 
 %% load
 % annotations for section 4
-newSceneSectionId = 4;
+newSceneSectionId = 42;
 relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
 
