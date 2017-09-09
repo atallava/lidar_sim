@@ -9,4 +9,8 @@
 - instance 13070917
   - with obj = package mean error + 2*f1 score
 
+- instance 14090917
+  - same parameter settings as previous, but using alglib clustering
+
+
 

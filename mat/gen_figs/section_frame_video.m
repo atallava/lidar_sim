@@ -1,3 +1,4 @@
+%% helpers
 camIds = [156579, 156580];
 nCams = length(camIds);
 frameRelPathsPre = cell(1,nCams);
@@ -16,9 +17,9 @@ for i = 1:nCams
 end
 
 %% specify frame ids to play
-startId = 9200;
-endId = 11000;
-skip = 5;
+startId = 8000;
+endId = 9000;
+skip = 1;
 frameIds = startId:skip:endId;
 
 %% frame times
@@ -26,13 +27,15 @@ relPathFrameTimes = 'frame_times';
 load(relPathFrameTimes,'frameIdLog','frameTLog');
 frameTimeFn = @(frameId) getTimeFromFrameId(frameId,frameIdLog,frameTLog);
 
-%%
-outputVideo = VideoWriter('section_04.avi');
-outputVideo.FrameRate = 10;
+%% frame rate
+outputVideo = VideoWriter('tmp.avi'); % todo: change this
+outputVideo.FrameRate = 18;
 open(outputVideo);
 
-%%
+%% make video
 clockLocal = tic();
+hWaitbar = waitbar(0,'progress');
+
 for frameCount = 1:length(frameIds)
     clear panelFrame
     frameId = frameIds(frameCount);
@@ -57,6 +60,10 @@ for frameCount = 1:length(frameIds)
     set(gca,'visible','off');
     set(gcf,'visible','off');
     writeVideo(outputVideo,panelFrame);
+
+    waitbar(frameCount/length(frameIds));
+    waitbarTitle = sprintf('progress: %d/%d',frameCount,length(frameIds));
+    setWaitbarTitle(hWaitbar,waitbarTitle);
 end
 compTime = toc(clockLocal);
 fprintf('computation time: %.2fs\n',compTime);

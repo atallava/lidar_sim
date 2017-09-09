@@ -43,7 +43,8 @@ void EllipsoidModeler::createEllipsoidModels(const std::string rel_path_pts)
 
     loadPts(rel_path_pts);
     // filterPts();
-    clusterPtsFlann();
+    clusterPtsAlglib();
+    // clusterPtsFlann();
     filterClusters();
     fillEllipsoidModels();
 }

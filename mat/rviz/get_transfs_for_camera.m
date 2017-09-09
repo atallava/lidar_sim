@@ -1,5 +1,4 @@
 %% rvctoolbox
-
 someUsefulPaths;
 relPathRvcStartup = [pathToM '/rvctools/startup_rvc.m'];
 run(relPathRvcStartup);
@@ -18,14 +17,14 @@ load(relPathLaserCalibParams,'laserCalibParams');
 
 %% section times
 % section 3
-tStart = 1403045836.830185000;
-tEnd = 1403045902.775886000;
+% tStart = 1403045836.830185000;
+% tEnd = 1403045902.775886000;
 
 % section 4
-% tStart = 1403045911.411350000;
-% tEnd = 1403046027.954617000;
+tStart = 1403045911.411350000;
+tEnd = 1403046027.954617000;
 
-tResn = 1; 
+tResn = 0.1; 
 tKeypoints = tStart:tResn:tEnd;
 nKeypoints = length(tKeypoints);
 
@@ -48,7 +47,7 @@ end
 viewDirns = calcViewDirns(cameraPositions,cameraTargets);
 
 %% viz
-scatter3(pts(:,1),pts(:,2),pts(:,3),'b.');
+% scatter3(pts(:,1),pts(:,2),pts(:,3),'b.');
 axis equal;
 xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)'); 
 hold on;
@@ -57,7 +56,7 @@ quiver3(cameraPositions(:,1),cameraPositions(:,2),cameraPositions(:,3), ...
     viewDirns(:,1),viewDirns(:,2),viewDirns(:,3),'r');
 
 %% write out
-relPathOutCsv = '../data/rviz/section_03_camera_poses.csv';
+relPathOutCsv = '../data/rviz/section_04_camera_poses.csv';
 writeCameraTransforms(relPathOutCsv,tKeypoints-tStart,cameraPositions,viewDirns);
 
  
