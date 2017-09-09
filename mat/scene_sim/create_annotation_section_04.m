@@ -1,3 +1,5 @@
+% todo: this script needs cleanup
+
 %% rel path helpers
 % sources
 genRelPathLabelingForSegmentIds = @(sectionId) ...
