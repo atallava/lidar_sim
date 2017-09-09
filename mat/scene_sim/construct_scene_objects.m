@@ -24,7 +24,7 @@ relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 % elements to sample from
-primitivesVersion = '080917';
+primitivesVersion = '250417';
 primitivesSectionId = 3;
 relPathElementsToSampleFrom = sprintf('../data/sections/section_%02d/primitives/version_%s/element_ids_to_sample_from', ...
     primitivesSectionId,primitivesVersion);

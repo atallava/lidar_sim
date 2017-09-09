@@ -10,11 +10,12 @@ xGridVec = xGrid(:);
 yGridVec = yGrid(:);
 
 %% create tri models
+% todo: better generative model of ground
 ptsFit = [flipVecToColumn(xGridVec) flipVecToColumn(yGridVec) zeros(length(xGridVec),1)];
 tri = delaunay(ptsFit(:,1),ptsFit(:,2));
 triModels.tri = tri;
 triModels.ptsFit = ptsFit;
-triModels.hitProbVec = ones(1,size(tri,1));
+triModels.hitProbVec = 0.9*ones(1,size(tri,1));
 
 %% viz
 hfig = figure;

@@ -1,55 +1,13 @@
 % cover the ground with medium shrubs
-xLims = [-50 50];
-yLims = [-30 80];
-
-cellSide = 2;
-nXSteps = floor((xLims(2)-xLims(1))/cellSide);
-nYSteps = floor((yLims(2)-yLims(1))/cellSide);
-
-% medium shrub height range ~[2.5,5]
-% medium tree height range ~[10,20]
-
-%% patch annotation
-obbCenterZ = 0.01;
-
-cellObbs = {};
-T_cells_to_world = {};
-for i = 1:nXSteps
-   for j = 1:nYSteps
-       x = xLims(1) + (i-1)*cellSide + cellSide*0.5;
-       y = yLims(1) + (j-1)*cellSide + cellSide*0.5; 
-       center = [x y obbCenterZ];
-       ht = uniformSampleInRange(2.5,4,1);
-       extents = [-cellSide*0.5 cellSide*0.5; -cellSide*0.5 cellSide*0.5; -ht*0.5 ht*0.5];
-       ax1 = [1 0]; ax2 = [0 1];
-       obb = struct('center',center,'ax1',ax1,'ax2',ax2,'extents',extents);
-       
-       T = eye(4,4); T(1:3,4) = center;
-       
-       cellObbs{end+1} = obb;
-       T_cells_to_world{end+1} = T;
-   end
-end
-
-groundShrubPatchAnnotation.objectClass = 6;
-groundShrubPatchAnnotation.cellObbs_world = cellObbs;
-groundShrubPatchAnnotation.T_cells_to_world = T_cells_to_world;
-
-%% viz patch obbs
-hfig = figure;
-axis equal; hold on;
-drawObbs(hfig,cellObbs);
-plot3([xLims(1) xLims(1)],yLims,[0 0],'r');
-plot3([xLims(2) xLims(2)],yLims,[0 0],'r');
-plot3(xLims,[yLims(1) yLims(1)],[0 0],'r');
-plot3(xLims,[yLims(2) yLims(2)],[0 0],'r');
+xLims = [-70 70];
+yLims = [-30 150];
 
 %% trees
 % trees will be in either the left or right box, which leave a column along
 % y axis for the vehicle path
-boxLeft = [xLims(1) -15; yLims(1) yLims(2)];
-boxRight = [15 xLims(2); yLims(1) yLims(2)];
-nTrees = 20;
+boxLeft = [xLims(1) -7; yLims(1) yLims(2)];
+boxRight = [7 xLims(2); yLims(1) yLims(2)];
+nTrees = 30;
 treeAnnotations = cell(1,nTrees);
 treeObbs = cell(1,nTrees);
 for i = 1:nTrees
