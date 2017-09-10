@@ -1,7 +1,7 @@
 %% ground nodes
 nodeResn = 10;
 xLims = [-70 70];
-yLims = [-30 150];
+yLims = [-30 220];
 xNodes = xLims(1):nodeResn:xLims(2);
 yNodes = yLims(1):nodeResn:yLims(2);
 
@@ -15,7 +15,7 @@ ptsFit = [flipVecToColumn(xGridVec) flipVecToColumn(yGridVec) zeros(length(xGrid
 tri = delaunay(ptsFit(:,1),ptsFit(:,2));
 triModels.tri = tri;
 triModels.ptsFit = ptsFit;
-triModels.hitProbVec = 0.9*ones(1,size(tri,1));
+triModels.hitProbVec = 0.5*ones(1,size(tri,1));
 
 %% viz
 hfig = figure;

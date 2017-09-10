@@ -1,13 +1,13 @@
 % cover the ground with medium shrubs
-xLims = [-70 70];
-yLims = [-30 150];
+xLims = [-50 50];
+yLims = [-30 220];
 
 %% trees
 % trees will be in either the left or right box, which leave a column along
 % y axis for the vehicle path
 boxLeft = [xLims(1) -7; yLims(1) yLims(2)];
 boxRight = [7 xLims(2); yLims(1) yLims(2)];
-nTrees = 30;
+nTrees = 50;
 treeAnnotations = cell(1,nTrees);
 treeObbs = cell(1,nTrees);
 for i = 1:nTrees

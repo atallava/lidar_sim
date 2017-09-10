@@ -2,13 +2,12 @@ relPathLabeledPts = '../data/sections/section_03/classification/pts_ground_truth
 load(relPathLabeledPts,'pts','labels');
 
 %%
-% relPathOut = '../../cpp/data/sections/section_03/classification/pts_labeled.txt';
-relPathOut = 'trial.txt';
+relPathFile = '../../cpp/data/sections/section_03/classification/pts_labeled.txt';
 
 clockLocal = tic();
 fid = fopen(relPathFile,'w');
 for i = 1:size(pts,1)
-    if ~labels(j)
+    if ~labels(i)
         continue;
     end
     pt = pts(i,:);
@@ -16,7 +15,7 @@ for i = 1:size(pts,1)
     for j = 1:length(pt)
         line = [line ' ' num2str(pt(j))];
     end
-    line = [line ' ' num2str(labels(j))];
+    line = [line ' ' num2str(labels(i))];
     % remove trailing whitespaces
     line = strtrim(line);
     line = sprintf('%s\n',line);

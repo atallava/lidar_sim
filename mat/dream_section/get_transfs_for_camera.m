@@ -4,8 +4,8 @@ relPathRvcStartup = [pathToM '/rvctools/startup_rvc.m'];
 run(relPathRvcStartup);
 
 %%
-v = 0.5;
-duration = 180/v;
+v = 10;
+duration = 230/v;
 
 tStart = 0;
 tEnd = duration;
