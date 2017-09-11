@@ -23,6 +23,7 @@ int main(int argc, char **argv)
     std::string query_type = "section";
     int tag = -1;
 
+    // todo: make script accept these as input
     std::vector<std::pair<std::string, std::string> > sims_to_eval; // sim type, sim version
     sims_to_eval.push_back(std::make_pair("hg", "310817"));
     sims_to_eval.push_back(std::make_pair("hg", "070917"));

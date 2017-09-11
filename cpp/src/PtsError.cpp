@@ -61,9 +61,11 @@ std::tuple<double, double, double> PtsError::calcRangeError(const SimDetail &sim
     std::vector<int> packet_false_hits(n_packets, 0);
     std::vector<int> packet_true_misses(n_packets, 0);
     std::vector<std::vector<double> > packet_hit_errors;
+    std::vector<std::vector<double> > packet_true_hits_real_ranges;
 
     for(size_t i = 0; i < n_packets; ++i)
     {
+	std::vector<double> this_packet_ray_origin = sim_detail.m_ray_origins[i];
 	std::vector<std::vector<double> > this_packet_real_pts_all = sim_detail.m_real_pts_all[i];
 	std::vector<int> this_packet_real_hit_flag = sim_detail.m_real_hit_flags[i];
 	std::vector<std::vector<double> > this_packet_sim_pts_all = sim_detail.m_sim_pts_all[i];
@@ -75,6 +77,7 @@ std::tuple<double, double, double> PtsError::calcRangeError(const SimDetail &sim
 	int this_packet_false_hits = 0;
 	int this_packet_true_misses = 0;
 	std::vector<double> this_packet_hit_errors;
+	std::vector<double> this_packet_true_hits_real_ranges;
 	for(size_t j = 0; j < n_rays; ++j)
 	{
 	    bool condn1 = (this_packet_real_hit_flag[j] == 1);
@@ -89,6 +92,10 @@ std::tuple<double, double, double> PtsError::calcRangeError(const SimDetail &sim
 		double err = vectorNorm(
 		    vectorDiff(this_packet_real_pts_all[j], this_packet_sim_pts_all[j]));
 		this_packet_hit_errors.push_back(err);
+
+		double real_range = vectorNorm(
+		    vectorDiff(this_packet_real_pts_all[j], this_packet_ray_origin));
+		this_packet_true_hits_real_ranges.push_back(real_range);
 	    }
 
 	    if (!condn1 && condn2)
@@ -103,6 +110,7 @@ std::tuple<double, double, double> PtsError::calcRangeError(const SimDetail &sim
 	packet_false_hits[i] = this_packet_false_hits;
 	packet_true_misses[i] = this_packet_true_misses;
 	packet_hit_errors.push_back(this_packet_hit_errors);
+	packet_true_hits_real_ranges.push_back(this_packet_true_hits_real_ranges);
     }
 
     double total_true_hits = std::accumulate(packet_true_hits.begin(), packet_true_hits.end(), 0.0);
@@ -112,14 +120,23 @@ std::tuple<double, double, double> PtsError::calcRangeError(const SimDetail &sim
     double recall = total_true_hits/(total_true_hits + total_false_misses);
     double f1_score = calcF1Score(precision, recall);
 
+    // marginalize over packets
     std::vector<double> hit_errors_across_packets;
     for (size_t i = 0; i < packet_hit_errors.size(); ++i)
 	for (size_t j = 0; j < packet_hit_errors[i].size(); ++j)
 	    hit_errors_across_packets.push_back(packet_hit_errors[i][j]);
 
+    std::vector<double> true_hits_real_ranges_across_packets;
+    for (size_t i = 0; i < packet_true_hits_real_ranges.size(); ++i)
+	for (size_t j = 0; j < packet_true_hits_real_ranges[i].size(); ++j)
+	    true_hits_real_ranges_across_packets.push_back(
+		packet_true_hits_real_ranges[i][j]);
+
     if (disp) {
-	std::cout << "hit error across packets" << std::endl;
+	std::cout << "hit error across packets: " << std::endl;
 	dispVecMeanVar(hit_errors_across_packets);
+	std::cout << "real ranges corresponding to true hits, across packets: " << std::endl;
+	dispVecMeanVar(true_hits_real_ranges_across_packets);
 	std::cout << "total true hits: " << total_true_hits
 		  << ", total false hits: " << total_false_hits << std::endl;
 	std::cout << "total false misses: " << total_false_misses << std::endl;
