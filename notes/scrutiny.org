@@ -1,4 +1,11 @@
-* hg sim. version 250417. section 8 sim.
+# * section id: . query type: . sim type: . version: . tag: 
+
+- mat scrutiny pipeline
+  - check if appropriate sim version dirs exist in mat
+  - convert sim detail txt to mat
+  - convert models to mat
+
+* section id: 8. query type: section. sim type: hg. version: 250417.
 - packet idx 1349
   - ray idx 318, 382, 383, 320
     - sim rays didn't penetrate vegetation
@@ -40,7 +47,8 @@
   - ray idx 344
     - medium job. smaller variance could be better
 
-
+* section id: 4. query type: slice. sim type: hg. version: 080917.
+- 
 
 
 

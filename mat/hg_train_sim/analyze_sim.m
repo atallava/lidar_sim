@@ -1,3 +1,6 @@
+% todo: cleanup
+% view 
+
 %% load helpers
 genRelPathTriangleModels = @(sectionId,simVersion,blockId) ...
     sprintf('../data/sections/section_%02d/hg_sim/version_%s,section_%02d_block_%02d_ground_triangles', ...
