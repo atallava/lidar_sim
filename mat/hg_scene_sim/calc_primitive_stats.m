@@ -1,4 +1,5 @@
-% this script can use a facelift
+% useful stats like num ell, num pts, heights
+% todo: script needs cleanup
 
 %% rel path helpers
 genRelPathPrimitiveStats = @(sectionId,primitivesVersion) ...

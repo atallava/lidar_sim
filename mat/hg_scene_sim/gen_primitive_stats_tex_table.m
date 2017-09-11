@@ -1,3 +1,5 @@
+% tex helper. quite useful general method for tex data from mat
+
 %% rel path helpers
 genRelPathPrimitiveStats = @(sectionId) ...
     sprintf('../data/sections/section_%02d/primitives/primitive_stats',sectionId);

@@ -1,3 +1,5 @@
+% uses annotation + primitives to create objects
+
 %% rel path helpers
 genRelPathSceneAnnotation = @(sectionId) ...
     sprintf('../data/sections/section_%02d/scene_annotation',sectionId);

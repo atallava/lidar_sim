@@ -14,12 +14,12 @@ function relPathSimDetail = genRelPathSimDetailMat(sectionId,simType,simVersion,
 if (nargin < 5)
     tag = -1;
 end
-relPathSimDetail = sprintf('../data/section_%02d/%s_sim/version_%s/%s_sim_detail', ...
+relPathSimDetail = sprintf('../data/sections/section_%02d/%s_sim/version_%s/%s_sim_detail', ...
     sectionId,simType,simVersion,queryType);
 
 if (tag == -1)
-    relPathSimDetail = [relPathSimDetail  '.txt'];
+    relPathSimDetail = [relPathSimDetail  '.mat'];
 else
-    relPathSimDetail = [relPathSimDetail '_' num2str(tag) '.txt'];
+    relPathSimDetail = [relPathSimDetail '_' num2str(tag) '.mat'];
 end
 end

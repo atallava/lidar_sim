@@ -1,3 +1,6 @@
+% todo: script purpose?
+
+%% helpers
 genRelPathHgSimDetail = @(sectionId,tag) ...
     sprintf('../data/sections/section_%02d/hg_sim/slice_sim_detail_%d', ...
     sectionId,tag);

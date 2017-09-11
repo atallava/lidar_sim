@@ -1,3 +1,7 @@
+% construct_scene_objects saves all ellipsoids in a mat
+% sectionModelSim.cpp takes blocks of ellipsoids as input
+% this script is the bridge
+
 %% rel path helpers
 genRelPathImuPosnNodes = @(sectionId) ...
     sprintf('../../cpp/data/sections/section_%02d/imu_posn_nodes.txt',sectionId);

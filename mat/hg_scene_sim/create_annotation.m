@@ -1,4 +1,5 @@
 % todo: this script needs cleanup
+% annotations from semantic segmentation
 
 %% rel path helpers
 % sources

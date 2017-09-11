@@ -1,3 +1,0 @@
-relPathSimDetail = '';
-
-calcRangeError(relPathSimDetail);

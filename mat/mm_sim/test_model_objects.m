@@ -1,3 +1,5 @@
+% just playing around with raw meshes
+
 models = {};
 relPathMesh = '../data/3d_models/firtree4.mat';
 load(relPathMesh,'model');

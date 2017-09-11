@@ -14,7 +14,7 @@ function relPathSimDetail = genRelPathSimDetailTxt(sectionId,simType,simVersion,
 if (nargin < 5)
     tag = -1;
 end
-relPathSimDetail = sprintf('../../cpp/data/section_%02d/%s_sim/version_%s/%s_sim_detail', ...
+relPathSimDetail = sprintf('../../cpp/data/sections/section_%02d/%s_sim/version_%s/%s_sim_detail', ...
     sectionId,simType,simVersion,queryType);
 
 if (tag == -1)

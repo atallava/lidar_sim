@@ -1,4 +1,7 @@
 % warning: intended to run this only once
+% raw meshes are oversized, lopsided etc.
+
+%% relpath helpers
 genRelPathModel = @(type,fname) ...
     sprintf('../data/3d_models/src/%s/%s',type,fname);
 

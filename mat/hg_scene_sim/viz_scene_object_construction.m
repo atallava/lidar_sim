@@ -1,3 +1,5 @@
+% checking scene object construct. most of construct scene objects
+
 %% rel path helpers
 genRelPathSceneAnnotation = @(sectionId) ...
     sprintf('../data/sections/section_%02d/scene_annotation',sectionId);

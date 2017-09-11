@@ -28,6 +28,8 @@
   - check if appropriate sim version dirs exist in mat
   - convert sim detail txt to mat
 
+- start including short descriptions for each script
+
 ------------------------------
 
 * analyze taylor data

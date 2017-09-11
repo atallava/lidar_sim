@@ -1,4 +1,7 @@
-% rel path helpers
+% working script to test object creation for ellipsoids
+% might be out of date
+
+%% rel path helpers
 genRelPathPtsMat = @(sectionId,segmentId) ...
     sprintf('../data/sections/section_%02d/non_ground_segmentation/%d.mat', ...
     sectionId,segmentId);

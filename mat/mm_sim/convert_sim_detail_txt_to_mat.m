@@ -2,8 +2,8 @@
 
 %% load txt
 sectionId = 4;
-simType = 'hg';
-simVersion = '080917';
+simType = 'mm';
+simVersion = '280817';
 queryType = 'slice';
 tag = -1;
 relPathSimDetailTxt = genRelPathSimDetailTxt(sectionId,simType,simVersion,queryType,tag);

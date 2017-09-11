@@ -1,3 +1,5 @@
+% i forgot the purpose of this script
+
 %% rel path helpers
 genRelPathPrimitivePts = @(sectionId,className,elementId) ...
     sprintf('../../cpp/data/sections/section_%02d/primitives/pts/%s_%d.asc',sectionId,className,elementId);

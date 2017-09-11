@@ -1,3 +1,6 @@
+% primitives from hr models on train scene
+% this script is largely clean
+
 %% rel path helpers
 % sources
 genRelPathLabelingForSegmentIds = @(sectionId) ...

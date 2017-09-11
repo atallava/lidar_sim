@@ -1,4 +1,6 @@
-% rel path helpers
+% todo: needs cleanup
+
+%% rel path helpers
 genRelPathPrimitive = @(sectionId,className,elementId) ...
     sprintf('../data/sections/section_%02d/primitives/%s/%d.mat',sectionId,className,elementId);
 

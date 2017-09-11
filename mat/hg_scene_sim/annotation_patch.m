@@ -1,4 +1,7 @@
-% rel path helpers
+% this was working script to get patch annotation right
+% might be outdated
+
+%% rel path helpers
 genRelPathPtsMat = @(sectionId,segmentId) ...
     sprintf('../data/sections/section_%02d/non_ground_segmentation/%d.mat', ...
     sectionId,segmentId);

@@ -1,3 +1,7 @@
+% working script to test annotation for isolated object
+% might be outdated
+
+%% relpath helpers
 genRelPathPtsMat = @(sectionId,segmentId) ...
     sprintf('../data/sections/section_%02d/non_ground_segmentation/%d.mat',sectionId,segmentId);
 

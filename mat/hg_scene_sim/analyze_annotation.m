@@ -1,4 +1,7 @@
-% rel path helpers
+% i noticed that scene objects were buried in the ground
+% lead to correcting ground transform
+
+%% relpath helpers
 genRelPathPrimitive = @(sectionId,className,elementId) ...
     sprintf('../data/sections/section_%02d/primitives/%s/%d.mat',sectionId,className,elementId);
 
