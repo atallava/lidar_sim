@@ -13,7 +13,8 @@
 - section 4
   - 290717
     - this was the isrr submission version
-    - i think the models are lost
+    - the models are lost, but they can be recreated with old params, which are
+      documented
   - 280817
     - with models from 250417 sec3, and ground-corrected transforms
   - 080917
@@ -44,7 +45,6 @@
     - i think the models are lost
   - 280817
     - with ground corrected transforms
-
 
 ----------------------------------------------------------------------------------------------------
 

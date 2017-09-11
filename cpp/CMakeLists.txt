@@ -240,8 +240,8 @@ add_library(lidar_sim SHARED
 # add_executable(build_models_ground_blocks hybrid_geometric_sim/build_models_ground_blocks.cpp)
 #   target_link_libraries(build_models_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(build_models_non_ground_blocks hybrid_geometric_sim/build_models_non_ground_blocks.cpp)
-  target_link_libraries(build_models_non_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(build_models_non_ground_blocks hybrid_geometric_sim/build_models_non_ground_blocks.cpp)
+#   target_link_libraries(build_models_non_ground_blocks lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(build_models_non_ground_block hybrid_geometric_sim/build_models_non_ground_block.cpp)
 #   target_link_libraries(build_models_non_ground_block lidar_sim ${LIDAR_SIM_LIBRARIES} )

@@ -1,4 +1,4 @@
-board:
+* board
 
 
 --------------------------------------------------
@@ -22,7 +22,11 @@ board:
   - todo
     - create corresponding hg version dir in cpp
     - move block info non ground to hg version, not blocks info
-    - script to copy ground triangles, which are retained 
+    - script to copy ground triangles, which are retained
+
+- mat scrutiny pipeline
+  - check if appropriate sim version dirs exist in mat
+  - convert sim detail txt to mat
 
 ------------------------------
 
