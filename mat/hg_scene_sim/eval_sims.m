@@ -1,12 +1,13 @@
+%% sims to eval
 sectionId = 4;
 queryType = 'slice';
 tag = -1;
 
 simTypes = {'hg','hg','mm'};
 simVersions = {'080917','280817','280817'};
-
-%%
 nSimsToEval = length(simTypes);
+
+%% disp stats
 dispRangeErrorFlag = 1;
 for i = 1:nSimsToEval
     simType = simTypes{i};
@@ -19,3 +20,4 @@ for i = 1:nSimsToEval
     calcRangeError(simDetail,dispRangeErrorFlag);
     dispHorizontalLine(40);
 end
+
