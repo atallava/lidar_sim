@@ -4,6 +4,10 @@
   - check if appropriate sim version dirs exist in mat
   - convert sim detail txt to mat
   - convert models to mat
+    - if hg models created in cpp, save to mat
+    - if new scene hg, then ellipsoids will exist as mats
+    - for tri models, ground tri will be needed in the mm_sim directory
+      - use reduced scene tri models
   - lookat equispaced packets, random rays in each
 
 * section id: 8. query type: section. sim type: hg. version: 250417.

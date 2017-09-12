@@ -16,6 +16,8 @@
   - construct primitives
   - generate figures of primitives
     - also not a bad idea to calculate primitive stats
+
+- new scene sim pipeline
   - specify element ids to sample from
     - opportunity to weed out bad primitives
   - create ellipsoid blocks
@@ -23,10 +25,6 @@
     - create corresponding hg version dir in cpp
     - move block info non ground to hg version, not blocks info
     - script to copy ground triangles, which are retained
-
-- mat scrutiny pipeline
-  - check if appropriate sim version dirs exist in mat
-  - convert sim detail txt to mat
 
 - start including short descriptions for each script
 
