@@ -10,6 +10,8 @@
       - use reduced scene tri models
   - lookat equispaced packets, random rays in each
 
+----------------------------------------------------------------------------------------------------
+
 * section id: 8. query type: section. sim type: hg. version: 250417.
 - packet idx 1349
   - ray idx 318, 382, 383, 320
@@ -51,6 +53,8 @@
     - false ellipsoid hit. embarassingly large variance.
   - ray idx 344
     - medium job. smaller variance could be better
+
+----------------------------------------------------------------------------------------------------
 
 * section id: 4. query type: slice. sim type: hg. version: 080917.
 - packet idx 410. for many true hits, lower range than real. could be shape
@@ -225,4 +229,108 @@
 - packet idx 
 - packet idx 
 - packet idx 
+
+----------------------------------------------------------------------------------------------------
+
+* section id: 4. query type: slice. sim type: mm. version: 280817
+
+- packet idx 675. diff shape between sim and real veg?
+  - ray idx 225, 289, 323, 357
+    - false hit. in shrubs. why did real miss?
+  - ray idx 195
+    - medium job. true hit version of 225.
+  - ray idx 211, 313, 147
+    - large error. effect of no permeability for mm. also seems like error in mm
+      veg shape.
+  - ray idx 76, 237
+    - good job. version of 195.
+  - ray idx 136
+    - false miss. did the anno get this wrong?
+
+- packet idx 54. one tree in line of sight. mm veg shape diff from real? lots of
+  ground pts.
+
+- packet idx 4. some shrubs in sight.
+  - ray idx 33, 334, 328, 161
+    - false hit. in shrubs. 
+  - ray idx 100, 70, 135, 71, 130, 38
+    - good job. in shrubs. less var than ell, which seems to be better.
+  - ray idx 166
+    - false miss. version of 100. mm shrubs can't do mixed pixels.
+
+- packet idx 456. nothing remarkable. mostly ground
+  - ray idx 357, 337
+    - false hit. pointing at ground.
+  - ray idx 348
+    - false hit. sim hits veg far away. should prob of hit reduce with range?
+  - ray idx 456
+    - false miss. from ground. seems stochastic.
+
+- packet idx 344. mostly ground. potential bushes perm 0 example.
+
+- packet idx 27. lots of ground. some veg in line of sight. why is this case
+  coming up so often?
+  - ray idx 348
+    - false miss. looks like anno got it right, but the surface nature meant
+      that ray-tri intersection was missed
+  - ray idx 249
+    - large error. real stopped by nearer veg.
+
+- packet idx 90. lots of veg.
+  - ray idx 308, 305, 267, 72, 273
+    - good job. in shrubs.
+  - ray idx 107, 169, 172
+    - medium job. in shrubs
+  - ray idx 368, 365, 294
+    - false hit. ray directed at shrubs.
+  - ray idx 327, 90, 38
+    - large error. in shrubs.
+
+- packet idx 195. great example of no perm in mm.
+  - ray idx 252, 313
+    - medium job. example of no perm.
+  - ray idx 46
+    - false miss. anno problem perhaps.
+  - ray idx 369
+    - false hit. why?
+  - ray idx 225, 289, 357
+    - false hit. aimed at shrubs.
+  - ray idx 243, 211, 58
+    - false hit. because no stochasticity. shape error?
+
+- packet idx 139
+  - ray idx 147
+    - large error. real near bush
+  - ray idx 139, 207
+    - false miss. if volumetric could've worked.
+  - ray idx 359, 5, 265
+    - medium/ large error. sim stopped by opaque shrub.
+  - ray idx 219, 174
+    - false miss. bad anno perhaps.
+  - ray idx 101
+    - good job. shrubs.
+  - ray idx 88
+    - false hit. sim hits tree. shape error.
+
+- packet idx 573. example of good with ground triangles.
+
+- packet idx 196. another good example of no perm
+  - ray idx 368, 327, 261
+    - false hit. aimed at shrub.
+  - ray idx 308, 162, 305, 272
+    - low error. hit version of 368. can say no stochasticity? no stoch, no
+      perm, not volumetric.
+  - ray idx 252, 286
+    - false miss. bad anno. or due to surface nature.
+  - ray idx 107
+    - false miss. bad anno, or not enough ell in primitive.
+
+- packet idx 
+  - ray idx 
+  - ray idx 
+  - ray idx 
+  - ray idx 
+  - ray idx 
+  - ray idx 
+
 

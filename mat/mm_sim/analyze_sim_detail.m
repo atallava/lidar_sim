@@ -66,10 +66,12 @@ falseHitRayIds = find(~realPtsAll & simPtsAll);
 falseMissRayIds = find(realPtsAll & ~simPtsAll);
 trueMissRayIds = find(~realPtsAll & ~simPtsAll);
 
-%% viz packet pts only
+%% viz packet 
 hfig = figure(); axis equal;
 grid on; box on;
 
+% drawPacket(hfig,rayOrigin,rayDirns,realPtsAll,realHitFlag,'b');
+% drawPacket(hfig,rayOrigin,rayDirns,simPtsAll,simHitFlag,'r');
 drawPts(hfig,realPtsAll(realHitFlag,:),'b');
 drawPts(hfig,simPtsAll(simHitFlag,:),'r');
 
@@ -81,25 +83,6 @@ groundTriModelsNbr = createTriModelsNbr(groundTriModels,[simPtsHit; realPtsHit],
 sceneTriModelsNbr = createTriModelsNbr(sceneTriModels,[simPtsHit; realPtsHit],modelNbrRadius);
 
 drawTriModels(hfig,sceneTriModelsNbr,'veg');
-drawTriModels(hfig,groundTriModelsNbr,'ground');
-
-title(sprintf('packet idx: %d',packetIdx));
-
-%% viz packet
-hfig = figure(); axis equal;
-grid on; box on;
-
-drawPacket(hfig,rayOrigin,rayDirns,realPtsAll,realHitFlag,'b');
-drawPacket(hfig,rayOrigin,rayDirns,simPtsAll,simHitFlag,'r');
-
-% draw models
-modelNbrRadius = 0.5;
-simPtsHit = simPtsAll(simHitFlag,:);
-realPtsHit = realPtsAll(realHitFlag,:);
-groundTriModelsNbr = createTriModelsNbr(groundTriModels,[simPtsHit; realPtsHit],modelNbrRadius);
-sceneTriModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,[simPtsHit; realPtsHit],modelNbrRadius);
-
-drawEllipsoids(hfig,sceneTriModelsNbr);
 drawTriModels(hfig,groundTriModelsNbr,'ground');
 
 title(sprintf('packet idx: %d',packetIdx));
@@ -140,7 +123,7 @@ grid on; box on;
 drawPacket(hfig,rayOrigin,thisRayDirn,thisRealPt,thisRealHitFlag,'b');
 drawPacket(hfig,rayOrigin,thisRayDirn,thisSimPt,thisSimHitFlag,'r');
 
-drawEllipsoids(hfig,sceneTriModelsNbr);
+drawTriModels(hfig,sceneTriModelsNbr,'veg');
 drawTriModels(hfig,groundTriModelsNbr,'ground');
 
 title(sprintf('packet idx: %d, ray idx: %d',packetIdx,rayIdx));
