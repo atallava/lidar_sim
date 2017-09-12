@@ -19,6 +19,8 @@ queryType = 'slice';
 
 % object triangles
 % todo: change names. sceneObjectTriModelsCell. sceneTriModels
+% todo: ideally should have used triModel for triangles. then triModels has
+% the better meaning slot
 relPathSceneTriModels = genRelPathSceneTriModels(sectionId,simVersion);
 load(relPathSceneTriModels,'sceneTriModels');
 sceneTriModels = stitchTriModels(sceneTriModels);
