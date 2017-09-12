@@ -38,6 +38,7 @@ lib/
 *~
 *#
 *.asv
+.#*
 
 # data
 *.mat
