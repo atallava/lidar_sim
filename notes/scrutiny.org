@@ -237,7 +237,8 @@
   - ray idx 76, 237
     - good job. version of 195.
   - ray idx 136
-    - false miss. did the anno get this wrong?
+    - false miss. did the anno get this wrong? hg got this right. so my guess is
+      mm primitive is wrong.
 
 - packet idx 54. one tree in line of sight. mm veg shape diff from real? lots of
   ground pts.
@@ -340,7 +341,6 @@
   - ray idx 85, 213
     - both large error. too much shrubs is bad anno?
 
-
 - packet idx 219
   - ray idx 313
     - hg does better. captures via ellipsoids. mm passes through and hits
@@ -399,8 +399,42 @@
     - mm does better. hg suffers from large ell.
   - ray idx 305
     - hg good. mm misses.
-  - ray idx 
-  - ray idx 
+
+- packet idx 675
+  - ray idx 311, 313, 147
+    - both do bad. mm opaque, hg stuck in earlier ell. 
+      
+- packet idx 54. one tree in line of sight. mm veg shape diff from real. hg's
+  shape is more crazy ellipsoids.
+
+- packet idx 4
+  - ray idx 100, 70
+    - mm good job, hg misses shrubs. too perm perhaps. unoptimized priors.
+  - ray idx 166
+    - both false miss
+
+- packet idx 344. hg perm bush, mm opaque bush.
+
+- packet idx 27. hg large ell var.
+  - ray idx 348
+    - mm miss. hg's ellipsoids capture, but it doesn't do too much better
+  - ray idx 249
+    - range hg sim < real < mm sim. both do badly.
+
+- packet idx 139. hg has obscenely large ell.
+  - ray idx 139, 207
+    - mm miss because surface. but hg gets lost in thicket. another example of
+      overdoing hg ell.
+  - ray idx 359, 174
+    - mm stopped early. hg does better in shrubs. but seems stochastic.
+
+- packet idx 196
+  - ray idx 308, 162, 305
+    - mm does better than hg in shrubs. again aggressive ell.
+  - ray idx 252
+    - mm false miss due to surf nature or shape. hg gets it right. large shrub.
+  - ray idx 107
+    - mm false miss, why? hg medium job in shrubs.
 
 - packet idx 
   - ray idx 
