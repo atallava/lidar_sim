@@ -19,25 +19,17 @@ using namespace lidar_sim;
 std::string genRelPathGroundBlocksDir(int section_id)
 {
     std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+       << "/hg_sim/blocks_info";
 
     return ss.str();
 }
 
-std::string genRelPathBlock(int section_id, int block_id)
+std::string genRelPathTriangles(int section_id, std::string sim_version, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground.xyz";
-
-    return ss.str();
-}
-
-std::string genRelPathTriangles(int section_id, int block_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/version_" << sim_version
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground_triangles.txt";
 
@@ -48,7 +40,7 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    int section_id = 4;
+    int section_id = 1;
     std::string rel_path_ground_blocks_dir = genRelPathGroundBlocksDir(section_id);
     std::vector<int> block_ids = getGroundBlockIds(rel_path_ground_blocks_dir, section_id);
     
@@ -57,24 +49,25 @@ int main(int argc, char **argv)
     SectionLoader section(rel_path_section);
 
     // pose server
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
+    std::string rel_path_poses_log = genPathPosesLog();
     PoseServer imu_pose_server(rel_path_poses_log);
 
     // blocks info
     std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(rel_path_imu_posn_nodes, 3);
     std::string rel_path_block_node_ids_ground = genPathBlockNodeIdsGround(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
     std::vector<std::vector<int> > block_node_ids_ground = 
 	doubleToIntArray(loadArray(rel_path_block_node_ids_ground, 2));
 
     // loop over blocks
+    std::string hg_sim_version = "130917";
     for(size_t i = 0; i < block_ids.size(); ++i)
     {
 	std::cout << "processing block " << i << "..." << std::endl;
 
 	// model each block
 	int block_id = block_ids[i];
-	std::string rel_path_pts = genRelPathBlock(section_id, block_id);
+	std::string rel_path_pts = genPathGroundBlockPts(section_id, block_id);
 	std::vector<std::vector<double> > block_pts = loadPtsFromXYZFile(rel_path_pts);
 
 	TriangleModeler modeler;
@@ -101,7 +94,7 @@ int main(int argc, char **argv)
 	modeler.calcHitProb(section, section_pt_ids_to_process, imu_pose_server);
 
 	// write out
-	std::string rel_path_triangles = genRelPathTriangles(section_id, block_id);
+	std::string rel_path_triangles = genRelPathTriangles(section_id, hg_sim_version, block_id);
 	modeler.writeTrianglesToFile(rel_path_triangles);
     }
 

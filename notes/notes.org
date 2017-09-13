@@ -67,6 +67,7 @@
 14: loop A
 
 - time extents
+  - section 1: [1403045583 1403045649]
   - section 3: [1403045836 1403045903]
   - section 4: [1403045920 1403046033]
 
@@ -106,6 +107,8 @@ one file, contains labelings, semgentIds. combine this with the segment pts
     - divide into parts, folder for each part
     - numbered segments in each part folder
     - keep saving intermediate results
+  - labeling
+    - save segmented pts as mats
 
 --------------------------------------------------
 
@@ -165,6 +168,10 @@ them and writes them out? so that you don't have to keep track of them.
     tweak values there. since the python script has the semantic knowledge also
     of what is what, it will have no trouble outputing it as xml, txt, etc etc.
 
+- sim new scene pipeline
+  - build imu posn nodes
+  - build blocks from ground points
+    
 ------------------------------
 
 * analyze taylor data:

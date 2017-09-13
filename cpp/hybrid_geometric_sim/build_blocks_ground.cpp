@@ -18,16 +18,6 @@
 
 using namespace lidar_sim;
 
-std::string genSectionRelPath(int section_id)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_world_frame_subsampled.xyz";
-
-    return ss.str();
-}
-
 std::string genRelPathSectionPtsGround(int section_id)
 {
     std::ostringstream ss;
@@ -42,6 +32,7 @@ std::string genBlockRelPath(int section_id, int block_id)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/hg_sim/blocks_info" 
        << "/section_" << std::setw(2) << std::setfill('0') << section_id 
        << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_ground.xyz";
 
@@ -52,19 +43,19 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    int section_id = 4;
+    int section_id = 1;
 
     // load section
-    std::string rel_path_section = genSectionRelPath(section_id);
-    SectionLoader section(rel_path_section);
+    std::string path_section = genPathSection(section_id);
+    SectionLoader section(path_section);
 
     // pose server
-    std::string rel_path_poses_log = "../data/taylorJune2014/Pose/PoseAndEncoder_1797_0000254902_wgs84_wgs84.fixed";
-    PoseServer imu_pose_server(rel_path_poses_log);
+    std::string path_poses_log = genPathPosesLog();
+    PoseServer imu_pose_server(path_poses_log);
 
     // imu posn nodes
-    std::string rel_path_imu_posn_nodes = genPathImuPosnNodes(section_id);
-    std::vector<std::vector<double> > imu_posn_nodes = loadArray(genPathImuPosnNodes(section_id), 3);
+    std::string path_imu_posn_nodes = genPathImuPosnNodes(section_id);
+    std::vector<std::vector<double> > imu_posn_nodes = loadArray(path_imu_posn_nodes, 3);
 
     // section ground pts
     std::string rel_path_pts = genRelPathSectionPtsGround(section_id);

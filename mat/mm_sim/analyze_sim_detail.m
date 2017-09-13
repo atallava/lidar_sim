@@ -45,7 +45,7 @@ load(relPathSimDetail,'simDetail');
 
 %% pick packet
 nPackets = length(simDetail.rayPitchesCell);
-packetIdx = 196;
+packetIdx = 164;
 % packetIdx = randsample(nPackets,1);
 
 % extract packet info
