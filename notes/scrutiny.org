@@ -57,7 +57,7 @@
 ----------------------------------------------------------------------------------------------------
 
 * section id: 4. query type: slice. sim type: hg. version: 080917.
-- packet idx 410. for many true hits, lower range than real. could be shape
+- packet idx 410. for many true hits, sim range lower than real. could be shape
   error, or not permeable enough. although the low precision makes me think too
   permeable?
   - ray idx 14
@@ -106,7 +106,7 @@
     - good job. but ground, so no credit.
 
 - packet idx 581. another veg seems to generate sim hits for which real wasn't
-  present.
+  present. bad segment/ anno?
 
 - packet idx 219. seems like good job with some low shrubs. but extraneous
   bigger ellipsoids are there?
@@ -180,8 +180,6 @@
     - good job.
   - ray idx 278
     - medium job. so was the shrub overdone?
-  - ray idx 
-  - ray idx 
 
 - packet idx 122. one veg in sight
   - ray idx 189
@@ -192,8 +190,6 @@
     - large error. lost in shrubs.
   - ray idx 161
     - good job. in shrubs. stochastic.
-  - ray idx 
-  - ray idx 
 
 - packet idx 90. large shrubs looks like overall.
   - ray idx 243, 308, 305
@@ -226,9 +222,6 @@
 
 - packet idx 669. veg.
 - packet idx 539. example for good ground.
-- packet idx 
-- packet idx 
-- packet idx 
 
 ----------------------------------------------------------------------------------------------------
 

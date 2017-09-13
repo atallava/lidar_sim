@@ -93,6 +93,20 @@ the tape is broken
 
 one file, contains labelings, semgentIds. combine this with the segment pts
 
+- manual segmentation pipeline
+  - ground segmentation
+    - by which is meant separation into ground and non-ground
+    - results stored in lidar_sim/cpp/data/sections/section_xx/ground_segmentation
+    - load pts into cloudcompare, divide into parts
+    - delete non-ground segments generated in cloud compare, script later derives them.
+    - finally fuse into section_pts_xx_ground.asc
+  - non-ground segmentation
+    - results in lidar_sim/cpp/data/sections/section_xx/non_ground_segmentation
+    - section_pts_xx_non_ground is an output from ground segmentation
+    - divide into parts, folder for each part
+    - numbered segments in each part folder
+    - keep saving intermediate results
+
 --------------------------------------------------
 
 * cpp:

@@ -261,8 +261,8 @@ add_library(lidar_sim SHARED
 # add_executable(analyze_mesh hybrid_geometric_sim/analyze_mesh.cpp)
 #   target_link_libraries(analyze_mesh lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(get_non_ground_from_ground_pts hybrid_geometric_sim/get_non_ground_from_ground_pts.cpp)
-#   target_link_libraries(get_non_ground_from_ground_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(get_non_ground_from_ground_pts hybrid_geometric_sim/get_non_ground_from_ground_pts.cpp)
+  target_link_libraries(get_non_ground_from_ground_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(build_primitives scene_sim/build_primitives.cpp)
 #   target_link_libraries(build_primitives lidar_sim ${LIDAR_SIM_LIBRARIES} )
