@@ -45,7 +45,7 @@ load(relPathSimDetail,'simDetail');
 
 %% pick packet
 nPackets = length(simDetail.rayPitchesCell);
-packetIdx = 695;
+packetIdx = 195;
 % packetIdx = randsample(nPackets,1);
 
 % extract packet info
@@ -76,7 +76,7 @@ drawPts(hfig,realPtsAll(realHitFlag,:),'b');
 drawPts(hfig,simPtsAll(simHitFlag,:),'r');
 
 % draw models
-modelNbrRadius = 0.7;
+modelNbrRadius = 1;
 simPtsHit = simPtsAll(simHitFlag,:);
 realPtsHit = realPtsAll(realHitFlag,:);
 groundTriModelsNbr = createTriModelsNbr(groundTriModels,[simPtsHit; realPtsHit],modelNbrRadius);
@@ -90,7 +90,7 @@ title(sprintf('packet idx: %d',packetIdx));
 %% pick ray
 nRays = size(rayDirns,1);
 % rayIdx = randsample(nRays,1);
-rayIdx = 207;
+rayIdx = 261;
 % rayIdx = randsample(trueHitRayIds,1);
 % rayIdx = randsample(falseHitRayIds,1);
 % rayIdx = randsample(falseMissRayIds,1);

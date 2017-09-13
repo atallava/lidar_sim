@@ -40,7 +40,7 @@ load(relPathSimDetail,'simDetail');
 
 %% pick packet
 nPackets = length(simDetail.rayPitchesCell);
-packetIdx = 695;
+packetIdx = 573;
 % packetIdx = randsample(nPackets,1);
 
 % extract packet info
@@ -61,34 +61,17 @@ falseHitRayIds = find(~realPtsAll & simPtsAll);
 falseMissRayIds = find(realPtsAll & ~simPtsAll);
 trueMissRayIds = find(~realPtsAll & ~simPtsAll);
 
-%% viz packet pts only
-hfig = figure(); axis equal;
-grid on; box on;
-
-drawPts(hfig,realPtsAll(realHitFlag,:),'b');
-drawPts(hfig,simPtsAll(simHitFlag,:),'r');
-
-% draw models
-modelNbrRadius = 0.7;
-simPtsHit = simPtsAll(simHitFlag,:);
-realPtsHit = realPtsAll(realHitFlag,:);
-triModelsNbr = createTriModelsNbr(triModels,[simPtsHit; realPtsHit],modelNbrRadius);
-ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,[simPtsHit; realPtsHit],modelNbrRadius);
-
-drawEllipsoids(hfig,ellipsoidModelsNbr);
-drawTriModels(hfig,triModelsNbr,'ground');
-
-title(sprintf('packet idx: %d',packetIdx));
-
 %% viz packet
 hfig = figure(); axis equal;
 grid on; box on;
 
-drawPacket(hfig,rayOrigin,rayDirns,realPtsAll,realHitFlag,'b');
-drawPacket(hfig,rayOrigin,rayDirns,simPtsAll,simHitFlag,'r');
+% drawPacket(hfig,rayOrigin,rayDirns,realPtsAll,realHitFlag,'b');
+% drawPacket(hfig,rayOrigin,rayDirns,simPtsAll,simHitFlag,'r');
+drawPts(hfig,realPtsAll(realHitFlag,:),'b');
+drawPts(hfig,simPtsAll(simHitFlag,:),'r');
 
 % draw models
-modelNbrRadius = 0.5;
+modelNbrRadius = 3;
 simPtsHit = simPtsAll(simHitFlag,:);
 realPtsHit = realPtsAll(realHitFlag,:);
 triModelsNbr = createTriModelsNbr(triModels,[simPtsHit; realPtsHit],modelNbrRadius);
@@ -102,7 +85,7 @@ title(sprintf('packet idx: %d',packetIdx));
 %% pick ray
 nRays = size(rayDirns,1);
 % rayIdx = randsample(nRays,1);
-rayIdx = 207;
+rayIdx = 261;
 % rayIdx = randsample(trueHitRayIds,1);
 % rayIdx = randsample(falseHitRayIds,1);
 % rayIdx = randsample(falseMissRayIds,1);

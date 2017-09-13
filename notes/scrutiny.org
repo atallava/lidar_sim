@@ -184,7 +184,7 @@
 - packet idx 122. one veg in sight
   - ray idx 189
     - good job. hit far veg.
-  - ray idx 21, 122
+  - ray idx 21
     - false hit. sim hits shrub patch. why does real miss? overdone shrub patch?
   - ray idx 211
     - large error. lost in shrubs.
@@ -210,7 +210,6 @@
     - good job. in tree.
   - ray idx 252, 272
     - medium job. in tree.
-  - ray idx 
 
 - packet idx 
   - ray idx 
@@ -326,10 +325,80 @@
   - ray idx 201
     - both are similar
   - ray idx 176
-    - hg does better because ell captures. mm tri cant capture. no vol issue.
+    - hg does better because ell captures. mm tri cant capture, no vol.
   - ray idx 207
     - same comments as 176
-  - ray idx 
+
+- packet idx 695
+  - ray idx 208
+    - in shrubs. hg does better. mm gets caught earlier? both intersect, but hg
+      can pass through due to permeability of models.
+  - ray idx 210
+    - in shrubs. both do medium.
+  - ray idx 301
+    - in shrubs. here mm does better. but hg has stochasticity :P
+  - ray idx 85, 213
+    - both large error. too much shrubs is bad anno?
+
+
+- packet idx 219
+  - ray idx 313
+    - hg does better. captures via ellipsoids. mm passes through and hits
+      faraway tree. could happen with ell too because of hit prob, but stoch
+  - ray idx 243
+    - hg does better. not a strong explanatory case though.
+  - ray idx 107
+    - both do good
+
+- packet idx 9. excellent example of opacity in mm.
+  - ray idx 207
+    - both false miss. an anno issue?
+  - ray idx 212
+    - hg good job. mm false miss. candidate for hg better shape to environment.
+  - ray idx 155
+    - hg does better. faraway tree. mm is opaque tree.
+  - ray idx 93
+    - same tree. hg does better. mm misses because not volumetric.
+  - ray idx 91
+    - both do good.
+
+- packet idx 654. here, ell gets the position-shape error right because trained
+  on data. mm suffers. not sure what to say
+
+- packet idx 654
+  - ray idx 12, 163
+    - both false hit. bad anno?
+  - ray idx 357, 201, 268
+    - mm, real hit ground. hg aggressively hits shrub ell. good example.
+  - ray idx 278
+    - hg does better. mm passes through to hit far veg.
+
+- packet idx 122
+  - ray idx 189
+    - far tree. hg good job. mm false miss. good example of getting shape
+      right + vol capture.
+  - ray idx 21
+    - mm gets true miss right. hg hits ell further down the line. good example
+      of aggressive ell.
+  - ray idx 211
+    - both get lost in shrubbery.
+  - ray idx 161
+    - hg does better. not convincing.
+
+- packet idx 90
+  - ray idx 243, 308
+    - hg does better. but looks like mm shape went wrong. maybe too clear-cut
+      hedges.
+  - ray idx 368, 162, 327, 261
+    - mm also false hits. 
+
+- packet idx 195. both screwed up here. hg large ell variance. mm opaque.
+  - ray idx 46
+    - example of large ell var. mm misses, insufficient shape.
+  - ray idx 49
+    - mm does better. hg suffers from large ell.
+  - ray idx 305
+    - hg good. mm misses.
   - ray idx 
   - ray idx 
 
@@ -340,5 +409,4 @@
   - ray idx 
   - ray idx 
   - ray idx 
-
 
