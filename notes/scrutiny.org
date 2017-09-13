@@ -71,8 +71,8 @@
     - false hit. here sim hit some bushes farther down. again why real missed
       unclear.
   - ray idx 201, 176, 207
-    - good job. how to present good job? that semantic segmented correctly, and
-      then the primitive ellipsoids transferred over well?
+    - medium job. in shrubs. how to present? that semantic segmented correctly,
+      and then the primitive ellipsoids transferred over well?
   - ray idx 214
     - false hit. but this time on faraway ground.
 
@@ -317,6 +317,21 @@
     - false miss. bad anno. or due to surface nature.
   - ray idx 107
     - false miss. bad anno, or not enough ell in primitive.
+
+----------------------------------------------------------------------------------------------------
+
+* comparison
+
+- packet idx 410
+  - ray idx 201
+    - both are similar
+  - ray idx 176
+    - hg does better because ell captures. mm tri cant capture. no vol issue.
+  - ray idx 207
+    - same comments as 176
+  - ray idx 
+  - ray idx 
+  - ray idx 
 
 - packet idx 
   - ray idx 
