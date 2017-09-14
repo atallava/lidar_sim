@@ -70,17 +70,19 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     // load section
-    int section_sim_id = 4;
+    int section_sim_id = 1;
     std::string rel_path_section = genPathSection(section_sim_id);
     SectionLoader section(rel_path_section);
 
     // sim object
-    int section_hg_models_id = 4;
-    std::string hg_sim_version = "280817";
+    // todo: remove this dependency on hg. it is very confusing.
+    // manual copying of files is better
+    int section_hg_models_id = 1;
+    std::string hg_sim_version = "130917";
     std::string path_hg_models_dir = genPathHgModelsDir(section_hg_models_id, hg_sim_version);
 
     // find object meshes
-    std::string mm_sim_version = "280817";
+    std::string mm_sim_version = "130917";
     std::vector<std::string> rel_path_object_meshes;
     std::string rel_path_object_meshes_dir = genRelPathObjectMeshesDir(section_sim_id, mm_sim_version);
     std::vector<int> object_mesh_ids = 

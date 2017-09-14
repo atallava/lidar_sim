@@ -1,4 +1,7 @@
-% rel path helpers
+% todo: this script needs cleanup
+% and add the obb logic here
+
+%% rel path helpers
 genRelPathMeshPrimitive = @(className,elementId) ...
     sprintf('../data/3d_models/primitives/%s/%d',className,elementId);
 
@@ -13,15 +16,17 @@ genRelPathClassPrimitivesDir = @(className) ...
     sprintf('../data/3d_models/primitives/%s',className);
 
 % scene object meshes
-genRelPathSceneTriModels = @(sectionId,triModelsId) ...
-    sprintf('../../cpp/data/sections/section_%02d/mesh_model_sim/%d.txt',sectionId,triModelsId);
+genRelPathSceneTriModels = @(sectionId,simVersion,triModelsId) ...
+    sprintf('../../cpp/data/sections/section_%02d/mm_sim/version_%s/%d.txt', ...
+    sectionId,simVersion,triModelsId);
 
-genRelPathSceneTriModelsMat = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/mesh_model_sim/scene_tri_models',sectionId);
+genRelPathSceneTriModelsMat = @(sectionId,simVersion) ...
+    sprintf('../data/sections/section_%02d/mm_sim/version_%s/scene_tri_models', ...
+    sectionId,simVersion);
 
 %% load
-% annotations for section 4
-newSceneSectionId = 4;
+% annotations 
+newSceneSectionId = 1;
 relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
 
@@ -30,7 +35,7 @@ relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 %% create object meshes
-elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir,primitiveClasses);
+elementIdsPerClass = getMmPrimitiveElementIds(); % todo: correct hack
 nObjects = length(sceneAnnotation);
 sceneTriModels = {};
 sceneTriModelsCount = 0;
@@ -87,15 +92,16 @@ close(hWaitbar);
 
 %% write tri models
 hWaitbar = waitbar(0,'saving object meshes');
+simVersion = '130917';
 for i = 1:length(sceneTriModels)
     triModels = sceneTriModels{i};
     
-    relPathSceneTriModels = genRelPathSceneTriModels(newSceneSectionId,i);
+    relPathSceneTriModels = genRelPathSceneTriModels(newSceneSectionId,simVersion,i);
     saveTriModels(relPathSceneTriModels,triModels);
     waitbar(i/length(sceneTriModels));
 end
 
-relPathSceneTriModelsMat = genRelPathSceneTriModelsMat(newSceneSectionId);
+relPathSceneTriModelsMat = genRelPathSceneTriModelsMat(newSceneSectionId,simVersion);
 save(relPathSceneTriModelsMat,'sceneTriModels');
 close(hWaitbar);
 compTime = toc(clockLocal);

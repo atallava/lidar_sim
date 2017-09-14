@@ -18,8 +18,8 @@ genRelPathEllipsoidsBlock = @(sectionId,simVersion,blockId) ...
     sectionId,simVersion,sectionId,blockId);
 
 %% load
-sectionId = 4;
-simVersion = '080917';
+sectionId = 1;
+simVersion = '130917';
 relPathImuPosnNodes = genRelPathImuPosnNodes(sectionId);
 imuPosnNodes = loadPts(relPathImuPosnNodes);
 

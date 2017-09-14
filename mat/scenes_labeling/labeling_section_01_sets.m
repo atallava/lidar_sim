@@ -23,7 +23,7 @@ can = load(relPathPoseLog);
 imuData.poseLog = can.poseLog;
 imuData.tLog = can.tLog;
 imuData.tExtents = [1403045583 1403045649];
-imuData.tResn = 5;
+imuData.tResn = 2;
 
 %% label
 % pick a set
@@ -31,8 +31,8 @@ setId = 1;
 segmentIdsInSet = setCell{setId};
 nSegmentsInSet = length(segmentIdsInSet);
 
-% labelingData.relPathLabelingOut = 'labeling_current';
-labelingData.loadPartialLabeling = 0;
+labelingData.relPathLabelingOut = 'labeling_current';
+labelingData.loadPartialLabeling = 1;
 labelingData.relPathPartialLabeling = 'labeling_ongoing';
 
 ptsCellToPass = ptsCell(segmentIdsInSet);

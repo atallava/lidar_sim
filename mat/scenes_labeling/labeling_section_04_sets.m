@@ -31,9 +31,9 @@ setId = 1;
 segmentIdsInSet = setCell{setId};
 nSegmentsInSet = length(segmentIdsInSet);
 
-% labelingData.relPathLabelingOut = 'labeling_current';
+labelingData.relPathLabelingOut = 'labeling_tmp';
 labelingData.loadPartialLabeling = 1;
-labelingData.relPathPartialLabeling = 'labeling_ongoing';
+labelingData.relPathPartialLabeling = 'labeling_section_04';
 
 ptsCellToPass = ptsCell(segmentIdsInSet);
 labeling = labelingTool(ptsCellToPass,primitiveClasses,labelingData,imuData);

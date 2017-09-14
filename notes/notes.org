@@ -16,17 +16,20 @@
   - construct primitives
   - generate figures of primitives
     - also not a bad idea to calculate primitive stats
-
-- new scene sim pipeline
   - specify element ids to sample from
     - opportunity to weed out bad primitives
+
+- new scene sim pipeline
+  - get annotations from labeling
   - create ellipsoid blocks
+  - create meshes
   - todo
     - create corresponding hg version dir in cpp
     - move block info non ground to hg version, not blocks info
     - script to copy ground triangles, which are retained
+  - reduce tri models for viewing in rviz
 
-- start including short descriptions for each script
+- include short descriptions for each script
 
 ------------------------------
 
@@ -109,6 +112,10 @@ one file, contains labelings, semgentIds. combine this with the segment pts
     - keep saving intermediate results
   - labeling
     - save segmented pts as mats
+    - use the labeling tool
+    - save in data/sections/section_xx/labeling/labeling_for_segment_ids
+      - todo
+      - variables 'labeling' and 'segmentIds'
 
 --------------------------------------------------
 

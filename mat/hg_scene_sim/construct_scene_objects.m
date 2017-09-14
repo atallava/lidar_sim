@@ -1,3 +1,5 @@
+% todo: this script should be more verbose. specially with options like
+% which models being loaded, save destinations etc
 % uses annotation + primitives to create objects
 
 %% rel path helpers
@@ -16,8 +18,8 @@ genRelPathSceneEllipsoidModelsMat = @(sectionId,simVersion) ...
     sprintf('../data/sections/section_%02d/hg_sim/version_%s/object_ellipsoid_models',sectionId,simVersion);
 
 %% load
-% annotations for section 4
-newSceneSectionId = 42;
+% annotations
+newSceneSectionId = 1;
 relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
 
@@ -83,7 +85,7 @@ compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
 
 %% write object pts
-simVersion = '080917';
+simVersion = '130917';
 relPathSceneObjectPtsMat = genRelPathSceneObjectPtsMat(newSceneSectionId,simVersion);
 can.pts = scenePts;
 save(relPathSceneObjectPtsMat,'-struct','can');

@@ -11,8 +11,8 @@ genRelPathTriModelsReducedTxt = @(sectionId,simVersion) sprintf('../data/section
     sectionId,simVersion);
 
 %% load
-sectionId = 4;
-simVersion = '280817';
+sectionId = 1;
+simVersion = '130917';
 relPathTriModels = genRelPathTriModels(sectionId,simVersion);
 load(relPathTriModels,'sceneTriModels');
 
@@ -32,10 +32,10 @@ for i = 1:nTris
 end
 
 %% save
-% % as txt
-% sceneTriModelsReducedStitched = stitchTriModels(sceneTriModelsReduced);
-% relPathTriModelsReducedTxt = genRelPathTriModelsReducedTxt(sectionId,simVersion);
-% saveTriModels(relPathOut,sceneTriModelsReducedStitched);
+% as txt
+sceneTriModelsReducedStitched = stitchTriModels(sceneTriModelsReduced);
+relPathTriModelsReducedTxt = genRelPathTriModelsReducedTxt(sectionId,simVersion);
+saveTriModels(relPathTriModelsReducedTxt,sceneTriModelsReducedStitched);
 
 % as mat
 relPathTriModelsReducedMat = genRelPathTriModelsReducedMat(sectionId,simVersion);

@@ -1,5 +1,9 @@
 * hg sim
 
+- section 1
+  - 130917
+    - using primitives from section 3 070917
+
 - section 3
   - 250417
     - initial hand-selected parameters
@@ -38,6 +42,9 @@
 ---------------------------------------------------------------------------
 
 * mm sim
+
+- section 1
+  - 130917
 
 - section 4
   - 290717

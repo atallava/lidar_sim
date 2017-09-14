@@ -61,13 +61,13 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     // load section
-    int section_sim_id = 4;
+    int section_sim_id = 1;
     std::string path_section = genPathSection(section_sim_id);
     SectionLoader section(path_section);
 
     // sim object
-    int section_models_id = 4;
-    std::string sim_version = "080917";
+    int section_models_id = 1;
+    std::string sim_version = "130917";
     std::string path_models_dir = genPathHgModelsDir(section_models_id, sim_version);
 
     // find ellipsoid models for this section
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
     std::vector<int> ellipsoid_blocks_queried;
     std::vector<int> triangle_blocks_queried;
     SimDetail sim_detail;
-    size_t packet_array_step = 10; 
+    size_t packet_array_step = 20; // todo: check!
 
     for(size_t i = packet_id_sim_start; 
 	i < packet_id_sim_end; i += packet_array_step)
