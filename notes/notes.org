@@ -121,6 +121,8 @@ one file, contains labelings, semgentIds. combine this with the segment pts
 
 * cpp:
 
+- todo: add progress bars to your sim codes
+
 - grep todos
 
 - just like you have functions written in matlab for matlab processing, you need
