@@ -19,15 +19,14 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    int section_id = 4;
+    int section_id = 1;
     std::string query_type = "slice";
     int tag = -1;
 
     // todo: make script accept these as input
     std::vector<std::pair<std::string, std::string> > sims_to_eval; // sim type, sim version
-    sims_to_eval.push_back(std::make_pair("hg", "080917"));
-    sims_to_eval.push_back(std::make_pair("hg", "280817"));
-    sims_to_eval.push_back(std::make_pair("mm", "280817")); 
+    sims_to_eval.push_back(std::make_pair("hg", "130917"));
+    sims_to_eval.push_back(std::make_pair("mm", "130917")); 
 
     PtsError metric;
     size_t n_sims_to_eval = sims_to_eval.size();

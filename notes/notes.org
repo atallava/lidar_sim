@@ -169,6 +169,7 @@ them and writes them out? so that you don't have to keep track of them.
   - hg_sim section 8 takes 1.5hr
   - clustering s3 b10, 30k points. both flann and alglib take 2min.
   - with secn3 subsampled, packet step 10, creating sim detail template takes 8min.
+  - sec1 sim with packet skip 10, mm 130917 takes 3.5hr, hg takes 130917 15min
 
 - a config helper
   - i guess ideally, a class like OptimAssistant, doesn't deal so extensively
