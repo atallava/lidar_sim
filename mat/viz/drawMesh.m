@@ -29,7 +29,11 @@ switch objectType
         faceVertexAlpha = 0.5;
     case 'ground'
         edgeColor = saddleBrownRgb;
-        faceColor = mudBrownRgb;
+
+        % todo: adjust for paper fig, revert
+%         faceColor = mudBrownRgb;
+        faceColor = [1 1 1];
+
         faceVertexAlpha = 0.5;
     otherwise
         edgeColor = [0 0 0];

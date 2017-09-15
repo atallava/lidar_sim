@@ -16,9 +16,15 @@ end
 
 % rayMissLength = calcRayMissLength(rayOrigin,ptsAll(hitFlag,:));
 rayMissLength = 5;
-markerSizeData = 150;
-lineWidth = 3;
 
+%% adjust for paper fig
+% todo: revert to normal
+% markerSizeData = 150;
+% lineWidth = 3;
+markerSizeData = 100;
+lineWidth = 4;
+
+%% 
 figure(hfig); hold on;
 nRays = size(rayDirns,1);
 for i = 1:nRays
@@ -26,18 +32,25 @@ for i = 1:nRays
     if hitFlag(i)
         thisPt = ptsAll(i,:);
         rayLength = norm(thisPt-rayOrigin);
-        thisMarker = '.';
+        thisMarker = 'o';
     else
         rayLength = rayMissLength;
         thisPt = rayOrigin + rayLength*rayDirn;
-        thisMarker = 'x';
+        thisMarker = 'x'; 
     end
     rayPts = [rayOrigin; rayOrigin + rayLength*rayDirn];
-    plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'--','color',color);
+    plot3(rayPts(:,1),rayPts(:,2),rayPts(:,3),'--','color',color,'linewidth',lineWidth);
     scatter3(thisPt(:,1),thisPt(:,2),thisPt(:,3), ...
         'markerfacecolor',color,'markerEdgeColor',color, ...
         'marker',thisMarker,'sizeData',markerSizeData,'lineWidth',lineWidth);
 end
+
+% draw origin
+originMarker = '>';
+scatter3(rayOrigin(:,1),rayOrigin(:,2),rayOrigin(:,3), ...
+    'markerfacecolor',color,'markerEdgeColor',color, ...
+    'marker',originMarker,'sizeData',markerSizeData,'lineWidth',lineWidth);
+
 end
 
 %% helper
