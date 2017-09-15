@@ -40,7 +40,7 @@ load(relPathSimDetail,'simDetail');
 
 %% pick packet
 nPackets = length(simDetail.rayPitchesCell);
-packetIdx = 164;
+packetIdx = 195;
 % packetIdx = randsample(nPackets,1);
 
 % extract packet info
@@ -85,7 +85,7 @@ title(sprintf('packet idx: %d',packetIdx));
 %% pick ray
 nRays = size(rayDirns,1);
 % rayIdx = randsample(nRays,1);
-rayIdx = 107;
+rayIdx = 49;
 % rayIdx = randsample(trueHitRayIds,1);
 % rayIdx = randsample(falseHitRayIds,1);
 % rayIdx = randsample(falseMissRayIds,1);
@@ -107,7 +107,7 @@ else
 end
 thisRayPts = genPtsRay(rayOrigin,thisRayDirn,thisRayLength);
 
-modelNbrRadius = 3.5;
+modelNbrRadius = 2.0;
 triModelsNbr = createTriModelsNbr(triModels,thisRayPts,modelNbrRadius);
 ellipsoidModelsNbr = createEllipsoidModelsNbr(ellipsoidModels,thisRayPts,modelNbrRadius);
 
@@ -123,7 +123,40 @@ drawTriModels(hfig,triModelsNbr,'ground');
 
 title(sprintf('packet idx: %d, ray idx: %d',packetIdx,rayIdx));
 
+%% adjust for paper fig
+title('');
+addAxisCartesianLabels(hfig,3,'m');
+fontSize = 15;
+set(gca,'FontSize',fontSize);
 
+% p219r313
+% grid off;
+% az = -44; el = 16; 
+% view(az,el);
+% % use these to generate axes
+% xlim([-132.3170 -114.5878]);
+% ylim([361.1068  375.0900]);
+% zlim([-10.0041    3.9791]);
+
+% p9r155
+% az = 175; el = 3; 
+% view(az,el);
+% xlim([-376.9543 -305.0173])
+% ylim([313.1444  369.8818]);
+% zlim([-27.7384   28.9990]);
+
+% p9r212
+% xlim([-306.4402 -289.5041]);
+% ylim([353.2215  366.5791]);
+
+% p195r49
+grid off;
+az = -1.6; el = 9.2;
+view(az,el);
+% use these to generate fig axes
+xlim([-154.7055 -141.5450]);
+ylim([379.2514  389.6312]);
+zlim([-8.9204    1.4594]);
 
 
 
