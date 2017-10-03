@@ -1,5 +1,16 @@
 * board
 
+- todo
+  - softdev
+    - build tools
+    - unit testing framework
+
+- cpp11
+  - auto
+  - lambda expressions
+  - for_each
+  - initializations
+  - set functions
 
 --------------------------------------------------
 
