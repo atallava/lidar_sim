@@ -1,7 +1,6 @@
 % units:
 % distance: m, time: s, angle: rad
 
-sPerp = 10; % lateral dist to object
 vCruise = 5; % regular vehicle speed
 
 wSens = 62.7; % sensor rotation speed
@@ -12,13 +11,18 @@ nZPacket = 384; % readings per packet
 fracnHit = 0.8; % fraction readings which are hit
 
 %% decision variables
+% previously 10
+sPerp = 5; % lateral dist to object
 sPath = 638; % total length of path
 sVox = 0.1; % voxel side length
 sQv = 3; % 3 % query vol side length
-vObjPass = 0.1; % speed when passing object
+% previously 0.1
+vObjPass = 0.5; % speed when passing object
 sMax = 10; % max distance from object to start log
-nInstPerObj = 10; 
-nObj = 10;
+% previously 10
+nInstPerObj = 5; 
+% previously 10
+nObj = 40;
 
 %% 
 nVoxPerQv = floor(sQv/sVox)^3;
@@ -48,3 +52,7 @@ fprintf('n hits per instance: %.2f\n',nHitsPerInstance);
 fprintf('n hits per voxel: %.2f\n',nHitsPerVoxel);
 fprintf('s obj passes: %.2f, s cruise: %.2f, t full: %.2f min\n', ...
     sObjPasses,sCruise,tFull/60);
+
+% n instances, ~100
+% n hits per voxel, ~30
+% n hits per instance, 4e6
