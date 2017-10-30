@@ -1,6 +1,5 @@
-% todo: this script should be more verbose. specially with options like
-% which models being loaded, save destinations etc
 % uses annotation + primitives to create objects
+% this script is also an experiment in verbosity
 
 %% rel path helpers
 genRelPathSceneAnnotation = @(sectionId) ...
@@ -17,15 +16,23 @@ genRelPathSceneObjectPtsMat = @(sectionId,simVersion) ...
 genRelPathSceneEllipsoidModelsMat = @(sectionId,simVersion) ...
     sprintf('../data/sections/section_%02d/hg_sim/version_%s/object_ellipsoid_models',sectionId,simVersion);
 
+verbose = 1;
+
 %% load
 % annotations
 newSceneSectionId = 1;
 relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
+if verbose
+    fprintf('loaded scene annotation from %s\n',relPathSceneAnnotation);
+end
 
 % class info
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
+if verbose
+    fprintf('loaded primitive classes from %s\n',relPathPrimitiveClasses);
+end
 
 % elements to sample from
 primitivesVersion = '250417';
@@ -34,6 +41,11 @@ relPathElementsToSampleFrom = sprintf('../data/sections/section_%02d/primitives/
     primitivesSectionId,primitivesVersion);
 load(relPathElementsToSampleFrom,'elementIdsToSampleFrom');
 classElementIds = elementIdsToSampleFrom;
+if verbose
+    fprintf('primitives version: %s\n',primitivesVersion);
+    fprintf('primitives section id: %s\n',primitivesSectionId);
+    fprintf('loaded elements to sample from %s\n',relPathElementsToSampleFrom);
+end
 
 % primitives
 primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitivesVersion,primitiveClasses, ...
@@ -89,8 +101,11 @@ simVersion = '130917';
 relPathSceneObjectPtsMat = genRelPathSceneObjectPtsMat(newSceneSectionId,simVersion);
 can.pts = scenePts;
 save(relPathSceneObjectPtsMat,'-struct','can');
+if verbose
+    fprintf('saved scene object pts mat to %s\n',relPathSceneObjectPtsMat);
+end
 
-% todo: not writing because it takes too long
+% not writing raw pts because it takes too long
 % relPathSceneObjectPts = genRelPathSceneObjectPts(newSceneSectionId);
 % savePts(relPathSceneObjectPts,scenePts);
 
@@ -98,3 +113,6 @@ save(relPathSceneObjectPtsMat,'-struct','can');
 relPathSceneEllipsoids = genRelPathSceneEllipsoidModelsMat(newSceneSectionId,simVersion);
 can.ellipsoidModels = sceneEllipsoidModels;
 save(relPathSceneEllipsoids,'-struct','can');
+if verbose
+    fprintf('saved scene ellipsoids mat to %s\n',relPathSceneEllipsoids);
+end

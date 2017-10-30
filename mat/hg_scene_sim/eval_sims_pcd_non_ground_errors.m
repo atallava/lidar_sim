@@ -1,4 +1,4 @@
-% todo: script purpose?
+% this script was to evaluate only on non-ground returns
 
 %% helpers
 genRelPathHgSimDetail = @(sectionId,tag) ...

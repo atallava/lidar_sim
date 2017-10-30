@@ -1,4 +1,4 @@
-% todo: this script needs cleanup
+% figures for primitives
 
 %% rel path helpers
 % primitives
@@ -15,7 +15,8 @@ genRelPathPrimitivePng = @(sectionId,primitivesVersion,className,elementId) ...
     sprintf('../figs/sections/section_%02d/primitives/version_%s/%s/%d.png', ...
     sectionId,primitivesVersion,className,elementId);
 
-%% load labeling and segments
+%% load 
+% class info
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
@@ -46,73 +47,42 @@ for i = 1:nClasses
         elementId = elementIds(j);
         
         if ~primitiveClassIsPatch(i)
+            % load primitive
             relPathPrimitive = genRelPathPrimitive(sectionId,primitivesVersion,className,elementId);
             load(relPathPrimitive,'T_segment_to_world','pts','obb','ellipsoidModels');
 
-            % transform back to world frame
-            pts_world = applyTransf(pts,T_segment_to_world);
-            obb_world = applyTransfToObb(obb,T_segment_to_world);
-            ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,T_segment_to_world);
-
-            % plot
-            plotStructVars = {'ellipsoidData','plotStruct'};
-            clear(plotStructVars{:});
-            ellipsoidData.ellipsoidModels = ellipsoidModels_world;
-            plotStruct.ellipsoidData = ellipsoidData;
-            hfig = plotRangeData(plotStruct);
-            set(hfig,'visible','off');
-            drawObb(hfig,obb_world,pts_world);
-            
-            % save fig
-            relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,primitivesVersion,className,elementId);
-            savefig(hfig,relPathPrimitiveFig);
-            % save png
-            relPathPrimitivePng = genRelPathPrimitivePng(sectionId,primitivesVersion,className,elementId);
-            export_fig(relPathPrimitivePng,hfig);
-            close(hfig);
+            % gen fig
+            hfig = genFigPrimitive(T_segment_to_world,pts,obb,ellipsoidModels,'off');
         else
-            % patch
+            % load data for all cells
             relPathPrimitiveDir = genRelPathPatchPrimitive(sectionId,primitivesVersion,className,elementId);
             patternCell = '([0-9]+)';
             [~,cellIds] = getPatternMatchingFileIds(relPathPrimitiveDir,patternCell);
             
-            % loop over cells
-            % oops, clash of cell term
             nCells = length(cellIds);
-            [cellObbs_world,cellPts_world,cellEllipsoidModels_world] = deal(cell(1,nCells));
+            [cellT_segment_to_world,cellPts,cellObb,cellEllipsoidModels] = deal(cell(1,nCells));
             for k = 1:nCells
                 cellId = cellIds(k);
                 relPathPrimitivePatchCell = ...
                     genRelPathPatchPrimitiveCell(sectionId,primitivesVersion,className,elementId,cellId);
-            load(relPathPrimitivePatchCell,'T_segment_to_world','pts','obb','ellipsoidModels');
-
-            % transform back to world frame
-            cellPts_world{k} = applyTransf(pts,T_segment_to_world);
-            cellObbs_world{k} = applyTransfToObb(obb,T_segment_to_world);
-            cellEllipsoidModels_world{k} = applyTransfToEllipsoids(ellipsoidModels,T_segment_to_world);
-            end
-            patchEllipsoidModels_world = stitchEllipsoidModels(cellEllipsoidModels_world);
-            
-            % figure
-            plotStructVars = {'ellipsoidData','plotStruct'};
-            clear(plotStructVars{:});
-            ellipsoidData.ellipsoidModels = patchEllipsoidModels_world;
-            plotStruct.ellipsoidData = ellipsoidData;
-            hfig = plotRangeData(plotStruct);
-            set(hfig,'visible','off');
-            % draw all obbs
-            for k = 1:nCells
-                drawObb(hfig,cellObbs_world{k},cellPts_world{k});
+                load(relPathPrimitivePatchCell,'T_segment_to_world','pts','obb','ellipsoidModels');
+                cellT_segment_to_world{k} = T_segment_to_world;
+                cellPts{k} = pts;
+                cellObb{k} = obb;
+                cellEllipsoidModels{k} = ellipsoidModels;
             end
             
-            % save fig
-            relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,primitivesVersion,className,elementId);
-            savefig(hfig,relPathPrimitiveFig);
-            % save png
-            relPathPrimitivePng = genRelPathPrimitivePng(sectionId,primitivesVersion,className,elementId);
-            export_fig(relPathPrimitivePng,hfig);
-            close(hfig);
+            % gen fig
+            hfig = genFigPrimitivePatch(cellT_segment_to_world,cellPts,cellObb,cellEllipsoidModels);
         end
+        
+        % save fig
+        relPathPrimitiveFig = genRelPathPrimitiveFig(sectionId,primitivesVersion,className,elementId);
+        savefig(hfig,relPathPrimitiveFig);
+        % save png
+        relPathPrimitivePng = genRelPathPrimitivePng(sectionId,primitivesVersion,className,elementId);
+        export_fig(relPathPrimitivePng,hfig);
+        close(hfig);
     end
     
     waitbar(i/nClasses);

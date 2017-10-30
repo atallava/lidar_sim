@@ -1,93 +1,74 @@
-% todo: needs cleanup
+% this script is a rip-off of code to construct scene objects
 
 %% rel path helpers
-genRelPathPrimitive = @(sectionId,className,elementId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d.mat',sectionId,className,elementId);
-
-genRelPathPrimitivePatch = @(sectionId,className,elementId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d',sectionId,className,elementId);
-
-genRelPathPrimitivePatchCell = @(sectionId,className,elementId,cellId) ...
-    sprintf('../data/sections/section_%02d/primitives/%s/%d/%d.mat',...
-    sectionId,className,elementId,cellId);
-
 genRelPathSceneAnnotation = @(sectionId) ...
     sprintf('../data/sections/section_%02d/scene_annotation',sectionId);
 
-genRelPathClassPrimitivesDir = @(sectionId,className) ...
-    sprintf('../data/sections/section_%02d/primitives/%s',sectionId,className);
-
 % scene pts
-genRelPathSceneObjectPts = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/object_pts.txt',sectionId);
+genRelPathSceneObjectPts = @(sectionId,simVersion) ...
+    sprintf('../data/sections/section_%02d/hg_sim/version_%s/object_pts.txt',sectionId,simVersion);
 
-genRelPathSceneObjectPtsMat = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/object_pts',sectionId);
-
-% scene ellipsoids
-genRelPathSceneEllipsoidModelsMat = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/object_ellipsoid_models',sectionId);
+verbose = 1;
 
 %% load
-% annotations for section 4
+% annotations
 newSceneSectionId = 4;
 relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
+if verbose
+    fprintf('loaded scene annotation from %s\n',relPathSceneAnnotation);
+end
 
 % class info
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
+if verbose
+    fprintf('loaded primitive classes from %s\n',relPathPrimitiveClasses);
+end
 
-%%
-trainSectionId = 3;
-genRelPathClassPrimitivesDir2 = @(className) ...
-    genRelPathClassPrimitivesDir(trainSectionId,className);
-elementIdsPerClass = getPrimitiveElementIds(genRelPathClassPrimitivesDir2,primitiveClasses);
-nObjects = length(sceneAnnotation);
-scenePts = [];
-sceneEllipsoidModels = [];
+% elements to sample from
+primitivesVersion = '250417';
+primitivesSectionId = 3;
+relPathElementsToSampleFrom = sprintf('../data/sections/section_%02d/primitives/version_%s/element_ids_to_sample_from', ...
+    primitivesSectionId,primitivesVersion);
+load(relPathElementsToSampleFrom,'elementIdsToSampleFrom');
+classElementIds = elementIdsToSampleFrom;
+if verbose
+    fprintf('primitives version: %s\n',primitivesVersion);
+    fprintf('primitives section id: %s\n',primitivesSectionId);
+    fprintf('loaded elements to sample from %s\n',relPathElementsToSampleFrom);
+end
 
-% loop through annotations
+% primitives
+primitivesPerClass = loadAllPrimitives(primitivesSectionId,primitivesVersion,primitiveClasses, ...
+    primitiveClassIsPatch,classElementIds);
+
+%% construct objects
 clockLocal = tic();
-for i = 214%1:nObjects
-    objectAnnotation = sceneAnnotation{i};
-    objectClass = objectAnnotation.objectClass;
-    className = primitiveClasses{objectClass};
-    % select a primitive
-    % todo: this can be done better, by comparing obb, e.g.
-    sampledElementId = randsample(elementIdsPerClass{objectClass},1);
-    if ~primitiveClassIsPatch(objectClass)
-        % load primitive
-        relPathPrimitive = genRelPathPrimitive(trainSectionId,className,sampledElementId);
-        load(relPathPrimitive,'pts','ellipsoidModels');
-        % transform pts, ellipsoidModels to the new pose
-        pts_world = applyTransf(pts,objectAnnotation.T_object_to_world);
-        ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,objectAnnotation.T_object_to_world);
-        % add to scenePts
-        scenePts = [scenePts; pts_world];
-        % add to sceneEllipsoidModels
-        sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
-    else
-        relPathPrimitivePatch = genRelPathPrimitivePatch(trainSectionId,className,sampledElementId);
-        nObjectCells = length(objectAnnotation.T_cells_to_world);
-        pattern = '([0-9]+)';
-        [~,primitiveCellIds] = getPatternMatchingFileIds(relPathPrimitivePatch,pattern);
-        % select primitive patch cells
-        sampledCellIds = randsample(primitiveCellIds,nObjectCells,'true');
-        for j = 1:nObjectCells
-            sampledCellId = sampledCellIds(j);
-            relPathPrimitivePatchCell = genRelPathPrimitivePatchCell(trainSectionId,className,sampledElementId,sampledCellId);
-            load(relPathPrimitivePatchCell,'pts','ellipsoidModels');
-            % transform pts, ellipsoidModels to the new pose
-            pts_world = applyTransf(pts,objectAnnotation.T_cells_to_world{j});
-            ellipsoidModels_world = applyTransfToEllipsoids(ellipsoidModels,objectAnnotation.T_cells_to_world{j});
-            % add to big scenePts
-            scenePts = [scenePts; pts_world];
-            % add to sceneEllipsoidModels
-            sceneEllipsoidModels = [sceneEllipsoidModels ellipsoidModels_world];
-        end
+
+% pick annotation idx
+annotationIdx = 214;
+% this object data
+objectAnnotation = sceneAnnotation{annotationIdx};
+objectClass = objectAnnotation.objectClass;
+className = primitiveClasses{objectClass};
+
+if ~primitiveClassIsPatch(objectClass)
+    error('script only intended for patch objects.');
+else
+    % construct cell objects
+    thisClassPrimitives = primitivesPerClass{objectClass};
+    [patchPtsCell,patchEllipsoidModelsCell] = constructScenePatch(objectAnnotation,thisClassPrimitives);
+    
+    % add cells to scene
+    nCells = length(patchPtsCell);
+    for j = 1:nCells
+        % this cell data
+        objectPts = patchPtsCell{j};
+        objectEllipsoidModels = patchEllipsoidModelsCell{j};
     end
 end
+
 compTime = toc(clockLocal);
 fprintf('comp time: %.2fs\n',compTime);
 
@@ -98,6 +79,7 @@ ellipsoidData.ellipsoidModels = sceneEllipsoidModels;
 ellipsoidData.uniformAlpha = false;
 plotStruct.ellipsoidData = ellipsoidData;
 % plotStruct.pts = scenePts;
+% plotRangeData might be deprecated
 hfig = plotRangeData(plotStruct);
 
 % for i = 1:length(patchObbs)

@@ -1,5 +1,4 @@
-% todo: cleanup
-% view 
+% sim scrutiny workhorse
 
 %% load helpers
 genRelPathTriangleModels = @(sectionId,simVersion,blockId) ...
