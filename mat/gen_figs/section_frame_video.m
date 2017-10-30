@@ -28,7 +28,8 @@ load(relPathFrameTimes,'frameIdLog','frameTLog');
 frameTimeFn = @(frameId) getTimeFromFrameId(frameId,frameIdLog,frameTLog);
 
 %% frame rate
-outputVideo = VideoWriter('tmp.avi'); % todo: change this
+relPathVideo = 'tmp.avi';
+outputVideo = VideoWrite(relPathVideo);
 outputVideo.FrameRate = 18;
 open(outputVideo);
 

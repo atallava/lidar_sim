@@ -53,7 +53,6 @@ heightFeatures = zeros(nPts,1);
 fewNbrsFlag = zeros(1,nPts);
 emptyCylinderFlag = zeros(1,nPts);
 
-% todo: all pts
 for i = 1:nPts
     pt = pts(i,:);
     nbrIdx = idx{i};

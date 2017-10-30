@@ -10,7 +10,7 @@
   - lambda expressions
   - for_each
   - initializations
-  - set functions
+  - set functions. like intersections etc
 
 --------------------------------------------------
 

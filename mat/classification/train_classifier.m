@@ -5,8 +5,8 @@ genRelPathDatasetType = @(sectionId,datasetType) ...
 
 %% load
 sectionId = 3;
-% relPathDataset = genRelPathDatasetType(sectionId,'train'); % todo:
-% cleanup
+% relPathDataset = genRelPathDatasetType(sectionId,'train');
+% todo: cleanup
 % relPathDataset = '../data/misc/working_features';
 relPathDataset = '../data/misc/classification/dataset_collapsed';
 load(relPathDataset,'features','labels','classNames');

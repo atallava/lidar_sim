@@ -1,4 +1,4 @@
-% todo: script purpose?
+% this script was to split sim detail into ground and non-ground
 
 %% relpath helpers
 genRelPathHgSimDetail = @(sectionId,tag) ...
