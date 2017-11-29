@@ -192,17 +192,6 @@ add_library(lidar_sim SHARED
 
 ####################################################################################################
 
-# vtk examples
-# file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} vtk_examples/*.cpp )
-# foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
-#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-#   string( REPLACE "vtk_examples/" "" testname ${testnamewithdir})
-#   add_executable( ${testname} ${testsourcefile} )
-#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-# endforeach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
-
-####################################################################################################
-
 # nlopt examples
 
 ## pattern

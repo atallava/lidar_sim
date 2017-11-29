@@ -321,14 +321,3 @@ which worked
 
 
 
-* purging vtk and pcl
-
-- in scripts that matter
-  - remove range data vizer
-  - open each to compilation
-
-- some scripts are to be removed
-
-- then, in viz utils take out vtk
-
-- then remove range data vizer from shared library

@@ -5,28 +5,6 @@
 #include <stdexcept>
 #include <math.h>
 
-#include <vtkSmartPointer.h>
-#include <vtkCamera.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkTextMapper.h>
-#include <vtkActor.h>
-#include <vtkActor2D.h>
-#include <vtkProperty.h>
-#include <vtkTextProperty.h>
-#include <vtkRenderWindow.h>
-#include <vtkRenderer.h>
-#include <vtkRenderWindowInteractor.h>
-#include <vtkParametricFunctionSource.h>
-#include <vtkMath.h>
-#include <vtkPoints.h>
-#include <vtkOrientationMarkerWidget.h>
-#include <vtkAxesActor.h>
-#include <vtkParametricEllipsoid.h>
-#include <vtkPropAssembly.h>
-#include <vtkTransform.h>
-#include <vtkTransformPolyDataFilter.h>
-#include <vtkInteractorStyleTrackballCamera.h>
-
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
