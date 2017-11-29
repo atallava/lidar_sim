@@ -5,7 +5,10 @@
 #include <stdexcept>
 #include <vector>
 
+// todo: hacking boost filesystem bug
+#define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <lidar_sim/OptimAssistant.h>
 #include <lidar_sim/DataProcessingUtils.h>

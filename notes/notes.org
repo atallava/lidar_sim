@@ -319,5 +319,7 @@ which worked
 
 - ros
 
+- boost filesystem needs extra handling with cpp11
+
 
 

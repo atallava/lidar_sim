@@ -4,8 +4,6 @@
 #include <pcl/point_types.h>
 #include <pcl/visualization/cloud_viewer.h>
 
-//#include <lidar_sim/Dataset.h>
-
 namespace lidar_sim {
     class Visualizer {
     public:

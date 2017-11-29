@@ -9,7 +9,11 @@
 #include <regex>
 #include <ctime>
 
+// todo: hacking boost filesystem bug
+#define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
+
 #include <boost/regex.hpp>
 
 #include <lidar_sim/DataProcessingUtils.h>

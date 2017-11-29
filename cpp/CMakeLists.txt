@@ -17,7 +17,7 @@ list( APPEND LIDAR_SIM_LIBRARIES ${CMAKE_THREAD_LIBS_INIT} )
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 
 # Boost
-find_package( Boost COMPONENTS system thread log regex program_options REQUIRED )
+find_package( Boost COMPONENTS filesystem system thread log regex program_options REQUIRED ) 
 include_directories( ${Boost_INCLUDE_DIRS} )
 list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_thread" ) # Force linking against thread
@@ -29,11 +29,11 @@ list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES ${VTK_LIBRARIES} )
 
 # PCL
-find_package( PCL 1.4 REQUIRED )
-include_directories( ${PCL_INCLUDE_DIRS} )
-link_directories( ${PCL_LIBRARY_DIRS} )
-add_definitions(${PCL_DEFINITIONS})
-list( APPEND LIDAR_SIM_LIBRARIES ${PCL_LIBRARIES})
+# find_package( PCL 1.4 REQUIRED )
+# include_directories( ${PCL_INCLUDE_DIRS} )
+# link_directories( ${PCL_LIBRARY_DIRS} )
+# add_definitions(${PCL_DEFINITIONS})
+# list( APPEND LIDAR_SIM_LIBRARIES ${PCL_LIBRARIES})
 
 # CGAL
 find_package( CGAL)
@@ -44,49 +44,53 @@ include( CGAL_CreateSingleSourceCGALProgram )
 
 ########## Desktop options
 
-# # ALGLIB
-# set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
-# include_directories( ${ALGLIB_INCLUDE_DIR} )
-# set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
-# set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
-# link_directories( ${ALGLIB_LIBRARY_DIR} )
-# list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
-
-# # EIGENMVN
-# set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
-# include_directories( ${EIGENMVN_INCLUDE_DIR} )
-
-# # FLANN
-# # commenting out because flann headers seem to already be in /usr/include
-# # set( FLANN_INCLUDE_DIR "/usr0/home/atallav1/" )
-# # include_directories( ${FLANN_INCLUDE_DIR} )
-
-# # NLOPT
-# set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
-# list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
-
-########## Laptop options
+# EIGEN
+set( EIGEN_INCLUDE_DIR "/usr/include/eigen3" )
+include_directories( ${EIGEN_INCLUDE_DIR} )
 
 # ALGLIB
-set( ALGLIB_INCLUDE_DIR "/home/abhijeet/alglib-3.10.0.cpp/src" )
+set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
 include_directories( ${ALGLIB_INCLUDE_DIR} )
-set( ALGLIB_LIBRARY "/home/abhijeet/alglib-3.10.0.cpp/lib/libalglib.so" )
-set( ALGLIB_LIBRARY_DIR "/home/abhijeet/alglib-3.10.0.cpp/lib/" )
+set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
+set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
 link_directories( ${ALGLIB_LIBRARY_DIR} )
 list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
 
 # EIGENMVN
-set( EIGENMVN_INCLUDE_DIR "/home/abhijeet/eigenmvn" )
+set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
 include_directories( ${EIGENMVN_INCLUDE_DIR} )
 
 # FLANN
 # commenting out because flann headers seem to already be in /usr/include
-# set( FLANN_INCLUDE_DIR "/home/abhijeet/" )
+# set( FLANN_INCLUDE_DIR "/usr0/home/atallav1/" )
 # include_directories( ${FLANN_INCLUDE_DIR} )
 
 # NLOPT
-set( NLOPT_LIBRARY "/usr/local/lib/libnlopt.a" )
+set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
 list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
+
+########## Laptop options
+
+# # ALGLIB
+# set( ALGLIB_INCLUDE_DIR "/home/abhijeet/alglib-3.10.0.cpp/src" )
+# include_directories( ${ALGLIB_INCLUDE_DIR} )
+# set( ALGLIB_LIBRARY "/home/abhijeet/alglib-3.10.0.cpp/lib/libalglib.so" )
+# set( ALGLIB_LIBRARY_DIR "/home/abhijeet/alglib-3.10.0.cpp/lib/" )
+# link_directories( ${ALGLIB_LIBRARY_DIR} )
+# list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
+
+# # EIGENMVN
+# set( EIGENMVN_INCLUDE_DIR "/home/abhijeet/eigenmvn" )
+# include_directories( ${EIGENMVN_INCLUDE_DIR} )
+
+# # FLANN
+# # commenting out because flann headers seem to already be in /usr/include
+# # set( FLANN_INCLUDE_DIR "/home/abhijeet/" )
+# # include_directories( ${FLANN_INCLUDE_DIR} )
+
+# # NLOPT
+# set( NLOPT_LIBRARY "/usr/local/lib/libnlopt.a" )
+# list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
 
 ########## 
 
@@ -109,7 +113,7 @@ add_library(lidar_sim SHARED
   src/DataProcessingUtils.cpp
   src/VizUtils.cpp
 
-  src/Visualizer.cpp
+  # src/Visualizer.cpp
 
   src/MathUtils.cpp
   src/LaserCalibParams.cpp
@@ -315,8 +319,8 @@ add_executable(slice_hg_sim hybrid_geometric_sim/slice_hg_sim.cpp)
 # add_executable(test_triangle_sim_nbr_server hybrid_geometric_sim/test_triangle_sim_nbr_server.cpp)
 #   target_link_libraries(test_triangle_sim_nbr_server lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
-#   target_link_libraries(section_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(section_hg_sim hybrid_geometric_sim/section_hg_sim.cpp)
+  target_link_libraries(section_hg_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## nbr sim
 
@@ -343,19 +347,16 @@ add_executable(eval_sims hybrid_geometric_sim/eval_sims.cpp)
 
 # hg sim
 
-# add_executable(slice_hg_scene_sim scene_sim/slice_hg_scene_sim.cpp)
-#   target_link_libraries(slice_hg_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(slice_hg_scene_sim scene_sim/slice_hg_scene_sim.cpp)
+  target_link_libraries(slice_hg_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
   
 # mesh model sim
 
 # add_executable(test_mesh_model_sim scene_sim/test_mesh_model_sim.cpp)
 #   target_link_libraries(test_mesh_model_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-# add_executable(slice_mm_scene_sim scene_sim/slice_mm_scene_sim.cpp)
-#   target_link_libraries(slice_mm_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-# add_executable(viz_scene_mesh_models scene_sim/viz_scene_mesh_models.cpp)
-#   target_link_libraries(viz_scene_mesh_models lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(slice_mm_scene_sim scene_sim/slice_mm_scene_sim.cpp)
+  target_link_libraries(slice_mm_scene_sim lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # nbr sim
 
