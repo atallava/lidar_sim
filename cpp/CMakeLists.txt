@@ -113,8 +113,6 @@ add_library(lidar_sim SHARED
   src/DataProcessingUtils.cpp
   src/VizUtils.cpp
 
-  # src/Visualizer.cpp
-
   src/MathUtils.cpp
   src/LaserCalibParams.cpp
   src/LaserUtils.cpp
