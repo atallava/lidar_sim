@@ -27,7 +27,6 @@
 #include <lidar_sim/VizUtils.h>
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/FlannDatasetWrapper.h>
 #include <lidar_sim/EllipsoidSimNbrServer.h>
 
@@ -290,26 +289,6 @@ bool Test::testPtsLine()
 {
     std::string line = "1 2 3 4 5 6";
     std::cout << getPtsLineFromSectionLine(line) << std::endl;
-    return true;
-}
-
-bool Test::testVizEllipsoid()
-{
-    std::vector<std::vector<double> > pts   {
-	{2.3159,3.9552,8.8517},
-	{4.889,3.6744,9.1329},
-	{6.2406,9.8798,7.9618},
-	{6.7914,0.37739,0.98712}};
-  
-    EllipsoidModel model;
-    model.mu = calcPtsMean(pts);
-    model.cov_mat = calcPtsCovMat(pts);
-    EllipsoidModels models;
-    models.push_back(model);
-
-    RangeDataVizer vizer;
-    vizer.vizEllipsoidModels(models, pts);
-    
     return true;
 }
 

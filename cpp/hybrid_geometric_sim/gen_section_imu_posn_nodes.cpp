@@ -6,7 +6,6 @@
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>
@@ -47,10 +46,6 @@ int main(int argc, char **argv)
     	    prev_t = t;
     	}
     }
-
-    // viz these nodes
-    RangeDataVizer vizer;
-    vizer.vizPts(imu_posn_nodes);
 
     // write out
     writePtsToXYZFile(imu_posn_nodes, genPathImuPosnNodes(section_id));

@@ -9,7 +9,6 @@
 
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/ModelingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/ClusteringUtils.h>
 #include <lidar_sim/EllipsoidModeler.h>
 
@@ -93,11 +92,6 @@ int main(int argc, char **argv)
     // write to file
     // std::string rel_path_ellipsoid_models = "data/ellipsoid_models.txt";
     // writeEllipsoidModelsToFile(ellipsoid_models, rel_path_ellipsoid_models);
-
-    // viz
-    RangeDataVizer vizer;
-    std::cout << "vizing ellipsoid models..." << std::endl;
-    vizer.vizEllipsoidModels(ellipsoid_models, pts);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << std::setprecision(15) << "elapsed time: " << elapsed_time << "s" << std::endl;

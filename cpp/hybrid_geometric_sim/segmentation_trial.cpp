@@ -1,12 +1,9 @@
 #include <tuple>
 #include <ctime>
 
-#include <vtkProperty.h>
-
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>
@@ -36,10 +33,6 @@ int main(int argc, char **argv)
 
     std::vector<std::vector<double> > pts_ground = logicalSubsetArray(pts, segmentation);
     std::vector<std::vector<double> > pts_non_ground = logicalSubsetArray(pts, negateLogicalVec(segmentation));
-
-    // viz
-    RangeDataVizer vizer;
-    vizer.vizSegmentation(pts, segmentation);
 
     // write results
     std::string rel_path_ground = "data/sections/section_03/section_pts_03_ground.xyz";

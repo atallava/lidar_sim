@@ -3,7 +3,6 @@
 
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>
 #include <lidar_sim/LaserCalibParams.h>
@@ -59,7 +58,6 @@ int main(int argc, char **argv)
     std::tie(sim_pts, hit_flag) = sim.simPtsGivenIntersections(intersection_flag, dist_along_ray);
 
     // viz
-    RangeDataVizer vizer;
     std::vector<vtkSmartPointer<vtkActor> > actors;
     bool use_intersected_flag  = false;
     bool use_hit_flag = true;
@@ -76,8 +74,6 @@ int main(int argc, char **argv)
 	if (use_intersected_flag)
 	    if (!intersected_ellipsoids_flag[i])
 		continue;
-    	actors.push_back(
-    	    vizer.m_ellipsoid_actor_server.genEllipsoidActor(ellipsoid_models[i].mu, ellipsoid_models[i].cov_mat));
     }
 
     // ray
@@ -86,8 +82,6 @@ int main(int argc, char **argv)
 	if (use_hit_flag)
 	    if (!hit_flag[i])
 		continue;
-	actors.push_back(
-	    vizer.m_line_actor_server.genLineActorDirn(ray_origin, ray_dirns[i]));
     }
 
     // pts
@@ -96,12 +90,6 @@ int main(int argc, char **argv)
     	sim_pts_to_plot = logicalSubsetArray(sim_pts, hit_flag);
     else
     	sim_pts_to_plot = sim_pts;
-
-    actors.push_back(
-    	vizer.m_points_actor_server.genPointsActor(sim_pts_to_plot));
-
-    // fire up
-    //vizer.takeItAway(actors);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << std::setprecision(15) << "elapsed time: " << elapsed_time << "s" << std::endl;

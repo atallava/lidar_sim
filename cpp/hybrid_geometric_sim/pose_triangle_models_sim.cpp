@@ -1,10 +1,7 @@
 #include <tuple>
 
-#include <vtkProperty.h>
-
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>
 #include <lidar_sim/LaserCalibParams.h>
@@ -47,42 +44,6 @@ int main(int argc, char **argv)
     std::vector<int> hit_flag;
     std::tie(sim_pts, hit_flag) = sim.simPtsGivenIntersections(ray_origin, ray_dirns, 
     							       intersection_flag, dist_along_ray);
-
-    // viz
-    RangeDataVizer vizer;
-    std::vector<vtkSmartPointer<vtkActor> > actors;
-    bool use_hit_flag = true;
-
-    // debug
-    // std::cout << "hit flag: " << std::endl;
-    // dispVec(findNonzeroIds(hit_flag));
-
-    // triangles
-    actors.push_back(
-	vizer.m_triangles_actor_server.genTrianglesActor(sim.m_triangles, sim.m_fit_pts));
-
-    // ray
-    for(size_t i = 0; i < ray_dirns.size(); ++i)
-    {
-	if (use_hit_flag)
-	    if (!hit_flag[i])
-		continue;
-	actors.push_back(
-	    vizer.m_line_actor_server.genLineActorDirn(ray_origin, ray_dirns[i]));
-    }
-
-    // pts
-    std::vector<std::vector<double> > sim_pts_to_plot;
-    if (use_hit_flag)
-    	sim_pts_to_plot = logicalSubsetArray(sim_pts, hit_flag);
-    else
-    	sim_pts_to_plot = sim_pts;
-    vtkSmartPointer<vtkActor> pts_actor = vizer.m_points_actor_server.genPointsActor(sim_pts_to_plot);
-    pts_actor->GetProperty()->SetColor(0, 1, 0);
-    actors.push_back(pts_actor);
-
-    // fire up
-    vizer.takeItAway(actors);
 
     return(1);
 }

@@ -1,12 +1,9 @@
 #include <tuple>
 #include <ctime>
 
-#include <vtkProperty.h>
-
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>
@@ -63,9 +60,6 @@ int main(int argc, char **argv)
     std::vector<double> pt{-520.791, 460.518, -6.09491};
     TriangleModelSim triangle_sim_nbr = triangle_sim_nbr_server.createSim(pt);
     
-    RangeDataVizer vizer;
-    vizer.vizTriangles(triangle_sim_nbr.m_triangle_models.m_triangles, triangle_sim_nbr.m_triangle_models.m_fit_pts);
-
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
 	

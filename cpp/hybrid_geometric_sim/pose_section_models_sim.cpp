@@ -1,12 +1,9 @@
 #include <tuple>
 #include <ctime>
 
-#include <vtkProperty.h>
-
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/PoseUtils.h>
 #include <lidar_sim/LaserUtils.h>
@@ -71,37 +68,12 @@ int main(int argc, char **argv)
     std::tie(sim_pts_all, hit_flag) = sim.simPtsGivenPose(imu_pose);
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
-    // viz
-    RangeDataVizer vizer;
-    std::vector<vtkSmartPointer<vtkActor> > actors;
     bool use_hit_flag = true;
 
     // rays
     std::vector<double> ray_origin = {imu_pose[1], imu_pose[0], imu_pose[2]};
     LaserCalibParams laser_calib_params;
     std::vector<std::vector<double> > ray_dirns = genRayDirnsWorldFrame(imu_pose, laser_calib_params);
-
-    for(size_t i = 0; i < ray_dirns.size(); ++i)
-    {
-	if (use_hit_flag)
-	    if (!hit_flag[i])
-		continue;
-	actors.push_back(
-	    vizer.m_line_actor_server.genLineActorDirn(ray_origin, ray_dirns[i]));
-    }
-
-    // pts
-    vtkSmartPointer<vtkActor> actor_pts;
-    actor_pts = vizer.m_points_actor_server.genPointsActor(sim_pts);
-    actor_pts->GetProperty()->SetColor(1, 0, 0);
-    actors.push_back(actor_pts);
-
-    // section model
-    std::vector<vtkSmartPointer<vtkActor> > actors_section
-	= vizer.genSectionModelsActors(sim);
-    actors.insert(actors.end(), actors_section.begin(), actors_section.end());
-
-    vizer.takeItAway(actors);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

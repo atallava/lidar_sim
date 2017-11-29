@@ -4,11 +4,8 @@
 #include <math.h>
 #include <ctime>
 
-#include <vtkProperty.h>
-
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/ModelingUtils.h>
-#include <lidar_sim/RangeDataVizer.h>
 #include <lidar_sim/ClusteringUtils.h>
 #include <lidar_sim/TriangleModeler.h>
 
@@ -27,17 +24,6 @@ int main(int argc, char **argv)
     TriangleModeler modeler;
     modeler.setDebugFlag(1);
     modeler.createTriangleModels(rel_path_pts);
-
-    // viz
-    RangeDataVizer vizer;
-    std::vector<vtkSmartPointer<vtkActor> > actors;
-    vtkSmartPointer<vtkActor> pts_actor = 
-	vizer.m_points_actor_server.genPointsActor(pts);
-    pts_actor->GetProperty()->SetColor(1, 0, 0);
-    actors.push_back(pts_actor);
-    actors.push_back(
-	vizer.m_triangles_actor_server.genTrianglesActor(modeler.m_triangles, modeler.m_fit_pts));
-    vizer.takeItAway(actors);
 
     // write out
     std::string rel_path_triangles = "data/triangle_models.txt";
