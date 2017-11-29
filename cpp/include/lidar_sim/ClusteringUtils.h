@@ -7,8 +7,6 @@
 #include "stdafx.h"
 #include "dataanalysis.h"
 
-#include <lidar_sim/EllipsoidVtkActorServer.h>
-#include <lidar_sim/PointsVtkActorServer.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/MathUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>

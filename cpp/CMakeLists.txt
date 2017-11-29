@@ -110,11 +110,6 @@ add_library(lidar_sim SHARED
   src/VizUtils.cpp
 
   src/Visualizer.cpp
-  # src/EllipsoidVtkActorServer.cpp
-  # src/PointsVtkActorServer.cpp
-  # src/LineVtkActorServer.cpp
-  # src/TrianglesVtkActorServer.cpp
-  # src/RangeDataVizer.cpp 
 
   src/MathUtils.cpp
   src/LaserCalibParams.cpp
