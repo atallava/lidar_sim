@@ -24,9 +24,9 @@ list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_system" ) # Force linking against system
 
 # VTK
-find_package(VTK REQUIRED)
-include(${VTK_USE_FILE})
-list( APPEND LIDAR_SIM_LIBRARIES ${VTK_LIBRARIES} )
+# find_package(VTK REQUIRED)
+# include(${VTK_USE_FILE})
+# list( APPEND LIDAR_SIM_LIBRARIES ${VTK_LIBRARIES} )
 
 # PCL
 find_package( PCL 1.4 REQUIRED )
@@ -103,13 +103,13 @@ include_directories(${LIDAR_SIM_INCLUDE_DIRECTORIES})
 add_library(lidar_sim SHARED 	
 
   src/Test.cpp
-  src/Visualizer.cpp
   
   src/PoseServer.cpp
   src/FrameTimeServer.cpp
   src/DataProcessingUtils.cpp
   src/VizUtils.cpp
 
+  src/Visualizer.cpp
   # src/EllipsoidVtkActorServer.cpp
   # src/PointsVtkActorServer.cpp
   # src/LineVtkActorServer.cpp
