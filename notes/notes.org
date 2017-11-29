@@ -291,3 +291,32 @@ which worked
 
 
 
+* soup up laptop 
+
+- increasing space for ubuntu. both / and /home needed more space. more space
+  was available in a drive used by windows. the space was positioned as windows
+  space, linux root, linux home. i used a bootable gparted usb to make the
+  changes. i had to make changes to the thinkpad bios to get it to boot from
+  usb. secure boot: disable. and then boot from uefi and legacy both. i created
+  the bootable usb using tuxboot.
+
+- cloudcompare installation was very easy. because now it can be done via snap.
+
+- alglib. copies files from desktop
+
+- eigenmvn. copied files from desktop
+
+- flann seems to be present in /usr/include
+
+- cgal. installed via apt.
+
+- nlopt. installed as per website instructions.
+
+- pcl. installed via package
+
+- vtk. attempted package install. might not be sufficient. some clash between
+  pcl and vtk packages.
+
+- ros
+
+

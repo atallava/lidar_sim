@@ -35,23 +35,6 @@ link_directories( ${PCL_LIBRARY_DIRS} )
 add_definitions(${PCL_DEFINITIONS})
 list( APPEND LIDAR_SIM_LIBRARIES ${PCL_LIBRARIES})
 
-# ALGLIB
-set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
-include_directories( ${ALGLIB_INCLUDE_DIR} )
-set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
-set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
-link_directories( ${ALGLIB_LIBRARY_DIR} )
-list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
-
-# EIGENMVN
-set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
-include_directories( ${EIGENMVN_INCLUDE_DIR} )
-
-# FLANN
-# commenting out because flann headers seem to already be in /usr/include
-# set( FLANN_INCLUDE_DIR "/usr0/home/atallav1/" )
-# include_directories( ${FLANN_INCLUDE_DIR} )
-
 # CGAL
 find_package( CGAL)
 include( ${CGAL_USE_FILE} ) 
@@ -59,9 +42,53 @@ include( CGAL_CreateSingleSourceCGALProgram )
 # message( STATUS "CGAL FOUND: " ${CGAL_FOUND} )
 # message( FATAL_ERROR )
 
+########## Desktop options
+
+# # ALGLIB
+# set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
+# include_directories( ${ALGLIB_INCLUDE_DIR} )
+# set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
+# set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
+# link_directories( ${ALGLIB_LIBRARY_DIR} )
+# list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
+
+# # EIGENMVN
+# set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
+# include_directories( ${EIGENMVN_INCLUDE_DIR} )
+
+# # FLANN
+# # commenting out because flann headers seem to already be in /usr/include
+# # set( FLANN_INCLUDE_DIR "/usr0/home/atallav1/" )
+# # include_directories( ${FLANN_INCLUDE_DIR} )
+
+# # NLOPT
+# set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
+# list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
+
+########## Laptop options
+
+# ALGLIB
+set( ALGLIB_INCLUDE_DIR "/home/abhijeet/alglib-3.10.0.cpp/src" )
+include_directories( ${ALGLIB_INCLUDE_DIR} )
+set( ALGLIB_LIBRARY "/home/abhijeet/alglib-3.10.0.cpp/lib/libalglib.so" )
+set( ALGLIB_LIBRARY_DIR "/home/abhijeet/alglib-3.10.0.cpp/lib/" )
+link_directories( ${ALGLIB_LIBRARY_DIR} )
+list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
+
+# EIGENMVN
+set( EIGENMVN_INCLUDE_DIR "/home/abhijeet/eigenmvn" )
+include_directories( ${EIGENMVN_INCLUDE_DIR} )
+
+# FLANN
+# commenting out because flann headers seem to already be in /usr/include
+# set( FLANN_INCLUDE_DIR "/home/abhijeet/" )
+# include_directories( ${FLANN_INCLUDE_DIR} )
+
 # NLOPT
-set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
+set( NLOPT_LIBRARY "/usr/local/lib/libnlopt.a" )
 list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
+
+########## 
 
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
