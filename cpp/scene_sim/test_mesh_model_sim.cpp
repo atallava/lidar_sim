@@ -3,7 +3,6 @@
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/MeshModelSim.h>
-#include <lidar_sim/RangeDataVizer.h>
 
 using namespace lidar_sim;
 
@@ -18,9 +17,6 @@ int main(int argc, char**argv)
     MeshModelSim sim;
     sim.loadObjectMeshes(rel_path_object_meshes);
     sim.setDeterministicSim(true);
-
-    // RangeDataVizer vizer;
-    // vizer.vizObjectMeshes(sim.m_object_mesh_sims);
 
     std::vector<double> ray_origin {-2, 0, 1};
     std::vector<double> ray_dirn {1, 0, 0};
