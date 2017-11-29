@@ -1,8 +1,6 @@
 #include <tuple>
 #include <ctime>
 
-#include <vtkProperty.h>
-
 #include <lidar_sim/SectionLoader.h>
 #include <lidar_sim/ModelingUtils.h>
 #include <lidar_sim/DataProcessingUtils.h>

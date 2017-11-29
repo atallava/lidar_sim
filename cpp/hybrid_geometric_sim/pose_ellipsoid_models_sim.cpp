@@ -57,40 +57,6 @@ int main(int argc, char **argv)
     std::vector<int> hit_flag;
     std::tie(sim_pts, hit_flag) = sim.simPtsGivenIntersections(intersection_flag, dist_along_ray);
 
-    // viz
-    std::vector<vtkSmartPointer<vtkActor> > actors;
-    bool use_intersected_flag  = false;
-    bool use_hit_flag = true;
-
-    // debug
-    // std::cout << "hit flag: " << std::endl;
-    // dispVec(findNonzeroIds(hit_flag));
-    // std::cout << "intersected ellipsoids: " << std::endl;
-    // dispVec(findNonzeroIds(intersected_ellipsoids_flag));
-
-    // ellipsoids
-    for(size_t i = 0; i < ellipsoid_models.size(); ++i)
-    {
-	if (use_intersected_flag)
-	    if (!intersected_ellipsoids_flag[i])
-		continue;
-    }
-
-    // ray
-    for(size_t i = 0; i < ray_dirns.size(); ++i)
-    {
-	if (use_hit_flag)
-	    if (!hit_flag[i])
-		continue;
-    }
-
-    // pts
-    std::vector<std::vector<double> > sim_pts_to_plot;
-    if (use_hit_flag)
-    	sim_pts_to_plot = logicalSubsetArray(sim_pts, hit_flag);
-    else
-    	sim_pts_to_plot = sim_pts;
-
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << std::setprecision(15) << "elapsed time: " << elapsed_time << "s" << std::endl;
 
