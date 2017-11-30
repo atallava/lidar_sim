@@ -42,11 +42,11 @@ include( CGAL_CreateSingleSourceCGALProgram )
 # message( STATUS "CGAL FOUND: " ${CGAL_FOUND} )
 # message( FATAL_ERROR )
 
-########## Desktop options
+# EIGEN
+set( EIGEN_INCLUDE_DIR "/usr/include/eigen3" )
+include_directories( ${EIGEN_INCLUDE_DIR} )
 
-# # EIGEN
-# set( EIGEN_INCLUDE_DIR "/usr/include/eigen3" )
-# include_directories( ${EIGEN_INCLUDE_DIR} )
+########## Desktop options
 
 # # ALGLIB
 # set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
@@ -65,10 +65,6 @@ include( CGAL_CreateSingleSourceCGALProgram )
 # list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
 
 ########## Laptop options
-
-# EIGEN
-set( EIGEN_INCLUDE_DIR "/usr/include/eigen3" )
-include_directories( ${EIGEN_INCLUDE_DIR} )
 
 # ALGLIB
 set( ALGLIB_INCLUDE_DIR "/home/abhijeet/alglib-3.10.0.cpp/src" )

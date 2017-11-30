@@ -312,14 +312,12 @@ which worked
 
 - nlopt. installed as per website instructions.
 
-- pcl. installed via package
+- boost filesystem needed extra handling with cpp11
 
-- vtk. attempted package install. might not be sufficient. some clash between
-  pcl and vtk packages.
+- compilation was maxing out memory. so i added 10gb from home to swap. 
 
 - ros
 
-- boost filesystem needs extra handling with cpp11
 
 
 
