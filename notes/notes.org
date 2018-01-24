@@ -279,7 +279,7 @@ which worked
 
 --------------------------------------------------
 
-* ros install:
+* ros install
 
 - installing indigo. when installing desktop-full, had problems with installing
   the simulators. a gazebo bug is noted on the website. i deleted all gazebo-7
@@ -316,7 +316,9 @@ which worked
 
 - compilation was maxing out memory. so i added 10gb from home to swap. 
 
-- ros
+- ros. i installed kinetic on laptop. i cloned the catkin, but it doesn't seem
+  to work. will have to read about how correctly to use ros with git.
+
 
 
 
