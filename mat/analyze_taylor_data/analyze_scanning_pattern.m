@@ -13,7 +13,7 @@ load('../data/laser_intrinsics','pitchVec');
 
 %%
 nPackets = length(section.packetIds);
-packetIdx = 31;
+packetIdx = 5;
 t = section.packetTimestamps(packetIdx);
 pts = getSectionPtsAtTime(section,t);
 rayOrigin = [0 0 0]; % since points are in laser frame
@@ -34,7 +34,7 @@ flag = (rayYawVec >= maxYaw - 1e-3) & (rayYawVec <= maxYaw);
 yawEnd = mean(rayYawVec(flag));
 
 % initial estimate
-yawVec = linspace(yawStart,yawEnd,12);
+yawVec = linspace(yawStart,yawEnd,12); % 12 yaw angles
 
 % map each point to closest yaw. then calculate mean for that bucket to
 % update yawVec
@@ -81,7 +81,7 @@ for i = 1:length(yawVec)
     end
 end
 
-%% 
+%% plot unrolled ray directions
 figure; 
 marker = 'x';
 markerSizeData = 30;
@@ -107,7 +107,7 @@ xlabel('yaw (rad)'); ylabel('pitch (rad)');
 titleStr = sprintf('packet idx: %d',packetIdx);
 title(titleStr);
 
-%%
+%% plot above + labels
 figure;
 hold on;
 for i = 1:nRays

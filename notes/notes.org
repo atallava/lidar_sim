@@ -12,8 +12,6 @@
   - initializations
   - set functions. like intersections etc
 
---------------------------------------------------
-
 * mat
 
 - grep todos in code
@@ -41,8 +39,6 @@
   - reduce tri models for viewing in rviz
 
 - include short descriptions for each script
-
-------------------------------
 
 * analyze taylor data
 
@@ -84,8 +80,6 @@
   - section 1: [1403045583 1403045649]
   - section 3: [1403045836 1403045903]
   - section 4: [1403045920 1403046033]
-
-------------------------------
 
 * hybrid geometric sim
 
@@ -279,17 +273,25 @@ which worked
 
 --------------------------------------------------
 
-* ros install
+* ros 
 
-- installing indigo. when installing desktop-full, had problems with installing
-  the simulators. a gazebo bug is noted on the website. i deleted all gazebo-7
-  filed i had, yet didn't go away. installing only desktop for now, since i
-  mainly need rviz.
+- installing indigo on cmu desktop. when installing desktop-full, had problems
+  with installing the simulators. a gazebo bug is noted on the website. i
+  deleted all gazebo-7 filed i had, yet didn't go away. installing only desktop
+  for now, since i mainly need rviz.
 
---------------------------------------------------
+- had catkin under git, which was wrong. split each package into a repo. for
+  sanjiban's ones, i need to set an upstream.
 
+- repos forked from humhu. catkin makes
+  - odoscan
+  - argus_utils
+  - rosbag_lib. not somethiing we can merge? ask
+  - infitu
+  - fieldtrack
 
-
+- after installing humhu, did rospack profile.
+- why doesn't odoscan/cloud_features_node show up on tab-complete?
 
 * soup up laptop 
 
