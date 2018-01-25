@@ -1,3 +1,4 @@
+% used as sample data to analyze scanning pattern
 % load section data
 relPathSection = '../../data/taylorJune2014/sections/laser_frame/section_03.xyz';
 nPacketsToRead = 1e3;

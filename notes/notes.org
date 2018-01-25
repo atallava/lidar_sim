@@ -325,3 +325,7 @@ which worked
 
 
 
+* algo state estimation
+
+- should i spin it off into its own repo/ library? try linking lidarsim to a new
+  empty repo

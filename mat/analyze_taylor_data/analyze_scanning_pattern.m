@@ -1,5 +1,7 @@
 % load section data
-relPathSection = 'some_packets';
+% relPathSection = 'some_packets_section_04_subsampled';
+relPathSection = 'some_packets_section_04';
+% relPathSection = 'some_packets';
 load(relPathSection,'section');
 
 relPathPoseLog = 'pose_log';
@@ -13,7 +15,7 @@ load('../data/laser_intrinsics','pitchVec');
 
 %%
 nPackets = length(section.packetIds);
-packetIdx = 5;
+packetIdx = 1;
 t = section.packetTimestamps(packetIdx);
 pts = getSectionPtsAtTime(section,t);
 rayOrigin = [0 0 0]; % since points are in laser frame

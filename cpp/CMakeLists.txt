@@ -48,39 +48,39 @@ include_directories( ${EIGEN_INCLUDE_DIR} )
 
 ########## Desktop options
 
-# # ALGLIB
-# set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
-# include_directories( ${ALGLIB_INCLUDE_DIR} )
-# set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
-# set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
-# link_directories( ${ALGLIB_LIBRARY_DIR} )
-# list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
-
-# # EIGENMVN
-# set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
-# include_directories( ${EIGENMVN_INCLUDE_DIR} )
-
-# # NLOPT
-# set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
-# list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
-
-########## Laptop options
-
 # ALGLIB
-set( ALGLIB_INCLUDE_DIR "/home/abhijeet/alglib-3.10.0.cpp/src" )
+set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
 include_directories( ${ALGLIB_INCLUDE_DIR} )
-set( ALGLIB_LIBRARY "/home/abhijeet/alglib-3.10.0.cpp/lib/libalglib.so" )
-set( ALGLIB_LIBRARY_DIR "/home/abhijeet/alglib-3.10.0.cpp/lib/" )
+set( ALGLIB_LIBRARY "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/libalglib.so" )
+set( ALGLIB_LIBRARY_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/lib/" )
 link_directories( ${ALGLIB_LIBRARY_DIR} )
 list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
 
 # EIGENMVN
-set( EIGENMVN_INCLUDE_DIR "/home/abhijeet/eigenmvn" )
+set( EIGENMVN_INCLUDE_DIR "/usr0/home/atallav1/eigenmvn" )
 include_directories( ${EIGENMVN_INCLUDE_DIR} )
 
 # NLOPT
-set( NLOPT_LIBRARY "/usr/local/lib/libnlopt.a" )
+set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
 list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
+
+########## Laptop options
+
+# # ALGLIB
+# set( ALGLIB_INCLUDE_DIR "/home/abhijeet/alglib-3.10.0.cpp/src" )
+# include_directories( ${ALGLIB_INCLUDE_DIR} )
+# set( ALGLIB_LIBRARY "/home/abhijeet/alglib-3.10.0.cpp/lib/libalglib.so" )
+# set( ALGLIB_LIBRARY_DIR "/home/abhijeet/alglib-3.10.0.cpp/lib/" )
+# link_directories( ${ALGLIB_LIBRARY_DIR} )
+# list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
+
+# # EIGENMVN
+# set( EIGENMVN_INCLUDE_DIR "/home/abhijeet/eigenmvn" )
+# include_directories( ${EIGENMVN_INCLUDE_DIR} )
+
+# # NLOPT
+# set( NLOPT_LIBRARY "/usr/local/lib/libnlopt.a" )
+# list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
 
 ########## 
 
@@ -133,6 +133,9 @@ add_library(lidar_sim SHARED
   src/OrientedBox.cpp
   src/SceneObjectServer.cpp
   src/MeshModelSim.cpp
+
+  # algo state estimation
+  src/StateEstPacketAggregator.cpp
   )
  
 ####################################################################################################
@@ -354,6 +357,11 @@ add_executable(slice_mm_scene_sim scene_sim/slice_mm_scene_sim.cpp)
 ## eval
 
 add_executable(eval_scene_sims scene_sim/eval_scene_sims.cpp)
-  target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
+target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+####################################################################################################
 
+## algo state estimation
+
+add_executable(process_lidar_packets algo_state_estimation/process_lidar_packets.cpp)
+target_link_libraries(process_lidar_packets lidar_sim ${LIDAR_SIM_LIBRARIES})
