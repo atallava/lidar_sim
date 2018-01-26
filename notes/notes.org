@@ -1,5 +1,18 @@
 * board
 
+- the new section creator
+- do the skipping for real
+- viz em
+- think about testing mm sim
+- back to ros
+
+- decide naming scheme for packets to aggregate. one timestamp. in that there
+  will be real, sim etc. and also info about various things, for that one text
+  file will be needed. which should ideally become an xml file.
+- then one class which takes a section in world frame as input, and creates the
+  packets to agg. this should also make a small metadata file
+- then the class which actually does the aggregation
+
 - todo
   - softdev
     - build tools
