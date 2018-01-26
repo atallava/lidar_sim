@@ -1,5 +1,6 @@
 %% load 
-relPathSection = 'some_packets_section_04_subsampled';
+relPathSection = 'some_packets';
+% relPathSection = 'some_packets_section_04_subsampled';
 load(relPathSection,'section');
 
 relPathPoseLog = '../data/pose_log';

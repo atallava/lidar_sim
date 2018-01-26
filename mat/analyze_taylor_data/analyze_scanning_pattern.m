@@ -1,6 +1,6 @@
 % load section data
-% relPathSection = 'some_packets_section_04_subsampled';
-relPathSection = 'some_packets_section_04';
+relPathSection = 'some_packets_section_04_subsampled';
+% relPathSection = 'some_packets_section_04';
 % relPathSection = 'some_packets';
 load(relPathSection,'section');
 
