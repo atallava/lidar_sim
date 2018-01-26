@@ -195,4 +195,7 @@ namespace lidar_sim {
 			      const std::string sim_version, const std::string query_type, const int tag);
     std::string genPathSimDetail(const int section_id, const std::string sim_type, 
 				 const std::string sim_version, const std::string query_type, const int tag);
+
+    // make a certain directory
+    void myMkdir(std::string rel_path_dir);
 }

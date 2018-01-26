@@ -135,7 +135,7 @@ std::vector<double> PoseServer::getPoseAtTime (double t) const
     return pose;
 }
 
-Eigen::Matrix<float,4,4> PoseServer::getTransfAtTime(double t)
+Eigen::Matrix<double,4,4> PoseServer::getTransfAtTime(double t)
 {
     std::vector<double> pose = getPoseAtTime(t);
     double y = pose[0];
@@ -145,7 +145,7 @@ Eigen::Matrix<float,4,4> PoseServer::getTransfAtTime(double t)
     double pitch = pose[4];
     double yaw = pose[5];
 
-    Eigen::Matrix<float,4,4> T_pose;
+    Eigen::Matrix<double,4,4> T_pose;
 
     // convention from cetin
     Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitY());

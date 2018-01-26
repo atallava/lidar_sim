@@ -787,4 +787,17 @@ namespace lidar_sim {
 
 	return ss.str();
     }
+
+    void myMkdir(std::string rel_path_dir)
+    {
+	// if directory exists, do nothing
+	// todo: have option of rewriting even if exists?
+	if (boost::filesystem::exists(rel_path_dir)) {
+	    std::cout << "Directory " << rel_path_dir << " exists" << std::endl;
+	}
+	else {
+	    std::cout << "Creating directory " << rel_path_dir << std::endl;
+	    boost::filesystem::create_directory(rel_path_dir);
+	}
+    }
 }
