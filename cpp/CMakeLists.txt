@@ -135,7 +135,7 @@ add_library(lidar_sim SHARED
   src/MeshModelSim.cpp
 
   # algo state estimation
-  src/StateEstPacketAggregator.cpp
+  src/PacketsToScanAggregator.cpp
   )
  
 ####################################################################################################
@@ -363,5 +363,8 @@ target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## algo state estimation
 
-add_executable(process_lidar_packets algo_state_estimation/process_lidar_packets.cpp)
-target_link_libraries(process_lidar_packets lidar_sim ${LIDAR_SIM_LIBRARIES})
+add_executable(aggregate_packets_to_scans algo_state_estimation/aggregate_packets_to_scans.cpp)
+target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(create_real_packets_to_process algo_state_estimation/create_real_packets_to_process.cpp)
+target_link_libraries(create_real_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})

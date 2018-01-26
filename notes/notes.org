@@ -1,17 +1,33 @@
 * board
 
-- the new section creator
+- ask humphrey how he stores metadata, or format information
+- process info format
+  - source section file
+  - n scans
+  - packets per scan
+  - skip between scans
+- the aggregator tool
+  - reads in the packets as a section
+  - has the details from the process info
+  - scan in world frame
+  - scan in sensor frame
+  - traj list of timestamp, pose pairs
+
+- scrutinize bag_replayer code
+- then conversion into rosbags
+- read out rosbag scans to see if they make sense
+- odoscan part of launch, read some odoscan
+- throw into odoscan
+- tool to read out the poses
+- visualize the estimated trajectory
+
+- i see, so packages can be in subdirs, what matters is having the
+  cmakelists.txt and the package.xml
+
 - do the skipping for real
 - viz em
 - think about testing mm sim
 - back to ros
-
-- decide naming scheme for packets to aggregate. one timestamp. in that there
-  will be real, sim etc. and also info about various things, for that one text
-  file will be needed. which should ideally become an xml file.
-- then one class which takes a section in world frame as input, and creates the
-  packets to agg. this should also make a small metadata file
-- then the class which actually does the aggregation
 
 - todo
   - softdev
@@ -24,6 +40,24 @@
   - for_each
   - initializations
   - set functions. like intersections etc
+
+** notes from humhu
+
+- launch nodes for rosbag and odoscan
+- need to convert my data -> pcl -> rosbag. use py tools
+- use service call to start rosbag playback. the StartPlayback service doesn't
+  take any arguments
+- load bag once, playback multiple times. cannot pause and reset bag once it
+  starts playing, need to kill node. for finer control, better to set start and
+  duration
+- check rosbag cmd line tools
+- to automate experiments, use rosservice py api
+- odoscan services have lo_node base
+- argus_utils for what to set
+- need to write out the published delta transforms to reconstruct estimated
+  trajectory
+- odoscan matcher has a buffer size, and max dt settin
+- can look at laser geom ros package for help stitching scans together
 
 * mat
 

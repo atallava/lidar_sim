@@ -4,10 +4,10 @@
 #include <lidar_sim/SectionLoader.h>
 
 namespace lidar_sim {
-    class StateEstPacketAggregator {
+    class PacketsToScanAggregator {
     public:
-	StateEstPacketAggregator(std::string rel_path_section);
-	void aggregatePacketsIntoScans();
+	PacketsToScanAggregator();
+	void aggregate();
 	void saveScans(std::string rel_path_data);
 
     private:

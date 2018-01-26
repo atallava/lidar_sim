@@ -3,7 +3,7 @@
 
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/DataProcessingUtils.h>
-#include <lidar_sim/StateEstPacketAggregator.h>
+#include <lidar_sim/PacketsToScanAggregator.h>
 
 using namespace lidar_sim;
 
@@ -14,8 +14,7 @@ int main(int argc, char **argv)
     int section_id = 4;
     std::string path_section = genPathSection(section_id);
 
-    StateEstPacketAggregator aggregator(path_section);
-    // aggregator.aggregatePacketsIntoScans();
+    PacketsToScanAggregator aggregator();
 
     double elapsed_time = (clock() - start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s. " << std::endl;
