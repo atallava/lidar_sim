@@ -146,13 +146,18 @@ void PacketsToScanAggregator::saveScanPoses(std::string rel_path_scan_poses)
     for (size_t i = 0; i < (size_t)m_n_scans; ++i)
     {
 	double t = m_scan_timestamps[i];
+	double intpart, fractpart;
+	fractpart = modf(t, &intpart);
+	int t_sec = (int)intpart;
+	int t_nanosec = (int)(fractpart*1e9);
+
 	Eigen::Matrix4d T = m_laser_poses[i];
 
 	std::stringstream oss;
-	oss << t << " ";
+	oss << t_sec << " " << t_nanosec << " ";
 	// transform written in column-major order
-	for (size_t row = 0; row < 4; ++row)
-	    for (size_t col = 0; col < 4; ++col)
+	for (size_t col = 0; col < 4; ++col)
+	    for (size_t row = 0; row < 4; ++row)
 		oss << T(row,col) << " ";
 
 	oss << std::endl;
