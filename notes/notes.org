@@ -13,6 +13,19 @@
   - scan in sensor frame
   - traj list of timestamp, pose pairs
 
+- seems like there is cpp and py api to write rosbag. but can i make code
+  outside catkin that uses rosbag? if not, am i forced to write a 'node' just
+  for some data processing?
+- check using rospy, in which case will do via rospy. then issue is about
+  getting scans in correct data format
+- i believe odoscan cloud message type is pcl::PointCloud<pcl::PointXYZ>. why
+  did humphrey then say pointcloud2?
+- first just load scan in python. try both, pcl and pointcloud2, and see what
+  happens.
+
+- test mm sim's capacity
+- work the new variables into the calculation
+
 - scrutinize bag_replayer code
 - then conversion into rosbags
 - read out rosbag scans to see if they make sense
@@ -23,11 +36,6 @@
 
 - i see, so packages can be in subdirs, what matters is having the
   cmakelists.txt and the package.xml
-
-- do the skipping for real
-- viz em
-- think about testing mm sim
-- back to ros
 
 - todo
   - softdev
@@ -50,7 +58,6 @@
 - load bag once, playback multiple times. cannot pause and reset bag once it
   starts playing, need to kill node. for finer control, better to set start and
   duration
-- check rosbag cmd line tools
 - to automate experiments, use rosservice py api
 - odoscan services have lo_node base
 - argus_utils for what to set
