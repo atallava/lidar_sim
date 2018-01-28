@@ -136,6 +136,7 @@ add_library(lidar_sim SHARED
 
   # algo state estimation
   src/PacketsToScanAggregator.cpp
+  src/AlgoStateEstUtils.cpp
   )
  
 ####################################################################################################
@@ -368,3 +369,6 @@ target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES
 
 add_executable(create_real_packets_to_process algo_state_estimation/create_real_packets_to_process.cpp)
 target_link_libraries(create_real_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(create_hg_sim_packets_to_process algo_state_estimation/create_hg_sim_packets_to_process.cpp)
+target_link_libraries(create_hg_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})

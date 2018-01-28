@@ -14,47 +14,9 @@
 #include <lidar_sim/PoseServer.h>
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/SectionLoader.h>
+#include <lidar_sim/AlgoStateEstUtils.h>
 
 using namespace lidar_sim;
-
-std::string genRelPathSectionUnsubsampled(int section_id)
-{
-    std::ostringstream ss;
-    ss << "../data/taylorJune2014/sections/world_frame/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_world_frame.xyz";
-
-    return ss.str();
-}
-
-void mkdirsForRealPacketsToProcess(int section_id, std::string version)
-{
-    // version dir
-    std::ostringstream ss;
-    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "/version_" << version;
-    std::string rel_path_version_dir = ss.str();
-    if (boost::filesystem::exists(rel_path_version_dir)) {
-	std::cout << rel_path_version_dir << " exists" << std::endl;
-    }
-    else {
-	std::cout << "creating " << rel_path_version_dir << std::endl;
-	boost::filesystem::create_directory(rel_path_version_dir);
-    }
-
-    // real data dir
-    ss.str(""); ss.clear();
-    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "/version_" << version
-       << "/real";
-    std::string rel_path_real_data_dir = ss.str();
-    if (boost::filesystem::exists(rel_path_real_data_dir)) {
-	std::cout << rel_path_real_data_dir << " exists" << std::endl;
-    }
-    else {
-	std::cout << "creating " << rel_path_real_data_dir << std::endl;
-	boost::filesystem::create_directory(rel_path_real_data_dir);
-    }
-}
 
 std::string genRelPathPacketsToProcess(int section_id, std::string version)
 {
@@ -83,7 +45,7 @@ int main(int argc, char **argv)
     // takes about 2 min to read in section_04_world_frame
     // load section
     int section_id = 4;
-    std::string rel_path_section = genRelPathSectionUnsubsampled(section_id);
+    std::string rel_path_section = algo_state_est::genRelPathSectionUnsubsampled(section_id);
     SectionLoader section(rel_path_section); 
 
     size_t n_step_per_scan = 200;
@@ -101,9 +63,9 @@ int main(int argc, char **argv)
 
     // open output file
     std::string datestr_format = "%d%m%y";
-    std::string version = getDateString(datestr_format);
-    mkdirsForRealPacketsToProcess(section_id, version);
-    std::string rel_path_packets_to_process = genRelPathPacketsToProcess(section_id, version);
+    std::string scans_version = getDateString(datestr_format);
+    algo_state_est::mkdirsForPacketsToProcess(section_id, scans_version, "real");
+    std::string rel_path_packets_to_process = genRelPathPacketsToProcess(section_id, scans_version);
     std::ofstream file_packets_to_process(rel_path_packets_to_process);
 
     size_t scan_start_idx = 0;
@@ -147,7 +109,7 @@ int main(int argc, char **argv)
     file_packets_to_process.close();
 
     // write process info
-    std::string rel_path_process_info = genRelPathProcessInfo(section_id, version);
+    std::string rel_path_process_info = genRelPathProcessInfo(section_id, scans_version);
     std::ofstream file_process_info(rel_path_process_info);
 
     std::ostringstream ss;

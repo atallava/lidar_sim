@@ -337,8 +337,6 @@ which worked
 - ros. i installed kinetic on laptop. i cloned the catkin, but it doesn't seem
   to work. will have to read about how correctly to use ros with git.
 
-
-
 * algo state estimation
 
 - should i spin it off into its own repo/ library? try linking lidarsim to a new
@@ -350,3 +348,7 @@ which worked
   - packets per scan
   - skip within scan
   - skip between scans
+
+- the rel path helpers in cpp can be in algo_state_est_utils namespace? and then
+  made somewhat common? i think so.
+

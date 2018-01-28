@@ -15,6 +15,7 @@
 #include <lidar_sim/SectionModelSim.h>
 #include <lidar_sim/SimDetail.h>
 #include <lidar_sim/RayDirnServer.h>
+#include <lidar_sim/AlgoStateEstUtils.h>
 
 using namespace lidar_sim;
 
@@ -40,13 +41,59 @@ std::string genRelPathEllipsoids(int section_id, std::string sim_version, int bl
     return ss.str();
 }
 
-std::string genRelPathPackets(int section_id, std::string scans_version)
+std::string genRelPathRealPackets(int section_id, std::string scans_version)
 {
     std::ostringstream ss;
     ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
        << "/version_" << scans_version 
        << "/real/packets_to_process.txt";
 
+    return ss.str();
+}
+
+void mkdirsForSimPackets(int section_id, std::string scans_version, std::string sim_version)
+{
+    std::ostringstream ss;
+    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+       << "/version_" << scans_version 
+       << "/hg_sim/version_" << sim_version;
+    std::string rel_path_dir = ss.str();
+    myMkdirs(rel_path_dir);
+}
+
+std::string genRelPathRealPtsRef(int section_id, std::string scans_version, 
+				 std::string sim_version)
+{
+    std::ostringstream ss;
+    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+       << "/version_" << scans_version 
+       << "/hg_sim/version_" << sim_version
+       << "real_pts.xyz";
+    std::string rel_path_dir = ss.str();
+    return ss.str();
+}
+
+std::string genRelPathSimPts(int section_id, std::string scans_version, 
+			     std::string sim_version)
+{
+    std::ostringstream ss;
+    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+       << "/version_" << scans_version 
+       << "/hg_sim/version_" << sim_version
+       << "sim_pts.xyz";
+    std::string rel_path_dir = ss.str();
+    return ss.str();
+}
+
+std::string genRelPathSimDetail(int section_id, std::string scans_version, 
+				std::string sim_version)
+{
+    std::ostringstream ss;
+    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
+       << "/version_" << scans_version 
+       << "/hg_sim/version_" << sim_version
+       << "sim_detail.txt";
+    std::string rel_path_dir = ss.str();
     return ss.str();
 }
 
@@ -57,7 +104,7 @@ int main(int argc, char **argv)
     // load real packets
     int section_scans_id = 4;
     std::string scans_version = "260118"; // todo: change
-    std::string rel_path_real_packets = genRelPathRealPackets(section_sim_id, scans_version);
+    std::string rel_path_real_packets = genRelPathRealPackets(section_scans_id, scans_version);
     SectionLoader real_packets(rel_path_real_packets);
 
     // sim object
@@ -107,14 +154,14 @@ int main(int argc, char **argv)
     size_t n_packets = real_packets.m_packet_ids.size();
     for(size_t i = 0; i < n_packets; ++i)
     {
-    	double t = section.m_packet_timestamps[i];
+    	double t = real_packets.m_packet_timestamps[i];
 
     	// pose, ray origin
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
 
 	// packet pts
-    	std::vector<std::vector<double> > this_real_pts = section.getPtsAtTime(t);
+    	std::vector<std::vector<double> > this_real_pts = real_packets.getPtsAtTime(t);
 
     	// add to big list of real pts
     	real_pts.insert(real_pts.end(), this_real_pts.begin(), this_real_pts.end());
@@ -159,26 +206,16 @@ int main(int argc, char **argv)
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
 
     // write real pts
-    int tag = -1;
-    std::string sim_type = "hg";
-    std::string query_type = "slice";
-    std::string path_real_pts = genPathRealPtsRef(section_sim_id, sim_type, sim_version, 
-						  query_type, tag);
-    writePtsToXYZFile(real_pts, path_real_pts);
+    std::string rel_path_real_pts = genRelPathRealPtsRef(section_scans_id, scans_version, sim_version);
+    writePtsToXYZFile(real_pts, rel_path_real_pts);
 
     // write sim pts
-    std::string path_sim_pts = genPathSimPts(section_sim_id, sim_type, sim_version, 
-					     query_type, tag);
-    writePtsToXYZFile(sim_pts, path_sim_pts);
+    std::string rel_path_sim_pts = genRelPathSimPts(section_scans_id, scans_version, sim_version);
+    writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     // write sim detail
-    std::string path_sim_detail = genPathSimDetail(section_sim_id, sim_type, sim_version, 
-						    query_type, tag);
-    sim_detail.save(path_sim_detail);
-
-    // write queried blocks
-    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id, tag); 
-    writeQueriedBlocks(rel_path_queried_blocks, triangle_blocks_queried, ellipsoid_blocks_queried);
+    std::string rel_path_sim_detail = genRelPathSimDetail(section_scans_id, scans_version, sim_version);
+    sim_detail.save(rel_path_sim_detail);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;
