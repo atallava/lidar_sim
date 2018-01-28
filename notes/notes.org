@@ -1,46 +1,34 @@
 * board
 
-- ask humphrey how he stores metadata, or format information
-- process info format
-  - source section file
-  - n scans
-  - packets per scan
-  - skip between scans
-- the aggregator tool
-  - reads in the packets as a section
-  - has the details from the process info
-  - scan in world frame
-  - scan in sensor frame
-  - traj list of timestamp, pose pairs
+- how humphrey he stores metadata, or format information
 
-- seems like there is cpp and py api to write rosbag. but can i make code
-  outside catkin that uses rosbag? if not, am i forced to write a 'node' just
-  for some data processing?
-- check using rospy, in which case will do via rospy. then issue is about
-  getting scans in correct data format
-- i believe odoscan cloud message type is pcl::PointCloud<pcl::PointXYZ>. why
-  did humphrey then say pointcloud2?
-- first just load scan in python. try both, pcl and pointcloud2, and see what
-  happens.
+- simple cpp script in ros must also be node?
+- odoscan cloud message. pcl::PointCloud<pcl::PointXYZ> or pointcloud2?
+- does odoscan use anything of pointcloud2 message aside of the points?
+- bag time vs playback time diff: concern?
+- rosparams for odoscan. tab-spacing oddity in launchfile?
+- need tabs for
+  - roscore
+  - roslaunch
+  - rosservice call replayer
+  - rostopic, rosbag etc
+- scans too far apart currently
+- what is the warning for vel?
+  WARNING: no messages received and simulated time is active.
+  Is /clock being published?
+- i couldn't see the displacement topic
+- ctrl-c takes long to get through
+
+- read odoscan for disp msg type. then a cpp subscriber?
+- then plot poses in matlab
+
+- which parameters to play with, their range, how many samples etc
+- 2 important parameters for anecdote
+- automation setup
 
 - test mm sim's capacity
+- use a version with smaller meshes? what did you do last?
 - work the new variables into the calculation
-
-- scrutinize bag_replayer code
-- then conversion into rosbags
-- read out rosbag scans to see if they make sense
-- odoscan part of launch, read some odoscan
-- throw into odoscan
-- tool to read out the poses
-- visualize the estimated trajectory
-
-- i see, so packages can be in subdirs, what matters is having the
-  cmakelists.txt and the package.xml
-
-- todo
-  - softdev
-    - build tools
-    - unit testing framework
 
 - cpp11
   - auto
@@ -48,23 +36,6 @@
   - for_each
   - initializations
   - set functions. like intersections etc
-
-** notes from humhu
-
-- launch nodes for rosbag and odoscan
-- need to convert my data -> pcl -> rosbag. use py tools
-- use service call to start rosbag playback. the StartPlayback service doesn't
-  take any arguments
-- load bag once, playback multiple times. cannot pause and reset bag once it
-  starts playing, need to kill node. for finer control, better to set start and
-  duration
-- to automate experiments, use rosservice py api
-- odoscan services have lo_node base
-- argus_utils for what to set
-- need to write out the published delta transforms to reconstruct estimated
-  trajectory
-- odoscan matcher has a buffer size, and max dt settin
-- can look at laser geom ros package for help stitching scans together
 
 * mat
 
@@ -344,8 +315,10 @@ which worked
   - infitu
   - fieldtrack
 
-- after installing humhu, did rospack profile.
+- after installing humhu's packages, did rospack profile.
 - why doesn't odoscan/cloud_features_node show up on tab-complete?
+- ros packages can be in subdirs, what matters is having the
+  cmakelists.txt and the package.xml
 
 * soup up laptop 
 
@@ -378,8 +351,13 @@ which worked
 
 
 
-
 * algo state estimation
 
 - should i spin it off into its own repo/ library? try linking lidarsim to a new
   empty repo
+
+- process info format
+  - source section file
+  - n scans
+  - packets per scan
+  - skip between scans

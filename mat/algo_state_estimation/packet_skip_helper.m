@@ -1,66 +1,44 @@
-% more experiment design variables
+% experiment design
 % common variables
 nPacketsUnsubsampled = (1312637-1101873)+1; % for section 4
 nSubsampleSkip = 30;
 nPacketsSubsampled = ceil(nPacketsUnsubsampled/nSubsampleSkip); 
-nPacketsPerScan = 200;
+nStepPerScan = 200;
 packetPeriod = 5e-4; % in sec
+
+%% given nPacketsSimulated, skipBetweenScans, skipWithinScan, calculate lastIdxProcessed
+nSimSkip = 10;
+nPacketsSimulated = floor(nPacketsSubsampled/nSimSkip);
+skipBetweenScans = 100;
+skipWithinScan = 3;
+
+nPacketsPerScan = floor(nStepPerScan/skipWithinScan);
+nScans = floor(nPacketsSimulated/nPacketsPerScan);
+lastIdxProcessed = nScans*nStepPerScan + skipBetweenScans*(nScans-1);
+
+%% given lastIdxProcessed, skipBetweenScans, skipWithinScan, calculate nPacketsSimulated
+trajFracn = 1;
+lastIdxProcessed = floor(nPacketsUnsubsampled*trajFracn);
+skipBetweenScans = 6000;
+skipWithinScan = 1;
+
+nPacketsPerScan = floor(nStepPerScan/skipWithinScan);
+nScans = (lastIdxProcessed + skipBetweenScans)/(nStepPerScan + skipBetweenScans);
+nScans = floor(nScans);
+nPacketsSimulated = nPacketsPerScan*nScans;
+
+%% disp
+durationBetweenScans = skipBetweenScans*packetPeriod;
 
 fprintf('nPacketsUnsubsampled: %d\n',nPacketsUnsubsampled);
 fprintf('nPacketsSubsampled: %d\n',nPacketsSubsampled);
-
-fprintf('\n');
-
-%% given nPacketsSimulated, lastIdxToProcess, calculate skipDuration
-nSimSkip = 10; % this was all that mm could manage
-nPacketsSimulated = ceil(nPacketsSubsampled/nSimSkip);
-lastIdxToProcess = nPacketsUnsubsampled;
-
-nScans = floor(nPacketsSimulated/nPacketsPerScan);
-nTotalSkippedInAgg = lastIdxToProcess - (nScans*nPacketsPerScan);
-nSkipBetweenScans = nTotalSkippedInAgg/(nScans-1);
-skipDuration = nSkipBetweenScans*packetPeriod;
-
-fprintf('case 1:\n');
-fprintf('lastIdxToProcess: %d\n',lastIdxToProcess);
-fprintf('frac of unsubsampled: %.2f\n',lastIdxToProcess/nPacketsUnsubsampled);
-fprintf('nPacketsSimulated: %d\n',nPacketsSimulated);
+fprintf('nStepPerScan: %d\n',nStepPerScan);
+fprintf('skipWithinScan: %d\n',skipWithinScan);
+fprintf('skipBetweenScans: %d\n',skipBetweenScans);
+fprintf('durationBetweenScans: %.3f\n',durationBetweenScans);
+fprintf('nPacketsPerScan: %d\n',nPacketsPerScan);
 fprintf('nScans: %d\n',nScans);
-fprintf('nSkipBetweenScans: %d\n',nSkipBetweenScans);
-fprintf('skipDuration: %.2f\n',skipDuration);
-fprintf('\n');
-
-%% given skipDuration, lastIdxToProcess, calculate nPacketsSimulated
-skipDuration = 1; % in s
-nSkipBetweenScans = floor(skipDuration/packetPeriod);
-lastIdxToProcess = nPacketsUnsubsampled;
-
-nScans = floor(lastIdxToProcess/(nPacketsPerScan+nSkipBetweenScans));
-nPacketsSimulated = nScans*nPacketsPerScan;
-
-fprintf('case 2:\n');
-fprintf('lastIdxToProcess: %d\n',lastIdxToProcess);
-fprintf('frac of unsubsampled: %.2f\n',lastIdxToProcess/nPacketsUnsubsampled);
 fprintf('nPacketsSimulated: %d\n',nPacketsSimulated);
-fprintf('nScans: %d\n',nScans);
-fprintf('nSkipBetweenScans: %d\n',nSkipBetweenScans);
-fprintf('skipDuration: %.2f\n',skipDuration);
-fprintf('\n');
-
-%% given skipDuration, nPacketsSimulated, calculate lastIdxToProcess
-skipDuration = 3; % in s
-nSkipBetweenScans = floor(skipDuration/packetPeriod);
-nSimSkip = 1; % this was all that mm could manage
-nPacketsSimulated = ceil(nPacketsSubsampled/nSimSkip);
-
-nScans = floor(nPacketsSimulated/nPacketsPerScan);
-lastIdxToProcess = nScans*nPacketsPerScan + nSkipBetweenScans*(nScans-1);
-
-fprintf('case 3:\n');
-fprintf('lastIdxToProcess: %d\n',lastIdxToProcess);
-fprintf('frac of unsubsampled: %.2f\n',lastIdxToProcess/nPacketsUnsubsampled);
-fprintf('nPacketsSimulated: %d\n',nPacketsSimulated);
-fprintf('nScans: %d\n',nScans);
-fprintf('nSkipBetweenScans: %d\n',nSkipBetweenScans);
-fprintf('skipDuration: %.2f\n',skipDuration);
+fprintf('lastIdxProcessed: %d\n',lastIdxProcessed);
+fprintf('trajFracn: %.3f\n',lastIdxProcessed/nPacketsUnsubsampled);
 fprintf('\n');
