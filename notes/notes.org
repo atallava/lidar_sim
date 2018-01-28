@@ -2,22 +2,11 @@
 
 - how humphrey he stores metadata, or format information
 
-- simple cpp script in ros must also be node?
-- odoscan cloud message. pcl::PointCloud<pcl::PointXYZ> or pointcloud2?
-- does odoscan use anything of pointcloud2 message aside of the points?
-- bag time vs playback time diff: concern?
-- rosparams for odoscan. tab-spacing oddity in launchfile?
 - need tabs for
   - roscore
   - roslaunch
   - rosservice call replayer
   - rostopic, rosbag etc
-- scans too far apart currently
-- what is the warning for vel?
-  WARNING: no messages received and simulated time is active.
-  Is /clock being published?
-- i couldn't see the displacement topic
-- ctrl-c takes long to get through
 
 - read odoscan for disp msg type. then a cpp subscriber?
 - then plot poses in matlab
@@ -350,7 +339,6 @@ which worked
 
 
 
-
 * algo state estimation
 
 - should i spin it off into its own repo/ library? try linking lidarsim to a new
@@ -360,4 +348,5 @@ which worked
   - source section file
   - n scans
   - packets per scan
+  - skip within scan
   - skip between scans

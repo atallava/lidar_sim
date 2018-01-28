@@ -1,0 +1,10 @@
+* section 4
+
+- 260811
+  - eyeballed parameters. scans were too far apart.
+  - note that the process info was in an old format, viz
+    - source section file
+    - n scans
+    - packets per scan
+    - skip between scans
+

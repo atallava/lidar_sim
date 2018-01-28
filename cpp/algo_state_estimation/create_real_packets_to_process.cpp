@@ -1,6 +1,11 @@
+// takes an unsubsampled section in world frame, and subsamples it for aggregation into scans
+// writes out a file that looks exactly like a section, so that simulating those packets is convenient
+// an info file has the parameters of the subsampling scheme
+
 #include <iostream>
 #include <ctime>
 #include <cmath>
+#include <exception>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
@@ -79,9 +84,19 @@ int main(int argc, char **argv)
     // load section
     int section_id = 4;
     std::string rel_path_section = genRelPathSectionUnsubsampled(section_id);
-    SectionLoader section(rel_path_section);
+    SectionLoader section(rel_path_section); 
 
-    size_t n_packets_per_scan = 200;
+    size_t n_step_per_scan = 200;
+    size_t n_skip_within_scan = 1;
+    bool condn = ( std::fmod((double)n_step_per_scan/n_skip_within_scan,10)
+		   != 0);
+    if (condn)
+    {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "n packets per scan must be an integer.";
+	throw std::invalid_argument(ss_err_msg.str().c_str());
+    }
+    size_t n_packets_per_scan = n_step_per_scan/n_skip_within_scan;
     size_t n_skip_between_scans = 6000;
 
     // open output file
@@ -97,12 +112,12 @@ int main(int argc, char **argv)
     // loop over scans
     while ( scan_start_idx < (n_packets-1) )
     {
-    	size_t scan_end_idx = scan_start_idx + n_packets_per_scan;
+    	size_t scan_end_idx = scan_start_idx + (n_step_per_scan-1);
     	if ( scan_end_idx > (n_packets-1) )
     	    break;
 
 	// loop over packets in scan
-    	for (size_t i = scan_start_idx; i <= scan_end_idx; ++i)
+    	for (size_t i = scan_start_idx; i <= scan_end_idx; i += n_skip_within_scan)
     	{
 	    int packet_id = section.m_packet_ids[i];
 	    double t = section.m_packet_timestamps[i];
@@ -145,6 +160,10 @@ int main(int argc, char **argv)
 
     ss.str(""); ss.clear();
     ss << n_packets_per_scan << " " << std::endl;
+    file_process_info << ss.str();
+
+    ss.str(""); ss.clear();
+    ss << n_skip_within_scan << " " << std::endl;
     file_process_info << ss.str();
 
     ss.str(""); ss.clear();
