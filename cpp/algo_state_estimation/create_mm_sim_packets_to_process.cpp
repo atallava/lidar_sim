@@ -15,6 +15,7 @@
 #include <lidar_sim/MeshModelSim.h>
 #include <lidar_sim/SimDetail.h>
 #include <lidar_sim/RayDirnServer.h>
+#include <lidar_sim/AlgoStateEstUtils.h>
 
 using namespace lidar_sim;
 
@@ -48,47 +49,37 @@ std::string genRelPathObjectMesh(int section_id, std::string sim_version, int ob
     return ss.str();
 }
 
-std::string genRelPathQueriedBlocks(int section_id, std::string sim_version, int tag = -1)
-{
-    std::ostringstream ss;
-    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/mm_sim/version_" << sim_version
-       << "/slice_sim_queried_blocks";
-    if (tag == -1)
-	ss << ".txt";
-    else
-	ss << "_" << tag << ".txt";
-
-    return ss.str();
-}
-
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    // load section
-    int section_sim_id = 1;
-    std::string rel_path_section = genPathSection(section_sim_id);
-    SectionLoader section(rel_path_section);
+    // load real packets
+    int section_scans_id = 4;
+    std::string scans_version = "260118"; // todo: change
+    std::string rel_path_real_packets = 
+	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
+    SectionLoader real_packets(rel_path_real_packets);
 
     // sim object
     // todo: remove this dependency on hg. it is very confusing.
     // manual copying of files is better
-    int section_hg_models_id = 1;
+    std::string sim_type = "mm_sim";
+    int section_hg_models_id = 4;
     std::string hg_sim_version = "130917";
     std::string path_hg_models_dir = genPathHgModelsDir(section_hg_models_id, hg_sim_version);
 
     // find object meshes
+    int section_mm_models_id = 4;
     std::string mm_sim_version = "130917";
     std::vector<std::string> rel_path_object_meshes;
-    std::string rel_path_object_meshes_dir = genRelPathObjectMeshesDir(section_sim_id, mm_sim_version);
+    std::string rel_path_object_meshes_dir = genRelPathObjectMeshesDir(section_mm_models_id, mm_sim_version);
     std::vector<int> object_mesh_ids = 
     	getObjectMeshIds(rel_path_object_meshes_dir);
 
     for(auto i : object_mesh_ids)
-	rel_path_object_meshes.push_back(genRelPathObjectMesh(section_sim_id, mm_sim_version, i));
+	rel_path_object_meshes.push_back(genRelPathObjectMesh(section_mm_models_id, mm_sim_version, i));
 
-    // find triangle models for this section
+    // find ground triangle models for this section
     std::vector<std::string> rel_path_ground_triangle_model_blocks;
     std::vector<int> ground_triangle_model_block_ids = 
 	getTriangleModelBlockIds(path_hg_models_dir, section_hg_models_id);
@@ -107,17 +98,19 @@ int main(int argc, char **argv)
     std::string path_block_node_ids_ground = genPathBlockNodeIdsGround(section_hg_models_id);
     sim.loadBlockInfo(path_imu_posn_nodes, path_block_node_ids_ground);
 
-    // pose server
+    // pose, ray servers
     std::string path_poses_log = genPathPosesLog();
     PoseServer imu_pose_server(path_poses_log);
 
-    // slice ids
-    size_t packet_id_sim_start, packet_id_sim_end;
-    packet_id_sim_start = 0;
-    packet_id_sim_end = section.m_packet_timestamps.size();
-
     RayDirnServer ray_dirn_server;
 
+    // sim packets file
+    algo_state_est::mkdirsForPacketsToProcess(section_scans_id, scans_version, 
+					      sim_type, mm_sim_version);
+    std::string rel_path_sim_packets = 
+	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, sim_type, mm_sim_version);
+    std::ofstream file_sim_packets(rel_path_sim_packets);
+    
     // sim
     // loop over packets
     std::vector<std::vector<double> > sim_pts_all;
@@ -126,19 +119,18 @@ int main(int argc, char **argv)
     std::vector<int> objects_queried;
     std::vector<int> ground_triangle_blocks_queried;
     SimDetail sim_detail;
-    size_t packet_array_step = 10; // todo: check!
+    size_t n_packets = real_packets.m_packet_ids.size();
 
-    for(size_t i = packet_id_sim_start; 
-    	i < packet_id_sim_end; i += packet_array_step)
+    for(size_t i = 0; i < n_packets; ++i)
     {
-    	double t = section.m_packet_timestamps[i];
+    	double t = real_packets.m_packet_timestamps[i];
 
     	// pose, ray origin
     	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
     	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
 
     	// packet pts
-    	std::vector<std::vector<double> > this_real_pts = section.getPtsAtTime(t);
+    	std::vector<std::vector<double> > this_real_pts = real_packets.getPtsAtTime(t);
 
     	// add to big list of real pts
     	real_pts.insert(real_pts.end(), this_real_pts.begin(), this_real_pts.end());
@@ -152,16 +144,6 @@ int main(int argc, char **argv)
 	    = ray_dirn_server.fitDetailToPts(ray_origin, this_real_pts);
 
 	std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_ray_pitches, this_ray_yaws);
-	
-    	// blocks queried for this pose
-    	std::vector<int> this_ground_triangle_blocks_queried = 
-    	    sim.getPosnTriangleBlockMembership(ray_origin);
-    	ground_triangle_blocks_queried.insert(ground_triangle_blocks_queried.begin(),
-    					this_ground_triangle_blocks_queried.begin(), this_ground_triangle_blocks_queried.end());
-    	std::vector<int> this_objects_queried = 
-    	    sim.calcObjectIdsForSim(ray_origin, ray_dirns);
-    	objects_queried.insert(objects_queried.begin(),
-    					this_objects_queried.begin(), this_objects_queried.end());
 
     	// simulate 
     	std::vector<std::vector<double> > this_sim_pts_all;
@@ -187,36 +169,45 @@ int main(int argc, char **argv)
 	sim_detail.m_sim_pts_all.push_back(this_sim_pts_all);
 	// sim hit flag
 	sim_detail.m_sim_hit_flags.push_back(this_sim_hit_flag);
+
+	// write hits to sim packets
+	int packet_id = real_packets.m_packet_ids[i];
+	double intpart, fractpart;
+	fractpart = modf(t, &intpart);
+	int t_sec = (int)intpart;
+	int t_nanosec = (int)(fractpart*1e9);
+	for (size_t j = 0; j < this_sim_pts_all.size(); ++j)
+	{
+	    if (!this_sim_hit_flag[j]) 
+		continue;
+
+	    std::vector<double> pt = this_sim_pts_all[j];
+	    std::ostringstream ss;
+	    ss << packet_id << " " << t_sec << " " << t_nanosec << " " 
+	       << pt[0] << " " << pt[1] << " " << pt[2] << std::endl;
+	    file_sim_packets << ss.str();
+	}
     }
 
-    // retain unique block ids
-    objects_queried = getUniqueSortedVec(objects_queried);
-    ground_triangle_blocks_queried = getUniqueSortedVec(ground_triangle_blocks_queried);
-    
-    // weed out non-hits
-    std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
+    std::cout << "Written packets to process to: " << rel_path_sim_packets  << std::endl;
+    file_sim_packets.close();
 
     // write real pts
-    int tag = -1;
-    std::string sim_type = "mm";
-    std::string query_type = "slice";
-    std::string path_real_pts = genPathRealPtsRef(section_sim_id, sim_type, mm_sim_version, 
-						  query_type, tag);
-    writePtsToXYZFile(real_pts, path_real_pts);
+    std::string rel_path_real_pts = 
+	algo_state_est::genRelPathRealPtsRef(section_scans_id, scans_version, sim_type, mm_sim_version);
+    writePtsToXYZFile(real_pts, rel_path_real_pts);
 
     // write sim pts
-    std::string path_sim_pts = genPathSimPts(section_sim_id, sim_type, mm_sim_version, 
-					     query_type, tag);
-    writePtsToXYZFile(sim_pts, path_sim_pts);
+    std::string rel_path_sim_pts = 
+	algo_state_est::genRelPathSimPts(section_scans_id, sim_type, scans_version, mm_sim_version);
+    // weed out non-hits in sim pts
+    std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
+    writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     // write sim detail
-    std::string path_sim_detail = genPathSimDetail(section_sim_id, sim_type, mm_sim_version, 
-						    query_type, tag);
-    sim_detail.save(path_sim_detail);
-
-    // write queried blocks
-    std::string rel_path_queried_blocks = genRelPathQueriedBlocks(section_sim_id, mm_sim_version, tag); 
-    writeQueriedBlocks(rel_path_queried_blocks, ground_triangle_blocks_queried, objects_queried);
+    std::string rel_path_sim_detail = 
+	algo_state_est::genRelPathSimDetail(section_scans_id, scans_version, sim_type, mm_sim_version);
+    sim_detail.save(rel_path_sim_detail);
 
     double elapsed_time = (clock()-start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s." << std::endl;

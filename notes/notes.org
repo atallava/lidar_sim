@@ -2,12 +2,6 @@
 
 - how humphrey he stores metadata, or format information
 
-- need tabs for
-  - roscore
-  - roslaunch
-  - rosservice call replayer
-  - rostopic, rosbag etc
-
 - read odoscan for disp msg type. then a cpp subscriber?
 - then plot poses in matlab
 
@@ -139,6 +133,8 @@ one file, contains labelings, semgentIds. combine this with the segment pts
 --------------------------------------------------
 
 * cpp:
+
+- simplifying sim creation code
 
 - todo: add progress bars to your sim codes
 
@@ -349,6 +345,16 @@ which worked
   - skip within scan
   - skip between scans
 
-- the rel path helpers in cpp can be in algo_state_est_utils namespace? and then
-  made somewhat common? i think so.
+- need tabs for
+  - roscore
+  - roslaunch
+  - rosservice call replayer
+  - rostopic, rosbag etc
+
+- for creating sim packets, the code for hg and mm is exactly the same, except
+  the sim object creation portions. so need 2 things. first, helper functions
+  for creating the appropriate sim objects. this is in your control. second, one
+  cpp code, which can then take arguments/ function/ handles of some form. get
+  help on the second.
+
 

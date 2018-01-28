@@ -18,26 +18,6 @@
 
 using namespace lidar_sim;
 
-std::string genRelPathPacketsToProcess(int section_id, std::string version)
-{
-    std::ostringstream ss;
-    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "/version_" << version 
-       << "/real/packets_to_process.txt";
-
-    return ss.str();
-}
-
-std::string genRelPathProcessInfo(int section_id, std::string version)
-{
-    std::ostringstream ss;
-    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-       << "/version_" << version 
-       << "/process_info.txt";
-
-    return ss.str();
-}
-
 int main(int argc, char **argv)
 {
     clock_t start_time = clock();
@@ -65,13 +45,14 @@ int main(int argc, char **argv)
     std::string datestr_format = "%d%m%y";
     std::string scans_version = getDateString(datestr_format);
     algo_state_est::mkdirsForPacketsToProcess(section_id, scans_version, "real");
-    std::string rel_path_packets_to_process = genRelPathPacketsToProcess(section_id, scans_version);
+    std::string rel_path_packets_to_process = 
+	algo_state_est::genRelPathPacketsToProcess(section_id, scans_version, "real");
     std::ofstream file_packets_to_process(rel_path_packets_to_process);
 
+    // write packets
     size_t scan_start_idx = 0;
     size_t n_packets = section.m_packet_ids.size();
     int n_scans = 0;
-    // loop over scans
     while ( scan_start_idx < (n_packets-1) )
     {
     	size_t scan_end_idx = scan_start_idx + (n_step_per_scan-1);
@@ -109,31 +90,8 @@ int main(int argc, char **argv)
     file_packets_to_process.close();
 
     // write process info
-    std::string rel_path_process_info = genRelPathProcessInfo(section_id, scans_version);
-    std::ofstream file_process_info(rel_path_process_info);
-
-    std::ostringstream ss;
-    ss << rel_path_section << std::endl;
-    file_process_info << ss.str();
-
-    ss.str(""); ss.clear();
-    ss << n_scans << " " << std::endl;
-    file_process_info << ss.str();
-
-    ss.str(""); ss.clear();
-    ss << n_packets_per_scan << " " << std::endl;
-    file_process_info << ss.str();
-
-    ss.str(""); ss.clear();
-    ss << n_skip_within_scan << " " << std::endl;
-    file_process_info << ss.str();
-
-    ss.str(""); ss.clear();
-    ss << n_skip_between_scans << " " << std::endl;
-    file_process_info << ss.str();
-
-    std::cout << "Written process info to: " << rel_path_process_info << std::endl;
-    file_process_info.close();
+    algo_state_est::writeProcessInfo(section_id, scans_version, n_scans, n_packets_per_scan, 
+				     n_skip_within_scan, n_skip_between_scans);
 
     double elapsed_time = (clock() - start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s. " << std::endl;
