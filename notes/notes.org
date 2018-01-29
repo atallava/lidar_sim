@@ -1,9 +1,17 @@
 * board
 
-- how humphrey he stores metadata, or format information
+- put metadata in yaml
+- how does catkin_make know a py file is a node?
+- making a directory module by putting __init__
 
-- read odoscan for disp msg type. then a cpp subscriber?
-- then plot poses in matlab
+- params
+- can i avoid using global variables?
+
+- python even performs launch?
+
+- matlab poses read in
+- matlab traj calc
+- matlab traj error
 
 - which parameters to play with, their range, how many samples etc
 - 2 important parameters for anecdote
@@ -11,7 +19,6 @@
 
 - test mm sim's capacity
 - use a version with smaller meshes? what did you do last?
-- work the new variables into the calculation
 
 - cpp11
   - auto
