@@ -2,6 +2,8 @@
 
 - 260811
   - eyeballed parameters. scans were too far apart.
+  - takes about 8 mins to create real packets to process. of those, about 2 min
+    is for loading section
   - note that the process info was in an old format, viz
     - source section file
     - n scans

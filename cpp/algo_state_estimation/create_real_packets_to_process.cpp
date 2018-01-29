@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	throw std::invalid_argument(ss_err_msg.str().c_str());
     }
     size_t n_packets_per_scan = n_step_per_scan/n_skip_within_scan;
-    size_t n_skip_between_scans = 6000;
+    size_t n_skip_between_scans = 1000; // check before computing
 
     // open output file
     std::string datestr_format = "%d%m%y";
@@ -58,6 +58,10 @@ int main(int argc, char **argv)
     	size_t scan_end_idx = scan_start_idx + (n_step_per_scan-1);
     	if ( scan_end_idx > (n_packets-1) )
     	    break;
+
+	// todo: delete me
+	std::cout << "scan start idx: " << scan_start_idx 
+		  << " scan end idx: " << scan_end_idx << std::endl;
 
 	// loop over packets in scan
     	for (size_t i = scan_start_idx; i <= scan_end_idx; i += n_skip_within_scan)

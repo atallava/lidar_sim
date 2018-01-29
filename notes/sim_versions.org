@@ -30,16 +30,11 @@
   - 310817
     - pts per cluster, max maha dist selected by sim optim
 
----------------------------------------------------------------------------
-
 * nbr sim
 
 - section 3, 8
   - 250417
     - with pts from section 3
-
-
----------------------------------------------------------------------------
 
 * mm sim
 
@@ -52,8 +47,6 @@
     - i think the models are lost
   - 280817
     - with ground corrected transforms
-
-----------------------------------------------------------------------------------------------------
 
 * primitives
 

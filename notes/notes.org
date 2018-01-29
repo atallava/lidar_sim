@@ -6,7 +6,7 @@
 - better way of putting modules on path?
 - how to avoid using global variables in python
 
-- what happened to scan 2?
+- what happened to scan 2? something wrong with timestamps?
 - T norm
 - more scan versions
 
@@ -14,8 +14,11 @@
 - 2 important parameters for anecdote
 - automation setup
 
-- test mm sim's capacity
-- use a version with smaller meshes? what did you do last?
+- i don't think mm version 280817 used subsampled meshes. now i will create such
+  a version for speed.
+
+- version with skip 1000 should take like 30min to create, there xy spacing
+  should be 2m? then overnight do 500 spacing.
 
 - cpp11
   - auto
@@ -360,5 +363,6 @@ which worked
   for creating the appropriate sim objects. this is in your control. second, one
   cpp code, which can then take arguments/ function/ handles of some form. get
   help on the second.
+
 
 

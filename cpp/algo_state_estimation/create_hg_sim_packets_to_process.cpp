@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "260118"; // todo: change
+    std::string scans_version = "260118"; 
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     // sim object
     std::string sim_type = "hg_sim";
     int section_models_id = 4;
-    std::string sim_version = "130917";
+    std::string sim_version = "080917";
     std::string path_models_dir = genPathHgModelsDir(section_models_id, sim_version);
 
     // find ellipsoid models for this section
