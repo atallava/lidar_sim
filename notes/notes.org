@@ -1,17 +1,14 @@
 * board
 
-- put metadata in yaml
+- put metadata in yaml. yaml-cpp
 - how does catkin_make know a py file is a node?
-- making a directory module by putting __init__
+- making a directory module by putting __init__, as in the srv modules
+- better way of putting modules on path?
+- how to avoid using global variables in python
 
-- params
-- can i avoid using global variables?
-
-- python even performs launch?
-
-- matlab poses read in
-- matlab traj calc
-- matlab traj error
+- what happened to scan 2?
+- T norm
+- more scan versions
 
 - which parameters to play with, their range, how many samples etc
 - 2 important parameters for anecdote
