@@ -1,14 +1,31 @@
 * board
 
 - put metadata in yaml. yaml-cpp
-- how does catkin_make know a py file is a node?
+- how does catkin_make know a py file is a node? 
 - making a directory module by putting __init__, as in the srv modules
-- better way of putting modules on path?
-- how to avoid using global variables in python
+- better way of putting modules on path? should be there if you source
+- how to avoid using global variables in python. put everything in __main__
 
 - what happened to scan 2? something wrong with timestamps?
 - T norm
 - more scan versions
+- l334 laser odometry node. just check the time printouts
+
+- icp params. odoscan/ScanMatcher.cpp
+  - ransac iters for noisy data
+  - log min stuff imp for realtime
+  - better to tune eps than maxiters
+  - reciprocal correspondence won't need
+  - min num points
+- node params
+  - l100 in lo node. keyframing params. error rejection after icp run. set them
+    loose to get disp. i won't need them
+  - set inlier ratios also to be large to get displacements
+  - max dt, won't need. set high enoug.
+  - will want approximate voxel grid. that has just one parameters. voxel size
+    in m. <10m good according to hhu
+- for velocity, enable prediction. tf set up correctly. odom tpoic, vel fields
+  set up correctly
 
 - which parameters to play with, their range, how many samples etc
 - 2 important parameters for anecdote

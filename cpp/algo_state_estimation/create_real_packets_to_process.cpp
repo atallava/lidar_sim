@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	throw std::invalid_argument(ss_err_msg.str().c_str());
     }
     size_t n_packets_per_scan = n_step_per_scan/n_skip_within_scan;
-    size_t n_skip_between_scans = 1000; // check before computing
+    size_t n_skip_between_scans = 500; // check before computing
 
     // open output file
     std::string datestr_format = "%d%m%y";
