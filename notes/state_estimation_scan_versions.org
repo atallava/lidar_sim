@@ -21,6 +21,7 @@
 
 - 300118
   - took about 60 min to create packets_to_process.xyz
+  - 17min to aggregate into scans
 
 
 

@@ -25,6 +25,7 @@ namespace lidar_sim {
 	PoseServer m_imu_pose_server;
 	LaserCalibParams m_laser_calib_params;
 	int m_n_packets_per_scan;
+	int m_n_scans_expected;
 	
 	int m_n_scans;
 	std::vector<Pts> m_scans_world_frame;

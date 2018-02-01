@@ -5,6 +5,7 @@
 #include <lidar_sim/DataProcessingUtils.h>
 #include <lidar_sim/PacketsToScanAggregator.h>
 #include <lidar_sim/AlgoStateEstUtils.h>
+#include <lidar_sim/MathUtils.h>
 
 using namespace lidar_sim;
 
@@ -13,7 +14,7 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     int section_id = 4;
-    std::string scans_version = "290118";
+    std::string scans_version = "300118";
     std::string data_source = "real";
     std::string source_version = "";
 

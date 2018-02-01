@@ -37,14 +37,14 @@ void PacketsToScanAggregator::loadProcessInfo(std::string rel_path_process_info)
     }
 
     std::string current_line;
-    std::getline(file, current_line); // number of scans, ignore
-    std::getline(file, current_line); // n packets per scan, read
-    std::istringstream iss(current_line);
-    iss >> m_n_packets_per_scan;
-
-    // todo: delete me
-    std::cout << "n packets " << m_packets.m_packet_ids.size() << std::endl; 
-    std::cout << "n packets per scan " << m_n_packets_per_scan << std::endl; std::exit(0);
+    std::getline(file, current_line); // number of scans
+    std::istringstream iss_1(current_line);
+    iss_1 >> m_n_scans_expected;
+    std::getline(file, current_line); // n packets per scan
+    std::istringstream iss_2(current_line);
+    iss_2 >> m_n_packets_per_scan;
+    // ignore other data 
+    file.close();
 }
 
 void PacketsToScanAggregator::aggregate()
@@ -55,7 +55,7 @@ void PacketsToScanAggregator::aggregate()
     size_t scan_start_idx = 0;
     while (scan_start_idx < n_packets) 
     {
-	size_t scan_end_idx = scan_start_idx + m_n_packets_per_scan;
+	size_t scan_end_idx = scan_start_idx + (m_n_packets_per_scan - 1);
 	if (scan_end_idx >= n_packets)
 	    break;
 
@@ -91,6 +91,15 @@ void PacketsToScanAggregator::aggregate()
 	m_n_scans++;
 	scan_start_idx = scan_end_idx + 1;
     }
+
+    bool condn = (m_n_scans == m_n_scans_expected);
+    if (!condn)
+    {
+	std::stringstream ss_err_msg;
+	ss_err_msg << "n scans expected: " << m_n_scans_expected 
+		   << " doesn't equal n scans aggregated: " << m_n_scans << std::endl;
+	throw std::runtime_error(ss_err_msg.str().c_str());
+    }
 }
 
 void PacketsToScanAggregator::saveScansWorldFrame(std::string rel_path_scans_dir)
@@ -98,9 +107,8 @@ void PacketsToScanAggregator::saveScansWorldFrame(std::string rel_path_scans_dir
     for (size_t i = 0; i < (size_t)m_n_scans; ++i)
     {
 	std::stringstream ss;
-	// todo: careful, how much does setw need to be? should calculate from
-	// number of digits in m_n_scans. also starting index of scan
-	ss << rel_path_scans_dir << "/scan_" << std::setw(2) << std::setfill('0') << i 
+	int width_arg = getNumDigits(m_n_scans);
+	ss << rel_path_scans_dir << "/scan_" << std::setw(width_arg) << std::setfill('0') << i 
 	   << ".xyz";
 	std::string rel_path_scan = ss.str();
 
@@ -123,9 +131,8 @@ void PacketsToScanAggregator::saveScansLaserFrame(std::string rel_path_scans_dir
     for (size_t i = 0; i < (size_t)m_n_scans; ++i)
     {
 	std::stringstream ss;
-	// todo: careful, how much does setw need to be? should calculate from
-	// number of digits in m_n_scans. also starting index of scan
-	ss << rel_path_scans_dir << "/scan_" << std::setw(2) << std::setfill('0') << i 
+	int width_arg = getNumDigits(m_n_scans);
+	ss << rel_path_scans_dir << "/scan_" << std::setw(width_arg) << std::setfill('0') << i 
 	   << ".xyz";
 	std::string rel_path_scan = ss.str();
 

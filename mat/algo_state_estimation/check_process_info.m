@@ -4,7 +4,7 @@
 nPackets = 210765; % number of packets in section 4 unsubsampled
 nStepPerScan = 200;
 nSkipWithinScan = 1;
-nSkipBetweenScans = 500;
+nSkipBetweenScans = 100;
 
 %% mimic of code in create_real_packets...
 nPacketsPerScan = nStepPerScan/nSkipWithinScan;
@@ -28,17 +28,13 @@ end
 fprintf('nPacketsPerScan: %d\n',nPacketsPerScan);
 fprintf('nScans: %d\n',nScans);
 
-%% mimic of code in PacketsToScanAggregator
-% aggregator loads the correct number of packets to process
-% and n packets per process
-
+%% corrected code in PacketsToScanAggregator
 nPacketsToProcess = nScans*nPacketsPerScan;
 nScansAggregated = 0;
 
 scanStartIdx = 0;
-% found error: way ids used here don't match previous
 while (scanStartIdx < nPacketsToProcess)
-    scanEndIdx = scanStartIdx + nPacketsPerScan;
+    scanEndIdx = scanStartIdx + (nPacketsPerScan-1);
     if (scanEndIdx >= nPacketsToProcess)
         break;
     end

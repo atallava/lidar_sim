@@ -132,5 +132,7 @@ namespace lidar_sim {
 			     Eigen::Vector3d &scale, double level = 9);
 
     double calcF1Score(double precision, double recall);
+
+    int getNumDigits(int x);
 }
 

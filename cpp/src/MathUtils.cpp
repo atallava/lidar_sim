@@ -460,5 +460,19 @@ namespace lidar_sim {
 	double f1_score = 2*(precision*recall)/(precision + recall);
 	return f1_score;
     }
+
+    int getNumDigits(int x)
+    {
+	return (x < 10 ? 1 :   
+		(x < 100 ? 2 :   
+		 (x < 1000 ? 3 :   
+		  (x < 10000 ? 4 :   
+		   (x < 100000 ? 5 :   
+		    (x < 1000000 ? 6 :   
+		     (x < 10000000 ? 7 :  
+		      (x < 100000000 ? 8 :  
+		       (x < 1000000000 ? 9 :  
+			10)))))))));  
+    }
 }
 
