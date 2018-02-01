@@ -41,6 +41,10 @@ void PacketsToScanAggregator::loadProcessInfo(std::string rel_path_process_info)
     std::getline(file, current_line); // n packets per scan, read
     std::istringstream iss(current_line);
     iss >> m_n_packets_per_scan;
+
+    // todo: delete me
+    std::cout << "n packets " << m_packets.m_packet_ids.size() << std::endl; 
+    std::cout << "n packets per scan " << m_n_packets_per_scan << std::endl; std::exit(0);
 }
 
 void PacketsToScanAggregator::aggregate()

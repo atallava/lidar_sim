@@ -6,6 +6,7 @@
 - better way of putting modules on path? should be there if you source
 - how to avoid using global variables in python. put everything in __main__
 
+- n scans error
 - 2 timestamps missing
 - create bags for others
 - runs odoscan. check for obvious errors
@@ -24,7 +25,6 @@
 
 - what happened to scan 2? something wrong with timestamps?
 - T norm
-- more scan versions
 - l334 laser odometry node. just check the time printouts
 
 - icp params. odoscan/ScanMatcher.cpp

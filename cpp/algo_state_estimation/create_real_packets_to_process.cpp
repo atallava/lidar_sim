@@ -22,7 +22,6 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    // takes about 2 min to read in section_04_world_frame
     // load section
     int section_id = 4;
     std::string rel_path_section = algo_state_est::genRelPathSectionUnsubsampled(section_id);
@@ -52,16 +51,13 @@ int main(int argc, char **argv)
     // write packets
     size_t scan_start_idx = 0;
     size_t n_packets = section.m_packet_ids.size();
+
     int n_scans = 0;
     while ( scan_start_idx < (n_packets-1) )
     {
     	size_t scan_end_idx = scan_start_idx + (n_step_per_scan-1);
     	if ( scan_end_idx > (n_packets-1) )
     	    break;
-
-	// todo: delete me
-	std::cout << "scan start idx: " << scan_start_idx 
-		  << " scan end idx: " << scan_end_idx << std::endl;
 
 	// loop over packets in scan
     	for (size_t i = scan_start_idx; i <= scan_end_idx; i += n_skip_within_scan)

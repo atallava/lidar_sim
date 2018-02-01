@@ -12,6 +12,7 @@
 
 - 290118
   - took about 35 min to create packets_to_process.xyz
+  - 6.3min to aggregate into scans
   - new format for process info
     - n scans
     - n packets per scan
