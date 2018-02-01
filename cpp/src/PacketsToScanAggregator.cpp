@@ -37,7 +37,6 @@ void PacketsToScanAggregator::loadProcessInfo(std::string rel_path_process_info)
     }
 
     std::string current_line;
-    std::getline(file, current_line); // the source section, ignore
     std::getline(file, current_line); // number of scans, ignore
     std::getline(file, current_line); // n packets per scan, read
     std::istringstream iss(current_line);

@@ -6,6 +6,22 @@
 - better way of putting modules on path? should be there if you source
 - how to avoid using global variables in python. put everything in __main__
 
+- 2 timestamps missing
+- create bags for others
+- runs odoscan. check for obvious errors
+- read about which params to tune, make a list
+- apply perhaps to bags
+- read about velocity prediction
+- hg sim timing
+  - parallel
+- mm sim timing
+- mm sim meshes
+  - which are meshes with many triangles?
+  - visualize at some subsampling fraction
+  - create new versions
+  - time again
+- upper bound on num packets to sim
+
 - what happened to scan 2? something wrong with timestamps?
 - T norm
 - more scan versions

@@ -1,6 +1,6 @@
 * section 4
 
-- 260811
+- 260118
   - eyeballed parameters. scans were too far apart.
   - takes about 8 mins to create real packets to process. of those, about 2 min
     is for loading section
@@ -9,4 +9,17 @@
     - n scans
     - packets per scan
     - skip between scans
+
+- 290118
+  - took about 35 min to create packets_to_process.xyz
+  - new format for process info
+    - n scans
+    - n packets per scan
+    - skip within scan
+    - skip between scans
+
+- 300118
+  - took about 60 min to create packets_to_process.xyz
+
+
 

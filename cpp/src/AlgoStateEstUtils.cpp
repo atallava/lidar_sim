@@ -91,7 +91,49 @@ namespace lidar_sim {
 	    std::cout << "Written process info to: " << rel_path_process_info << std::endl;
 	    file_process_info.close();
 	}
+	
+	bool mkdirsForScans(int section_id, std::string scans_version, 
+			    std::string data_source, std::string source_version)
+	{
+	    std::string rel_path_laser_frame_dir = 
+		genRelPathScansLaserFrameDir(section_id, scans_version, data_source, source_version);
+	    bool res_1 = boost::filesystem::create_directories(rel_path_laser_frame_dir);
 
+	    std::string rel_path_world_frame_dir = 
+		genRelPathScansWorldFrameDir(section_id, scans_version, data_source, source_version);
+	    bool res_2 = boost::filesystem::create_directories(rel_path_world_frame_dir);
+
+	    return (res_1 && res_2);
+	}
+
+	std::string genRelPathScansLaserFrameDir(int section_id, std::string scans_version, 
+						 std::string data_source, std::string source_version)
+	{
+	    std::string rel_path_packets_dir = genRelPathPacketsDir(section_id, scans_version, data_source, source_version);
+	    std::string rel_path_scans_laser_frame_dir = rel_path_packets_dir + "/scans_laser_frame";
+
+	    return rel_path_scans_laser_frame_dir;
+	}
+
+	std::string genRelPathScansWorldFrameDir(int section_id, std::string scans_version, 
+						 std::string data_source, std::string source_version)
+	{
+	    std::string rel_path_packets_dir = genRelPathPacketsDir(section_id, scans_version, data_source, source_version);
+	    std::string rel_path_scans_world_frame_dir = rel_path_packets_dir + "/scans_world_frame";
+
+	    return rel_path_scans_world_frame_dir;
+	}
+
+	std::string genRelPathScanPoses(int section_id, std::string scans_version, 
+					std::string data_source, std::string source_version)
+	{
+	    std::string rel_path_packets_dir = genRelPathPacketsDir(section_id, scans_version, data_source, source_version);
+	    std::string rel_path_scan_poses = rel_path_packets_dir + "/scan_poses.txt";
+
+	    return rel_path_scan_poses;
+	}
+
+	// for the sims
 	std::string genRelPathRealPtsRef(int section_id, std::string scans_version, 
 					 std::string sim_type, std::string sim_version)
 	{
@@ -127,5 +169,6 @@ namespace lidar_sim {
 	    std::string rel_path_dir = ss.str();
 	    return ss.str();
 	}
+
     }
 }
