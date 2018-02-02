@@ -7,8 +7,9 @@ function [primitivesCell,obbsCell,elementMembership] = loadPatchClassPrimitives(
 % className      - string.
 % elementIds     - nElements length vector.
 %
-% primitivesCell - nElements*nCells cell vector.
-% obbsCell       - nElements*nCells cell vector.
+% primitivesCell - \sum_i nCells_i cell vector.
+% obbsCell       - \sum_i nCells_i cell vector.
+% elementMembership - \sum_i nCells_i length cell vector.
 
 if nargin < 3
     pattern = '([0-9])+';
@@ -17,7 +18,7 @@ if nargin < 3
 end
 
 nElements = length(elementIds);
-% leaving these empty because haven't computer how many cells per element
+% leaving these empty because haven't computed how many cells per element
 primitivesCell = {};
 obbsCell = {};
 elementMembership = [];
@@ -39,7 +40,8 @@ for i = 1:nElements
         % add to big list
         primitivesCell{end+1} = can;
         obbsCell{end+1} = can.obb;
-        elementMembership = [elementMembership repmat(elementId,1,nCells)];
     end
+    
+    elementMembership = [elementMembership repmat(elementId,1,nCells)];
 end
 end

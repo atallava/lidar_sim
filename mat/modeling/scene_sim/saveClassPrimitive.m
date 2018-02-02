@@ -1,4 +1,12 @@
 function saveClassPrimitive(segmentId,pts,ellipsoidModels,relPathPrimitive)
+%SAVECLASSPRIMITIVE
+%
+% SAVECLASSPRIMITIVE(segmentId,pts,ellipsoidModels,relPathPrimitive)
+%
+% segmentId        -
+% pts              -
+% ellipsoidModels  -
+% relPathPrimitive -
 
 % calc obb
 obb_world = calcObb(pts);

@@ -1,4 +1,14 @@
 function [ellipsoidModels_world,pts_world] = createObjectFromPrimitive(objectAnnotation,primitive)
+%CREATEOBJECTFROMPRIMITIVE
+%
+% [ellipsoidModels_world,pts_world] = CREATEOBJECTFROMPRIMITIVE(objectAnnotation,primitive)
+%
+% objectAnnotation      -
+% primitive             -
+%
+% ellipsoidModels_world -
+% pts_world             -
+
 pts = primitive.pts;
 obb = primitive.obb;
 ellipsoidModels = primitive.ellipsoidModels;

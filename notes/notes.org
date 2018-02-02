@@ -10,6 +10,7 @@
 
 - cleanup mm_sim folder in mat, currently quite ugly. for created sims, where
   are metadata?
+  - 
 
 - params
   - ScanMatcher

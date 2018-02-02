@@ -1,4 +1,12 @@
 function savePatchClassPrimitive(segmentId,pts,ellipsoidModels,relPathPatchPrimitive)
+%SAVEPATCHCLASSPRIMITIVE
+%
+% SAVEPATCHCLASSPRIMITIVE(segmentId,pts,ellipsoidModels,relPathPatchPrimitive)
+%
+% segmentId             -
+% pts                   -
+% ellipsoidModels       -
+% relPathPatchPrimitive -
 
 % calc cell obbs
 [patchObbs,ptsInObbs] = calcPatchObbs(pts);

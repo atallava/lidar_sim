@@ -1,25 +1,11 @@
-% given an existing mm_sim version, create a new version by simply
+% given a mm_sim version, create a new version by simply
 % subsampling all mesh objects
-
-%% relpath helpers
-genRelPathTriModels = @(sectionId,simVersion) sprintf('../data/sections/section_%02d/mm_sim/version_%s/scene_tri_models', ...
-    sectionId,simVersion);
-
-genRelPathTriModelsReducedMat = @(sectionId,simVersion) sprintf('../data/sections/section_%02d/mm_sim/version_%s/scene_tri_models_reduced', ...
-    sectionId,simVersion);
-
-genRelPathTriModelsReducedTxt = @(sectionId,simVersion) sprintf('../data/sections/section_%02d/mm_sim/version_%s/scene_tri_models_reduced.txt', ...
-    sectionId,simVersion);
-
-% scene object meshes
-genRelPathSceneTriModels = @(sectionId,simVersion,triModelsId) ...
-    sprintf('../../cpp/data/sections/section_%02d/mm_sim/version_%s/%d.txt', ...
-    sectionId,simVersion,triModelsId);
 
 %% load
 sectionId = 4;
 simVersion = '280817';
-relPathTriModels = genRelPathTriModels(sectionId,simVersion);
+relPathTriModels = ...
+    mm_utils.genRelPathSceneTriModelsMat(sectionId,simVersion);
 load(relPathTriModels,'sceneTriModels');
 
 %% reduce
@@ -44,8 +30,10 @@ reducedSimVersion = '010218';
 for i = 1:length(sceneTriModelsReduced)
     triModelsReduced = sceneTriModelsReduced{i};
     
-    relPathSceneTriModels = genRelPathSceneTriModels(sectionId,reducedSimVersion,i);
+    relPathSceneTriModels = ...
+        mm_utils.genRelPathSceneMeshObjectCpp(sectionId, reducedSimVersion, i);
     saveTriModels(relPathSceneTriModels,triModelsReduced);
     waitbar(i/length(sceneTriModelsReduced));
 end
 hWaitbar = waitbar(0,'saving object meshes');
+

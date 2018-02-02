@@ -8,9 +8,6 @@ genRelPathMeshPrimitivePatchCell = @(className,elementId,cellId) ...
     sprintf('../data/3d_models/primitives/%s/%d/%d',...
     className,elementId,cellId);
 
-genRelPathSceneAnnotation = @(sectionId) ...
-    sprintf('../data/sections/section_%02d/scene_annotation',sectionId);
-
 genRelPathClassPrimitivesDir = @(className) ...
     sprintf('../data/3d_models/primitives/%s',className);
 
@@ -28,7 +25,7 @@ genRelPathTriangleModelsMat = @(sectionId,blockId) ...
 %% load
 % annotations for section 4
 sectionId = 4;
-relPathSceneAnnotation = genRelPathSceneAnnotation(sectionId);
+relPathSceneAnnotation = mm_utils.genRelPathSceneAnnotation(sectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
 
 % class info
