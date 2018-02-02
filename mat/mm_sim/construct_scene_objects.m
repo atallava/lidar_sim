@@ -1,5 +1,5 @@
-% todo: this script needs cleanup
-% and add the obb logic here
+% workhorse for constructing simulated mesh objects given a new scene
+% annotation
 
 verbose = 1;
 
@@ -15,17 +15,16 @@ end
 % class info
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
-load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 if verbose
     fprintf('loaded primitive classes from %s\n',relPathPrimitiveClasses);
 end
 
 % element ids to sample from
 elementIdsPerClass = mm_utils.getPrimitiveElementIds();
-% primitivesPerClass = mm_utils.loadMeshPrimitives(primitivesSectionId,primitivesVersion,primitiveClasses, ...
-%     primitiveClassIsPatch,classElementIds);
+primitivesPerClass = ...
+    mm_utils.loadAllMeshPrimitives(primitiveClasses,primitiveClassIsPatch,elementIdsPerClass);
 
-%% create object meshes
+%% construct objects
 nObjects = length(sceneAnnotation);
 sceneTriModels = {};
 sceneTriModelsCount = 0;
@@ -39,42 +38,27 @@ for i = 1:nObjects
     objectClass = objectAnnotation.objectClass;
     className = primitiveClasses{objectClass};
     
-    % select a primitive
-    % todo: this can be done better, by comparing obb, e.g
-    sampledElementId = randsample(elementIdsPerClass{objectClass},1);
     if ~primitiveClassIsPatch(objectClass)
-        % load primitive
-        relPathPrimitive = mm_utils.genRelPathMeshPrimitive(className,sampledElementId);
-        load(relPathPrimitive,'triModels','obb');
-        
-        % transform triModels to the new pose
-        TCorrected = correctTransformForGround(objectAnnotation.T_object_to_world,objectAnnotation.objectObb_world,obb);
-        triModels_world = applyTransfToTriModels(triModels,TCorrected);
+        % construct object
+        thisClassPrimitives = primitivesPerClass{objectClass};
+        objectTriModels = mm_utils.constructSceneMeshObject(objectAnnotation, thisClassPrimitives);
         
         % add to scene
         sceneTriModelsCount = sceneTriModelsCount+1;
-        sceneTriModels{sceneTriModelsCount} = triModels_world;
+        sceneTriModels{sceneTriModelsCount} = objectTriModels;
     else
-        relPathPrimitivePatch = mm_utils.genRelPathMeshPrimitive(className,sampledElementId);
-        nObjectCells = length(objectAnnotation.T_cells_to_world);
-        pattern = '([0-9]+)';
-        [~,primitiveCellIds] = getPatternMatchingFileIds(relPathPrimitivePatch,pattern);
-        
-        % select primitive patch cells
-        sampledCellIds = randsample(primitiveCellIds,nObjectCells,'true');
-        for j = 1:nObjectCells
-            sampledCellId = sampledCellIds(j);
-            relPathPrimitivePatchCell = ...
-                mm_utils.genRelPathMeshPrimitivePatchCell(className,sampledElementId,sampledCellId);
-            load(relPathPrimitivePatchCell,'triModels','obb');
-        
-            % transform triModels to the new pose
-            TCorrected = correctTransformForGround(objectAnnotation.T_cells_to_world{j},objectAnnotation.cellObbs_world{j},obb);
-            triModels_world = applyTransfToTriModels(triModels,TCorrected);
+        % construct object
+        thisClassPrimitives = primitivesPerClass{objectClass};
+        patchTriModelsCell = mm_utils.constructSceneMeshPatch(objectAnnotation, thisClassPrimitives);
+
+        % add cells to scene
+        nCells = length(patchTriModelsCell);
+        for j = 1:nCells
+            % this cell data
+            objectTriModels = patchTriModelsCell{j};
             
-            % add to scene
             sceneTriModelsCount = sceneTriModelsCount+1;
-            sceneTriModels{sceneTriModelsCount} = triModels_world;
+            sceneTriModels{sceneTriModelsCount} = objectTriModels;
         end
     end
 

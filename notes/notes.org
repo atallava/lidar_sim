@@ -8,10 +8,6 @@
 
 - 1st timestamp
 
-- cleanup mm_sim folder in mat, currently quite ugly. for created sims, where
-  are metadata?
-  - 
-
 - params
   - ScanMatcher
     - ransac_iters. imp for noisy. for ground?

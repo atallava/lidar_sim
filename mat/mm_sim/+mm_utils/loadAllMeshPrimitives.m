@@ -12,7 +12,7 @@ function [primitivesCell, primitiveObbsCell] = loadAllMeshPrimitives(primitiveCl
 
 nClasses = length(primitiveClasses);
 primitivesCell = cell(1,nClasses);
-primitiveObbsCell = cell(1,nPrimitiveClasses);
+primitiveObbsCell = cell(1,nClasses);
 
 for i = 1:nClasses
     thisClass = primitiveClasses{i};
