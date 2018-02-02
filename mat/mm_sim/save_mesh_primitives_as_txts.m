@@ -1,3 +1,4 @@
+% todo: more documentation
 %% helpers
 genRelPathMeshPrimitiveMat = @(className,elementId) ...
     sprintf('../data/3d_models/primitives/%s/%d',className,elementId);

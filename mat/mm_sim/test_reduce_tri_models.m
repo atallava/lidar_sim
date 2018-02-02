@@ -8,7 +8,7 @@ load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 %% pick primitive
 className = 'medium_tree';
-elementId = 1;
+elementId = 3;
 relPathPrimitive = genRelPathMeshPrimitive(className,elementId);
 
 load(relPathPrimitive,'triModels');
@@ -20,7 +20,9 @@ triModelsReduced = reduceTriModels(triModels,fracn);
 hfig1 = figure();
 drawTriModels(hfig1,triModels);
 title(sprintf('class name: %s, element id: %d',className,elementId));
+view(3);
 
 hfig2 = figure();
 drawTriModels(hfig2,triModelsReduced);
 title(sprintf('class name: %s, element id: %d, reduced',className,elementId));
+view(3);

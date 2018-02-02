@@ -105,6 +105,9 @@ int main(int argc, char **argv)
     SimDetail sim_detail;
     size_t n_packets = real_packets.m_packet_ids.size();
 
+    // todo: change/ delete me!
+    n_packets = 200;
+
     for(size_t i = 0; i < n_packets; ++i)
     {
     	double t = real_packets.m_packet_timestamps[i];
@@ -183,7 +186,7 @@ int main(int argc, char **argv)
 
     // write sim pts
     std::string rel_path_sim_pts = 
-	algo_state_est::genRelPathSimPts(section_scans_id, sim_type, scans_version, sim_version);
+	algo_state_est::genRelPathSimPts(section_scans_id, scans_version, sim_type, sim_version);
     // weed out non-hits in sim pts
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);

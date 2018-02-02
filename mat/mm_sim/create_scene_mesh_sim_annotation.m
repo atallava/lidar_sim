@@ -1,4 +1,7 @@
-% rel path helpers
+% todo: this seems identical to construct scene objects, except instead of
+% scene objects an anno is output
+
+%% rel path helpers
 genRelPathMeshPrimitive = @(className,elementId) ...
     sprintf('../data/3d_models/primitives/%s/%d',className,elementId);
 

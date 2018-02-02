@@ -1,3 +1,5 @@
+% helper script
+
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 

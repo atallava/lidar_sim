@@ -1,3 +1,5 @@
+% preprocessing for mesh primitives
+
 relPathSrcDirPly = '../../cpp/data/3d_models/src';
 relPathSrcDirMat = '../data/3d_models/src';
 srcTypes = {'shrubs','grass'};

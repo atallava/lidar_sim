@@ -55,22 +55,22 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "260118"; // todo: change
+    std::string scans_version = "260118"; 
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
 
     // sim object
-    // todo: remove this dependency on hg. it is very confusing.
+    // todo: remove this dependency on hg. it is confusing.
     // manual copying of files is better
-    std::string sim_type = "mm_sim";
     int section_hg_models_id = 4;
-    std::string hg_sim_version = "130917";
+    std::string hg_sim_version = "080917";
     std::string path_hg_models_dir = genPathHgModelsDir(section_hg_models_id, hg_sim_version);
 
     // find object meshes
+    std::string sim_type = "mm_sim";
     int section_mm_models_id = 4;
-    std::string mm_sim_version = "130917";
+    std::string mm_sim_version = "010218";
     std::vector<std::string> rel_path_object_meshes;
     std::string rel_path_object_meshes_dir = genRelPathObjectMeshesDir(section_mm_models_id, mm_sim_version);
     std::vector<int> object_mesh_ids = 
@@ -120,6 +120,9 @@ int main(int argc, char **argv)
     std::vector<int> ground_triangle_blocks_queried;
     SimDetail sim_detail;
     size_t n_packets = real_packets.m_packet_ids.size();
+
+    // todo: change/ delete me!
+    n_packets = 10;
 
     for(size_t i = 0; i < n_packets; ++i)
     {
@@ -199,7 +202,7 @@ int main(int argc, char **argv)
 
     // write sim pts
     std::string rel_path_sim_pts = 
-	algo_state_est::genRelPathSimPts(section_scans_id, sim_type, scans_version, mm_sim_version);
+	algo_state_est::genRelPathSimPts(section_scans_id, scans_version, sim_type, mm_sim_version);
     // weed out non-hits in sim pts
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, hit_flag);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);

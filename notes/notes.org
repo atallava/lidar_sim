@@ -6,59 +6,49 @@
 - better way of putting modules on path? should be there if you source
 - how to avoid using global variables in python. put everything in __main__
 
-- n scans error
-- 2 timestamps missing
-- create bags for others
-- runs odoscan. check for obvious errors
-- read about which params to tune, make a list
-- apply perhaps to bags
-- read about velocity prediction
-- hg sim timing
-  - parallel
+- 1st timestamp
+
+- cleanup mm_sim folder in mat, currently quite ugly. for created sims, where
+  are metadata?
+
+- params
+  - ScanMatcher
+    - ransac_iters. imp for noisy. for ground?
+    - ransac_theshold. imp for noisy
+    - max_correspond_dist. 
+    - log_min_objective_eps. imp for realtime. better to tune than maxiters
+    - min num points. not a concern with vel32 data
+  - ICPMatcher
+    - use_reciprocal_correspond. false
+  - ApproximateVoxelGridFilter
+    - log_voxel_size. < 10m
+  - DegeneracyDetector. not using?
+  - MatchRestarter
+  - laser_odometry_node
+    - max_dt. fixed by data
+    - max_error. set high enough to receive output.
+    - min_inlier_ratio. set high enough to receive output.
+    - min_num_inliers. set high enough to receive output.
+- velocity prediction
+
+- |T|?
+
+- hg sim timing. upper bound on packets to sim
+  - takes 10s to load section 4 sim
+  - currently sim time is 2s/packet
+- hg sim parallel
 - mm sim timing
+  - takes 60s to load section 4 sim
+  - currently sim takes 20s/packet
+
 - mm sim meshes
   - which are meshes with many triangles?
   - visualize at some subsampling fraction
   - create new versions
   - time again
-- upper bound on num packets to sim
 
-- what happened to scan 2? something wrong with timestamps?
-- T norm
-- l334 laser odometry node. just check the time printouts
-
-- icp params. odoscan/ScanMatcher.cpp
-  - ransac iters for noisy data
-  - log min stuff imp for realtime
-  - better to tune eps than maxiters
-  - reciprocal correspondence won't need
-  - min num points
-- node params
-  - l100 in lo node. keyframing params. error rejection after icp run. set them
-    loose to get disp. i won't need them
-  - set inlier ratios also to be large to get displacements
-  - max dt, won't need. set high enoug.
-  - will want approximate voxel grid. that has just one parameters. voxel size
-    in m. <10m good according to hhu
-- for velocity, enable prediction. tf set up correctly. odom tpoic, vel fields
-  set up correctly
-
-- which parameters to play with, their range, how many samples etc
-- 2 important parameters for anecdote
-- automation setup
-
-- i don't think mm version 280817 used subsampled meshes. now i will create such
-  a version for speed.
-
-- version with skip 1000 should take like 30min to create, there xy spacing
-  should be 2m? then overnight do 500 spacing.
-
-- cpp11
-  - auto
-  - lambda expressions
-  - for_each
-  - initializations
-  - set functions. like intersections etc
+- 3 scripts are confusing
+  - reduce scene tri models
 
 * mat
 
@@ -172,7 +162,14 @@ one file, contains labelings, semgentIds. combine this with the segment pts
 
 --------------------------------------------------
 
-* cpp:
+* cpp
+
+- cpp11
+  - auto
+  - lambda expressions
+  - for_each
+  - initializations
+  - set functions. like intersections etc
 
 - simplifying sim creation code
 

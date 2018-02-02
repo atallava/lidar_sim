@@ -1,5 +1,5 @@
 * hg sim
-
+  
 - section 1
   - 130917
     - using primitives from section 3 070917
@@ -47,6 +47,8 @@
     - i think the models are lost
   - 280817
     - with ground corrected transforms
+  - 010218
+    - objects from 280817 subsampled fraction 0.1
 
 * primitives
 

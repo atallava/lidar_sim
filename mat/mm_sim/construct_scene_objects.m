@@ -24,31 +24,42 @@ genRelPathSceneTriModelsMat = @(sectionId,simVersion) ...
     sprintf('../data/sections/section_%02d/mm_sim/version_%s/scene_tri_models', ...
     sectionId,simVersion);
 
+verbose = 1;
+
 %% load
 % annotations 
 newSceneSectionId = 1;
 relPathSceneAnnotation = genRelPathSceneAnnotation(newSceneSectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
+if verbose
+    fprintf('loaded scene annotation from %s\n',relPathSceneAnnotation);
+end
 
 % class info
 relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
+load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
+if verbose
+    fprintf('loaded primitive classes from %s\n',relPathPrimitiveClasses);
+end
 
 %% create object meshes
-elementIdsPerClass = getMmPrimitiveElementIds(); % todo: correct hack
+elementIdsPerClass = getMmPrimitiveElementIds();
 nObjects = length(sceneAnnotation);
 sceneTriModels = {};
 sceneTriModelsCount = 0;
 
-hWaitbar = waitbar(0,'creating object meshes');
+hWaitbar = waitbar(0,'progress');
 % loop through annotations
 clockLocal = tic();
 for i = 1:nObjects
+    % this object data
     objectAnnotation = sceneAnnotation{i};
     objectClass = objectAnnotation.objectClass;
     className = primitiveClasses{objectClass};
+    
     % select a primitive
-    % todo: this can be done better, by comparing obb, e.g.g
+    % todo: this can be done better, by comparing obb, e.g
     sampledElementId = randsample(elementIdsPerClass{objectClass},1);
     if ~primitiveClassIsPatch(objectClass)
         % load primitive
@@ -101,6 +112,7 @@ for i = 1:length(sceneTriModels)
     waitbar(i/length(sceneTriModels));
 end
 
+% as mat
 relPathSceneTriModelsMat = genRelPathSceneTriModelsMat(newSceneSectionId,simVersion);
 save(relPathSceneTriModelsMat,'sceneTriModels');
 close(hWaitbar);
