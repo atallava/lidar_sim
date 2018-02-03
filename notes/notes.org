@@ -6,6 +6,7 @@
 - better way of putting modules on path? should be there if you source
 - how to avoid using global variables in python. put all subfunctions in __main__
 - terminator for ros with many terminals
+- how was tf_static was picked up?
 
 - 1st timestamp
 - |T|?
@@ -29,27 +30,15 @@
     - min_inlier_ratio. set high enough to receive output.
     - min_num_inliers. set high enough to receive output.
 
+- params tuning  
+  
+  start with 
+
 - velocity prediction
-  - put gps messages in bag with msg type nav_msgs/Odometry. populate pose,
-    leave velocity. this topic can have name gps_odom e.g. can put in gps
-    messages for entire section 5, and the timestamps don't have to match the
-    cloud
-    - write pose server in py. find idxs of time bracketing times, and write all
-      those poses. will have to do the conversions from cetin->T->quaternion
-    - or, already have pose log in matlab. so there, do the task of bracketing
-      and cetin->T conversion. then in rosbagging python script can simply load
-      and put in to bag. 
-  - lookat remap
-  - in odoscan_test.launch, remap your gps_odom topic to odom so lo_node can see
-    it, and run things. should experience an error.
-  - what is the expected topic name for laser->imu tf? who expects it that way?
-  - add fieldtrack/odometry_differentiator node. this should fill in the
-    velocity field in the gps_odom Odometry messages
-  - remap odom for lo_node to the one from fieldtrack/odometry_differentiator
-  - will want to make sure that the differentiation is running fine. lookat
-    humphrey's velocity integrator in argus_utils. it is templated cpp code,
-    good for character building. and you will probably have to rewrite a
-    velocity integrator in python.
+
+- will want to make sure that the differentiation is running fine. lookat
+  humphrey's velocity integrator in argus_utils/geometry. it is templated cpp
+  code, good for character building.
 
 - hg sim timing. upper bound on packets to sim
   - takes 10s to load section 4 sim
@@ -64,9 +53,6 @@
   - visualize at some subsampling fraction
   - create new versions
   - time again
-
-- 3 scripts are confusing
-  - reduce scene tri models
 
 * mat
 
