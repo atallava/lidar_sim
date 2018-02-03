@@ -173,3 +173,35 @@ PoseServer::getNearestPoseInLog(const std::vector<double> pose)
     
     return std::make_tuple(m_pose_log[nn_ids[0][0]], nn_ids[0][0]);
 }
+
+double PoseServer::getTimeAtIndex(size_t idx)
+{
+    return m_t_log[idx];
+}
+
+size_t PoseServer::getIndexOfNearestTime(double t)
+{
+    auto it = std::lower_bound(m_t_log.begin(), m_t_log.end(), t);
+    size_t index = std::distance(m_t_log.begin(), it) - 1;
+
+    // t greater than max time
+    if (index == m_t_log.size())
+    {
+	std::cout << std::setprecision(20) << t << " outside range, greater than max time" << std::endl;
+	throw std::range_error("query time outside range");
+    }
+
+    // t less than min time
+    if (index == 0)
+    {
+	std::cout << t << " outside range, less than min time" << std::endl;
+	throw std::range_error("query time outside range");
+    }
+
+    return index;
+}
+
+size_t PoseServer::getNumLogs()
+{
+    return m_t_log.size();
+}

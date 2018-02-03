@@ -375,3 +375,7 @@ target_link_libraries(create_hg_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIB
 
 add_executable(create_mm_sim_packets_to_process algo_state_estimation/create_mm_sim_packets_to_process.cpp)
 target_link_libraries(create_mm_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(write_imu_poses_for_section algo_state_estimation/write_imu_poses_for_section.cpp)
+target_link_libraries(write_imu_poses_for_section lidar_sim ${LIDAR_SIM_LIBRARIES})
+

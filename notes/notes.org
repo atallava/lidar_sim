@@ -4,9 +4,11 @@
 - how does catkin_make know a py file is a node? 
 - making a directory module by putting __init__, as in the srv modules
 - better way of putting modules on path? should be there if you source
-- how to avoid using global variables in python. put everything in __main__
+- how to avoid using global variables in python. put all subfunctions in __main__
+- terminator for ros with many terminals
 
 - 1st timestamp
+- |T|?
 
 - params
   - ScanMatcher
@@ -26,9 +28,28 @@
     - max_error. set high enough to receive output.
     - min_inlier_ratio. set high enough to receive output.
     - min_num_inliers. set high enough to receive output.
-- velocity prediction
 
-- |T|?
+- velocity prediction
+  - put gps messages in bag with msg type nav_msgs/Odometry. populate pose,
+    leave velocity. this topic can have name gps_odom e.g. can put in gps
+    messages for entire section 5, and the timestamps don't have to match the
+    cloud
+    - write pose server in py. find idxs of time bracketing times, and write all
+      those poses. will have to do the conversions from cetin->T->quaternion
+    - or, already have pose log in matlab. so there, do the task of bracketing
+      and cetin->T conversion. then in rosbagging python script can simply load
+      and put in to bag. 
+  - lookat remap
+  - in odoscan_test.launch, remap your gps_odom topic to odom so lo_node can see
+    it, and run things. should experience an error.
+  - what is the expected topic name for laser->imu tf? who expects it that way?
+  - add fieldtrack/odometry_differentiator node. this should fill in the
+    velocity field in the gps_odom Odometry messages
+  - remap odom for lo_node to the one from fieldtrack/odometry_differentiator
+  - will want to make sure that the differentiation is running fine. lookat
+    humphrey's velocity integrator in argus_utils. it is templated cpp code,
+    good for character building. and you will probably have to rewrite a
+    velocity integrator in python.
 
 - hg sim timing. upper bound on packets to sim
   - takes 10s to load section 4 sim
@@ -381,9 +402,11 @@ which worked
 
 - need tabs for
   - roscore
+  - catkin_make
   - roslaunch
-  - rosservice call replayer
-  - rostopic, rosbag etc
+  - rosservice call. or python run_odoscan
+  - rostopic, rosbag
+  - ipython
 
 - for creating sim packets, the code for hg and mm is exactly the same, except
   the sim object creation portions. so need 2 things. first, helper functions

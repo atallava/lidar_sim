@@ -15,6 +15,10 @@ namespace lidar_sim {
 	Eigen::Matrix<double,4,4> getTransfAtTime(double t);
 	std::tuple<std::vector<double>, int> 
 	    getNearestPoseInLog(const std::vector<double> pose);
+	double getTimeAtIndex(size_t idx);
+	// largest index s.t. m_t_log[idx] is < t
+	size_t getIndexOfNearestTime(double t);
+	size_t getNumLogs();
 
     private:
 	void m_loadPoseLog(std::string rel_path_pose_log);
