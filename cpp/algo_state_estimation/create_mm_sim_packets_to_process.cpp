@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "260118"; 
+    std::string scans_version = "260118";
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
@@ -69,6 +69,7 @@ int main(int argc, char **argv)
 
     // find object meshes
     std::string sim_type = "mm_sim";
+    bool deterministic_sim = "false"; 
     int section_mm_models_id = 4;
     std::string mm_sim_version = "010218";
     std::vector<std::string> rel_path_object_meshes;
@@ -91,7 +92,7 @@ int main(int argc, char **argv)
     sim.loadTriangleModelBlocks(rel_path_ground_triangle_model_blocks); // semantically this is ground
     sim.loadObjectMeshes(rel_path_object_meshes);
 
-    sim.setDeterministicSim(false);
+    sim.setDeterministicSim(deterministic_sim);
 
     // blocks info
     std::string path_imu_posn_nodes = genPathImuPosnNodes(section_hg_models_id);
@@ -122,7 +123,7 @@ int main(int argc, char **argv)
     size_t n_packets = real_packets.m_packet_ids.size();
 
     // todo: change/ delete me!
-    n_packets = 10;
+    n_packets = 50;
 
     for(size_t i = 0; i < n_packets; ++i)
     {

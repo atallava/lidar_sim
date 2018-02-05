@@ -14,7 +14,7 @@
 #include <lidar_sim/EllipsoidModelSim.h>
 #include <lidar_sim/TriangleModelSim.h>
 #include <lidar_sim/MathUtils.h>
-#include <lidar_sim/SectionModelSim.h>
+#include <lidar_sim/MeshModelSim.h>
 #include <lidar_sim/SimDetail.h>
 #include <lidar_sim/RayDirnServer.h>
 #include <lidar_sim/AlgoStateEstUtils.h>
@@ -32,13 +32,21 @@ std::string genRelPathTriangles(int section_id, std::string sim_version, int blo
     return ss.str();
 }
 
-std::string genRelPathEllipsoids(int section_id, std::string sim_version, int block_id)
+std::string genRelPathObjectMeshesDir(int section_id, std::string sim_version)
 {
     std::ostringstream ss;
     ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "/hg_sim/version_" << sim_version
-       << "/section_" << std::setw(2) << std::setfill('0') << section_id 
-       << "_block_" << std::setw(2) << std::setfill('0') << block_id << "_non_ground_ellipsoids.txt";
+       << "/mm_sim/version_" << sim_version;
+
+    return ss.str();
+}
+
+std::string genRelPathObjectMesh(int section_id, std::string sim_version, int object_id)
+{
+   std::ostringstream ss;
+    ss << "data/sections/section_" << std::setw(2) << std::setfill('0') << section_id 
+       << "/mm_sim/version_" << sim_version 
+       << "/" << object_id << ".txt";
 
     return ss.str();
 }
@@ -59,35 +67,40 @@ int main(int argc, char **argv)
     SectionLoader real_packets(rel_path_real_packets);
 
     // data for sim object
-    std::string sim_type = "hg_sim";
-    bool deterministic_sim = "false";
-    int section_models_id = 4;
-    std::string sim_version = "080917";
-    std::string path_models_dir = genPathHgModelsDir(section_models_id, sim_version);
+    // todo: remove this dependency on hg. it is confusing.
+    // manual copying of files is better
+    int section_hg_models_id = 4;
+    std::string hg_sim_version = "080917";
+    std::string path_hg_models_dir = genPathHgModelsDir(section_hg_models_id, hg_sim_version);
 
-    // find ellipsoid models for this section
-    std::vector<std::string> rel_path_ellipsoid_model_blocks;
-    std::vector<int> ellipsoid_model_block_ids = 
-    	getEllipsoidModelBlockIds(path_models_dir, section_models_id);
-    for(auto i : ellipsoid_model_block_ids)
-    	rel_path_ellipsoid_model_blocks.push_back(genRelPathEllipsoids(section_models_id, sim_version, i));
+    // find object meshes
+    std::string sim_type = "mm_sim";
+    bool deterministic_sim = "false"; 
+    int section_mm_models_id = 4;
+    std::string mm_sim_version = "010218";
+    std::vector<std::string> rel_path_object_meshes;
+    std::string rel_path_object_meshes_dir = genRelPathObjectMeshesDir(section_mm_models_id, mm_sim_version);
+    std::vector<int> object_mesh_ids = 
+    	getObjectMeshIds(rel_path_object_meshes_dir);
 
-    // find triangle models for this section
-    std::vector<std::string> rel_path_triangle_model_blocks;
-    std::vector<int> triangle_model_block_ids = 
-    	getTriangleModelBlockIds(path_models_dir, section_models_id);
-    for(auto i : triangle_model_block_ids)
-    	rel_path_triangle_model_blocks.push_back(genRelPathTriangles(section_models_id, sim_version, i));
+    for(auto i : object_mesh_ids)
+	rel_path_object_meshes.push_back(genRelPathObjectMesh(section_mm_models_id, mm_sim_version, i));
 
-    // model blocks info
-    std::string path_imu_posn_nodes = genPathImuPosnNodes(section_models_id);
-    std::string path_block_node_ids_ground = genPathBlockNodeIdsGround(section_models_id);
-    std::string path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_models_id);
+    // find ground triangle models for this section
+    std::vector<std::string> rel_path_ground_triangle_model_blocks;
+    std::vector<int> ground_triangle_model_block_ids = 
+	getTriangleModelBlockIds(path_hg_models_dir, section_hg_models_id);
+    for(auto i : ground_triangle_model_block_ids)
+    	rel_path_ground_triangle_model_blocks.push_back(genRelPathTriangles(section_hg_models_id, hg_sim_version, i));
+
+    // hg model blocks info
+    std::string path_imu_posn_nodes = genPathImuPosnNodes(section_hg_models_id);
+    std::string path_block_node_ids_ground = genPathBlockNodeIdsGround(section_hg_models_id);
 
     // obtain ray information per packet for sim
     // currently this is serial
     size_t n_packets = real_packets.m_packet_ids.size();
-    n_packets = 1000; // todo: change/ delete me! limiting n packets to sim for debug
+    n_packets = 50; // todo: change/ delete me! limiting n packets to sim for debug
     std::vector<Pts> real_pts_per_packet;
     std::vector<std::vector<double> > ray_origin_per_packet;
     std::vector<Dirns> ray_dirns_per_packet;
@@ -150,17 +163,17 @@ int main(int argc, char **argv)
     }
 
     // todo: how many threads?    
-    int num_threads = 2;
+    int num_threads = 5;
 #pragma omp parallel num_threads (num_threads) 
     {
 	// create sim object
-	SectionModelSim sim;
+	MeshModelSim sim;
 #pragma omp critical (load_object_data)	
 	{
-	    sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
-	    sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
+	    sim.loadTriangleModelBlocks(rel_path_ground_triangle_model_blocks); // semantically this is ground
+	    sim.loadObjectMeshes(rel_path_object_meshes);
 	    sim.setDeterministicSim(deterministic_sim);
-	    sim.loadBlockInfo(path_imu_posn_nodes, path_block_node_ids_ground, path_block_node_ids_non_ground);
+	    sim.loadBlockInfo(path_imu_posn_nodes, path_block_node_ids_ground);
 	}
 
 	// sim. loop over packets
@@ -186,9 +199,9 @@ int main(int argc, char **argv)
 
     // write sim packets
     algo_state_est::mkdirsForPacketsToProcess(section_scans_id, scans_version, 
-					      sim_type, sim_version);
+					      sim_type, mm_sim_version);
     std::string rel_path_sim_packets = 
-	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, sim_type, sim_version);
+	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, sim_type, mm_sim_version);
     sim_detail.writeSimPackets(rel_path_sim_packets);
     
     // marginalize and write real pts
@@ -196,7 +209,7 @@ int main(int argc, char **argv)
     for (size_t i = 0; i < real_pts_per_packet.size(); ++i)
 	real_pts.insert(real_pts.end(), real_pts_per_packet[i].begin(), real_pts_per_packet[i].end());
     std::string rel_path_real_pts = 
-	algo_state_est::genRelPathRealPtsRef(section_scans_id, scans_version, sim_type, sim_version);
+	algo_state_est::genRelPathRealPtsRef(section_scans_id, scans_version, sim_type, mm_sim_version);
     writePtsToXYZFile(real_pts, rel_path_real_pts);
 
     // marginalize and write sim pts
@@ -212,12 +225,12 @@ int main(int argc, char **argv)
     // weed out non-hits in sim pts
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
     std::string rel_path_sim_pts = 
-	algo_state_est::genRelPathSimPts(section_scans_id, scans_version, sim_type, sim_version);
+	algo_state_est::genRelPathSimPts(section_scans_id, scans_version, sim_type, mm_sim_version);
     writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
     // write sim detail
     std::string rel_path_sim_detail = 
-	algo_state_est::genRelPathSimDetail(section_scans_id, scans_version, sim_type, sim_version);
+	algo_state_est::genRelPathSimDetail(section_scans_id, scans_version, sim_type, mm_sim_version);
     sim_detail.save(rel_path_sim_detail);
 
     struct timeval end_time;

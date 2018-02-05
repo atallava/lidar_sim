@@ -53,6 +53,8 @@ int main()
 	}
     }
 
+    std::cout << real_pts_per_packet[1].size() << std::endl;
+
     double elapsed_time = (clock() - start_time)/CLOCKS_PER_SEC;
     std::cout << "elapsed time: " << elapsed_time << "s. " << std::endl;
 

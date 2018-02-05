@@ -40,25 +40,23 @@
 - hg sim parallel
 - mm sim timing
   - takes 60s to load section 4 sim
+  - version 010218 takes 16s to load section 4 sim
   - currently sim takes 20s/packet
+  - version 010218 takes 5s/packet. still 2.5x slower than hg. try reducing
+    meshes further, then.
 
 - mm sim meshes
-  - any with too many triangles?
+  - try further fraction reduction of mesh. although if 0.1 reduced by 4x, i
+    think unlikely that 0.05 will do more
+  - if there are any particularly heavy meshes, remove those from consideration
 
 - omp
   - currently doing presim operations in serial. with section 4 scans version
     260118, presim takes ~2s for 1k packets. for scans version 300118 it takes
     ~16s/1k packets. why? this implies total presim time for 300118 is ~15min,
     negligible compared to overall sim time.
-  - det false, thread 1. few packets serial, parallel.
-  - det false, thread 1. more packets serial, parallel.
-  - det false, thread 2. few packets serial, parallel. if works, can cleanup omp
-    code some.
-  - det false, thread 2. more packets serial, parallel.
-  - det false, thread 4. more packets serial, parallel.
-  - det false, thread 8. more packets serial, parallel.
-  - det false, thread 8. more packets serial, parallel.
-  - repeat for mm_sim
+- how many threads to use? not inversely proportional
+- ub on hg/ sim packets, fire.
     
 
 * mat

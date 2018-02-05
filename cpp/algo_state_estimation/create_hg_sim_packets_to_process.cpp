@@ -47,14 +47,14 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "260118"; // todo: check for sync with omp
+    std::string scans_version = "260118";
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
 
     // sim object
     std::string sim_type = "hg_sim";
-    bool deterministic_sim = "true"; // todo: set to false
+    bool deterministic_sim = "false";
     int section_models_id = 4;
     std::string sim_version = "080917";
     std::string path_models_dir = genPathHgModelsDir(section_models_id, sim_version);
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
     size_t n_packets = real_packets.m_packet_ids.size();
 
     // todo: change/ delete me!
-    n_packets = 25;
+    n_packets = 1000;
 
     for(size_t i = 0; i < n_packets; ++i)
     {
