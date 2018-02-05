@@ -23,11 +23,12 @@ PoseServer::PoseServer(std::string rel_path_pose_log) :
     m_path_pose_log(rel_path_pose_log),
     m_num_logs(0)
 {
-    m_loadPoseLog(m_path_pose_log);
+    loadPoseLog(m_path_pose_log);
 }
 
-void PoseServer::m_loadPoseLog(std::string path_pose_log)
+void PoseServer::loadPoseLog(std::string path_pose_log)
 {
+    m_path_pose_log = path_pose_log;
     std::ifstream pose_log_file(path_pose_log);
     std::string current_line;
     m_num_logs = 0;

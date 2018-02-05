@@ -22,6 +22,19 @@ SimDetail::SimDetail(const std::string rel_path_file) :
     load(rel_path_file);
 }
 
+void SimDetail::reserve(const int size)
+{
+    m_packet_ids.reserve(size);
+    m_packet_timestamps.reserve(size);
+    m_ray_origins.reserve(size);
+    m_ray_pitches.reserve(size);
+    m_ray_yaws.reserve(size);
+    m_real_pts_all.reserve(size);
+    m_real_hit_flags.reserve(size);
+    m_sim_pts_all.reserve(size);
+    m_sim_hit_flags.reserve(size);
+}
+
 void SimDetail::load(const std::string rel_path_file)
 {
     std::ifstream file(rel_path_file);
@@ -119,6 +132,38 @@ void SimDetail::save(const std::string rel_path_sim_detail)
     }
 
     file.close();
+}
+
+void SimDetail::writeSimPackets(const std::string rel_path_sim_packets)
+{
+    std::ofstream file_sim_packets(rel_path_sim_packets);
+
+    for (size_t i = 0; i < m_packet_ids.size(); ++i)
+    {
+	int packet_id = m_packet_ids[i];
+	double t = m_packet_timestamps[i];
+	double intpart, fractpart;
+	fractpart = modf(t, &intpart);
+	int t_sec = (int)intpart;
+	int t_nanosec = (int)(fractpart*1e9);
+	std::vector<std::vector<double> > this_sim_pts_all 
+	    = m_sim_pts_all[i];
+	std::vector<int> this_sim_hit_flag
+	    = m_sim_hit_flags[i];
+	for (size_t j = 0; j < this_sim_pts_all.size(); ++j)
+	{
+	    if (!this_sim_hit_flag[j]) 
+		continue;
+
+	    std::vector<double> pt = this_sim_pts_all[j];
+	    std::ostringstream ss;
+	    ss << packet_id << " " << t_sec << " " << t_nanosec << " " 
+	       << pt[0] << " " << pt[1] << " " << pt[2] << std::endl;
+	    file_sim_packets << ss.str();
+	}
+    }
+    std::cout << "Written sim packets to process to: " << rel_path_sim_packets  << std::endl;
+    file_sim_packets.close();
 }
 
 void SimDetail::setVerbosity(int verbose)

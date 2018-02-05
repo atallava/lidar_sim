@@ -54,6 +54,7 @@ int main(int argc, char **argv)
 
     // sim object
     std::string sim_type = "hg_sim";
+    bool deterministic_sim = "true"; // todo: set to false
     int section_models_id = 4;
     std::string sim_version = "080917";
     std::string path_models_dir = genPathHgModelsDir(section_models_id, sim_version);
@@ -106,7 +107,7 @@ int main(int argc, char **argv)
     size_t n_packets = real_packets.m_packet_ids.size();
 
     // todo: change/ delete me!
-    n_packets = 200;
+    n_packets = 2;
 
     for(size_t i = 0; i < n_packets; ++i)
     {

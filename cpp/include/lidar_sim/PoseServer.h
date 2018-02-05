@@ -9,6 +9,7 @@ namespace lidar_sim {
     public:
 	PoseServer();
 	PoseServer(std::string rel_path_pose_log);
+	void loadPoseLog(std::string rel_path_pose_log);
 	void printLogAtIndex(int data_id);
 	void printPose(const std::vector<double> pose);
 	std::vector<double> getPoseAtTime (double t) const;
@@ -21,8 +22,6 @@ namespace lidar_sim {
 	size_t getNumLogs();
 
     private:
-	void m_loadPoseLog(std::string rel_path_pose_log);
-	
 	std::vector<std::vector<double>> m_pose_log;
 	std::vector<std::vector<double> > m_posn_log;
 	std::vector<double> m_t_log;

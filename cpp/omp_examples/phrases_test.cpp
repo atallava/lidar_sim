@@ -9,6 +9,8 @@ int main()
 
     clock_t start_time = clock();
 
+    std::vector<std::vector<double> > pts;
+    pts.reserve(10);
 
     std::vector<int> vec;
     size_t n_vec = 10000;

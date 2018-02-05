@@ -7,8 +7,10 @@ namespace lidar_sim {
     public:
 	SimDetail();
 	SimDetail(const std::string rel_path_file);
+	void reserve(const int size);
 	void load(const std::string rel_path_sim_detail);
 	void save(const std::string rel_path_sim_detail);
+	void writeSimPackets(const std::string rel_path_sim_packets);
 	void setVerbosity(int verbose);
 
 	typedef std::vector<std::vector<double> > Pts;
@@ -17,6 +19,8 @@ namespace lidar_sim {
 	std::vector<std::vector<double> > getPtsFromLine(const std::string line);
 	std::vector<int> getHitFlagFromLine(const std::string line);
 
+	std::vector<int> m_packet_ids;
+	std::vector<double> m_packet_timestamps;
 	std::vector<std::vector<double> > m_ray_origins;
 	std::vector<std::vector<double> > m_ray_pitches;
 	std::vector<std::vector<double> > m_ray_yaws;
