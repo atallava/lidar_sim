@@ -30,10 +30,6 @@
     - min_inlier_ratio. set high enough to receive output.
     - min_num_inliers. set high enough to receive output.
 
-- params tuning  
-  
-  start with 
-
 - velocity prediction
 
 - will want to make sure that the differentiation is running fine. lookat
