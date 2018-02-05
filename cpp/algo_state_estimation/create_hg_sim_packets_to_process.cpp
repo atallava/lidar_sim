@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "260118"; 
+    std::string scans_version = "260118"; // todo: check for sync with omp
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
     sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 
-    sim.setDeterministicSim(false);
+    sim.setDeterministicSim(deterministic_sim);
 
     std::string path_imu_posn_nodes = genPathImuPosnNodes(section_models_id);
     std::string path_block_node_ids_ground = genPathBlockNodeIdsGround(section_models_id);
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
     size_t n_packets = real_packets.m_packet_ids.size();
 
     // todo: change/ delete me!
-    n_packets = 2;
+    n_packets = 25;
 
     for(size_t i = 0; i < n_packets; ++i)
     {

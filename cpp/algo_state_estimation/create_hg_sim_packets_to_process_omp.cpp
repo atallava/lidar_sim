@@ -44,13 +44,14 @@ std::string genRelPathEllipsoids(int section_id, std::string sim_version, int bl
 
 int main(int argc, char **argv)
 {
-    typedef std::vector<std::vector<double> > Pts;
-
     clock_t start_time = clock();
+
+    typedef std::vector<std::vector<double> > Pts;
+    typedef std::vector<std::vector<double> > Dirns;
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "260118"; 
+    std::string scans_version = "260118"; // todo: check for sync with serial
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
@@ -81,20 +82,70 @@ int main(int argc, char **argv)
     std::string path_block_node_ids_ground = genPathBlockNodeIdsGround(section_models_id);
     std::string path_block_node_ids_non_ground = genPathBlockNodeIdsNonGround(section_models_id);
 
-    // miscellaenous move-outs of parallel
-    std::string path_poses_log = genPathPosesLog();
+    // obtain ray information per packet for sim
+    // currently this is serial
     size_t n_packets = real_packets.m_packet_ids.size();
-    n_packets = 2; // todo: change/ delete me! limiting n packets to sim for debug
+    n_packets = 25; // todo: change/ delete me! limiting n packets to sim for debug
     std::vector<Pts> real_pts_per_packet;
-    real_pts_per_packet.reserve(n_packets);
-    std::vector<Pts> sim_pts_all_per_packet;
-    sim_pts_all_per_packet.reserve(n_packets);
-    std::vector<std::vector<int> > sim_hit_flag_per_packet;
-    sim_hit_flag_per_packet.reserve(n_packets);
-
-    // sim detail
+    std::vector<std::vector<double> > ray_origin_per_packet;
+    std::vector<Dirns> ray_dirns_per_packet;
     SimDetail sim_detail; 
-    sim_detail.reserve(n_packets);
+    sim_detail.m_sim_pts_all.resize(n_packets);
+    sim_detail.m_sim_hit_flags.resize(n_packets);
+
+    LaserCalibParams laser_calib_params;
+
+    // pose, ray servers
+    std::string path_poses_log = genPathPosesLog();
+    PoseServer imu_pose_server(path_poses_log);
+    RayDirnServer ray_dirn_server;
+
+    for (size_t i = 0; i < n_packets; ++i)
+    {
+	int packet_id = real_packets.m_packet_ids[i];
+	double t = real_packets.m_packet_timestamps[i];
+	
+	// pose, ray origin
+	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
+	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, laser_calib_params);
+
+	// packet pts
+	Pts this_packet_real_pts = real_packets.getPtsAtTime(t);
+	real_pts_per_packet.push_back(this_packet_real_pts); 
+	
+	// ray dirns
+	std::vector<double> this_packet_ray_pitches;
+	std::vector<double> this_packet_ray_yaws;
+	std::vector<std::vector<double> > this_real_pts_all;
+	std::vector<int> this_real_hit_flag;
+	std::tie(this_packet_ray_pitches, this_packet_ray_yaws, this_real_pts_all, this_real_hit_flag)
+	    = ray_dirn_server.fitDetailToPts(ray_origin, real_pts_per_packet[i]);
+	std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_packet_ray_pitches, this_packet_ray_yaws);
+
+	// store for parallel sim
+	ray_origin_per_packet.push_back(ray_origin);
+	ray_dirns_per_packet.push_back(ray_dirns);
+
+	// add to sim detail
+	// packet details
+	sim_detail.m_packet_ids.push_back(packet_id);
+	sim_detail.m_packet_timestamps.push_back(t);
+	// ray origin
+	sim_detail.m_ray_origins.push_back(ray_origin);
+	// pitches
+	sim_detail.m_ray_pitches.push_back(this_packet_ray_pitches);
+	// yaws
+	sim_detail.m_ray_yaws.push_back(this_packet_ray_yaws);
+	// real pts all
+	sim_detail.m_real_pts_all.push_back(this_real_pts_all);
+	// real hit flag
+	sim_detail.m_real_hit_flags.push_back(this_real_hit_flag);
+
+	// resize sim detail data for parallel sim
+	size_t n_rays = ray_dirns.size();
+	sim_detail.m_sim_pts_all[i].resize(n_rays, std::vector<double> (3));
+	sim_detail.m_sim_hit_flags[i].resize(n_rays);
+    }
 
     // todo: how many threads?    
     int num_threads = 1;
@@ -102,99 +153,33 @@ int main(int argc, char **argv)
     {
 	// create sim object
 	SectionModelSim sim;
-
-	// pose, ray servers
-	PoseServer imu_pose_server(path_poses_log);
-	RayDirnServer ray_dirn_server;
-
 #pragma omp critical (load_object_data)	
 	{
-	    // sim object
 	    sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
 	    sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 	    sim.setDeterministicSim(deterministic_sim);
 	    sim.loadBlockInfo(path_imu_posn_nodes, path_block_node_ids_ground, path_block_node_ids_non_ground);
-
-	    // pose server
-	    imu_pose_server.loadPoseLog(path_poses_log);
 	}
 
-	// sim 
-	// loop over packets
+	// sim. loop over packets
 #pragma omp for
 	for(size_t i = 0; i < n_packets; ++i)
 	{	
-	    double t = real_packets.m_packet_timestamps[i];
+	    // todo: need ray origins and ray dirns
 
-	    // pose, ray origin
-	    std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
-	    std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, sim.m_laser_calib_params);
+	    std::vector<double> ray_origin = ray_origin_per_packet[i];
+	    std::vector<std::vector<double> > ray_dirns = ray_dirns_per_packet[i];
 
-	    // packet pts
-	    real_pts_per_packet[i] = real_packets.getPtsAtTime(t);
-	    // std::vector<std::vector<double> > this_real_pts = real_packets.getPtsAtTime(t);
-
-	    // ray dirns
-	    std::vector<double> this_packet_ray_pitches;
-	    std::vector<double> this_packet_ray_yaws;
-	    std::vector<std::vector<double> > this_real_pts_all;
-	    std::vector<int> this_real_hit_flag;
-	    std::tie(this_packet_ray_pitches, this_packet_ray_yaws, this_real_pts_all, this_real_hit_flag)
-		= ray_dirn_server.fitDetailToPts(ray_origin, real_pts_per_packet[i]);
-
-	    std::vector<std::vector<double> > ray_dirns = calcRayDirnsFromSph(this_packet_ray_pitches, this_packet_ray_yaws);
-	
 	    // simulate 
 	    std::vector<std::vector<double> > this_sim_pts_all;
 	    std::vector<int> this_sim_hit_flag;
 	    std::tie(this_sim_pts_all, this_sim_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
 
-	    sim_pts_all_per_packet[i] = this_sim_pts_all;
-	    sim_hit_flag_per_packet[i] = this_sim_hit_flag;
-
 	    // add to sim detail
-	    // packet details
-	    sim_detail.m_packet_ids[i] = real_packets.m_packet_ids[i];
-	    sim_detail.m_packet_timestamps[i] = real_packets.m_packet_timestamps[i];
-	    // ray origin
-	    sim_detail.m_ray_origins[i] = ray_origin;
-	    // sim_detail.m_ray_origins.push_back(ray_origin);
-	    // pitches
-	    sim_detail.m_ray_pitches[i] = this_packet_ray_pitches;
-	    // sim_detail.m_ray_pitches.push_back(this_packet_ray_pitches);
-	    // yaws
-	    sim_detail.m_ray_yaws[i] = this_packet_ray_yaws;
-	    // sim_detail.m_ray_yaws.push_back(this_packet_ray_yaws);
-	    // real pts all
-	    sim_detail.m_real_pts_all[i] = this_real_pts_all;
-	    // sim_detail.m_real_pts_all.push_back(this_real_pts_all);
-	    // real hit flag
-	    sim_detail.m_real_hit_flags[i] = this_real_hit_flag;
-	    // sim_detail.m_real_hit_flags.push_back(this_real_hit_flag);
 	    // sim pts all
 	    sim_detail.m_sim_pts_all[i] = this_sim_pts_all;
-	    // sim_detail.m_sim_pts_all.push_back(this_sim_pts_all);
 	    // sim hit flag
 	    sim_detail.m_sim_hit_flags[i] = this_sim_hit_flag;
-	    // sim_detail.m_sim_hit_flags.push_back(this_sim_hit_flag);
-
-	    // write hits to sim packets
-	    // int packet_id = real_packets.m_packet_ids[i];
-	    // double intpart, fractpart;
-	    // fractpart = modf(t, &intpart);
-	    // int t_sec = (int)intpart;
-	    // int t_nanosec = (int)(fractpart*1e9);
-	    // for (size_t j = 0; j < this_sim_pts_all.size(); ++j)
-	    // {
-	    //     if (!this_sim_hit_flag[j]) 
-	    // 	continue;
-
-	    //     std::vector<double> pt = this_sim_pts_all[j];
-	    //     std::ostringstream ss;
-	    //     ss << packet_id << " " << t_sec << " " << t_nanosec << " " 
-	    //        << pt[0] << " " << pt[1] << " " << pt[2] << std::endl;
-	    //     file_sim_packets << ss.str();
-	    // }
 	}
 
     }   // omp parallel ends
@@ -205,7 +190,6 @@ int main(int argc, char **argv)
     std::string rel_path_sim_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, sim_type, sim_version);
     sim_detail.writeSimPackets(rel_path_sim_packets);
-    
     
     // marginalize and write real pts
     std::vector<std::vector<double> > real_pts;
@@ -218,12 +202,12 @@ int main(int argc, char **argv)
     // marginalize and write sim pts
     std::vector<std::vector<double> > sim_pts_all;
     std::vector<int> sim_hit_flag;
-    for (size_t i = 0; i < sim_pts_all_per_packet.size(); ++i)
+    for (size_t i = 0; i < sim_detail.m_sim_pts_all.size(); ++i)
     {
 	sim_pts_all.insert(sim_pts_all.end(), 
-			   sim_pts_all_per_packet[i].begin(), sim_pts_all_per_packet[i].end());
+			   sim_detail.m_sim_pts_all[i].begin(), sim_detail.m_sim_pts_all[i].end());
     	sim_hit_flag.insert(sim_hit_flag.end(), 
-			    sim_hit_flag_per_packet[i].begin(), sim_hit_flag_per_packet[i].end());
+			    sim_detail.m_sim_hit_flags[i].begin(), sim_detail.m_sim_hit_flags[i].end());
     }
     // weed out non-hits in sim pts
     std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);

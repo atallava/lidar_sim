@@ -22,19 +22,6 @@ SimDetail::SimDetail(const std::string rel_path_file) :
     load(rel_path_file);
 }
 
-void SimDetail::reserve(const int size)
-{
-    m_packet_ids.reserve(size);
-    m_packet_timestamps.reserve(size);
-    m_ray_origins.reserve(size);
-    m_ray_pitches.reserve(size);
-    m_ray_yaws.reserve(size);
-    m_real_pts_all.reserve(size);
-    m_real_hit_flags.reserve(size);
-    m_sim_pts_all.reserve(size);
-    m_sim_hit_flags.reserve(size);
-}
-
 void SimDetail::load(const std::string rel_path_file)
 {
     std::ifstream file(rel_path_file);

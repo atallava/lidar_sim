@@ -7,7 +7,6 @@ namespace lidar_sim {
     public:
 	SimDetail();
 	SimDetail(const std::string rel_path_file);
-	void reserve(const int size);
 	void load(const std::string rel_path_sim_detail);
 	void save(const std::string rel_path_sim_detail);
 	void writeSimPackets(const std::string rel_path_sim_packets);
