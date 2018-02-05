@@ -31,10 +31,8 @@
     - min_num_inliers. set high enough to receive output.
 
 - velocity prediction
-
-- will want to make sure that the differentiation is running fine. lookat
-  humphrey's velocity integrator in argus_utils/geometry. it is templated cpp
-  code, good for character building.
+  - needs frame check
+  - velocity integration check
 
 - hg sim timing. upper bound on packets to sim
   - takes 10s to load section 4 sim
@@ -45,10 +43,13 @@
   - currently sim takes 20s/packet
 
 - mm sim meshes
-  - which are meshes with many triangles?
-  - visualize at some subsampling fraction
-  - create new versions
-  - time again
+  - any with too many triangles?
+
+- omp
+  - install gnu openmp
+  - caveats for shared resources
+  - will probably have to reorder loops
+  - omp critical
 
 * mat
 
@@ -372,8 +373,9 @@ which worked
 
 * algo state estimation
 
-- should i spin it off into its own repo/ library? try linking lidarsim to a new
-  empty repo
+- ideally should be own repo/ codebase. practice for linking your lidar_sim
+  libraries too.
+- created nested namespace, but this could also be its own namespace
 
 - process info format
   - source section file
