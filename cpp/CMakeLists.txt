@@ -64,6 +64,14 @@ include_directories( ${EIGENMVN_INCLUDE_DIR} )
 set( NLOPT_LIBRARY "/usr0/local/lib/libnlopt.a" )
 list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
 
+# OPENMP
+find_package(OpenMP)
+if (OPENMP_FOUND)
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+
 ########## Laptop options
 
 # # ALGLIB
@@ -197,6 +205,24 @@ add_library(lidar_sim SHARED
 
 # add_executable(trial nlopt_examples/trial.cpp)
 #   target_link_libraries(trial lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+####################################################################################################
+
+# omp examples
+
+## pattern
+
+# # add_executable(pattern omp_examples/pattern.cpp)
+# #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(sin_table omp_examples/sin_table.cpp)
+  target_link_libraries(sin_table lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(omp_hello_world omp_examples/omp_hello_world.cpp)
+  target_link_libraries(omp_hello_world lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(phrases_test omp_examples/phrases_test.cpp)
+  target_link_libraries(phrases_test lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
  
