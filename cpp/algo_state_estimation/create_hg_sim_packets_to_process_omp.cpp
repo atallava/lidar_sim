@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     // obtain ray information per packet for sim
     // currently this is serial
     size_t n_packets = real_packets.m_packet_ids.size();
-    n_packets = 1000; // todo: change/ delete me! limiting n packets to sim for debug
+    n_packets = 500; // todo: change/ delete me! limiting n packets to sim for debug
     std::vector<Pts> real_pts_per_packet;
     std::vector<std::vector<double> > ray_origin_per_packet;
     std::vector<Dirns> ray_dirns_per_packet;
@@ -150,7 +150,7 @@ int main(int argc, char **argv)
     }
 
     // todo: how many threads?    
-    int num_threads = 2;
+    int num_threads = 1;
 #pragma omp parallel num_threads (num_threads) 
     {
 	// create sim object

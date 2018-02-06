@@ -55,7 +55,11 @@
     260118, presim takes ~2s for 1k packets. for scans version 300118 it takes
     ~16s/1k packets. why? this implies total presim time for 300118 is ~15min,
     negligible compared to overall sim time.
-- how many threads to use? not inversely proportional
+  - section 4. scans version 260118. hg 500 packets. (threads, time in s). (8,
+    344). (6,376). (4,514). (2,688). (1,1036).
+
+
+
 - ub on hg/ sim packets, fire.
     
 
