@@ -1,5 +1,8 @@
 * board
 
+- write some more
+- begin gascola processing
+
 - put metadata in yaml. yaml-cpp
 - how does catkin_make know a py file is a node? 
 - making a directory module by putting __init__, as in the srv modules
@@ -42,13 +45,12 @@
   - takes 60s to load section 4 sim
   - version 010218 takes 16s to load section 4 sim
   - currently sim takes 20s/packet
-  - version 010218 takes 5s/packet. still 2.5x slower than hg. try reducing
+  - version 010218 takes ~6s/packet. still 2.5x slower than hg. try reducing
     meshes further, then.
 
 - mm sim meshes
-  - try further fraction reduction of mesh. although if 0.1 reduced by 4x, i
-    think unlikely that 0.05 will do more
-  - if there are any particularly heavy meshes, remove those from consideration
+  - removed heavy meshes from elements and reduced to 0.1 to create mm_version
+    070218. but even it took ~5s/packet. so going ahead with 010218 for now.
 
 - omp
   - currently doing presim operations in serial. with section 4 scans version
@@ -57,11 +59,12 @@
     negligible compared to overall sim time.
   - section 4. scans version 260118. hg 500 packets. (threads, time in s). (8,
     344). (6,376). (4,514). (2,688). (1,1036).
+  - section 4. scans version 260118. mm 200 packets. (threads, time in s). (8,
+    358). (6,397). (4,561). (2,733). (1,1227).
 
 
 
 - ub on hg/ sim packets, fire.
-    
 
 * mat
 

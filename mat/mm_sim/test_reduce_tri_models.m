@@ -7,8 +7,8 @@ relPathPrimitiveClasses = '../data/primitive_classes';
 load(relPathPrimitiveClasses,'primitiveClasses','primitiveClassIsPatch');
 
 %% pick primitive
-className = 'medium_tree';
-elementId = 3;
+className = 'small_tree';
+elementId = 10;
 relPathPrimitive = genRelPathMeshPrimitive(className,elementId);
 
 load(relPathPrimitive,'triModels');

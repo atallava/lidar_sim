@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "260118";
+    std::string scans_version = "300118";
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
@@ -100,7 +100,6 @@ int main(int argc, char **argv)
     // obtain ray information per packet for sim
     // currently this is serial
     size_t n_packets = real_packets.m_packet_ids.size();
-    n_packets = 50; // todo: change/ delete me! limiting n packets to sim for debug
     std::vector<Pts> real_pts_per_packet;
     std::vector<std::vector<double> > ray_origin_per_packet;
     std::vector<Dirns> ray_dirns_per_packet;
@@ -163,7 +162,7 @@ int main(int argc, char **argv)
     }
 
     // todo: how many threads?    
-    int num_threads = 5;
+    int num_threads = 6;
 #pragma omp parallel num_threads (num_threads) 
     {
 	// create sim object

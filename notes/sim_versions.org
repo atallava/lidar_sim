@@ -49,6 +49,10 @@
     - with ground corrected transforms
   - 010218
     - objects from 280817 subsampled fraction 0.1
+    - compared to hg, 010218 is ~2.5x times slower (per packet)
+  - 070218
+    - excluding primitives of large size + subsample fraction 0.1
+    - trying to reduce sim time further.
 
 * primitives
 

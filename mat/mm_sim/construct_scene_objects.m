@@ -5,7 +5,7 @@ verbose = 1;
 
 %% load
 % annotations 
-newSceneSectionId = 1;
+newSceneSectionId = 4;
 relPathSceneAnnotation = mm_utils.genRelPathSceneAnnotation(newSceneSectionId);
 load(relPathSceneAnnotation,'sceneAnnotation');
 if verbose
@@ -29,6 +29,7 @@ nObjects = length(sceneAnnotation);
 sceneTriModels = {};
 sceneTriModelsCount = 0;
 hWaitbar = waitbar(0,'progress');
+reduceFracn = 0.1;
 
 % loop through annotations
 clockLocal = tic();
@@ -42,6 +43,7 @@ for i = 1:nObjects
         % construct object
         thisClassPrimitives = primitivesPerClass{objectClass};
         objectTriModels = mm_utils.constructSceneMeshObject(objectAnnotation, thisClassPrimitives);
+        objectTriModels = reduceTriModels(objectTriModels,reduceFracn);
         
         % add to scene
         sceneTriModelsCount = sceneTriModelsCount+1;
@@ -56,6 +58,7 @@ for i = 1:nObjects
         for j = 1:nCells
             % this cell data
             objectTriModels = patchTriModelsCell{j};
+            objectTriModels = reduceTriModels(objectTriModels,reduceFracn);
             
             sceneTriModelsCount = sceneTriModelsCount+1;
             sceneTriModels{sceneTriModelsCount} = objectTriModels;
@@ -68,7 +71,7 @@ close(hWaitbar);
 
 %% write tri models
 hWaitbar = waitbar(0,'saving object meshes');
-simVersion = '130917';
+simVersion = '070218';
 for i = 1:length(sceneTriModels)
     triModels = sceneTriModels{i};
     

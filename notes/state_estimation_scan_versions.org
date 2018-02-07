@@ -10,6 +10,7 @@
       - n scans
       - packets per scan
       - skip between scans
+    - ~6k scans
   - 290118
     - took about 35 min to create packets_to_process.xyz
     - 6.3min to aggregate into scans
@@ -21,6 +22,7 @@
   - 300118
     - took about 60 min to create packets_to_process.xyz
     - 17min to aggregate into scans
+    - ~60k scans
 
 * hg_sim
 
