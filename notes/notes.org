@@ -1,8 +1,5 @@
 * board
 
-- write some more
-- begin gascola processing
-
 - put metadata in yaml. yaml-cpp
 - how does catkin_make know a py file is a node? 
 - making a directory module by putting __init__, as in the srv modules
@@ -37,10 +34,9 @@
   - needs frame check
   - velocity integration check
 
-- hg sim timing. upper bound on packets to sim
+- hg sim timing
   - takes 10s to load section 4 sim
-  - currently sim time is 2s/packet
-- hg sim parallel
+  - serial sim time is 2s/packet
 - mm sim timing
   - takes 60s to load section 4 sim
   - version 010218 takes 16s to load section 4 sim
@@ -50,7 +46,7 @@
 
 - mm sim meshes
   - removed heavy meshes from elements and reduced to 0.1 to create mm_version
-    070218. but even it took ~5s/packet. so going ahead with 010218 for now.
+    1. but even it took ~5s/packet. so going ahead with 010218 for now.
 
 - omp
   - currently doing presim operations in serial. with section 4 scans version
@@ -62,9 +58,19 @@
   - section 4. scans version 260118. mm 200 packets. (threads, time in s). (8,
     358). (6,397). (4,561). (2,733). (1,1227).
 
+- sim memory leak
+  - destorys execution of mm for large number of packets
+  - also observed for hg, evidently not fatal
+  - simulating from tri object
+  - when finding nearest neighbors
+  - load the mesh object sim. load a section. pass a single packet repeatedly,
+    and observe a memory rise
 
-
-- ub on hg/ sim packets, fire.
+- profiling
+  - O0, O2 for simple optimization
+  - g, pg. then just give valgrind the executable
+  - perf, operf for who is taking long etc
+  - nvidia optix for raytracing
 
 * mat
 

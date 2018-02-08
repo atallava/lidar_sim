@@ -154,8 +154,8 @@ int main(int argc, char **argv)
     {
 	// create sim object
 	SectionModelSim sim;
-#pragma omp critical (load_object_data)	
 	{
+#pragma omp critical (load_object_data)	
 	    sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
 	    sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
 	    sim.setDeterministicSim(deterministic_sim);
@@ -166,19 +166,10 @@ int main(int argc, char **argv)
 #pragma omp for
 	for(size_t i = 0; i < n_packets; ++i)
 	{	
-	    std::vector<double> ray_origin = ray_origin_per_packet[i];
-	    std::vector<std::vector<double> > ray_dirns = ray_dirns_per_packet[i];
-
-	    // simulate 
-	    std::vector<std::vector<double> > this_sim_pts_all;
-	    std::vector<int> this_sim_hit_flag;
-	    std::tie(this_sim_pts_all, this_sim_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
-
-	    // add to sim detail
-	    // sim pts all
-	    sim_detail.m_sim_pts_all[i] = this_sim_pts_all;
-	    // sim hit flag
-	    sim_detail.m_sim_hit_flags[i] = this_sim_hit_flag;
+	    std::tie(
+		sim_detail.m_sim_pts_all[i], 
+		sim_detail.m_sim_hit_flags[i]) = sim.simPtsGivenRays(
+		    ray_origin_per_packet[i], ray_dirns_per_packet[i]);
 	}
 
     }   // omp parallel ends

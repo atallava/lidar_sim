@@ -70,6 +70,7 @@ void OptimAssistant::init()
 	genPathSection(m_section_id_for_sim);
     m_section_for_sim = SectionLoader (m_rel_path_section_for_sim);
 
+    // todo: what did these sim types stand for?
     if (m_sim_type == 0) {
 	fillSectionPtIdsForBlocksSim();
     }

@@ -93,7 +93,7 @@ endif()
 ########## 
 
 # c++ 11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -o0")
 
 add_definitions( -Wall -std=c++0x )
 
