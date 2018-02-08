@@ -93,7 +93,10 @@ endif()
 ########## 
 
 # c++ 11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -o0")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x") 
+# todo: only for valgrind. delete else.
+# the -DCGAL... flag is because without it, valgrind encounters a cgal assertion error. some bug.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -O0 -frounding-math -DCGAL_DISABLE_ROUNDING_MATH_CHECK=ON") 
 
 add_definitions( -Wall -std=c++0x )
 

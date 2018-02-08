@@ -69,6 +69,9 @@ main.log
 main.out
 main.pdf
 
+# perf
+perf.*
+
 ##################################################
 
 # misc
@@ -85,3 +88,4 @@ figs/primitives
 scratch.txt
 
 vids/
+

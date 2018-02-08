@@ -49,6 +49,8 @@ void MeshModelSim::calcObjectCentroids()
 
 	m_object_centroids.push_back(object_centroid);
     }
+
+    m_centroids_flann_wrapper.setDataset(m_object_centroids);
 }
 
 std::vector<int> MeshModelSim::calcObjectIdsForSim(const std::vector<double> &ray_origin, 
@@ -77,22 +79,29 @@ std::vector<int> MeshModelSim::calcObjectIdsForSim(const std::vector<double> &ra
 
 	nodes_along_ray.push_back(node);
     }
-    
+
+    // nn for each node
+    // std::vector<std::vector<int> > nn_ids;
+    // std::vector<std::vector<double> > nn_dists;
+    // int n_objects = m_object_mesh_sims.size();
+    // int num_nbrs = std::min(20, n_objects);
+    // std::tie(nn_ids, nn_dists) = nearestNeighbors(m_object_centroids, nodes_along_ray, num_nbrs);
+    // // object ids
+    // std::vector<int> object_ids;
+    // for(size_t i = 0; i < n_nodes; ++i)
+    // 	for(size_t j = 0; j < (size_t)num_nbrs; ++j)
+    // 	    if (nn_dists[i][j] <= m_object_nn_radius)
+    // 		object_ids.push_back(nn_ids[i][j]);
+    // // retain unique ids
+    // object_ids = getUniqueSortedVec(object_ids);
+
     // nn for each node
     std::vector<std::vector<int> > nn_ids;
     std::vector<std::vector<double> > nn_dists;
-    int n_objects = m_object_mesh_sims.size();
-    int num_nbrs = std::min(20, n_objects);
-    std::tie(nn_ids, nn_dists) = nearestNeighbors(m_object_centroids, nodes_along_ray, num_nbrs);
-    
-
-    // object ids
+    std::tie(nn_ids, nn_dists) = m_centroids_flann_wrapper.radiusSearch(nodes_along_ray, m_object_nn_radius);
     std::vector<int> object_ids;
-    for(size_t i = 0; i < n_nodes; ++i)
-	for(size_t j = 0; j < (size_t)num_nbrs; ++j)
-	    if (nn_dists[i][j] <= m_object_nn_radius)
-		object_ids.push_back(nn_ids[i][j]);
-    // retain unique ids
+    for (size_t i = 0; i < nn_ids.size(); ++i)
+    	object_ids.insert(object_ids.end(), nn_ids[i].begin(), nn_ids[i].end());
     object_ids = getUniqueSortedVec(object_ids);
 
     // debug

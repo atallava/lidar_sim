@@ -8,6 +8,7 @@
 #include <lidar_sim/TriangleModelSim.h>
 #include <lidar_sim/LaserCalibParams.h>
 #include <lidar_sim/VizUtils.h>
+#include <lidar_sim/FlannDatasetWrapper.h>
 
 namespace lidar_sim {
     class MeshModelSim {
@@ -48,5 +49,6 @@ namespace lidar_sim {
 	double m_max_dist_to_node_for_membership;
 	bool m_deterministic_sim;
 	double m_object_nn_radius;
+	FlannDatasetWrapper m_centroids_flann_wrapper;
     };
 }

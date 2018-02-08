@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "300118";
+    std::string scans_version = "260118"; // todo: revert to 300118
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
@@ -87,6 +87,7 @@ int main(int argc, char **argv)
     // obtain ray information per packet for sim
     // currently this is serial
     size_t n_packets = real_packets.m_packet_ids.size();
+    n_packets = 5; // todo: delete. for debug.
     std::vector<Pts> real_pts_per_packet;
     std::vector<std::vector<double> > ray_origin_per_packet;
     std::vector<Dirns> ray_dirns_per_packet;
@@ -149,7 +150,7 @@ int main(int argc, char **argv)
     }
 
     // todo: how many threads?    
-    int num_threads = 6;
+    int num_threads = 1;
 #pragma omp parallel num_threads (num_threads) 
     {
 	// create sim object
@@ -174,41 +175,42 @@ int main(int argc, char **argv)
 
     }   // omp parallel ends
 
-    // write sim packets
-    algo_state_est::mkdirsForPacketsToProcess(section_scans_id, scans_version, 
-					      sim_type, sim_version);
-    std::string rel_path_sim_packets = 
-	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, sim_type, sim_version);
-    sim_detail.writeSimPackets(rel_path_sim_packets);
+    // todo: uncomment me.
+    // // write sim packets
+    // algo_state_est::mkdirsForPacketsToProcess(section_scans_id, scans_version, 
+    // 					      sim_type, sim_version);
+    // std::string rel_path_sim_packets = 
+    // 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, sim_type, sim_version);
+    // sim_detail.writeSimPackets(rel_path_sim_packets);
     
-    // marginalize and write real pts
-    std::vector<std::vector<double> > real_pts;
-    for (size_t i = 0; i < real_pts_per_packet.size(); ++i)
-	real_pts.insert(real_pts.end(), real_pts_per_packet[i].begin(), real_pts_per_packet[i].end());
-    std::string rel_path_real_pts = 
-	algo_state_est::genRelPathRealPtsRef(section_scans_id, scans_version, sim_type, sim_version);
-    writePtsToXYZFile(real_pts, rel_path_real_pts);
+    // // marginalize and write real pts
+    // std::vector<std::vector<double> > real_pts;
+    // for (size_t i = 0; i < real_pts_per_packet.size(); ++i)
+    // 	real_pts.insert(real_pts.end(), real_pts_per_packet[i].begin(), real_pts_per_packet[i].end());
+    // std::string rel_path_real_pts = 
+    // 	algo_state_est::genRelPathRealPtsRef(section_scans_id, scans_version, sim_type, sim_version);
+    // writePtsToXYZFile(real_pts, rel_path_real_pts);
 
-    // marginalize and write sim pts
-    std::vector<std::vector<double> > sim_pts_all;
-    std::vector<int> sim_hit_flag;
-    for (size_t i = 0; i < sim_detail.m_sim_pts_all.size(); ++i)
-    {
-	sim_pts_all.insert(sim_pts_all.end(), 
-			   sim_detail.m_sim_pts_all[i].begin(), sim_detail.m_sim_pts_all[i].end());
-    	sim_hit_flag.insert(sim_hit_flag.end(), 
-			    sim_detail.m_sim_hit_flags[i].begin(), sim_detail.m_sim_hit_flags[i].end());
-    }
-    // weed out non-hits in sim pts
-    std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
-    std::string rel_path_sim_pts = 
-	algo_state_est::genRelPathSimPts(section_scans_id, scans_version, sim_type, sim_version);
-    writePtsToXYZFile(sim_pts, rel_path_sim_pts);
+    // // marginalize and write sim pts
+    // std::vector<std::vector<double> > sim_pts_all;
+    // std::vector<int> sim_hit_flag;
+    // for (size_t i = 0; i < sim_detail.m_sim_pts_all.size(); ++i)
+    // {
+    // 	sim_pts_all.insert(sim_pts_all.end(), 
+    // 			   sim_detail.m_sim_pts_all[i].begin(), sim_detail.m_sim_pts_all[i].end());
+    // 	sim_hit_flag.insert(sim_hit_flag.end(), 
+    // 			    sim_detail.m_sim_hit_flags[i].begin(), sim_detail.m_sim_hit_flags[i].end());
+    // }
+    // // weed out non-hits in sim pts
+    // std::vector<std::vector<double> > sim_pts = logicalSubsetArray(sim_pts_all, sim_hit_flag);
+    // std::string rel_path_sim_pts = 
+    // 	algo_state_est::genRelPathSimPts(section_scans_id, scans_version, sim_type, sim_version);
+    // writePtsToXYZFile(sim_pts, rel_path_sim_pts);
 
-    // write sim detail
-    std::string rel_path_sim_detail = 
-	algo_state_est::genRelPathSimDetail(section_scans_id, scans_version, sim_type, sim_version);
-    sim_detail.save(rel_path_sim_detail);
+    // // write sim detail
+    // std::string rel_path_sim_detail = 
+    // 	algo_state_est::genRelPathSimDetail(section_scans_id, scans_version, sim_type, sim_version);
+    // sim_detail.save(rel_path_sim_detail);
 
     struct timeval end_time;
     gettimeofday(&end_time, NULL);

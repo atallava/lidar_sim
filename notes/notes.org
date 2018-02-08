@@ -66,11 +66,11 @@
   - load the mesh object sim. load a section. pass a single packet repeatedly,
     and observe a memory rise
 
+- use flann dataset wrapper in sims
+
 - profiling
-  - O0, O2 for simple optimization
-  - g, pg. then just give valgrind the executable
   - perf, operf for who is taking long etc
-  - nvidia optix for raytracing
+  - look up nvidia optix for raytracing
 
 * mat
 
