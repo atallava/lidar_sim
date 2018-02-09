@@ -87,14 +87,17 @@ void EllipsoidModeler::clusterPtsFlann()
     int n_clusters_queried = calcNClusters();
     size_t dim_pts = m_pts[0].size(); // expect this to be 3
 
-    flann::Matrix<double> centers_flann(new double[n_clusters_queried*dim_pts], n_clusters_queried, dim_pts);
+    std::vector<double> centers_unrolled(n_clusters_queried*dim_pts, 0.0);
+    flann::Matrix<double> centers_flann(centers_unrolled.data(), n_clusters_queried, dim_pts);
 
     // todo: make the params a private member? optimize over these params?
     flann::KMeansIndexParams kmeans_index_params;
     int n_clusters_returned = flann::hierarchicalClustering<flann::L2<double> >(pts_flann, centers_flann, kmeans_index_params);
 
-    std::vector<std::vector<double> > centers = flannMatrixToStlArray(centers_flann);
-    centers.erase(centers.begin() + n_clusters_returned, centers.end());
+    std::vector<std::vector<double> > centers(n_clusters_returned, std::vector<double> (dim_pts));
+    for (size_t i = 0; i < (size_t)n_clusters_returned; ++i)
+	for (size_t j = 0; j < dim_pts; ++j)
+	    centers[i][j] = centers_unrolled[i*dim_pts + j];
 
     // update m_n_clusters
     m_n_clusters = n_clusters_returned;

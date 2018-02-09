@@ -60,21 +60,19 @@ std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 FlannDatasetWrapper::knnSearch(const std::vector<std::vector<double> > &pts, const int nn)
 {
     flann::Matrix<double> queries = stlArrayToFlannMatrix(pts);
-    flann::Matrix<int> indices(new int[queries.rows*nn], queries.rows, nn);
-    flann::Matrix<double> dists(new double[queries.rows*nn], queries.rows, nn);
+    std::vector<std::vector<int> > indices;
+    std::vector<std::vector<double> > dists;
     
     // load index
     flann::Index<flann::L2<double> > index(m_dataset_flann, flann::SavedIndexParams(m_rel_path_index));
     index.knnSearch(queries, indices, dists, nn, flann::SearchParams(m_n_checks));
 
-    std::vector<std::vector<double> > nn_dists = flannMatrixToStlArray(dists);
     // flann returns squared distances
-    for(size_t i = 0; i < nn_dists.size(); ++i)
-	for(size_t j = 0 ; j < nn_dists[i].size(); ++j)
-	    nn_dists[i][j] = std::sqrt(nn_dists[i][j]);
+    for(size_t i = 0; i < dists.size(); ++i)
+	for(size_t j = 0 ; j < dists[i].size(); ++j)
+	    dists[i][j] = std::sqrt(dists[i][j]);
 	
-    return std::make_tuple(
-	flannMatrixToStlArray(indices), nn_dists);
+    return std::make_tuple(indices, dists);
 }
 
 std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >

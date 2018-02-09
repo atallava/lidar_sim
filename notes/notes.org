@@ -86,27 +86,20 @@
     (1908, 64.7). (2293, 66). (2523, 44) drop probably because i threw in a
     compile. (2591, 44.5) not sure why it became tame, because processor doing
     other things?. (7046, 64.7). (7398, 68). (7416, 51.6) again, reduced because
-    i compiled.
+    i compiled, maybe some cleanup is done. (7746, 54.3).
 
 - profiling
   - perf, operf for who is taking long etc
   - look up nvidia optix for raytracing
 
 - look new valgrind report
-- make index private
 - then rerun valgrind
 - continue with gascola
 - perhaps install caturana? give it a try before you go speaking to him.
 
-- can i just give flann the data?
-- do knn/ radius search take std vectors directly as input? i have used in
-  radius search but not in knnsearch? try these two.
+- create flann matrix without new: change in dataproc utils, flann wrapper
+- give stl vectors directly to knn/radius search
 
-- check index header
-- remove Tests
-- flann_tests dir
-- the flann new tests
-- update code
 - run valgrind again
 
 * mat

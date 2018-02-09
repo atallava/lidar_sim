@@ -192,6 +192,9 @@ add_library(lidar_sim SHARED
 add_executable(test_mm_flann_leak flann_examples/test_mm_flann_leak.cpp)
   target_link_libraries(test_mm_flann_leak lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(test_flann_matrix flann_examples/test_flann_matrix.cpp)
+  target_link_libraries(test_flann_matrix lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ####################################################################################################
 
 # nlopt examples

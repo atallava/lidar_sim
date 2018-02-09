@@ -137,9 +137,9 @@ namespace lidar_sim {
 
 	int nn = 1;
 
-	flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
-	flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
-
+	std::vector<std::vector<int> > indices;
+	std::vector<std::vector<double> > dists;
+    
 	// randomized kd trees
 	// int n_kd_trees = 10; 
 	// flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
@@ -172,9 +172,9 @@ namespace lidar_sim {
 	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
 	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
 
-	flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
-	flann::Matrix<double> dists(new double[query.rows*nn], query.rows, nn);
-
+	std::vector<std::vector<int> > indices;
+	std::vector<std::vector<double> > dists;
+    
 	// randomized kd trees
 	// int n_kd_trees = 10; 
 	// flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(n_kd_trees));
@@ -190,14 +190,12 @@ namespace lidar_sim {
 	int n_checks = 100;
 	index.knnSearch(query, indices, dists, nn, flann::SearchParams(n_checks));
 
-	std::vector<std::vector<double> > nn_dists = flannMatrixToStlArray(dists);
 	// flann returns squared distances
-	for(size_t i = 0; i < nn_dists.size(); ++i)
-	    for(size_t j = 0 ; j < nn_dists[i].size(); ++j)
-		nn_dists[i][j] = std::sqrt(nn_dists[i][j]);
+	for(size_t i = 0; i < dists.size(); ++i)
+	    for(size_t j = 0 ; j < dists[i].size(); ++j)
+		dists[i][j] = std::sqrt(dists[i][j]);
 	
-	return std::make_tuple(
-	    flannMatrixToStlArray(indices), nn_dists);
+	return std::make_tuple(indices, dists);
     }
 
     std::vector<std::vector<double> > pdist2(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2)
