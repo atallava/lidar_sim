@@ -166,14 +166,14 @@ std::vector<int> MeshModelSim::getPosnTriangleBlockMembership(const std::vector<
 }
 
 std::vector<int> MeshModelSim::getPoseBlockMembership(const std::vector<double> &imu_pose, 
-							 const std::vector<std::vector<int> > &block_node_ids)
+						      const std::vector<std::vector<int> > &block_node_ids)
 {
     std::vector<double> imu_posn = posnFromImuPose(imu_pose);
     return getPosnBlockMembership(imu_posn, block_node_ids);
 }
 
 std::vector<int> MeshModelSim::getPosnBlockMembership(const std::vector<double> &posn, 
-							 const std::vector<std::vector<int> > &block_node_ids)
+						      const std::vector<std::vector<int> > &block_node_ids)
 {
     // distances to imu posn nodes
     std::vector<double> dists_to_imu_posn_nodes;

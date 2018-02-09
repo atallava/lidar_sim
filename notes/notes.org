@@ -68,6 +68,12 @@
   - when finding nearest neighbors
   - load the mesh object sim. load a section. pass a single packet repeatedly,
     and observe a memory rise
+  - seems like both error messages are from flann. marius says the bug was
+    fixed, and i have version 1.8.4, but still seem to be getting the valgrind
+    bug
+  - create a version where you load a bunch of object meshes only, say the
+    first 10. then load a section, and pass the same say first packet a couple
+    of times to sim. see if you get new errors. 
 
 - memory use is already high during presim. solution? some data, eyeballed from
   top. section 4, scans version 300118. (min, mem%).
@@ -76,7 +82,9 @@
   - hg. (6, 17). (12, 28.8). (14, 32.7). (16, 36.7). so similar use.
 
 - more top eyeballing. section 4, scans version 300118. (min, mem%).
-  - (45, 55.4). (200, 56). (417, 57.8). (642, 58.5). (1000, 61), (1243, 63.2)
+  - (45, 55.4). (200, 56). (417, 57.8). (642, 58.5). (1000, 61). (1243, 63.2).
+    (1908, 64.7). (2293, 66). (2523, 44) drop probably because i threw in a
+    compile.
 
 - profiling
   - perf, operf for who is taking long etc

@@ -93,10 +93,10 @@ endif()
 ########## 
 
 # c++ 11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x") 
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x") 
 # todo: only for valgrind. delete else.
 # the -DCGAL... flag is because without it, valgrind encounters a cgal assertion error. some bug.
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -O0 -frounding-math -DCGAL_DISABLE_ROUNDING_MATH_CHECK=ON") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -O0 -frounding-math -DCGAL_DISABLE_ROUNDING_MATH_CHECK=ON") 
 
 add_definitions( -Wall -std=c++0x )
 
@@ -169,6 +169,9 @@ add_library(lidar_sim SHARED
 # add_executable(run_tests tests/run_tests.cpp)
 #   target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(test_mm_flann_leak tests/test_mm_flann_leak.cpp)
+  target_link_libraries(test_mm_flann_leak lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ####################################################################################################
 
 # analyze taylor data
@@ -218,14 +221,14 @@ add_library(lidar_sim SHARED
 # # add_executable(pattern omp_examples/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(sin_table omp_examples/sin_table.cpp)
-  target_link_libraries(sin_table lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(sin_table omp_examples/sin_table.cpp)
+#   target_link_libraries(sin_table lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(omp_hello_world omp_examples/omp_hello_world.cpp)
-  target_link_libraries(omp_hello_world lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(omp_hello_world omp_examples/omp_hello_world.cpp)
+#   target_link_libraries(omp_hello_world lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(phrases_test omp_examples/phrases_test.cpp)
-  target_link_libraries(phrases_test lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(phrases_test omp_examples/phrases_test.cpp)
+#   target_link_libraries(phrases_test lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
  
