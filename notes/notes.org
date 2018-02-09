@@ -45,14 +45,17 @@
     meshes further, then.
 
 - mm sim meshes
-  - removed heavy meshes from elements and reduced to 0.1 to create mm_version
-    1. but even it took ~5s/packet. so going ahead with 010218 for now.
+  - removed heavy meshes from elements and reduced to 0.1 to create
+    mm_version 070218. but even it took ~5s/packet. so going ahead with 010218
+    for now.
+  - after using flann dataset wrapper for objects near mesh, ~4s/packet, minor
+    improvement
 
 - omp
   - currently doing presim operations in serial. with section 4 scans version
     260118, presim takes ~2s for 1k packets. for scans version 300118 it takes
-    ~16s/1k packets. why? this implies total presim time for 300118 is ~15min,
-    negligible compared to overall sim time.
+    ~16s/1k packets. why? this implies total presim time for 300118 expected to
+    be ~15min (actually is 18min), negligible compared to overall sim time.
   - section 4. scans version 260118. hg 500 packets. (threads, time in s). (8,
     344). (6,376). (4,514). (2,688). (1,1036).
   - section 4. scans version 260118. mm 200 packets. (threads, time in s). (8,
@@ -66,7 +69,14 @@
   - load the mesh object sim. load a section. pass a single packet repeatedly,
     and observe a memory rise
 
-- use flann dataset wrapper in sims
+- memory use is already high during presim. solution? some data, eyeballed from
+  top. section 4, scans version 300118. (min, mem%).
+  - mm. (5, 15). (8, 20.5). (10, 24.3). (12,
+    28.2). (13, 30). (14, 32). (15, 34). (18, 40). overall around 18min.
+  - hg. (6, 17). (12, 28.8). (14, 32.7). (16, 36.7). so similar use.
+
+- more top eyeballing. section 4, scans version 300118. (min, mem%).
+  - (45, 55.4). (200, 56). (417, 57.8). (642, 58.5). (1000, 61), (1243, 63.2)
 
 - profiling
   - perf, operf for who is taking long etc

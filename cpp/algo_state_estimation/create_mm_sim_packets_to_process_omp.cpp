@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
     // load real packets
     int section_scans_id = 4;
-    std::string scans_version = "300118";
+    std::string scans_version = "300118"; 
     std::string rel_path_real_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_scans_id, scans_version, "real");
     SectionLoader real_packets(rel_path_real_packets);
@@ -167,8 +167,8 @@ int main(int argc, char **argv)
     {
 	// create sim object
 	MeshModelSim sim;
-#pragma omp critical (load_object_data)	
 	{
+#pragma omp critical (load_object_data)	
 	    sim.loadTriangleModelBlocks(rel_path_ground_triangle_model_blocks); // semantically this is ground
 	    sim.loadObjectMeshes(rel_path_object_meshes);
 	    sim.setDeterministicSim(deterministic_sim);
@@ -179,19 +179,10 @@ int main(int argc, char **argv)
 #pragma omp for
 	for(size_t i = 0; i < n_packets; ++i)
 	{	
-	    std::vector<double> ray_origin = ray_origin_per_packet[i];
-	    std::vector<std::vector<double> > ray_dirns = ray_dirns_per_packet[i];
-
-	    // simulate 
-	    std::vector<std::vector<double> > this_sim_pts_all;
-	    std::vector<int> this_sim_hit_flag;
-	    std::tie(this_sim_pts_all, this_sim_hit_flag) = sim.simPtsGivenRays(ray_origin, ray_dirns); 
-
-	    // add to sim detail
-	    // sim pts all
-	    sim_detail.m_sim_pts_all[i] = this_sim_pts_all;
-	    // sim hit flag
-	    sim_detail.m_sim_hit_flags[i] = this_sim_hit_flag;
+	    std::tie(
+		sim_detail.m_sim_pts_all[i], 
+		sim_detail.m_sim_hit_flags[i]) = sim.simPtsGivenRays(
+		    ray_origin_per_packet[i], ray_dirns_per_packet[i]);
 	}
 
     }   // omp parallel ends
