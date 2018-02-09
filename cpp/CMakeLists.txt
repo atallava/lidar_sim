@@ -154,24 +154,6 @@ add_library(lidar_sim SHARED
 
 ####################################################################################################
 
-# tests
-# file( GLOB TESTS_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp )
-# MESSAGE( STATUS "tests sources: " ${TESTS_SOURCES} )
-# foreach( testsourcefile ${TESTS_SOURCES} )
-#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-#   string( REPLACE "tests/" "" testname ${testnamewithdir})
-#   add_executable( ${testname} ${testsourcefile} )
-#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-# endforeach( testsourcefile ${TESTS_SOURCES} )
-
-# add_executable(run_tests tests/run_tests.cpp)
-#   target_link_libraries(run_tests lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-add_executable(test_mm_flann_leak tests/test_mm_flann_leak.cpp)
-  target_link_libraries(test_mm_flann_leak lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-####################################################################################################
-
 # analyze taylor data
 # file( GLOB ANALYZE_TAYLOR_DATA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} analyze_taylor_data/*.cpp )
 # foreach( testsourcefile ${ANALYZE_TAYLOR_DATA_SOURCES} )
@@ -197,6 +179,18 @@ add_executable(test_mm_flann_leak tests/test_mm_flann_leak.cpp)
 
 # add_executable(analyze_scanning_pattern analyze_taylor_data/analyze_scanning_pattern.cpp)
 #   target_link_libraries(analyze_scanning_pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+####################################################################################################
+
+# flann examples
+
+## pattern
+
+# # add_executable(pattern flann_examples/pattern.cpp)
+# #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(test_mm_flann_leak flann_examples/test_mm_flann_leak.cpp)
+  target_link_libraries(test_mm_flann_leak lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
 
@@ -244,14 +238,6 @@ add_executable(test_mm_flann_leak tests/test_mm_flann_leak.cpp)
 
 # # add_executable(pattern hybrid_geometric_sim/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-## tests
-
-# add_executable(test_flann tests/test_flann.cpp)
-#   target_link_libraries(test_flann lidar_sim ${LIDAR_SIM_LIBRARIES} )
-
-# add_executable(test_flann_clustering tests/test_flann_clustering.cpp)
-#   target_link_libraries(test_flann_clustering lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ## data processing
 
