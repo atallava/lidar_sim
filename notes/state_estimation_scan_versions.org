@@ -27,7 +27,13 @@
 * hg_sim
 
 - section 4
-  - 260118
+  - 300118
+
+* mm_sim
+
+- section 4
+  - 300118
+    - took 148176s, 41hrs. almost 2 days! hg must have taken 20hr
 
 
 

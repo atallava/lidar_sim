@@ -195,6 +195,9 @@ add_executable(test_mm_flann_leak flann_examples/test_mm_flann_leak.cpp)
 add_executable(test_flann_matrix flann_examples/test_flann_matrix.cpp)
   target_link_libraries(test_flann_matrix lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(test_flann_dataset_wrapper flann_examples/test_flann_dataset_wrapper.cpp)
+  target_link_libraries(test_flann_dataset_wrapper lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
 ####################################################################################################
 
 # nlopt examples
@@ -383,24 +386,24 @@ add_executable(test_flann_matrix flann_examples/test_flann_matrix.cpp)
 
 ## algo state estimation
 
-add_executable(aggregate_packets_to_scans algo_state_estimation/aggregate_packets_to_scans.cpp)
-target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES})
+# add_executable(aggregate_packets_to_scans algo_state_estimation/aggregate_packets_to_scans.cpp)
+# target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(create_real_packets_to_process algo_state_estimation/create_real_packets_to_process.cpp)
-target_link_libraries(create_real_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
+# add_executable(create_real_packets_to_process algo_state_estimation/create_real_packets_to_process.cpp)
+# target_link_libraries(create_real_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(create_hg_sim_packets_to_process algo_state_estimation/create_hg_sim_packets_to_process.cpp)
-target_link_libraries(create_hg_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
+# add_executable(create_hg_sim_packets_to_process algo_state_estimation/create_hg_sim_packets_to_process.cpp)
+# target_link_libraries(create_hg_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(create_hg_sim_packets_to_process_omp algo_state_estimation/create_hg_sim_packets_to_process_omp.cpp)
-target_link_libraries(create_hg_sim_packets_to_process_omp lidar_sim ${LIDAR_SIM_LIBRARIES})
+# add_executable(create_hg_sim_packets_to_process_omp algo_state_estimation/create_hg_sim_packets_to_process_omp.cpp)
+# target_link_libraries(create_hg_sim_packets_to_process_omp lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(create_mm_sim_packets_to_process algo_state_estimation/create_mm_sim_packets_to_process.cpp)
-target_link_libraries(create_mm_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
+# add_executable(create_mm_sim_packets_to_process algo_state_estimation/create_mm_sim_packets_to_process.cpp)
+# target_link_libraries(create_mm_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(create_mm_sim_packets_to_process_omp algo_state_estimation/create_mm_sim_packets_to_process_omp.cpp)
-target_link_libraries(create_mm_sim_packets_to_process_omp lidar_sim ${LIDAR_SIM_LIBRARIES})
+# add_executable(create_mm_sim_packets_to_process_omp algo_state_estimation/create_mm_sim_packets_to_process_omp.cpp)
+# target_link_libraries(create_mm_sim_packets_to_process_omp lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(write_imu_poses_for_section algo_state_estimation/write_imu_poses_for_section.cpp)
-target_link_libraries(write_imu_poses_for_section lidar_sim ${LIDAR_SIM_LIBRARIES})
+# add_executable(write_imu_poses_for_section algo_state_estimation/write_imu_poses_for_section.cpp)
+# target_link_libraries(write_imu_poses_for_section lidar_sim ${LIDAR_SIM_LIBRARIES})
 

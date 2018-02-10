@@ -2,7 +2,7 @@
 
 #include <flann/flann.hpp>
 
-#include <lidar_sim/DataProcessingUtils.h>
+#include <lidar_sim/FlannDatasetWrapper.h>
 
 using namespace lidar_sim;
 
@@ -28,27 +28,15 @@ int main(int argc, char**argv)
     for(size_t i = 0; i < dataset_unrolled.size(); ++i)
 	std::cout << dataset_unrolled[i] << " ";
     std::cout << std::endl << std::endl;
-    
-    // using new
-    flann::Matrix<double> dataset_flann_1 
-	(new double[dataset.size()*dataset[0].size()], dataset.size(), dataset[0].size());
-    for(size_t i = 0; i < dataset.size(); ++i)
-	for(size_t j = 0; j < dataset[0].size(); ++j)
-	    dataset_flann_1[i][j] = dataset[i][j];
 
+    // wrapping dataset
+    FlannDatasetWrapper wrapper(dataset);
+    
     // passing dataset_unrolled pointer
     flann::Matrix<double> dataset_flann_2
     	(dataset_unrolled.data(), dataset.size(), dataset[0].size());
 
     // disp
-    std::cout << "flann dataset 1. " << std::endl;
-    for(size_t i = 0; i < dataset.size(); ++i)
-    {
-	for(size_t j = 0; j < dataset[0].size(); ++j)
-	    std::cout << dataset_flann_1[i][j] << " ";
-	std::cout << std::endl;
-    }
-    
     std::cout << "flann dataset 2. " << std::endl;
     for(size_t i = 0; i < dataset.size(); ++i)
     {
@@ -79,27 +67,12 @@ int main(int argc, char**argv)
 	std::cout << query_unrolled[i] << " ";
     std::cout << std::endl << std::endl;
     
-    // using new
-    flann::Matrix<double> query_flann_1 
-	(new double[query.size()*query[0].size()], query.size(), query[0].size());
-    for(size_t i = 0; i < query.size(); ++i)
-	for(size_t j = 0; j < query[0].size(); ++j)
-	    query_flann_1[i][j] = query[i][j];
-
     // passing query_unrolled pointer
     flann::Matrix<double> query_flann_2
 	(query_unrolled.data(), query.size(), query[0].size());
 
     // disp
-    std::cout << "flann query 1. " << std::endl;
-    for(size_t i = 0; i < query.size(); ++i)
-    {
-	for(size_t j = 0; j < query[0].size(); ++j)
-	    std::cout << query_flann_1[i][j] << " ";
-	std::cout << std::endl;
-    }
-    
-    std::cout << "flann query 2. " << std::endl;
+    std::cout << "flann query. " << std::endl;
     for(size_t i = 0; i < query.size(); ++i)
     {
 	for(size_t j = 0; j < query[0].size(); ++j)
@@ -110,32 +83,31 @@ int main(int argc, char**argv)
 
     // indices
     int n_kd_trees = 10;
-    flann::Index<flann::L2<double> > index_1(dataset_flann_1, flann::KDTreeIndexParams(n_kd_trees));
-    index_1.buildIndex();
+    // wrapper builds internal index
     flann::Index<flann::L2<double> > index_2(dataset_flann_2, flann::KDTreeIndexParams(n_kd_trees));
     index_2.buildIndex();
 
     // flann output
     int nn = 2;
     int n_checks = 100;
-    flann::Matrix<int> indices_flann_1(new int[query_flann_1.rows*nn], query_flann_1.rows, nn);
-    flann::Matrix<double> dists_flann_1(new double[query_flann_1.rows*nn], query_flann_1.rows, nn);
-    index_1.knnSearch(query_flann_1, indices_flann_1, dists_flann_1, nn, flann::SearchParams(n_checks));
+    std::vector<std::vector<int> > indices_1;
+    std::vector<std::vector<double> > dists_1;
+    std::tie(indices_1, dists_1) = wrapper.knnSearch(query, nn);
 
     // disp
-    std::cout << "flann indices 1. " << std::endl;
+    std::cout << "indices 1. " << std::endl;
     for(size_t i = 0; i < query.size(); ++i)
     {
 	for(size_t j = 0; j < (size_t)nn; ++j)
-	    std::cout << indices_flann_1[i][j] << " ";
+	    std::cout << indices_1[i][j] << " ";
 	std::cout << std::endl;
     }
     
-    std::cout << "flann dists 1. " << std::endl;
+    std::cout << "dists 1. " << std::endl;
     for(size_t i = 0; i < query.size(); ++i)
     {
 	for(size_t j = 0; j < (size_t)nn; ++j)
-	    std::cout << dists_flann_1[i][j] << " ";
+	    std::cout << dists_1[i][j] << " ";
 	std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -163,42 +135,5 @@ int main(int argc, char**argv)
     }
     std::cout << std::endl;
 
-    // hierarchical clustering
-    int n_clusters_queried = 2;
-    size_t dim_dataset = dataset[0].size();
-    std::vector<std::vector<double> > centers;
-    centers.resize(n_clusters_queried, std::vector<double> (dim_dataset));
-    std::vector<double> centers_unrolled;
-    for (size_t i = 0; i < centers.size(); ++i)
-	centers_unrolled.insert(centers_unrolled.end(), centers[i].begin(), centers[i].end());
-    
-    flann::Matrix<double> centers_flann(centers_unrolled.data(), n_clusters_queried, dim_dataset);
-
-    flann::KMeansIndexParams kmeans_index_params;
-    int n_clusters_returned = 
-	flann::hierarchicalClustering<flann::L2<double> >(dataset_flann_2, centers_flann, kmeans_index_params);
-
-    // disp
-    std::cout << "centers_flann. " << std::endl;
-    for(size_t i = 0; i < (size_t)n_clusters_returned; ++i)
-    {
-	for(size_t j = 0; j < dim_dataset; ++j)
-	    std::cout << centers_flann[i][j] << " ";
-	std::cout << std::endl;
-    }
-
-    std::cout << "centers. " << std::endl;
-    for(size_t i = 0; i < centers.size(); ++i)
-    {
-	for(size_t j = 0; j < centers[i].size(); ++j)
-	    std::cout << centers[i][j] << " ";
-	std::cout << std::endl;
-    }
-        
-    std::cout << "centers unrolled. " << std::endl;
-    for(size_t i = 0; i < centers_unrolled.size(); ++i)
-	std::cout << centers_unrolled[i] << " ";
-    std::cout << std::endl;
-        
     return(1);
 }

@@ -450,7 +450,6 @@ namespace lidar_sim {
 	return int_array;
     }
 
-
     flann::Matrix<double> stlArrayToFlannMatrix(const std::vector<std::vector<double> > &array)
     {
 	std::vector<double> array_unrolled;

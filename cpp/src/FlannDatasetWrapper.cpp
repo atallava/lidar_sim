@@ -50,8 +50,13 @@ FlannDatasetWrapper::~FlannDatasetWrapper()
 void FlannDatasetWrapper::setDataset(const std::vector<std::vector<double> > &dataset)
 {
     m_dataset = dataset;
-    m_dataset_flann = stlArrayToFlannMatrix(m_dataset);
-    flann::Index<flann::L2<double> > index(m_dataset_flann, flann::KDTreeIndexParams(m_n_kd_trees));
+    
+    for (size_t i = 0; i < m_dataset.size(); ++i)
+	m_dataset_unrolled.insert(m_dataset_unrolled.end(), m_dataset[i].begin(), m_dataset[i].end());
+
+    flann::Matrix<double> dataset_flann(m_dataset_unrolled.data(), m_dataset.size(), m_dataset[0].size());
+
+    flann::Index<flann::L2<double> > index(dataset_flann, flann::KDTreeIndexParams(m_n_kd_trees));
     index.buildIndex();
     index.save(m_rel_path_index);
 }
@@ -59,12 +64,16 @@ void FlannDatasetWrapper::setDataset(const std::vector<std::vector<double> > &da
 std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 FlannDatasetWrapper::knnSearch(const std::vector<std::vector<double> > &pts, const int nn)
 {
-    flann::Matrix<double> queries = stlArrayToFlannMatrix(pts);
+    std::vector<double> pts_unrolled;
+    for (size_t i = 0; i < pts.size(); ++i)
+	pts_unrolled.insert(pts_unrolled.end(), pts[i].begin(), pts[i].end());
+    flann::Matrix<double> queries(pts_unrolled.data(), pts.size(), pts[0].size());
     std::vector<std::vector<int> > indices;
     std::vector<std::vector<double> > dists;
     
     // load index
-    flann::Index<flann::L2<double> > index(m_dataset_flann, flann::SavedIndexParams(m_rel_path_index));
+    flann::Matrix<double> dataset_flann(m_dataset_unrolled.data(), m_dataset.size(), m_dataset[0].size());
+    flann::Index<flann::L2<double> > index(dataset_flann, flann::SavedIndexParams(m_rel_path_index));
     index.knnSearch(queries, indices, dists, nn, flann::SearchParams(m_n_checks));
 
     // flann returns squared distances
@@ -85,12 +94,16 @@ FlannDatasetWrapper::knnSearch(const std::vector<double> &pt, const int nn)
 std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
 FlannDatasetWrapper::radiusSearch(const std::vector<std::vector<double> > &pts, const double radius)
 {
-    flann::Matrix<double> queries = stlArrayToFlannMatrix(pts);
+    std::vector<double> pts_unrolled;
+    for (size_t i = 0; i < pts.size(); ++i)
+	pts_unrolled.insert(pts_unrolled.end(), pts[i].begin(), pts[i].end());
+    flann::Matrix<double> queries(pts_unrolled.data(), pts.size(), pts[0].size());
     std::vector<std::vector<int> > indices;
     std::vector<std::vector<double> > dists;
     
     // load index
-    flann::Index<flann::L2<double> > index(m_dataset_flann, flann::SavedIndexParams(m_rel_path_index));
+    flann::Matrix<double> dataset_flann(m_dataset_unrolled.data(), m_dataset.size(), m_dataset[0].size());
+    flann::Index<flann::L2<double> > index(dataset_flann, flann::SavedIndexParams(m_rel_path_index));
     // note: since using L2 distance, raising radius to pow 2 
     index.radiusSearch(queries, indices, dists, std::pow(radius, 2.0), flann::SearchParams(m_n_checks));
 

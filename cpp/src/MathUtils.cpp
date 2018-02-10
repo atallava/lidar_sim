@@ -132,8 +132,15 @@ namespace lidar_sim {
     std::tuple<std::vector<int>, std::vector<double> >
     nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2)
     {
-	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
-	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
+	std::vector<double> pts1_unrolled;
+	for (size_t i = 0; i < pts1.size(); ++i)
+	    pts1_unrolled.insert(pts1_unrolled.end(), pts1[i].begin(), pts1[i].end());
+	flann::Matrix<double> dataset(pts1_unrolled.data(), pts1.size(), pts1[0].size());
+
+	std::vector<double> pts2_unrolled;
+	for (size_t i = 0; i < pts2.size(); ++i)
+	    pts2_unrolled.insert(pts2_unrolled.end(), pts2[i].begin(), pts2[i].end());
+	flann::Matrix<double> query(pts2_unrolled.data(), pts2.size(), pts2[0].size());
 
 	int nn = 1;
 
@@ -169,8 +176,15 @@ namespace lidar_sim {
     std::tuple<std::vector<std::vector<int> >, std::vector<std::vector<double> > >
     nearestNeighbors(const std::vector<std::vector<double> > &pts1, const std::vector<std::vector<double> > &pts2, const int nn)
     {
-	flann::Matrix<double> dataset = stlArrayToFlannMatrix(pts1);
-	flann::Matrix<double> query = stlArrayToFlannMatrix(pts2);
+	std::vector<double> pts1_unrolled;
+	for (size_t i = 0; i < pts1.size(); ++i)
+	    pts1_unrolled.insert(pts1_unrolled.end(), pts1[i].begin(), pts1[i].end());
+	flann::Matrix<double> dataset(pts1_unrolled.data(), pts1.size(), pts1[0].size());
+
+	std::vector<double> pts2_unrolled;
+	for (size_t i = 0; i < pts2.size(); ++i)
+	    pts2_unrolled.insert(pts2_unrolled.end(), pts2[i].begin(), pts2[i].end());
+	flann::Matrix<double> query(pts2_unrolled.data(), pts2.size(), pts2[0].size());
 
 	std::vector<std::vector<int> > indices;
 	std::vector<std::vector<double> > dists;

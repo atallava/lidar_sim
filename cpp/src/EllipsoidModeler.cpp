@@ -83,9 +83,13 @@ void EllipsoidModeler::clusterPtsFlann()
     if (m_verbose)
 	std::cout << "EllipsoidModeler: clustering." << std::endl;
 
-    flann::Matrix<double> pts_flann = stlArrayToFlannMatrix(m_pts);
+    std::vector<double> pts_unrolled;
+    for (size_t i = 0; i < m_pts.size(); ++i)
+	pts_unrolled.insert(pts_unrolled.end(), m_pts[i].begin(), m_pts[i].end());
+
     int n_clusters_queried = calcNClusters();
     size_t dim_pts = m_pts[0].size(); // expect this to be 3
+    flann::Matrix<double> pts_flann(pts_unrolled.data(), m_pts.size(), dim_pts);
 
     std::vector<double> centers_unrolled(n_clusters_queried*dim_pts, 0.0);
     flann::Matrix<double> centers_flann(centers_unrolled.data(), n_clusters_queried, dim_pts);

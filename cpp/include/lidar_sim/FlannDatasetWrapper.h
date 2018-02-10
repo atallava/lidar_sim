@@ -27,6 +27,7 @@ namespace lidar_sim {
 	int m_n_kd_trees;
 	int m_n_checks;
 	std::vector<std::vector<double> > m_dataset;
+	std::vector<double> m_dataset_unrolled;
 	flann::Matrix<double> m_dataset_flann;
 	std::string m_rel_path_index;
     };

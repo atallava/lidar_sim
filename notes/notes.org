@@ -86,21 +86,12 @@
     (1908, 64.7). (2293, 66). (2523, 44) drop probably because i threw in a
     compile. (2591, 44.5) not sure why it became tame, because processor doing
     other things?. (7046, 64.7). (7398, 68). (7416, 51.6) again, reduced because
-    i compiled, maybe some cleanup is done. (7746, 54.3).
+    i compiled, maybe some cleanup is done. (7746, 54.3). (8712, 49.4) in check
+    because valgrind is also running. (9197, 52.5). (10836, 54).
 
 - profiling
   - perf, operf for who is taking long etc
   - look up nvidia optix for raytracing
-
-- look new valgrind report
-- then rerun valgrind
-- continue with gascola
-- perhaps install caturana? give it a try before you go speaking to him.
-
-- create flann matrix without new: change in dataproc utils, flann wrapper
-- give stl vectors directly to knn/radius search
-
-- run valgrind again
 
 * mat
 
