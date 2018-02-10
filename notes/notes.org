@@ -63,17 +63,11 @@
 
 - sim memory leak
   - destorys execution of mm for large number of packets
-  - also observed for hg, evidently not fatal
-  - simulating from tri object
-  - when finding nearest neighbors
-  - load the mesh object sim. load a section. pass a single packet repeatedly,
-    and observe a memory rise
-  - seems like both error messages are from flann. marius says the bug was
-    fixed, and i have version 1.8.4, but still seem to be getting the valgrind
-    bug
-  - create a version where you load a bunch of object meshes only, say the
-    first 10. then load a section, and pass the same say first packet a couple
-    of times to sim. see if you get new errors. 
+  - first, i added the use of flann dataset wrapper for MeshModelSim, to find
+    nearest mesh objects. earlier i was building index each time
+  - then, i removed the uses of new while creating flann matrices
+  - then, i removed the use of stlArrayToFlannMatrix. because i was using a
+    local variable to create the flann matrix, which was going out of scope.
 
 - memory use is already high during presim. solution? some data, eyeballed from
   top. section 4, scans version 300118. (min, mem%).

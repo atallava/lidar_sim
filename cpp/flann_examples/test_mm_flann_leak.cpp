@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     std::string rel_path_object_meshes_dir = genRelPathObjectMeshesDir(section_mm_models_id, mm_sim_version);
 
     // pick a few objects only
-    size_t n_objects = 10;
+    size_t n_objects = 3;
     std::vector<int> object_mesh_ids;
     for(size_t i = 1; i <= n_objects; ++i)
 	object_mesh_ids.push_back(i);
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     // obtain ray information per packet for sim
     // currently this is serial
     size_t n_packets = real_packets.m_packet_ids.size();
-    n_packets = 5;
+    n_packets = 3;
     std::vector<Pts> real_pts_per_packet;
     std::vector<std::vector<double> > ray_origin_per_packet;
     std::vector<Dirns> ray_dirns_per_packet;
