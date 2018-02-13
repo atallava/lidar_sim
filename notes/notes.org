@@ -8,6 +8,10 @@
 - terminator for ros with many terminals
 - how was tf_static was picked up?
 
+- debug odoscan params -> can you parallelize? -> generate params -> setup
+  script for experiments, look up humhu's code -> run for real
+- aggregate sim scans -> run for sim(s)
+
 - 1st timestamp
 - |T|?
 
