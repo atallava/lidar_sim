@@ -94,6 +94,7 @@ namespace lidar_sim {
     }
 
     // handy version
+    // return (mean, var)
     template<typename T>
 	std::tuple<double, double> calcVecMeanVar(std::vector<T> data)
     {

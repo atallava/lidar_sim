@@ -84,7 +84,7 @@ void PacketsToScanAggregator::aggregate()
 	m_laser_poses.push_back(T_laser);
 
 	// scan in laser frame
-	Eigen::Matrix4d T_world_laser = T_imu.inverse();
+	Eigen::Matrix4d T_world_laser = T_laser.inverse();
 	Pts scan_laser_frame = applyTransfToPts(scan, T_world_laser);
 	m_scans_laser_frame.push_back(scan_laser_frame);
 

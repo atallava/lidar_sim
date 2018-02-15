@@ -1,5 +1,4 @@
 * board
-
 - put metadata in yaml. yaml-cpp
 - how does catkin_make know a py file is a node? 
 - making a directory module by putting __init__, as in the srv modules
@@ -7,10 +6,6 @@
 - how to avoid using global variables in python. put all subfunctions in __main__
 - terminator for ros with many terminals
 - how was tf_static was picked up?
-
-- debug odoscan params -> can you parallelize? -> generate params -> setup
-  script for experiments, look up humhu's code -> run for real
-- aggregate sim scans -> run for sim(s)
 
 - 1st timestamp
 - |T|?
@@ -91,6 +86,25 @@
   - perf, operf for who is taking long etc
   - look up nvidia optix for raytracing
 
+- debug odoscan params -> can you parallelize? -> generate params -> setup
+  script for experiments, look up humhu's code -> run for real
+- aggregate sim scans -> run for sim(s)
+
+- debug odoscan
+  - scans in world frame look fine
+  - lookup laser tf, and then check that laser frame data looks correct
+  - viz and check in rviz too
+  - check the velocity messages calculation being written to bag
+  - what kind of output would you expect?
+  - then the velocity pred output in rviz, what it looks like
+
+- aggregating scans version 300118 took 1079s = ~18min.
+
+- looking at scans in world frame and laser Tfs in matlab. they look right. the
+  laser tfs lie along the path with correct orientation. they are also roughly
+  in the middle of their respective scans
+- bug! the laser scan rotations are off by pi/2 degrees, why? caught the bug. heh.
+
 * mat
 
 - grep todos in code
@@ -120,6 +134,9 @@
 - include short descriptions for each script
 
 * analyze taylor data
+
+- imu frame s.t. vehicle moves along -ve y
+- laser frame s.t. vehicle moves along +ve x
 
 - camera ids: clock-hour orientation, 12 is straight ahead
 
