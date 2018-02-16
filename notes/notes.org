@@ -29,6 +29,18 @@
     - min_inlier_ratio. set high enough to receive output.
     - min_num_inliers. set high enough to receive output.
 
+  - first lowering bar to allow results to come in. min inlier ratio low, high
+    max correspond distance, quick keyframe updating, high ransac threshold,
+    high ransac iters (upto real time limit), high log_min_eps. for simplicity,
+    no filtering, no prediction.
+  - toggle filtering
+  - for better performance, make scan matcher work
+    harder by lowering log_min_eps.
+  - then can tune the inlier ratio, correspond dist, ransac threshold, ransac
+    iters
+  - toggle prediction
+  - if ransac iters 0 does it do anything?
+
 - velocity prediction
   - needs frame check
   - velocity integration check
@@ -59,7 +71,7 @@
     344). (6,376). (4,514). (2,688). (1,1036).
   - section 4. scans version 260118. mm 200 packets. (threads, time in s). (8,
     358). (6,397). (4,561). (2,733). (1,1227).
-
+    
 - sim memory leak
   - destorys execution of mm for large number of packets
   - first, i added the use of flann dataset wrapper for MeshModelSim, to find
@@ -90,20 +102,12 @@
   script for experiments, look up humhu's code -> run for real
 - aggregate sim scans -> run for sim(s)
 
-- debug odoscan
-  - scans in world frame look fine
-  - lookup laser tf, and then check that laser frame data looks correct
-  - viz and check in rviz too
-  - check the velocity messages calculation being written to bag
-  - what kind of output would you expect?
-  - then the velocity pred output in rviz, what it looks like
-
 - aggregating scans version 300118 took 1079s = ~18min.
 
-- looking at scans in world frame and laser Tfs in matlab. they look right. the
-  laser tfs lie along the path with correct orientation. they are also roughly
-  in the middle of their respective scans
-- bug! the laser scan rotations are off by pi/2 degrees, why? caught the bug. heh.
+- velocity pred at real time! not slowed down like you do rosbag play
+  - perf without prediction, doesn't seem like odoscan is doing /anything/
+  - see if you can print out the estimated poses from lo_node
+  - lookat lo_node to see how the vel estimate is applied
 
 * mat
 
@@ -443,6 +447,7 @@ which worked
 
 - need tabs for
   - roscore
+  - rviz
   - catkin_make
   - roslaunch
   - rosservice call. or python run_odoscan
