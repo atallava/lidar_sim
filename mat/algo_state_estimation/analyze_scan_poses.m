@@ -1,3 +1,6 @@
+% are the scan poses as expected along the path? how do the scans look in
+% the world/ laser frame?
+
 % load poses
 sectionId = 4;
 scansVersion = '300118';

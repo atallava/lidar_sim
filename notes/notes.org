@@ -1,6 +1,5 @@
 * board
 - put metadata in yaml. yaml-cpp
-- how does catkin_make know a py file is a node? 
 - making a directory module by putting __init__, as in the srv modules
 - better way of putting modules on path? should be there if you source
 - how to avoid using global variables in python. put all subfunctions in __main__
@@ -40,10 +39,6 @@
     iters
   - toggle prediction
   - if ransac iters 0 does it do anything?
-
-- velocity prediction
-  - needs frame check
-  - velocity integration check
 
 - hg sim timing
   - takes 10s to load section 4 sim
@@ -104,10 +99,17 @@
 
 - aggregating scans version 300118 took 1079s = ~18min.
 
-- velocity pred at real time! not slowed down like you do rosbag play
-  - perf without prediction, doesn't seem like odoscan is doing /anything/
-  - see if you can print out the estimated poses from lo_node
-  - lookat lo_node to see how the vel estimate is applied
+- seems like problem is fundamentally hard
+  - make a full scan?
+  - distance between scans
+  - filtering to remove the matching of the hole around the vehicle
+  - any other tricks
+- spin off pair matcher. scrutinize num inliers, error etc.
+- simple filters
+- check odoscan output path with vel pred
+
+
+- set-variable c-basic-offset 8 for humphrey's cpp files
 
 * mat
 
