@@ -1,4 +1,5 @@
 * board
+- set-variable c-basic-offset 8 for humphrey's cpp files
 - put metadata in yaml. yaml-cpp
 - making a directory module by putting __init__, as in the srv modules
 - better way of putting modules on path? should be there if you source
@@ -104,12 +105,142 @@
   - distance between scans
   - filtering to remove the matching of the hole around the vehicle
   - any other tricks
-- spin off pair matcher. scrutinize num inliers, error etc.
-- simple filters
-- check odoscan output path with vel pred
+- odoscan path est with vel pred, 0 matching has drift. what does humphrey make
+  of this?
+- restarter samples from init distribution and tries a bunch of times. the first
+  time it takes just the mean, which is what it is set to with num_restarts: 0
 
+- (duration (s), inlier ratio, error): (0.299, 0.976, 0.306)
+  
+  num_threads: 1
+  path_scan_key: /usr0/home/atallav1/lidar_sim/cpp/data/algo_state_estimation/sections/section_04/version_300118/real/scans_laser_frame/scan_100.xyz
+  path_scan_query: /usr0/home/atallav1/lidar_sim/cpp/data/algo_state_estimation/sections/section_04/version_300118/real/scans_laser_frame/scan_101.xyz
+  
+  matcher:
+  type: icp
+  max_iters: 30
+  max_correspond_dist: 5
+  ransac_iters: 1
+  ransac_threshold: 2
+  log_min_transform_eps: -2
+  log_min_objective_eps: -2
+  
+  restarter:
+  two_dimensional: false
+  num_restarts: 0
+  
+  filter:
+  type: none 
 
-- set-variable c-basic-offset 8 for humphrey's cpp files
+- same result. so 30 iters was enough
+
+  max_iters: 1000
+
+- (0.819, 0.982, 0.203). some improvement
+
+  max_iters: 10
+  log_min_transform_eps: -3
+  log_min_objective_eps: -3
+
+- (2.22, 0.984, 0.090). much better, but takes long
+
+  max_iters: 100
+
+- (1.53, 0.983, 0.123). 
+
+  max_iters: 20
+
+- (2.19, 0.984, 0.092). so 30 iters enough to reach
+
+  max_iters: 30
+
+- (2.25, 0.984, 0.092). not much change
+
+  log_min_transform_eps: -4
+  log_min_objective_eps: -4
+
+- (2.81, 0.984, 0.084). minor improvement. more iters didn't help
+
+  max_iters: 40
+
+- (3.6, 0.984, 0.084). 
+
+  max_iters: 100
+  log_min_transform_eps: -6
+  log_min_objective_eps: -6
+
+- (2.17, 0.984, 0.092). high ransac iterations didn't help.
+
+  max_iters: 30
+  max_correspond_dist: 5
+  ransac_iters: 100
+  ransac_threshold: 2
+  log_min_transform_eps: -3
+  log_min_objective_eps: -3
+
+- (2.13, 0.984, 0.092). 
+
+ max_iters: 30
+ max_correspond_dist: 5
+ ransac_iters: 1
+ ransac_threshold: 2
+ log_min_transform_eps: -3
+ log_min_objective_eps: -2
+
+- (0.3, 0.976, 0.31). so log_min_transform_eps more important than
+  log_min_objective_eps
+
+  max_iters: 30
+  max_correspond_dist: 5
+  ransac_iters: 1
+  ransac_threshold: 2
+  log_min_transform_eps: -2
+  log_min_objective_eps: -3
+
+- (2.12, 0.987, 0.11). playing with max_correspond_dist
+
+  max_iters: 30
+  max_correspond_dist: 10
+  ransac_iters: 1
+  ransac_threshold: 2
+  log_min_transform_eps: -3
+  log_min_objective_eps: -2
+
+- (2.20, 0.989, 0.145).
+
+  max_correspond_dist: 20
+
+- (2.12, 0.981, 0.085)
+
+  max_correspond_dist: 3
+
+- (0.274, 0.884, 0.142). 
+
+  max_correspond_dist: 1
+
+- (2.2, .984, .092). playing with ransac_threshold
+  
+  max_iters: 30
+  max_correspond_dist: 5
+  ransac_iters: 1
+  ransac_threshold: 5
+  log_min_transform_eps: -3
+  log_min_objective_eps: -2
+
+- same result as above
+
+  ransac_threshold: 10
+  ransac_theshold: 3
+  ransac_theshold: 1
+
+- tried best performing iters on realtime. the result is still crap. but at
+  least there is some minor drift from the origin, not just stuck there.
+
+- with filter on example
+- with approx disp
+- test on path
+- static batch matcher. reads in scans, absorbs disps if prediction enabled,
+  writes out disps
 
 * mat
 

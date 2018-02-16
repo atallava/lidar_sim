@@ -45,6 +45,7 @@ end
 TCellEst = cell(1,nDisps+1);
 posnsEst = zeros(nDisps+1,3);
 TCellEst{1} = TCellReal{1};
+posnsEst(1,:) = TCellEst{1}(1:3,4);
 for i = 2:(nDisps+1)
     TCellEst{i} = TCellEst{i-1}*TCellDisp{i-1};
     TEst = TCellEst{i};
