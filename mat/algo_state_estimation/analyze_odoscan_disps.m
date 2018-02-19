@@ -6,7 +6,8 @@ sourceVersion = '';
 odoscanParamsIdx = 1;
 
 %% load
-relPathScanPoses = genRelPathScanPoses(sectionId,scansVersion,dataSource,sourceVersion);
+% relPathScanPoses = genRelPathScanPoses(sectionId,scansVersion,dataSource,sourceVersion);
+relPathScanPoses = 'disps_vel_integration.txt';
 [tReal, TCellReal] = loadScanPoses(relPathScanPoses);
 nPoses = length(tReal);
 
