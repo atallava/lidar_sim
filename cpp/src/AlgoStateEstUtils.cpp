@@ -26,7 +26,7 @@ namespace lidar_sim {
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-	       << "/version_" << scans_version;
+	       << "/scans_version_" << scans_version;
 	    std::string rel_path_dir = ss.str();
 	    std::string rel_path_info = rel_path_dir + "/process_info.txt";
 
@@ -38,7 +38,7 @@ namespace lidar_sim {
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-	       << "/version_" << scans_version
+	       << "/scans_version_" << scans_version
 	       << "/" << data_source;
 	    if (source_version != "")
 		ss << "/version_" << source_version;
@@ -139,7 +139,7 @@ namespace lidar_sim {
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-	       << "/version_" << scans_version 
+	       << "/scans_version_" << scans_version 
 	       << "/" << sim_type << "/version_" << sim_version
 	       << "/real_pts.xyz";
 	    std::string rel_path_dir = ss.str();
@@ -151,7 +151,7 @@ namespace lidar_sim {
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-	       << "/version_" << scans_version 
+	       << "/scans_version_" << scans_version 
 	       << "/" << sim_type << "/version_" << sim_version
 	       << "/sim_pts.xyz";
 	    std::string rel_path_dir = ss.str();
@@ -163,7 +163,7 @@ namespace lidar_sim {
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
-	       << "/version_" << scans_version 
+	       << "/scans_version_" << scans_version 
 	       << "/" << sim_type << "/version_" << sim_version
 	       << "/sim_detail.txt";
 	    std::string rel_path_dir = ss.str();

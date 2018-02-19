@@ -13,7 +13,7 @@ function relPathBagsDir = genRelPathBagsDir(sectionId,scansVersion,dataSource,so
 if nargin < 4
     sourceVersion = '';
 end
-relPathBagsDir = sprintf('~/catkin_ws/src/lidar_sim_state_estimation/data/sections/section_%02d/version_%s/%s', ...
+relPathBagsDir = sprintf('~/catkin_ws/src/lidar_sim_state_estimation/data/sections/section_%02d/scans_version_%s/%s', ...
     sectionId,scansVersion,dataSource);
 if ~strcmp(sourceVersion,'')
     relPathBagsDir = [relPathBagsDir '/version_' sourceVersion];
