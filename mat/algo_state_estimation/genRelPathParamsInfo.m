@@ -1,4 +1,4 @@
-function relPathSamples = genRelPathParamSamples(samplesVersion)
+function relPathSamples = genRelPathParamsInfo(samplesVersion)
 %GENRELPATHPARAMSAMPLES
 %
 % relPathSamples = GENRELPATHPARAMSAMPLES()
@@ -6,5 +6,5 @@ function relPathSamples = genRelPathParamSamples(samplesVersion)
 % relPathSamples -
 
 relPathSamples = ['~/catkin_ws/src/lidar_sim_state_estimation/data/param_samples/version_' ...
-    samplesVersion '.txt'];
+    samplesVersion '_info.txt'];
 end
