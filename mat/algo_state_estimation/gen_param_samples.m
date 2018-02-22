@@ -12,7 +12,7 @@ paramNames = {'max_iters', 'max_correspond_dist', 'ransac_iters', 'ransac_thresh
     'log_min_transform_eps', 'log_min_objective_eps', 'log_voxel_size', 'enable_guess_disps'};
 
 %% sample
-nSamples = 100;
+nSamples = 1000;
 paramSamples = zeros(nSamples,nParams);
 
 for id = find(paramIsInteger)
