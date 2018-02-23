@@ -12,7 +12,7 @@ paramNames = {'max_iters', 'max_correspond_dist', 'ransac_iters', 'ransac_thresh
     'log_min_transform_eps', 'log_min_objective_eps', 'log_voxel_size', 'enable_guess_disps'};
 
 %% sample
-nSamples = 1000;
+nSamples = 100;
 paramSamples = zeros(nSamples,nParams);
 
 for id = find(paramIsInteger)
@@ -24,12 +24,12 @@ for id = find(~paramIsInteger)
     paramSamples(:,id) = rand(nSamples,1)*(paramLims(id,2)-paramLims(id,1)) + paramLims(id,1);
 end
 
-%% 
-enableGuessDisps = 0;
+%% enable guess disps?
+enableGuessDisps = 1;
 if enableGuessDisps
     nParams = nParams + 1;
     paramSamples(:,nParams) = ones(nSamples,1);
-    guessDispsVersion = 12345678;
+    guessDispsVersion = 18220218;
     nParams = nParams + 1;
     paramSamples(:,nParams) = guessDispsVersion;
     paramNames{end+1} = 'guess_disps_version';

@@ -2,7 +2,7 @@ sectionId = 4;
 scansVersion = '300118';
 dataSource = 'real';
 sourceVersion = '';
-paramSamplesVersion = '22190218';
+paramSamplesVersion = '18220218';
 
 %% load reports
 relPathSamples = genRelPathParamSamples(paramSamplesVersion);
@@ -57,18 +57,21 @@ fprintf('mean error: %.3f\n', mean(posnErrorPerParam));
 
 %% viz
 % pick param
-paramsIdx = 75;
+paramsIdx = 37;
 posnsEst = posnsEstPerParam{paramsIdx};
 
 hfig = figure();
 lineWidth = 1.5;
-plot(posnsReal(:,1),posnsReal(:,2),'bo-', ...
+plot3(posnsReal(:,1),posnsReal(:,2),posnsReal(:,3),'b-', ...
     'linewidth',lineWidth);
 hold on; axis equal;
-plot(posnsEst(:,1),posnsEst(:,2),'rx-', ...
+plot3(posnsEst(:,1),posnsEst(:,2),posnsEst(:,3),'r-', ...
     'linewidth',lineWidth);
 xlabel('x (m)'); ylabel('y (m)');
 legend({'real','est'});
+view(2);
+box on; grid on;
+title(sprintf('params idx: %d', paramsIdx));
 
 
 
