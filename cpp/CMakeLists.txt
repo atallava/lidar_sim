@@ -23,18 +23,6 @@ list( APPEND LIDAR_SIM_LIBRARIES ${Boost_LIBRARIES} )
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_thread" ) # Force linking against thread
 # list( APPEND LIDAR_SIM_LIBRARIES "-lboost_system" ) # Force linking against system
 
-# VTK
-# find_package(VTK REQUIRED)
-# include(${VTK_USE_FILE})
-# list( APPEND LIDAR_SIM_LIBRARIES ${VTK_LIBRARIES} )
-
-# PCL
-# find_package( PCL 1.4 REQUIRED )
-# include_directories( ${PCL_INCLUDE_DIRS} )
-# link_directories( ${PCL_LIBRARY_DIRS} )
-# add_definitions(${PCL_DEFINITIONS})
-# list( APPEND LIDAR_SIM_LIBRARIES ${PCL_LIBRARIES})
-
 # CGAL
 find_package( CGAL)
 include( ${CGAL_USE_FILE} ) 
@@ -45,8 +33,6 @@ include( CGAL_CreateSingleSourceCGALProgram )
 # EIGEN
 set( EIGEN_INCLUDE_DIR "/usr/include/eigen3" )
 include_directories( ${EIGEN_INCLUDE_DIR} )
-
-########## Desktop options
 
 # ALGLIB
 set( ALGLIB_INCLUDE_DIR "/usr0/home/atallav1/alglib-3.10.0.cpp/src" )
@@ -72,25 +58,13 @@ set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
-########## Laptop options
-
-# # ALGLIB
-# set( ALGLIB_INCLUDE_DIR "/home/abhijeet/alglib-3.10.0.cpp/src" )
-# include_directories( ${ALGLIB_INCLUDE_DIR} )
-# set( ALGLIB_LIBRARY "/home/abhijeet/alglib-3.10.0.cpp/lib/libalglib.so" )
-# set( ALGLIB_LIBRARY_DIR "/home/abhijeet/alglib-3.10.0.cpp/lib/" )
-# link_directories( ${ALGLIB_LIBRARY_DIR} )
-# list( APPEND LIDAR_SIM_LIBRARIES ${ALGLIB_LIBRARY} )
-
-# # EIGENMVN
-# set( EIGENMVN_INCLUDE_DIR "/home/abhijeet/eigenmvn" )
-# include_directories( ${EIGENMVN_INCLUDE_DIR} )
-
-# # NLOPT
-# set( NLOPT_LIBRARY "/usr/local/lib/libnlopt.a" )
-# list( APPEND LIDAR_SIM_LIBRARIES ${NLOPT_LIBRARY} )
-
-########## 
+# lidar_sim_classification
+set( LIDAR_SIM_CLASSIFICATION_INCLUDE_DIR "/usr0/home/atallav1/lidar_sim_classification/cpp/include" )
+include_directories( ${LIDAR_SIM_CLASSIFICATION_INCLUDE_DIR} )
+set( LIDAR_SIM_CLASSIFICATION_LIBRARY "/usr0/home/atallav1/lidar_sim_classification/cpp/lib/liblidar_sim_classification.so" )
+set( LIDAR_SIM_CLASSIFICATION_LIBRARY_DIR "/usr0/home/atallav1/lidar_sim_classification/cpp/lib" )
+link_directories( ${LIDAR_SIM_CLASSIFICATION_LIBRARY_DIR} )
+list( APPEND LIDAR_SIM_LIBRARIES ${LIDAR_SIM_CLASSIFICATION_LIBRARY} )
 
 # c++ 11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x") 
@@ -231,14 +205,6 @@ add_library(lidar_sim SHARED
 ####################################################################################################
  
 # hybrid_geometric sim
-# file( GLOB HYBRID_GEOMETRIC_SIM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} hybrid_geometric_sim/*.cpp )
-# foreach( testsourcefile ${HYBRID_GEOMETRIC_SIM_SOURCES} )
-#   string( REPLACE ".cpp" "" testnamewithdir ${testsourcefile} )
-#   string( REPLACE "hybrid_geometric_sim/" "" testname ${testnamewithdir})
-   
-#   add_executable( ${testname} ${testsourcefile} )
-#   target_link_libraries( ${testname} lidar_sim ${LIDAR_SIM_LIBRARIES} )
-# endforeach( testsourcefile ${HYBRID_GEOMETRIC_SIM_SOURCES} )
  
 ## pattern
 
@@ -406,4 +372,19 @@ target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES
 
 # add_executable(write_imu_poses_for_section algo_state_estimation/write_imu_poses_for_section.cpp)
 # target_link_libraries(write_imu_poses_for_section lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+####################################################################################################
+
+## algo classification
+
+## pattern
+
+# # add_executable(pattern algo_classification/pattern.cpp)
+# #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(get_non_ground_from_ground_pts algo_classification/get_non_ground_from_ground_pts.cpp)
+  target_link_libraries(get_non_ground_from_ground_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(gen_runs_vehicle_posn_nodes algo_classification/gen_runs_vehicle_posn_nodes.cpp)
+  target_link_libraries(gen_runs_vehicle_posn_nodes lidar_sim ${LIDAR_SIM_LIBRARIES} )
 

@@ -74,6 +74,9 @@
     - opportunity to weed out bad primitives
 
 - new scene sim pipeline
+  - perform non/ ground segmentation
+  - build imu posn nodes
+  - build blocks from ground points. these are shared by hg and mm sim
   - get annotations from labeling
   - create ellipsoid blocks
   - create meshes
@@ -170,8 +173,6 @@ one file, contains labelings, semgentIds. combine this with the segment pts
       - todo
       - variables 'labeling' and 'segmentIds'
 
---------------------------------------------------
-
 * cpp
 
 - cpp11
@@ -239,12 +240,6 @@ them and writes them out? so that you don't have to keep track of them.
     scripting tools to manage the config file. for example, go into python and
     tweak values there. since the python script has the semantic knowledge also
     of what is what, it will have no trouble outputing it as xml, txt, etc etc.
-
-- sim new scene pipeline
-  - build imu posn nodes
-  - build blocks from ground points
-    
-------------------------------
 
 * analyze taylor data:
 

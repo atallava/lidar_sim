@@ -6,6 +6,7 @@
 #include <vector>
 #include <tuple>
 #include <algorithm>
+#include <iomanip>
 
 #include <Eigen/Dense>
 
@@ -42,7 +43,7 @@ namespace lidar_sim {
 	{
 	    std::ostringstream ss;
 	    for(size_t j = 0; j < pts[i].size(); ++j)
-		ss << pts[i][j] << " ";
+		ss << std::setprecision(15) << pts[i][j] << " ";
 	    ss << std::endl;
 	    
 	    file << ss.str();
