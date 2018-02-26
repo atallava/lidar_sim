@@ -75,8 +75,16 @@
 
 - new scene sim pipeline
   - perform non/ ground segmentation
-  - build imu posn nodes
-  - build blocks from ground points. these are shared by hg and mm sim
+  - gen imu posn nodes
+
+    posn nodes can be stored in the section folder
+  - build ground blocks. build ground block models. these are shared by hg and
+    mm sim
+
+    the blocks, and the block node ids, can be stored in
+    section_folder/hg_sim/blocks_info. note that the blocks are indexed starting
+    from 1. this is a relic convention and should be overhauled
+
   - get annotations from labeling
   - create ellipsoid blocks
   - create meshes
@@ -141,7 +149,9 @@ e.g. max dist to nbrs or min nbrs. segmentation works with subsampled
 dataset. so will have to transfer labels to points in full dataset, just do
 nearest neighbors
 
-------------------------------
+- block_node_ids format
+
+  [block_id_start block_id_end]. where the ids are of the imu position nodes
 
 * scenes labeling
 

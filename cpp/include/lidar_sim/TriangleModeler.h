@@ -42,6 +42,7 @@ namespace lidar_sim {
 	void setDebugFlag(int flag);
 	void calcHitProb(std::string rel_path_section, const PoseServer &imu_poses_server);
 	void calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_poses_server);
+	void calcHitProb(const std::vector<std::vector<double> > &ray_origins, const std::vector<std::vector<double> > &ray_endpoints);
 	void subsamplePts();
 	void filterPts();
 	void filterTriangles();

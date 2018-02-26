@@ -228,6 +228,26 @@ void TriangleModeler::calcHitProb(std::string rel_path_section, const PoseServer
 
 void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vector<int> &section_pt_ids_to_process, const PoseServer &imu_pose_server)
 {
+    std::vector<std::vector<double> > ray_origins;
+    std::vector<std::vector<double> > ray_endpoints;
+    const LaserCalibParams laser_calib_params;
+    for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
+    {
+    	int id = section_pt_ids_to_process[i];
+	double t = section.m_pt_timestamps[id];
+    	std::vector<double> this_pt = section.m_pts[id];
+    	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
+    	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, laser_calib_params);
+
+	ray_origins.push_back(ray_origin);
+	ray_endpoints.push_back(this_pt);
+    }
+
+    calcHitProb(ray_origins, ray_endpoints);
+}
+
+void TriangleModeler::calcHitProb(const std::vector<std::vector<double> > &ray_origins, const std::vector<std::vector<double> > &ray_endpoints)
+{
     if (m_debug_flag)
 	std::cout << "TriangleModeler: calculating hit probs." << std::endl;
 
@@ -251,14 +271,10 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
     std::vector<int> tri_intersected_count(m_triangle_models.m_triangles.size(), 0);
     std::vector<int> pt_intersected_flag;
 
-    for(size_t i = 0; i < section_pt_ids_to_process.size(); ++i)
+    for(size_t i = 0; i < ray_origins.size(); ++i)
     {
-    	int id = section_pt_ids_to_process[i];
-	
-    	double t = section.m_pt_timestamps[id];
-    	std::vector<double> this_pt = section.m_pts[id];
-    	std::vector<double> imu_pose = imu_pose_server.getPoseAtTime(t);
-    	std::vector<double> ray_origin = laserPosnFromImuPose(imu_pose, laser_calib_params);
+    	std::vector<double> this_pt = ray_endpoints[i];
+    	std::vector<double> ray_origin = ray_origins[i];
     	std::vector<double> ray_dirn;
     	double meas_dist;
     	std::tie(ray_dirn, meas_dist) = calcRayDirn(ray_origin, this_pt);
@@ -307,8 +323,8 @@ void TriangleModeler::calcHitProb(const SectionLoader &section, const std::vecto
     // stats
     if (m_debug_flag)
     {
-	std::cout << "n pts: " << section_pt_ids_to_process.size() << std::endl;
-	std::cout << "fracs pts intersected: " << std::accumulate(pt_intersected_flag.begin(), pt_intersected_flag.end(), 0.0)/(double)section_pt_ids_to_process.size() << std::endl;
+	std::cout << "n pts: " << ray_origins.size() << std::endl;
+	std::cout << "fracs pts intersected: " << std::accumulate(pt_intersected_flag.begin(), pt_intersected_flag.end(), 0.0)/(double)ray_origins.size() << std::endl;
 	std::vector<int> tri_missed_flag = negateLogicalVec(tri_intersected_count);
 	std::cout << "fracs tri missed: " << std::accumulate(std::begin(tri_missed_flag), std::end(tri_missed_flag), 0.0)/(double)tri_missed_flag.size() << std::endl;
 	double range_var = calcVariance(filtered_residual_ranges);
