@@ -3,9 +3,9 @@ function posns = getPosnsFromTfs(TCell)
 %
 % posns = GETPOSNSFROMTFS(TCell)
 %
-% TCell -
+% TCell - cell array. TCell{i} is [4,4] homogeneous transform.
 %
-% posns -
+% posns - [nPoses, 3] array. xyz of each pose.
 
 nPoses = length(TCell);
 posns = zeros(nPoses,3);

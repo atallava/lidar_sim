@@ -382,15 +382,15 @@ target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES
 # # add_executable(pattern algo_classification/pattern.cpp)
 # #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(get_non_ground_from_ground_pts algo_classification/get_non_ground_from_ground_pts.cpp)
-  target_link_libraries(get_non_ground_from_ground_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(get_non_ground_from_ground_pts algo_classification/get_non_ground_from_ground_pts.cpp)
+#   target_link_libraries(get_non_ground_from_ground_pts lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(gen_runs_vehicle_posn_nodes algo_classification/gen_runs_vehicle_posn_nodes.cpp)
-  target_link_libraries(gen_runs_vehicle_posn_nodes lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(gen_runs_vehicle_posn_nodes algo_classification/gen_runs_vehicle_posn_nodes.cpp)
+#   target_link_libraries(gen_runs_vehicle_posn_nodes lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(build_blocks_ground_gascola algo_classification/build_blocks_ground_gascola.cpp)
-  target_link_libraries(build_blocks_ground_gascola lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(build_blocks_ground_gascola algo_classification/build_blocks_ground_gascola.cpp)
+#   target_link_libraries(build_blocks_ground_gascola lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(build_models_ground_blocks_gascola algo_classification/build_models_ground_blocks_gascola.cpp)
-  target_link_libraries(build_models_ground_blocks_gascola lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(build_models_ground_blocks_gascola algo_classification/build_models_ground_blocks_gascola.cpp)
+#   target_link_libraries(build_models_ground_blocks_gascola lidar_sim ${LIDAR_SIM_LIBRARIES} )
 

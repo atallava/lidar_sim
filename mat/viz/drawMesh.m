@@ -19,8 +19,13 @@ yellowGreenRgb = [154,205,50]/255.0;
 darkGreenRgb = [0,100,0]/255.0;
 forestGreenRgb = [34,139,34]/255.0;
 
+% brown for ground
 mudBrownRgb = [210 180 140]/255.0;
 saddleBrownRgb = [139 69 19]/255.0;
+
+% for barrel
+redRgb = [1 0 0];
+orangeRgb = [255 165 0]/255.0;
 
 switch objectType
     case 'veg'
@@ -34,6 +39,10 @@ switch objectType
 %         faceColor = mudBrownRgb;
         faceColor = [1 1 1];
 
+        faceVertexAlpha = 0.5;
+    case 'barrel'
+        edgeColor = redRgb;
+        faceColor = orangeRgb;
         faceVertexAlpha = 0.5;
     otherwise
         edgeColor = [0 0 0];

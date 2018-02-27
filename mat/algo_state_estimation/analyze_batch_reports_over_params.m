@@ -1,7 +1,15 @@
 sectionId = 4;
 scansVersion = '300118';
-dataSource = 'real';
-sourceVersion = '';
+
+% dataSource = 'real';
+% sourceVersion = '';
+
+% dataSource = 'hg_sim';
+% sourceVersion = '080917';
+
+dataSource = 'mm_sim';
+sourceVersion = '010218';
+
 paramSamplesVersion = '18220218';
 
 %% load reports
@@ -48,16 +56,30 @@ for i = 1:nSamples
     posnErrorPerParam(i) = calcPosnError(posnsReal,posnsEstPerParam{i});
 end
 
+rotnErrorPerParam = zeros(1,nSamples);
+for i = 1:nSamples
+    rotnErrorPerParam(i) = calcRotnError(TCellReal, TCellEstPerParam{i});
+end
+
 % some stats
+fprintf('data source: %s\n', dataSource);
+
 [minPosnError, minErrorId] = min(posnErrorPerParam);
 [maxPosnError, maxErrorId] = max(posnErrorPerParam);
 fprintf('min posn error: %.3f id: %d\n', minPosnError, minErrorId);
 fprintf('max posn error: %.3f, id: %d\n', maxPosnError, maxErrorId);
 fprintf('mean error: %.3f\n', mean(posnErrorPerParam));
 
+[minRotnError, minErrorId] = min(rotnErrorPerParam);
+[maxRotnError, maxErrorId] = max(rotnErrorPerParam);
+fprintf('min rotn error: %.3f id: %d\n', minRotnError, minErrorId);
+fprintf('max rotn error: %.3f, id: %d\n', maxRotnError, maxErrorId);
+fprintf('mean error: %.3f\n', mean(rotnErrorPerParam));
+fprintf('\n');
+
 %% viz
 % pick param
-paramsIdx = 37;
+paramsIdx = 4;
 posnsEst = posnsEstPerParam{paramsIdx};
 
 hfig = figure();

@@ -57,6 +57,9 @@
 
 - aggregating scans version 300118 took 1079s = ~18min.
 
+- running 100 params for hg scans took 2132s = 35min
+- running 100 params for hg scans took 2944s = 49min
+
 * mat
 
 - grep todos in code
@@ -413,5 +416,16 @@ which worked
   cpp code, which can then take arguments/ function/ handles of some form. get
   help on the second.
 
+- the sim scans look very clean compared to reality. part of this is not enough
+  surrounding vegetation. but what about the ground?
 
+- while aggregating mm, expected scans didn't much num scans. i think that some
+  packets were entirely not written, since there were no hit points there.
 
+** sim versions
+
+- hg_sim
+  - version 080917
+
+- mm_sim
+  - version 010218

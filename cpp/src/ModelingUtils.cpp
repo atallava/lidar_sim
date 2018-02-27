@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <math.h>
 
@@ -112,7 +113,7 @@ namespace lidar_sim {
 	file << "pts" << std::endl;
     
 	for(size_t i = 0; i < triangle_models.m_fit_pts.size(); ++i)
-	    file << triangle_models.m_fit_pts[i][0] << " " <<
+	    file << std::setprecision(15) << triangle_models.m_fit_pts[i][0] << " " <<
 		triangle_models.m_fit_pts[i][1] << " " <<
 		triangle_models.m_fit_pts[i][2] << std::endl;
 

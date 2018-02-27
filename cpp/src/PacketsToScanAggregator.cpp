@@ -95,10 +95,8 @@ void PacketsToScanAggregator::aggregate()
     bool condn = (m_n_scans == m_n_scans_expected);
     if (!condn)
     {
-	std::stringstream ss_err_msg;
-	ss_err_msg << "n scans expected: " << m_n_scans_expected 
+	std::cout << "warning: n scans expected: " << m_n_scans_expected 
 		   << " doesn't equal n scans aggregated: " << m_n_scans << std::endl;
-	throw std::runtime_error(ss_err_msg.str().c_str());
     }
 }
 

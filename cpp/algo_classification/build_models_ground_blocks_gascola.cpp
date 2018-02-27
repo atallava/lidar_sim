@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 {
     clock_t start_time = clock();
 
-    std::string run_name = "barrels_1";
+    std::string run_name = "barrels_2";
     std::vector<int> block_ids = lsc::getGroundBlockIds(run_name);
 
     // run as section
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
     // mkdirs for sim models
     std::string hg_sim_version = "260218"; // todo: currently hand-specified
-    std::string path_sim_models_dir = lsc::genPathSimModelsDir(run_name, "hg", hg_sim_version);
+    std::string path_sim_models_dir = lsc::genPathSimModelsDir(run_name, "hg_sim", hg_sim_version);
     boost::filesystem::create_directories(path_sim_models_dir);
 
     // loop over blocks
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 
     	// write out triangles
     	std::string path_triangles = 
-	    lsc::genPathGroundTriangles(run_name, "hg", hg_sim_version, block_id);
+	    lsc::genPathGroundTriangles(run_name, "hg_sim", hg_sim_version, block_id);
     	modeler.writeTrianglesToFile(path_triangles);
     }
 

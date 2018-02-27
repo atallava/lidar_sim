@@ -14,9 +14,9 @@ int main(int argc, char **argv)
     clock_t start_time = clock();
 
     int section_id = 4;
-    std::string scans_version = "290118";
-    std::string data_source = "real";
-    std::string source_version = "";
+    std::string scans_version = "300118";
+    std::string data_source = "mm_sim";
+    std::string source_version = "010218";
 
     std::string rel_path_packets = 
 	algo_state_est::genRelPathPacketsToProcess(section_id, scans_version, data_source, source_version);
