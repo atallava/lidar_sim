@@ -70,7 +70,6 @@ void TriangleModeler::fitSmoothedSurface()
     alglib::rbfbuildmodel(m_surface_model, rep);
 }
 
-
 void TriangleModeler::fitSmoothedPts()
 {
     if (m_debug_flag)

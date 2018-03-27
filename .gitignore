@@ -77,6 +77,7 @@ perf.*
 # misc
 testApp.*
 flann_index_*
+*.xyz
 
 mat/figs/
 
