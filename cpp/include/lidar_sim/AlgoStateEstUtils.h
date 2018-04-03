@@ -9,8 +9,10 @@ namespace lidar_sim {
 					 std::string data_source, std::string source_version = "");
 	bool mkdirsForPacketsToProcess(int section_id, std::string scans_version, 
 				       std::string data_source, std::string source_version = "");
+	bool mkdirsForPacketsToProcessDebug(int section_id, std::string scans_version, 
+					    std::string data_source, std::string source_version = "");
 	std::string genRelPathPacketsToProcess(int section_id, std::string scans_version,
-					       std::string data_source, std::string source_version = "");
+					       std::string data_source, std::string source_version = "", bool debug = false);
 	void writeProcessInfo(int section_id, std::string scans_version, 
 			      size_t n_scans, size_t n_packets_per_scan, 
 			      size_t n_skip_within_scan, size_t n_skip_between_scans);
@@ -26,10 +28,10 @@ namespace lidar_sim {
 
 	// for the sims
 	std::string genRelPathRealPtsRef(int section_id, std::string scans_version, 
-					 std::string sim_type, std::string sim_version);
+					 std::string sim_type, std::string sim_version, bool debug = false);
 	std::string genRelPathSimPts(int section_id, std::string scans_version, 
-				     std::string sim_type, std::string sim_version);
+				     std::string sim_type, std::string sim_version, bool debug = false);
 	std::string genRelPathSimDetail(int section_id, std::string scans_version, 
-					std::string sim_type, std::string sim_version);
+					std::string sim_type, std::string sim_version, bool debug = false);
     }
 }

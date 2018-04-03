@@ -352,11 +352,22 @@ add_library(lidar_sim SHARED
 
 ## algo state estimation
 
-add_executable(aggregate_packets_to_scans algo_state_estimation/aggregate_packets_to_scans.cpp)
-target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES})
+## pattern
+
+# # add_executable(pattern algo_state_estimation/pattern.cpp)
+# #   target_link_libraries(pattern lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+# add_executable(aggregate_packets_to_scans algo_state_estimation/aggregate_packets_to_scans.cpp)
+# target_link_libraries(aggregate_packets_to_scans lidar_sim ${LIDAR_SIM_LIBRARIES})
 
 # add_executable(create_real_packets_to_process algo_state_estimation/create_real_packets_to_process.cpp)
 # target_link_libraries(create_real_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
+
+add_executable(hg_sim_debug algo_state_estimation/hg_sim_debug.cpp)
+  target_link_libraries(hg_sim_debug lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(mm_sim_debug algo_state_estimation/mm_sim_debug.cpp)
+  target_link_libraries(mm_sim_debug lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(create_hg_sim_packets_to_process algo_state_estimation/create_hg_sim_packets_to_process.cpp)
 # target_link_libraries(create_hg_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})

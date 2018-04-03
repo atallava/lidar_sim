@@ -55,10 +55,20 @@ namespace lidar_sim {
 	    return boost::filesystem::create_directories(rel_path_dir);
 	}
 
+	bool mkdirsForPacketsToProcessDebug(int section_id, std::string scans_version, 
+					    std::string data_source, std::string source_version)
+	{
+	    std::string rel_path_dir = genRelPathPacketsDir(section_id, scans_version, data_source, source_version) +
+		"/debug";
+	    return boost::filesystem::create_directories(rel_path_dir);
+	}
+
 	std::string genRelPathPacketsToProcess(int section_id, std::string scans_version,
-					       std::string data_source, std::string source_version)
+					       std::string data_source, std::string source_version, bool debug)
 	{
 	    std::string rel_path_dir = genRelPathPacketsDir(section_id, scans_version, data_source, source_version);
+	    if (debug)
+		rel_path_dir += "/debug";
 	    std::string rel_path_packets = rel_path_dir + "/packets_to_process.xyz";
 
 	    return rel_path_packets;
@@ -135,37 +145,46 @@ namespace lidar_sim {
 
 	// for the sims
 	std::string genRelPathRealPtsRef(int section_id, std::string scans_version, 
-					 std::string sim_type, std::string sim_version)
+					 std::string sim_type, std::string sim_version, bool debug)
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
 	       << "/scans_version_" << scans_version 
-	       << "/" << sim_type << "/version_" << sim_version
-	       << "/real_pts.xyz";
+	       << "/" << sim_type << "/version_" << sim_version;
+	    if (debug)
+		ss << "/debug";
+
+	    ss << "/real_pts.xyz";
 	    std::string rel_path_dir = ss.str();
 	    return ss.str();
 	}
 
 	std::string genRelPathSimPts(int section_id, std::string scans_version, 
-				     std::string sim_type, std::string sim_version)
+				     std::string sim_type, std::string sim_version, bool debug)
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
 	       << "/scans_version_" << scans_version 
-	       << "/" << sim_type << "/version_" << sim_version
-	       << "/sim_pts.xyz";
+	       << "/" << sim_type << "/version_" << sim_version;
+	    if (debug)
+		ss << "/debug";
+
+	    ss << "/sim_pts.xyz";
 	    std::string rel_path_dir = ss.str();
 	    return ss.str();
 	}
 
 	std::string genRelPathSimDetail(int section_id, std::string scans_version, 
-					std::string sim_type, std::string sim_version)
+					std::string sim_type, std::string sim_version, bool debug)
 	{
 	    std::ostringstream ss;
 	    ss << "data/algo_state_estimation/sections/section_" << std::setw(2) << std::setfill('0') << section_id
 	       << "/scans_version_" << scans_version 
-	       << "/" << sim_type << "/version_" << sim_version
-	       << "/sim_detail.txt";
+	       << "/" << sim_type << "/version_" << sim_version;
+	    if (debug)
+		ss << "/debug";
+
+	    ss << "/sim_detail.txt";
 	    std::string rel_path_dir = ss.str();
 	    return ss.str();
 	}
