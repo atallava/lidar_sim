@@ -373,8 +373,13 @@ spotlightState = 0;
         tImu = imuData.tExtents(1);
         
         while tImu < imuData.tExtents(2)
-            imuPose = getImuPoseAtTime(imuData.poseLog,imuData.tLog,tImu);
-            T_imu_world = getImuTransfFromImuPose(imuPose);
+            % for taylor
+            %             imuPose = getImuPoseAtTime(imuData.poseLog,imuData.tLog,tImu);
+            %             T_imu_world = getImuTransfFromImuPose(imuPose);
+
+            % for gascola
+            T_imu_world = getVehicleTfAtTime(imuData.tLog, imuData.poseLog, tImu); 
+
             obb_world = applyTransfToObb(dummyObb,T_imu_world);
             drawObb(hfig,obb_world);
             tImu = tImu+imuData.tResn;

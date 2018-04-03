@@ -14,7 +14,9 @@ function drawObb(hfig,obb,pts,lineColor)
     figure(hfig);
     hold on; axis equal;
     box on; grid on;
-    xlabel('x'); ylabel('y'); zlabel('z');
+
+    %     xlabel('x'); ylabel('y'); zlabel('z'); % figure should decide its own
+%     axis?
     
     vertices = getObbVertices(obb);
     for i = 1:3

@@ -4,8 +4,8 @@ scansVersion = '300118';
 dataSourceReal = 'real';
 sourceVersionReal = '';
 
-simDataSource = 'hg_sim';
-simSourceVersion = '080917';
+dataSourceSim = 'hg_sim';
+sourceVersionSim = '080917';
 
 % dataSourceSim = 'mm_sim';
 % sourceVersionSim = '010218';
@@ -53,7 +53,7 @@ fprintf('\n');
 
 %% viz
 % pick param
-paramsIdx = 4;
+paramsIdx = 73;
 posnsEstReal = posnsEstPerParamReal{paramsIdx};
 posnsEstSim = posnsEstPerParamSim{paramsIdx};
 

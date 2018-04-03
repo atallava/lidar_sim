@@ -1,3 +1,6 @@
+% for a snapshot depicting the labeling tool. just a copy of the script in
+% scene_sim
+
 %% rel path helpers
 genRelPathSetLabeling = @(setId) ...
     sprintf('../data/sections/section_03/labeling/labeling_set_%d',setId);
