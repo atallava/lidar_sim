@@ -374,8 +374,8 @@ spotlightState = 0;
         
         while tImu < imuData.tExtents(2)
             % for taylor
-            %             imuPose = getImuPoseAtTime(imuData.poseLog,imuData.tLog,tImu);
-            %             T_imu_world = getImuTransfFromImuPose(imuPose);
+%             imuPose = getImuPoseAtTime(imuData.poseLog,imuData.tLog,tImu);
+%             T_imu_world = getImuTransfFromImuPose(imuPose);
 
             % for gascola
             T_imu_world = getVehicleTfAtTime(imuData.tLog, imuData.poseLog, tImu); 
