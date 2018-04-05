@@ -155,9 +155,9 @@ for i = 1:nSegments
     tagHandles(i).FontSize = tagFontSize;
 end
 
-%drawBasePlane();
+% drawBasePlane();
 
-drawImuObbs();
+% drawImuObbs();
 
 dcmObj = datacursormode(hfig);
 
@@ -374,11 +374,11 @@ spotlightState = 0;
         
         while tImu < imuData.tExtents(2)
             % for taylor
-%             imuPose = getImuPoseAtTime(imuData.poseLog,imuData.tLog,tImu);
-%             T_imu_world = getImuTransfFromImuPose(imuPose);
+            imuPose = getImuPoseAtTime(imuData.poseLog,imuData.tLog,tImu);
+            T_imu_world = getImuTransfFromImuPose(imuPose);
 
             % for gascola
-            T_imu_world = getVehicleTfAtTime(imuData.tLog, imuData.poseLog, tImu); 
+%             T_imu_world = getVehicleTfAtTime(imuData.tLog, imuData.poseLog, tImu); 
 
             obb_world = applyTransfToObb(dummyObb,T_imu_world);
             drawObb(hfig,obb_world);

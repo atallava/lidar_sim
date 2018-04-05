@@ -89,8 +89,9 @@
     from 1. this is a relic convention and should be overhauled
 
   - get annotations from labeling
+  - construct hg scene objects
   - create ellipsoid blocks
-  - create meshes
+  - create mm meshes
   - todo
     - create corresponding hg version dir in cpp
     - move block info non ground to hg version, not blocks info
