@@ -1,7 +1,13 @@
 #include <tuple>
+#include <utility>
 #include <ctime>
 #include <sys/time.h>
 #include <omp.h>
+
+// hacking boost filesystem bug
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <lidar_sim_classification/DataProcessingUtils.h>
 #include <lidar_sim_classification/ModelingUtils.h>
@@ -33,13 +39,9 @@ int main(int argc, char **argv)
     gettimeofday(&start_time, NULL);
 
     typedef std::vector<std::vector<double> > Pts;
-    typedef std::vector<std::vector<double> > Dirns;
+    // typedef std::vector<std::vector<double> > Dirns;
 
     std::string run_name = "barrels_1";
-
-    // load barrels
-    // load assignments, get real ray dirns
-    // detail for each object
 
     // data for sim object
     std::string sim_type = "hg_sim";
@@ -112,25 +114,106 @@ int main(int argc, char **argv)
 
     // write
 
-    // load barrels obbs
+    // load obbs, open detail file hangles
+    // scene barrels
     std::vector<lsc::Obb> scene_barrels_obbs;
+    std::vector<std::shared_ptr<std::ofstream> > files_barrel_detail;
+
+    // make dir
+    std::string path_barrel_detail_dir = lsc::genPathSceneBarrelDetailDir(run_name, sim_type, sim_version);
+    boost::filesystem::create_directories(path_barrel_detail_dir);
+
     int n_scene_barrels = lsc::getNSceneBarrels(run_name);
     for (size_t i = 0; i < (size_t)n_scene_barrels; ++i)
     {
 	std::string path_obb = lsc::genPathSceneBarrelObb(run_name, i);
 	scene_barrels_obbs.push_back(
 	    lsc::loadObb(path_obb));
+	std::string path_detail = lsc::genPathSceneBarrelDetail(run_name, sim_type, sim_version, i);
+	std::shared_ptr<std::ofstream> file(new std::ofstream);
+	file->open(path_detail.c_str());
+	files_barrel_detail.push_back(file);
     }
 
     // load negatives obbs
     std::vector<lsc::Obb> scene_negatives_obbs;
+    std::vector<std::shared_ptr<std::ofstream> > files_negative_detail;
+    // make dir
+    std::string path_negative_detail_dir = lsc::genPathSceneNegativeDetailDir(run_name, sim_type, sim_version);
+    boost::filesystem::create_directories(path_negative_detail_dir);
+
     int n_scene_negatives = lsc::getNSceneNegatives(run_name);
     for (size_t i = 0; i < (size_t)n_scene_negatives; ++i)
     {
-	std::string path_obb = lsc::genPathSceneNegativeObb(run_name, i);
-	scene_negatives_obbs.push_back(
-	    lsc::loadObb(path_obb));
+    	std::string path_obb = lsc::genPathSceneNegativeObb(run_name, i);
+    	scene_negatives_obbs.push_back(
+    	    lsc::loadObb(path_obb));
+    	std::string path_detail = lsc::genPathSceneNegativeDetail(run_name, sim_type, sim_version, i);
+	std::shared_ptr<std::ofstream> file(new std::ofstream);
+	file->open(path_detail.c_str());
+    	files_negative_detail.push_back(file);
     }
+
+    // loop over packets
+    for (size_t i = 0; i < n_packets_to_sim; ++i)
+    {
+	std::string object_type = rays_for_sim_colln.object_type[i];
+	int scan_id = rays_for_sim_colln.scan_ids[i];
+	int packet_id = rays_for_sim_colln.packet_ids[i];
+	int object_id = rays_for_sim_colln.object_ids[i];
+
+	Pts packet_returns = sim_returns_per_packet[i];
+	std::vector<int> hit_flag = sim_hit_flag_per_packet[i];
+	// loop over returns
+	for (size_t j = 0; j < hit_flag.size(); ++j)
+	{
+	    if (hit_flag[j])
+	    {
+		std::vector<double> pt = packet_returns[j];
+		if (strcmp(object_type.c_str(), "scene_barrel") == 0)
+		{
+		    lsc::Obb obb = scene_barrels_obbs[object_id];
+		    if (checkPointInObb(obb, pt))
+		    {
+			std::ostringstream oss;
+			oss << scan_id << " " << packet_id  << " " 
+			    << std::setprecision(15) << pt[0] << " " << pt[1] << " " << pt[2] 
+			    << std::endl;
+			std::string line = oss.str();
+			files_barrel_detail[object_id]->write(line.c_str(), line.size());
+		    }
+		}
+		else if (strcmp(object_type.c_str(), "scene_barrel") == 0)
+		{
+		    lsc::Obb obb = scene_negatives_obbs[object_id];
+		    if (checkPointInObb(obb, pt))
+		    {
+			std::ostringstream oss;
+			oss << scan_id << " " << packet_id  << " " 
+			    << std::setprecision(15) << pt[0] << " " << pt[1] << " " << pt[2] 
+			    << std::endl;
+			std::string line = oss.str();
+			files_negative_detail[object_id]->write(line.c_str(), line.size());
+		    }
+		}
+		else {
+		    std::stringstream ss_err_msg;
+		    ss_err_msg << "unknown object type " << object_type;
+		    throw std::runtime_error(ss_err_msg.str().c_str());
+		}
+
+	    }
+	}
+    }
+
+    // close all files
+    for (size_t i = 0; i < files_barrel_detail.size(); ++i)
+	files_barrel_detail[i]->close();
+    for (size_t i = 0; i < files_negative_detail.size(); ++i)
+	files_negative_detail[i]->close();
+
+    std::cout << "Written barrel details to " << path_barrel_detail_dir << std::endl;
+    std::cout << "Written negative details to " << path_negative_detail_dir << std::endl;
 
     struct timeval end_time;
     gettimeofday(&end_time, NULL);
