@@ -57,6 +57,23 @@ void SectionModelSim::loadTriangleModelBlocks(const std::vector<std::string> &re
     m_triangle_sim_nbr_server.setTriangleModels(triangle_models_vec);
 }
 
+// load misc tri models
+void SectionModelSim::loadMiscTriangleModels(const std::vector<std::string> &rel_path_models)
+{
+    std::vector<TriangleModels> triangle_models_vec;
+    for(size_t i = 0; i < rel_path_models.size(); ++i)
+    {    
+	TriangleModelSim sim;
+	sim.loadTriangleModels(rel_path_models[i]);
+	sim.setLaserCalibParams(m_laser_calib_params);
+	sim.setDeterministicSim(m_deterministic_sim);
+
+	triangle_models_vec.push_back(sim.m_triangle_models);
+
+	m_misc_triangle_model_sims.push_back(sim);
+    }
+}
+
 // load block info
 void SectionModelSim::loadBlockInfo(const std::string rel_path_imu_posn_nodes, const std::string rel_path_block_node_ids_ground, 
 				    const std::string rel_path_block_node_ids_non_ground)
@@ -212,7 +229,7 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
     hit_flag_over_blocks.push_back(hit_flag_can);
 
 
-    // sim over tri blocks
+    // sim over ground tri blocks
     std::vector<int> triangle_blocks_to_sim;
     std::vector<int> triangle_blocks_hit;
     if (m_block_node_info_provided)
@@ -236,6 +253,21 @@ SectionModelSim::simPtsGivenRays(const std::vector<double> &ray_origin,
 
 	sim_pts_over_blocks.push_back(sim_pts_can);
 	hit_flag_over_blocks.push_back(hit_flag_can);
+    }
+
+    // sim over misc tri models, if any
+    if (m_misc_triangle_model_sims.size() > 0)
+    {
+	for (size_t i = 0; i < m_misc_triangle_model_sims.size(); ++i)
+	{
+	    std::vector<std::vector<double> > sim_pts_can;
+	    std::vector<int> hit_flag_can;
+	    std::tie(sim_pts_can, hit_flag_can) = 
+		m_misc_triangle_model_sims[i].simPtsGivenRays(ray_origin, ray_dirns);
+
+	    sim_pts_over_blocks.push_back(sim_pts_can);
+	    hit_flag_over_blocks.push_back(hit_flag_can);
+	}
     }
 
     // marginalize 

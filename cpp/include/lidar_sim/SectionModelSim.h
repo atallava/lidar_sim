@@ -16,9 +16,11 @@
 namespace lidar_sim {
     class SectionModelSim {
     public:
-	SectionModelSim();;
+	SectionModelSim();
 	void loadEllipsoidModelBlocks(const std::vector<std::string> &rel_path_model_blocks);
+	// todo: semantically call these triangles ground
 	void loadTriangleModelBlocks(const std::vector<std::string> &rel_path_model_blocks);
+	void loadMiscTriangleModels(const std::vector<std::string> &rel_path_models);
 	void loadBlockInfo(const std::string rel_path_imu_posn_nodes, const std::string rel_path_block_node_ids_ground, const std::string rel_path_block_node_ids_non_ground);
 
 	std::vector<int> getPosnEllipsoidBlockMembership(const std::vector<double> &imu_pose);
@@ -37,6 +39,7 @@ namespace lidar_sim {
 
 	std::vector<EllipsoidModelSim> m_ellipsoid_model_sims;
 	std::vector<TriangleModelSim> m_triangle_model_sims;
+	std::vector<TriangleModelSim> m_misc_triangle_model_sims;
 	EllipsoidSimNbrServer m_ellipsoid_sim_nbr_server;
 	TriangleSimNbrServer m_triangle_sim_nbr_server;
 	std::vector<std::vector<double> > m_imu_posn_nodes;

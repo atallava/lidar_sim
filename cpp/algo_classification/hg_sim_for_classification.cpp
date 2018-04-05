@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     bool deterministic_sim = "false";
     std::string sim_version = "260218";
 
-    // find ellipsoid models for this section
+    // find ellipsoid models for this scene
     std::vector<std::string> rel_path_ellipsoid_model_blocks;
     std::vector<int> ellipsoid_model_block_ids = 
 	lsc::getEllipsoidModelBlockIds(run_name, sim_version);
@@ -57,13 +57,23 @@ int main(int argc, char **argv)
     	rel_path_ellipsoid_model_blocks.push_back(rel_path_ellipsoids);
     }
 
-    // find triangle models for this section
+    // find triangle models for this scene
     std::vector<std::string> rel_path_triangle_model_blocks;
     std::vector<int> triangle_model_block_ids = 
 	lsc::getTriangleModelBlockIds(run_name, sim_version);
     for(auto i : triangle_model_block_ids) {
 	std::string rel_path_triangles = lsc::genRelPathTriangles(run_name, sim_version, i);
     	rel_path_triangle_model_blocks.push_back(rel_path_triangles);
+    }
+    
+    // barrels for this scene
+    size_t n_scene_barrels = lsc::getNSceneBarrels(run_name);
+    std::vector<std::string> rel_path_barrel_models;
+    for (size_t i = 0; i < n_scene_barrels; ++i) 
+    {
+	int barrel_id = i;
+	std::string path_barrel_posed = lsc::genPathBarrelPosedMeshModel(run_name, barrel_id);
+	rel_path_barrel_models.push_back(path_barrel_posed);
     }
 
     // model blocks info
@@ -72,8 +82,8 @@ int main(int argc, char **argv)
     std::string path_block_node_ids_non_ground = lsc::genPathBlockNodeIdsNonGround(run_name);
 
     // rays for sim
-    lsc::RaysForSimColln rays_for_sim_colln = lsc::calcRaysForSim(run_name);
-    size_t n_packets_to_sim = rays_for_sim_colln.ray_origin_per_packet.size();
+    lsc::PacketsForSimColln packets_for_sim_colln = lsc::calcPacketsForSim(run_name);
+    size_t n_packets_to_sim = packets_for_sim_colln.ray_origin_per_packet.size();
 
     // preallocate space
     std::vector<Pts> sim_returns_per_packet;
@@ -97,6 +107,7 @@ int main(int argc, char **argv)
 #pragma omp critical (load_object_data)	
 	    sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
 	    sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
+	    sim.loadMiscTriangleModels(rel_path_barrel_models); 
 	    sim.setDeterministicSim(deterministic_sim);
 	    sim.loadBlockInfo(path_imu_posn_nodes, path_block_node_ids_ground, path_block_node_ids_non_ground);
 	}
@@ -107,7 +118,7 @@ int main(int argc, char **argv)
 	{	
 	    std::tie(
 		sim_returns_per_packet[i], sim_hit_flag_per_packet[i]) = 
-		sim.simPtsGivenRays(rays_for_sim_colln.ray_origin_per_packet[i], rays_for_sim_colln.ray_dirns_per_packet[i]);
+		sim.simPtsGivenRays(packets_for_sim_colln.ray_origin_per_packet[i], packets_for_sim_colln.ray_dirns_per_packet[i]);
 	}
 
     }   // omp parallel ends
@@ -123,7 +134,6 @@ int main(int argc, char **argv)
     std::string path_barrel_detail_dir = lsc::genPathSceneBarrelDetailDir(run_name, sim_type, sim_version);
     boost::filesystem::create_directories(path_barrel_detail_dir);
 
-    int n_scene_barrels = lsc::getNSceneBarrels(run_name);
     for (size_t i = 0; i < (size_t)n_scene_barrels; ++i)
     {
 	std::string path_obb = lsc::genPathSceneBarrelObb(run_name, i);
@@ -157,10 +167,10 @@ int main(int argc, char **argv)
     // loop over packets
     for (size_t i = 0; i < n_packets_to_sim; ++i)
     {
-	std::string object_type = rays_for_sim_colln.object_type[i];
-	int scan_id = rays_for_sim_colln.scan_ids[i];
-	int packet_id = rays_for_sim_colln.packet_ids[i];
-	int object_id = rays_for_sim_colln.object_ids[i];
+	std::string object_type = packets_for_sim_colln.object_type[i];
+	int scan_id = packets_for_sim_colln.scan_ids[i];
+	int packet_id = packets_for_sim_colln.packet_ids[i];
+	int object_id = packets_for_sim_colln.object_ids[i];
 
 	Pts packet_returns = sim_returns_per_packet[i];
 	std::vector<int> hit_flag = sim_hit_flag_per_packet[i];
