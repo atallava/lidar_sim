@@ -363,11 +363,11 @@ add_library(lidar_sim SHARED
 # add_executable(create_real_packets_to_process algo_state_estimation/create_real_packets_to_process.cpp)
 # target_link_libraries(create_real_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
 
-add_executable(hg_sim_debug algo_state_estimation/hg_sim_debug.cpp)
-  target_link_libraries(hg_sim_debug lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(hg_sim_debug algo_state_estimation/hg_sim_debug.cpp)
+#   target_link_libraries(hg_sim_debug lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
-add_executable(mm_sim_debug algo_state_estimation/mm_sim_debug.cpp)
-  target_link_libraries(mm_sim_debug lidar_sim ${LIDAR_SIM_LIBRARIES} )
+# add_executable(mm_sim_debug algo_state_estimation/mm_sim_debug.cpp)
+#   target_link_libraries(mm_sim_debug lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 # add_executable(create_hg_sim_packets_to_process algo_state_estimation/create_hg_sim_packets_to_process.cpp)
 # target_link_libraries(create_hg_sim_packets_to_process lidar_sim ${LIDAR_SIM_LIBRARIES})
@@ -404,4 +404,7 @@ add_executable(mm_sim_debug algo_state_estimation/mm_sim_debug.cpp)
 
 # add_executable(build_models_ground_blocks_gascola algo_classification/build_models_ground_blocks_gascola.cpp)
 #   target_link_libraries(build_models_ground_blocks_gascola lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
+add_executable(hg_sim_for_classification algo_classification/hg_sim_for_classification.cpp)
+  target_link_libraries(hg_sim_for_classification lidar_sim ${LIDAR_SIM_LIBRARIES} )
 

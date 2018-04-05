@@ -423,6 +423,8 @@ which worked
 - while aggregating mm, expected scans didn't much num scans. i think that some
   packets were entirely not written, since there were no hit points there.
 
+- sim for one scan's worth of packets took hg 463s, mm 622s
+
 ** sim versions
 
 - hg_sim
