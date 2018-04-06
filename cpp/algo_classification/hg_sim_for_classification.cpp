@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     // rays for sim
     lsc::PacketsForSimColln packets_for_sim_colln = lsc::calcPacketsForSim(run_name);
     size_t n_packets_to_sim = packets_for_sim_colln.ray_origin_per_packet.size();
-    n_packets_to_sim = 20877; // todo: modify
+    // n_packets_to_sim = 100; // todo: modify
 
     // preallocate space
     std::vector<Pts> sim_returns_per_packet;
@@ -225,6 +225,10 @@ int main(int argc, char **argv)
 
     std::cout << "Written barrel details to " << path_barrel_detail_dir << std::endl;
     std::cout << "Written negative details to " << path_negative_detail_dir << std::endl;
+
+    std::string rel_path_sim_detail = lsc::genPathSimDetail(run_name, sim_type, sim_version);
+    lsc::writeSimDetail(rel_path_sim_detail, packets_for_sim_colln, sim_returns_per_packet, sim_hit_flag_per_packet);
+    std::cout << "Written sim detail to " << rel_path_sim_detail << std::endl;
 
     struct timeval end_time;
     gettimeofday(&end_time, NULL);

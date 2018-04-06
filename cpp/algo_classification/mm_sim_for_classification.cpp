@@ -226,6 +226,10 @@ int main(int argc, char **argv)
     std::cout << "Written barrel details to " << path_barrel_detail_dir << std::endl;
     std::cout << "Written negative details to " << path_negative_detail_dir << std::endl;
 
+    std::string rel_path_sim_detail = lsc::genPathSimDetail(run_name, sim_type, mm_sim_version);
+    lsc::writeSimDetail(rel_path_sim_detail, packets_for_sim_colln, sim_returns_per_packet, sim_hit_flag_per_packet);
+    std::cout << "Written sim detail to " << rel_path_sim_detail << std::endl;
+
     struct timeval end_time;
     gettimeofday(&end_time, NULL);
 
