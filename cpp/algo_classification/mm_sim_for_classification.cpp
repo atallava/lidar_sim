@@ -1,5 +1,4 @@
 #include <tuple>
-#include <utility>
 #include <ctime>
 #include <sys/time.h>
 #include <omp.h>
@@ -24,7 +23,7 @@
 #include <lidar_sim/EllipsoidModelSim.h>
 #include <lidar_sim/TriangleModelSim.h>
 #include <lidar_sim/MathUtils.h>
-#include <lidar_sim/SectionModelSim.h>
+#include <lidar_sim/MeshModelSim.h>
 #include <lidar_sim/SimDetail.h>
 #include <lidar_sim/RayDirnServer.h>
 #include <lidar_sim/AlgoStateEstUtils.h>
@@ -44,42 +43,44 @@ int main(int argc, char **argv)
     std::string run_name = "barrels_1";
 
     // data for sim object
-    std::string sim_type = "hg_sim";
-    bool deterministic_sim = "false";
-    std::string sim_version = "260218";
+    // todo: remove this dependency on hg. it is confusing.
+    // manual copying of files is better
+    std::string hg_sim_version = "260218";
 
-    // find ellipsoid models for this scene
-    std::vector<std::string> rel_path_ellipsoid_model_blocks;
-    std::vector<int> ellipsoid_model_block_ids = 
-	lsc::getEllipsoidModelBlockIds(run_name, sim_version);
-    for(auto i : ellipsoid_model_block_ids) {
-	std::string rel_path_ellipsoids = lsc::genRelPathEllipsoids(run_name, sim_version, i);
-    	rel_path_ellipsoid_model_blocks.push_back(rel_path_ellipsoids);
+    // find object meshes
+    std::string sim_type = "mm_sim";
+    bool deterministic_sim = "false"; 
+    std::string mm_sim_version = "260218";
+    std::vector<std::string> rel_path_object_meshes;
+    std::vector<int> object_mesh_ids = lsc::getMmObjectMeshIds(run_name, mm_sim_version);
+    for(auto i : object_mesh_ids) 
+    {
+	std::string rel_path_mesh = lsc::genRelPathMmObjectMesh(run_name, mm_sim_version, i);
+	rel_path_object_meshes.push_back(rel_path_mesh);
     }
 
-    // find triangle models for this scene
-    std::vector<std::string> rel_path_triangle_model_blocks;
-    std::vector<int> triangle_model_block_ids = 
-	lsc::getTriangleModelBlockIds(run_name, sim_version);
-    for(auto i : triangle_model_block_ids) {
-	std::string rel_path_triangles = lsc::genRelPathTriangles(run_name, sim_version, i);
-    	rel_path_triangle_model_blocks.push_back(rel_path_triangles);
-    }
-    
     // barrels for this scene
+    // add them to rel path object meshes
     size_t n_scene_barrels = lsc::getNSceneBarrels(run_name);
-    std::vector<std::string> rel_path_barrel_models;
     for (size_t i = 0; i < n_scene_barrels; ++i) 
     {
 	int barrel_id = i;
 	std::string path_barrel_posed = lsc::genPathBarrelPosedMeshModel(run_name, barrel_id);
-	rel_path_barrel_models.push_back(path_barrel_posed);
+	rel_path_object_meshes.push_back(path_barrel_posed);
     }
 
-    // model blocks info
+    // find ground triangle models for this scene
+    std::vector<std::string> rel_path_ground_triangle_model_blocks;
+    std::vector<int> ground_triangle_model_block_ids = 
+	lsc::getTriangleModelBlockIds(run_name, hg_sim_version);
+    for(auto i : ground_triangle_model_block_ids) {
+	std::string rel_path_triangles = lsc::genRelPathTriangles(run_name, hg_sim_version, i);
+    	rel_path_ground_triangle_model_blocks.push_back(rel_path_triangles);
+    }
+
+    // hg model blocks info
     std::string path_imu_posn_nodes = lsc::genPathVehiclePosnNodes(run_name);
     std::string path_block_node_ids_ground = lsc::genPathBlockNodeIdsGround(run_name);
-    std::string path_block_node_ids_non_ground = lsc::genPathBlockNodeIdsNonGround(run_name);
 
     // rays for sim
     lsc::PacketsForSimColln packets_for_sim_colln = lsc::calcPacketsForSim(run_name);
@@ -103,14 +104,13 @@ int main(int argc, char **argv)
 #pragma omp parallel num_threads (num_threads) 
     {
 	// create sim object
-	SectionModelSim sim;
+	MeshModelSim sim;
 	{
 #pragma omp critical (load_object_data)	
-	    sim.loadEllipsoidModelBlocks(rel_path_ellipsoid_model_blocks);
-	    sim.loadTriangleModelBlocks(rel_path_triangle_model_blocks);
-	    sim.loadMiscTriangleModels(rel_path_barrel_models); 
+	    sim.loadTriangleModelBlocks(rel_path_ground_triangle_model_blocks); // semantically this is ground
+	    sim.loadObjectMeshes(rel_path_object_meshes);
 	    sim.setDeterministicSim(deterministic_sim);
-	    sim.loadBlockInfo(path_imu_posn_nodes, path_block_node_ids_ground, path_block_node_ids_non_ground);
+	    sim.loadBlockInfo(path_imu_posn_nodes, path_block_node_ids_ground);
 	}
 
 	// sim. loop over packets
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
     std::vector<std::shared_ptr<std::ofstream> > files_barrel_detail;
 
     // make dir
-    std::string path_barrel_detail_dir = lsc::genPathSceneBarrelDetailDir(run_name, sim_type, sim_version);
+    std::string path_barrel_detail_dir = lsc::genPathSceneBarrelDetailDir(run_name, sim_type, mm_sim_version);
     boost::filesystem::create_directories(path_barrel_detail_dir);
 
     for (size_t i = 0; i < (size_t)n_scene_barrels; ++i)
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 	std::string path_obb = lsc::genPathSceneBarrelObb(run_name, i);
 	scene_barrels_obbs.push_back(
 	    lsc::loadObb(path_obb));
-	std::string path_detail = lsc::genPathSceneBarrelDetail(run_name, sim_type, sim_version, i);
+	std::string path_detail = lsc::genPathSceneBarrelDetail(run_name, sim_type, mm_sim_version, i);
 	std::shared_ptr<std::ofstream> file(new std::ofstream);
 	file->open(path_detail.c_str());
 	files_barrel_detail.push_back(file);
@@ -150,7 +150,7 @@ int main(int argc, char **argv)
     std::vector<lsc::Obb> scene_negatives_obbs;
     std::vector<std::shared_ptr<std::ofstream> > files_negative_detail;
     // make dir
-    std::string path_negative_detail_dir = lsc::genPathSceneNegativeDetailDir(run_name, sim_type, sim_version);
+    std::string path_negative_detail_dir = lsc::genPathSceneNegativeDetailDir(run_name, sim_type, mm_sim_version);
     boost::filesystem::create_directories(path_negative_detail_dir);
 
     int n_scene_negatives = lsc::getNSceneNegatives(run_name);
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
     	std::string path_obb = lsc::genPathSceneNegativeObb(run_name, i);
     	scene_negatives_obbs.push_back(
     	    lsc::loadObb(path_obb));
-    	std::string path_detail = lsc::genPathSceneNegativeDetail(run_name, sim_type, sim_version, i);
+    	std::string path_detail = lsc::genPathSceneNegativeDetail(run_name, sim_type, mm_sim_version, i);
 	std::shared_ptr<std::ofstream> file(new std::ofstream);
 	file->open(path_detail.c_str());
     	files_negative_detail.push_back(file);

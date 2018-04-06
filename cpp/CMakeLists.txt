@@ -408,3 +408,6 @@ add_library(lidar_sim SHARED
 add_executable(hg_sim_for_classification algo_classification/hg_sim_for_classification.cpp)
   target_link_libraries(hg_sim_for_classification lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
+add_executable(mm_sim_for_classification algo_classification/mm_sim_for_classification.cpp)
+  target_link_libraries(mm_sim_for_classification lidar_sim ${LIDAR_SIM_LIBRARIES} )
+
