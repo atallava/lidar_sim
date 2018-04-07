@@ -1,10 +1,10 @@
 function triModelsNbr = createTriModelsNbr(triModels,pts,maxDist)
-%CREATETRIMODELSNBR
+%CREATETRIMODELSNBR models with maxDist radius of pts
 %
 % triModelsNbr = CREATETRIMODELSNBR(triModels,pt,maxDist)
 %
 % triModels    -
-% pt           -
+% pts           -
 % maxDist      -
 %
 % triModelsNbr -
