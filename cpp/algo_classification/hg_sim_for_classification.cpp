@@ -82,7 +82,8 @@ int main(int argc, char **argv)
     std::string path_block_node_ids_non_ground = lsc::genPathBlockNodeIdsNonGround(run_name);
 
     // rays for sim
-    lsc::PacketsForSimColln packets_for_sim_colln = lsc::calcPacketsForSim(run_name);
+    bool use_reduced_assignment = true;
+    lsc::PacketsForSimColln packets_for_sim_colln = lsc::calcPacketsForSim(run_name, use_reduced_assignment);
     size_t n_packets_to_sim = packets_for_sim_colln.ray_origin_per_packet.size();
     // n_packets_to_sim = 100; // todo: modify
 
@@ -194,7 +195,7 @@ int main(int argc, char **argv)
 			files_barrel_detail[object_id]->write(line.c_str(), line.size());
 		    }
 		}
-		else if (strcmp(object_type.c_str(), "scene_barrel") == 0)
+		else if (strcmp(object_type.c_str(), "scene_negative") == 0)
 		{
 		    lsc::Obb obb = scene_negatives_obbs[object_id];
 		    if (checkPointInObb(obb, pt))
