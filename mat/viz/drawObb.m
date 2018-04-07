@@ -13,7 +13,7 @@ function drawObb(hfig,obb,pts,lineColor)
     
     figure(hfig);
     hold on; axis equal;
-    box on; grid on;
+%     box on; grid on; % these should not be toyed in this function
 
     %     xlabel('x'); ylabel('y'); zlabel('z'); % figure should decide its own
 %     axis?
