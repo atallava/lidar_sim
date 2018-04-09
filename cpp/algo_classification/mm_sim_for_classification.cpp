@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     bool use_reduced_assignment = true;
     lsc::PacketsForSimColln packets_for_sim_colln = lsc::calcPacketsForSim(run_name, use_reduced_assignment);
     size_t n_packets_to_sim = packets_for_sim_colln.ray_origin_per_packet.size();
-    // n_packets_to_sim = 20877; // todo: modify
+    // n_packets_to_sim = 10; // todo: modify
 
     // preallocate space
     std::vector<Pts> sim_returns_per_packet;
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
     std::string path_negative_detail_dir = lsc::genPathSceneNegativeDetailDir(run_name, sim_type, mm_sim_version);
     boost::filesystem::create_directories(path_negative_detail_dir);
 
-    int n_scene_negatives = lsc::getNSceneNegatives(run_name);
+    size_t n_scene_negatives = lsc::getNSceneNegatives(run_name);
     for (size_t i = 0; i < (size_t)n_scene_negatives; ++i)
     {
     	std::string path_obb = lsc::genPathSceneNegativeObb(run_name, i);
@@ -227,9 +227,27 @@ int main(int argc, char **argv)
     std::cout << "Written barrel details to " << path_barrel_detail_dir << std::endl;
     std::cout << "Written negative details to " << path_negative_detail_dir << std::endl;
 
-    std::string rel_path_sim_detail = lsc::genPathSimDetail(run_name, sim_type, mm_sim_version);
-    lsc::writeSimDetail(rel_path_sim_detail, packets_for_sim_colln, sim_returns_per_packet, sim_hit_flag_per_packet);
-    std::cout << "Written sim detail to " << rel_path_sim_detail << std::endl;
+    // write sim detail
+    // barrels
+    std::string path_sim_detail_for_barrels_dir = lsc::genPathSimDetailForObjectsDir(run_name, sim_type, mm_sim_version, "scene_barrel");
+    boost::filesystem::create_directories(path_sim_detail_for_barrels_dir);
+    for (size_t i = 0; i < n_scene_barrels; ++i)
+    {
+	std::string rel_path_sim_detail = lsc::genPathSimDetailForObject(run_name, sim_type, mm_sim_version, "scene_barrel", i);
+	std::vector<int> packet_ids_for_object = packets_for_sim_colln.getPacketIdsForObject("scene_barrel", i);
+	lsc::writeSimDetailForObject(rel_path_sim_detail, packets_for_sim_colln, sim_returns_per_packet, sim_hit_flag_per_packet, packet_ids_for_object);
+    }
+    std::cout << "Written sim detail for barrels to " << path_sim_detail_for_barrels_dir << std::endl;
+    // negatives
+    std::string path_sim_detail_for_negatives_dir = lsc::genPathSimDetailForObjectsDir(run_name, sim_type, mm_sim_version, "scene_negative");
+    boost::filesystem::create_directories(path_sim_detail_for_negatives_dir);
+    for (size_t i = 0; i < n_scene_negatives; ++i)
+    {
+	std::string rel_path_sim_detail = lsc::genPathSimDetailForObject(run_name, sim_type, mm_sim_version, "scene_negative", i);
+	std::vector<int> packet_ids_for_object = packets_for_sim_colln.getPacketIdsForObject("scene_negative", i);
+	lsc::writeSimDetailForObject(rel_path_sim_detail, packets_for_sim_colln, sim_returns_per_packet, sim_hit_flag_per_packet, packet_ids_for_object);
+    }
+    std::cout << "Written sim detail for negatives to " << path_sim_detail_for_negatives_dir << std::endl;
 
     struct timeval end_time;
     gettimeofday(&end_time, NULL);

@@ -345,8 +345,8 @@ add_library(lidar_sim SHARED
 
 ## eval
 
-# add_executable(eval_scene_sims scene_sim/eval_scene_sims.cpp)
-# target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
+add_executable(eval_scene_sims scene_sim/eval_scene_sims.cpp)
+target_link_libraries(eval_scene_sims lidar_sim ${LIDAR_SIM_LIBRARIES} )
 
 ####################################################################################################
 

@@ -1,3 +1,7 @@
+% save models as mats for easier processing etc
+sectionId = 1;
+simVersion = '130917';
+
 %% rel path helpers
 genRelPathTriangleModels = @(sectionId,simVersion,blockId) ...
     sprintf('../../cpp/data/sections/section_%02d/hg_sim/version_%s/section_%02d_block_%02d_ground_triangles.txt', ...
@@ -16,22 +20,20 @@ genRelPathEllipsoidModelsMat = @(sectionId,simVersion,blockId) ...
     sectionId,simVersion,sectionId,blockId);
 
 %% triangles
-sectionId = 4;
 triangleBlockIds = 1:5;
 fprintf('triangle blocks...\n');
 for i = 1:length(triangleBlockIds)
     fprintf('block %d...\n',i);
     
     blockId = triangleBlockIds(i);
-    relPathTriangleModels = genRelPathTriangleModels(sectionId,blockId);
+    relPathTriangleModels = genRelPathTriangleModels(sectionId, simVersion, blockId);
     triModels = loadTriModels(relPathTriangleModels);
-    save(genRelPathTriangleModelsMat(sectionId,blockId),'triModels','relPathTriangleModels');
+    save(genRelPathTriangleModelsMat(sectionId, simVersion, blockId), ...
+        'triModels','relPathTriangleModels');
 end
 
 %% ellipsoids
-sectionId = 3;
 ellipsoidBlockIds = 1:23;
-simVersion = '070917';
 fprintf('ellipsoid blocks...\n');
 for i = 1:length(ellipsoidBlockIds)
     fprintf('block %d...\n',i);
