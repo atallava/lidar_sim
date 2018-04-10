@@ -37,10 +37,10 @@ relPathScanPoses = genRelPathScanPoses(sectionId, scansVersion, dataSourceReal, 
 posnsReal = getPosnsFromTfs(TCellReal);
 
 %% sim loss
-[errPerParamReal, ~, posnsEstPerParamReal] = calcPoseErrorPerParam(TCellReal, reportStructReal.dispArrayPerParam);
-[errPerParamSim, ~, posnsEstPerParamSim] = calcPoseErrorPerParam(TCellReal, reportStructSim.dispArrayPerParam);
+[posnErrPerParamReal, rotnErrPerParamReal, posnsEstPerParamReal] = calcPoseErrorPerParam(TCellReal, reportStructReal.dispArrayPerParam);
+[posnErrPerParamSim, rotnErrPerParamSim, posnsEstPerParamSim] = calcPoseErrorPerParam(TCellReal, reportStructSim.dispArrayPerParam);
 
-simLosses = (errPerParamReal-errPerParamSim).^2;
+simLosses = (posnErrPerParamReal-posnErrPerParamSim).^2;
 simRisk = mean(simLosses);
 
 fprintf('sim: %s\n', dataSourceSim);

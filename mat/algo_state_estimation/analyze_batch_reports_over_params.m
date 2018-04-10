@@ -4,11 +4,11 @@ scansVersion = '300118';
 % dataSource = 'real';
 % sourceVersion = '';
 
-% dataSource = 'hg_sim';
-% sourceVersion = '080917';
+dataSource = 'hg_sim';
+sourceVersion = '080917';
 
-dataSource = 'mm_sim';
-sourceVersion = '010218';
+% dataSource = 'mm_sim';
+% sourceVersion = '010218';
 
 paramSamplesVersion = '18220218';
 

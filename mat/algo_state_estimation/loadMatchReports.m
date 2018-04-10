@@ -9,7 +9,7 @@ function [successVec,durationVec,inlierRatioVec,fitnessVec,dispArray]  = loadMat
 % durationVec    - length nDisps vector.
 % inlierRatioVec - length nDisps vector.
 % fitnessVec     - length nDisps vector.
-% dispArray]     - [nDisps,6] array.
+% dispArray      - [nDisps,6] array.
 
 fid = fopen(relPathFile,'r');
 successVec = [];
