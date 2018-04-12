@@ -1,3 +1,5 @@
+% approx dist covered by vehicle between two time instances
+
 relPathPoseLog = '../data/pose_log';
 load(relPathPoseLog,'poseLog','tLog');
 
@@ -6,8 +8,11 @@ load(relPathPoseLog,'poseLog','tLog');
 % tEnd = 1403045902.775886000; % sec 3
 % tStart = 1403045911.411350000; 
 % tEnd = 1403046027.954617000; % sec 4
-tStart = 1403046151.135538000; 
-tEnd = 1403046221.65702000; % sec 6
+% tStart = 1403046151.135538000; 
+% tEnd = 1403046221.65702000; % sec 6
+tStart = 1403045583.453744888;
+tEnd = 1403045648.386085033;
+
 idStart = indexOfNearestTime(tStart,tLog);
 idEnd = indexOfNearestTime(tEnd,tLog);
 
