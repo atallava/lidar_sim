@@ -1,5 +1,5 @@
 % experiment design
-% common variables
+%% common variables
 nPacketsUnsubsampled = (1312637-1101873)+1; % for section 4
 nSubsampleSkip = 30;
 nPacketsSubsampled = ceil(nPacketsUnsubsampled/nSubsampleSkip); 

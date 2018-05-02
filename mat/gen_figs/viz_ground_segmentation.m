@@ -12,7 +12,7 @@ ptsNonGround = pts;
 %% viz
 hfig = figure;
 hold on; axis equal;
-markerSize = 500;
+markerSize = 100;
 skip = 2;
 
 % ground
@@ -26,18 +26,23 @@ scatter3(ptsNonGround(1:skip:end,1), ptsNonGround(1:skip:end,2), ptsNonGround(1:
     '.', 'sizeData', markerSize, 'markerEdgeColor', nonGroundRgb, 'markerFaceColor', nonGroundRgb);
 xlabel('x (m)'); ylabel('y (m)'); zlabel('z (m)');
 
-box off;
+box on;
 
 fontSize = 25;
 ax = gca;
-ax.Clipping = 'off'; % clipping off helps get a big picture on zooming in
+% ax.Clipping = 'off'; % clipping off helps get a big picture on zooming in
 set(ax, 'fontsize', fontSize);
 axLinewidth = 2;
 set(ax, 'linewidth', axLinewidth);
 
-view(125,30);
+% legend('ground', 'non-ground');
 
-xlim([-549.9528 -398.5114]);
-ylim([389.0685  508.5118]);
-zlim([-67.0521   52.3912]);
+view(2);
+
+% earlier setting for cool 3d view. didn't go down well with viewers
+% view(125,30);
+% 
+% xlim([-549.9528 -398.5114]);
+% ylim([389.0685  508.5118]);
+% zlim([-67.0521   52.3912]);
 

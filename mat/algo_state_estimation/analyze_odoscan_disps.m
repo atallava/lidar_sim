@@ -1,3 +1,5 @@
+% disps output by odoscan
+
 %% data params
 sectionId = 4;
 scansVersion = '300118';
@@ -79,22 +81,4 @@ end
 
 fprintf('mean posn err: %.2f\n',mean(posnErrVec));
 fprintf('mean T err: %.2f\n',mean(TErrVec));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

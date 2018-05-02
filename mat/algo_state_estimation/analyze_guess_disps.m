@@ -1,3 +1,5 @@
+% viz the traj after guess disps
+
 sectionId = 4;
 scansVersion = '300118';
 dataSource = 'real';

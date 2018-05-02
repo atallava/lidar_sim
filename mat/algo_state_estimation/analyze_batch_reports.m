@@ -1,3 +1,4 @@
+% for a single set of parameters
 sectionId = 4;
 scansVersion = '300118';
 dataSource = 'real';

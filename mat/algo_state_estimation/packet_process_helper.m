@@ -1,3 +1,5 @@
+% todo: what does this script do?
+
 %% load 
 relPathSection = 'some_packets';
 % relPathSection = 'some_packets_section_04_subsampled';
