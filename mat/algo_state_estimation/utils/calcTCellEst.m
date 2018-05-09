@@ -1,9 +1,9 @@
 function TCellEst = calcTCellEst(TStart,disps)
-%CALCTCELLEST
+%CALCTCELLEST Disps are quaternions.
 %
 % TCellEst = CALCTCELLEST(TStart,disps)
 %
-% TStart   -
+% TStart   - 
 % disps    -
 %
 % TCellEst -
